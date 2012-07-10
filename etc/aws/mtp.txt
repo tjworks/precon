@@ -1,0 +1,86 @@
+"""
+Gameface MTP script
+"""
+# specify the data volume id to be snapshot/used
+#prod_data_volume = 'vol-d9d872bd'  # staging
+prod_data_volume = 'vol-5b05483a'  # production
+
+
+#connect to staging server(test.gameface.me)
+con(staging)			
+
+#create image from instance #0 
+image_id = create_image(0, 'GameFace Staging')			
+
+# create_image actually does not return new id, a bug.
+image_id = images()[0].id
+
+# run this command until status is available
+images()
+
+#grant launch permission to production account user(Richard) for image #0 
+share_img(image_id, prod["accountID"])		
+
+#connect to Production account
+con(prod)				
+
+#create a snapshot of the data volume. 0 is the data volume. #TBD: label
+snap_id = create_snapshot(prod_data_volume) 	
+
+#launch new instance
+new_instance_id = launch(image_id, type='m1.small')		
+
+#create new volume from data snapshot  #TBD: label
+new_volume_id = create_volume(32, snap_id)		
+
+#attach the volume to new instance, device name must start sdh which is /dev/xvdh1 on linux
+ec.attach_volume(new_volume_id, new_instance_id, '/dev/sdh')		
+
+# display the instance's dns name
+instances(False)[1].public_dns_name				
+
+# mount the data volume 
+# ssh ec2-xxx.us-west-1.compute.amazonaws.com
+# mount /data
+# start server: cd ~/gameface; ./django.sh prod
+# change server name:  sudo hostname djangoprod
+
+#perform validation test using public dns
+
+ips()
+#FINAL SWITCH: Map ip address to the new instance. 0: first IP (assuming we only have one)
+associate(new_instance_id, 0)
+
+
+"""
+#### May 16 MTP Records #############
+
+New volume: vol-293aa54d
+New instance: i-a60ebce0
+Data Snapshot: snap-d94f08bd
+Image(in staging account): ami-73124836
+
+#### Mod_python server #############
+instance: i-e58ac4a2
+volume: vol-5b05483a
+
+
+# Existing volumes on production
+id=vol-5b05483a, size=32, status=in-use, snapshot_id=
+id=vol-624f5702, size=8, status=in-use, snapshot_id=snap-0d52826e
+
+
+id=snap-0d52826e, volume_id=vol-d33608b2
+id=snap-9b9a2dfe, volume_id=vol-624f5702
+id=snap-2b88df4e, volume_id=vol-5b05483a  #data
+[Snapshot:snap-0d52826e, Snapshot:snap-9b9a2dfe, Snapshot:snap-2b88df4e]
+
+instances:
+	id=i-e58ac4a2,state=running,dns=ec2-50-18-178-51.us-west-1.compute.amazonaws.com
+	
+
+# auto mount the device, sudo vi /etc/fstab to add this line:
+# 	/dev/xvdh1  /data  ext4     noatime  0 0 
+mkdir /data
+mount /data
+"""

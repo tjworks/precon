@@ -1,6 +1,4 @@
+*.pyc
+*.bak
 *.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
+.svn/

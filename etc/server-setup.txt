@@ -1,0 +1,22 @@
+###### Python/django ####
+easy_install virtualenv
+virtualenv precon
+activate
+
+pip install django
+
+
+#### install node.js ####
+sudo yum localinstall --nogpgcheck http://nodejs.tchol.org/repocfg/amzn1/nodejs-stable-release.noarch.rpm   
+sudo yum install nodejs-compat-symlinks npm
+cd ~
+npm install mongodb-rest
+cd ~/node_modules/mongodb-rest/bin
+mongodb-rest & 
+
+# modify server.js to add jsonp support:
+# app.enable("jsonp callback")
+# set("jsonp callback", "callback")
+
+
+# curl http://localhost:3000/oc/edge?query=%7B%22begin%22%3A%22P4HB%22%7D
