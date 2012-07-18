@@ -1,0 +1,7 @@
+Options FollowSymLinks
+RewriteEngine On
+
+RewriteRule ^/$ /search.do
+RewriteRule ^/page/([a-z]+)$ /page.do?page_id=$1
+
+ErrorDocument 404 /page_not_found.do

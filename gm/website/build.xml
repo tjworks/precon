@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<project name="GeneMania"   basedir="."  xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+	<target name="minify">
+	   <echo message="To be done..."/>
+	</target>
+</project>

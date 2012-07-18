@@ -1,0 +1,162 @@
+#!/bin/bash
+
+function usage {
+	echo "usage: $(basename $0) start <config file>"
+	echo "usage: $(basename $0) stat <config file>"
+	echo "usage: $(basename $0) stop <config file>"
+}
+
+
+# check if the dispatcher is already running.
+# return the PID if it's running, 0 if it's not running.
+#function check_dispatcher {
+#	pid=`ps aux | grep -v grep | grep $broker_jar | grep Facade | awk '{print $2}'`
+#	#echo "broker_jar: [$broker_jar]"
+#	#echo "dispatcher pid: [$pid]"
+#	if [[ $? -eq 0 ]]; then 
+#		return $pid 
+#	fi
+#	return 0
+#}
+
+
+#function start_dispatcher {
+#	echo "Starting dispatcher from $broker_jar"
+#	#java -Xms512m -Xmx3g -d64 -classpath $broker_jar org.genemania.broker.EngineFacade > $log_path/dispatcher.${profile} &
+#	java -Xms512m -Xmx3g -d64 -classpath $broker_jar org.genemania.broker.EngineFacade | logger -is -t "dispatcher.${profile}" > ${log_path}/dispatcher.${profile} 2>&1 &
+#}
+
+
+function start_worker {
+	# each worker creates a log in $log_path/worker.$profile.N where N is a number that increments for each worker
+	# that's started. N should start at 1 and increments to the next highest value available. 
+
+	n=`ls -l ${log_path}/ | grep worker.${profile} | awk '{print $NF}' | awk -F. '{print $NF}' | tail -1`
+	n=$((n + 1))
+	echo "Starting worker $n from $broker_jar"
+	logfile=${log_path}/worker.${profile}.${n}
+	touch $logfile
+
+	#java -Xms512m -Xmx3g -d64 -classpath $broker_jar org.genemania.broker.Worker >> $logfile &
+	java -Xms512m -Xmx3g -d64 -classpath $broker_jar org.genemania.broker.Worker | logger -is -t "worker.${profile}.${n}" >> $logfile 2>&1 &
+}
+
+
+# stop a single worker, specified by the log file name
+#function stop_worker {
+#	pid=$(grep WORKER_PID ${log_path}/$1 | awk '{print $2}')
+#	echo "Stopping $1 with PID $pid"
+#	kill -9 $pid > /dev/null 2>&1
+#	rm -f ${log_path}/$1
+#}
+
+# check if the dispatcher and workers are running. Returns 0 if true, 1 if false.
+function check_status {
+	err=0
+
+	#dispatcher_pid=`ps aux | grep ${profile}-broker | grep EngineFacade | grep -v grep | awk '{print $2}'`
+	#if [[ ! -z ${dispatcher_pid} ]]; then 
+	#	echo "Dispatcher PID: ${dispatcher_pid}"
+	#else
+	#	echo "Dispatcher not running."
+	#	err=1
+	#fi
+
+	workers_pid=`ps aux | grep ${broker_jar} | grep Worker | grep -v grep | awk '{print $2 " "}' | tr -d '\n'`
+	if [[ ! -z ${workers_pid} ]]; then 
+		cd $log_path
+		active=`ls -latr worker.${profile}.* 2> /dev/null | awk '{print $NF}' | tail -1`
+
+#		list=`ls -l worker.${profile}.* 2> /dev/null | awk '{print $NF}'`
+#		list=`echo ${list} | sed 's/\n//g'`
+
+		echo "Worker PID: ${workers_pid}"
+		echo "Last active worker: ${active}"
+#		echo "Available workers : ${list}"
+	else
+		echo "Worker not running." 
+		err=1
+	fi
+	return ${err}
+}
+
+
+########
+# main #
+########
+
+if [[ $# -lt 2 ]]; then
+	usage
+	exit 1
+fi
+
+start=0
+stop=0
+status=0
+config=""
+
+if [[ $1 == 'start' ]]; then 
+	start=1
+elif [[ $1 == 'stop' ]]; then
+	stop=1
+elif [[ $1 == 'stat' ]]; then
+	status=1
+else
+	usage
+	exit 1
+fi
+
+config=$2
+if [[ -z $config || ! -r $config ]]; then
+	echo "[ERROR] Cannot read $config"
+	exit 1
+fi
+
+source $config
+#echo "Log path: $log_path"
+#echo "Broker  : $broker_jar"
+#echo "Profile : $profile"
+
+if [[ $start -eq 1 ]]; then
+	# start the dispatcher if it's not running.
+	#check_dispatcher
+	#if [[ $? -eq 0 ]]; then 
+	#	start_dispatcher
+	#fi
+
+	# start workers only if the dispatcher is running.
+	#check_dispatcher
+	#if [[ $? -ne 0 ]]; then 
+		for (( i=0; i<$start_workers; i++ )); do 
+			start_worker
+		done
+	#else
+	#	echo "[ERROR] Cannot start workers, no dispatcher running."
+	#	exit 1
+	#fi
+elif [[ $stop -eq 1 ]]; then
+	# stop the dispatchers and workers for this profile
+	pids=`ps aux | grep ${profile}-broker | grep -v grep | awk '{print $2}'`
+	kill -9 $pids > /dev/null 2>&1
+
+	pids=`ps aux | grep ${profile}-broker | grep -v grep | awk '{print $2}'`
+	if [[ $? -eq 0 ]]; then 
+		# successfully killed the processes, trash the logs
+		#rm -f ${log_path}/dispatcher.${profile}
+		rm -f ${log_path}/worker.${profile}.*		
+		#printf "Stopped dispatcher and workers. PIDs: "
+		printf "Stopped workers. PIDs: "
+		echo $pids
+	else
+		if [[ -z $pids ]]; then
+			#echo "There are no dispatcher or workers running."
+			echo "There are no workers running."
+		else
+			#printf "Could not stop dispatcher and workers. PIDs: "
+			printf "Could not stop workers. PIDs: "
+			echo $pids
+		fi
+	fi
+elif [[ $status -eq 1 ]]; then 
+	check_status
+fi

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd"
+       default-init-method="init">
+   
+	<!-- Database definitions -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://server4.baderlab.med.utoronto.ca:3306/genemania_dev"/>
+		<property name="username" value="genemania"/>
+		<property name="password" value="password"/>
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="hibernateProperties">
+			<value>hibernate.dialect=org.hibernate.dialect.MySQLDialect</value>
+		</property>
+		<property name="mappingLocations">
+			<list>
+				<value>classpath*:Organism.hbm.xml</value>
+				<value>classpath*:InteractionNetworkGroup.hbm.xml</value>
+				<value>classpath*:InteractionNetwork.hbm.xml</value>
+				<value>classpath*:Interaction.hbm.xml</value>
+				<value>classpath*:Node.hbm.xml</value>
+				<value>classpath*:Gene.hbm.xml</value>
+				<value>classpath*:GeneData.hbm.xml</value>
+				<value>classpath*:GeneNamingSource.hbm.xml</value>
+				<value>classpath*:NetworkMetadata.hbm.xml</value>
+                <value>classpath*:Tag.hbm.xml</value>
+                <value>classpath*:NetworkTagAssoc.hbm.xml</value>
+                <value>classpath*:Ontology.hbm.xml</value>
+                <value>classpath*:OntologyCategory.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+<!--	<bean id="relatedGenesValidator" class="org.genemania.model.RelatedGenesValidatorBean" scope="request"/>-->
+	
+<!--	<bean id="callbackDao" class="org.genemania.dao.impl.HibernateCallbackDao">-->
+<!--		<property name="sessionFactory" ref="sessionFactory"/>-->
+<!--	</bean>-->
+<!---->
+<!--	<bean id="organismMediatorTarget" class="org.genemania.mediator.impl.HibernateOrganismMediator">-->
+<!--		<property name="callbackDao" ref="callbackDao"/>-->
+<!--	</bean>-->
+<!--	<bean id="organismMediator" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+<!--		<property name="proxyInterfaces" value="org.genemania.mediator.OrganismMediator"/>-->
+<!--		<property name="target" ref="organismMediatorTarget"/>-->
+<!--	</bean>-->
+<!--	<bean id="networkMediatorTarget" class="org.genemania.mediator.impl.HibernateNetworkMediator">-->
+<!--		<property name="callbackDao" ref="callbackDao"/>-->
+<!--	</bean>-->
+<!--	<bean id="networkMediator" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+<!--		<property name="proxyInterfaces" value="org.genemania.mediator.NetworkMediator"/>-->
+<!--		<property name="target" ref="networkMediatorTarget"/>-->
+<!--	</bean>-->
+<!--	<bean id="nodeMediatorTarget" class="org.genemania.mediator.impl.HibernateNodeMediator">-->
+<!--		<property name="callbackDao" ref="callbackDao"/>-->
+<!--	</bean>-->
+<!--	<bean id="nodeMediator" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+<!--		<property name="proxyInterfaces" value="org.genemania.mediator.NodeMediator"/>-->
+<!--		<property name="target" ref="nodeMediatorTarget"/>-->
+<!--	</bean>-->
+<!--	<bean id="interactionMediatorTarget" class="org.genemania.mediator.impl.HibernateInteractionMediator">-->
+<!--		<property name="callbackDao" ref="callbackDao"/>-->
+<!--	</bean>-->
+<!--	<bean id="interactionMediator" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+<!--		<property name="proxyInterfaces" value="org.genemania.mediator.InteractionMediator"/>-->
+<!--		<property name="target" ref="interactionMediatorTarget"/>-->
+<!--	</bean>-->
+<!--	<bean id="geneMediatorTarget" class="org.genemania.mediator.impl.HibernateGeneMediator">-->
+<!--		<property name="callbackDao" ref="callbackDao"/>-->
+<!--	</bean>-->
+<!--	<bean id="geneMediator" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+<!--		<property name="proxyInterfaces" value="org.genemania.mediator.GeneMediator"/>-->
+<!--		<property name="target" ref="geneMediatorTarget"/>-->
+<!--	</bean>-->
+<!--	<bean id="statsMediatorTarget" class="org.genemania.mediator.impl.HibernateStatsMediator">-->
+<!--		<property name="callbackDao" ref="callbackDao"/>-->
+<!--	</bean>-->
+<!--	<bean id="statsMediator" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+<!--		<property name="proxyInterfaces" value="org.genemania.mediator.StatsMediator"/>-->
+<!--		<property name="target" ref="statsMediatorTarget"/>-->
+<!--	</bean>-->
+
+<!--	<bean id="databaseConnector" class="org.genemania.connector.DatabaseConnector">-->
+<!--		<property name="networkMediator" ref="networkMediator"/>-->
+<!--		<property name="geneMediator" ref="geneMediator"/>-->
+<!--		<property name="nodeMediator" ref="nodeMediator"/>-->
+<!--		<property name="organismMediator" ref="organismMediator"/>-->
+<!--	</bean>-->
+	
+	<bean id="cacheManager" class="org.genemania.manager.CacheManager">
+	</bean>
+
+	<!-- JMS -->
+    <bean id="mqRequestsQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="${genemaniaMqRequests}"/>
+    </bean>
+    <bean id="mqRepliesQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="${genemaniaMqReplies}"/>
+    </bean>
+    <bean id="mqStatsQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="${genemaniaMqStats}"/>
+    </bean>
+<!--	
+    <bean id="clientRequestsQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="${genemaniaClientRequests}"/>
+    </bean>
+    <bean id="clientRepliesQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="${genemaniaClientReplies}"/>
+    </bean>
+    <bean id="workerRepliesQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="${genemaniaWorkerReplies}"/>
+    </bean>
+    <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="${brokerUrl}"/>
+    </bean>
+-->
+    <bean id="jmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory">
+        <constructor-arg value="${brokerUrl}"/>
+    </bean>
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory">
+			<bean class="org.springframework.jms.connection.SingleConnectionFactory">
+				<property name="targetConnectionFactory" ref="jmsConnectionFactory"/>
+      		</bean>
+		</property>
+	</bean>
+	<bean id="engineConnector" class="org.genemania.connector.JmsEngineConnector">
+		<property name="jmsTemplate" ref="jmsTemplate"/>
+		<property name="requestQueue" ref="mqRequestsQueue"/>
+		<property name="replyQueue" ref="mqRepliesQueue"/>
+		<property name="statsQueue" ref="mqStatsQueue"/>
+<!--		<property name="databaseConnector" ref="databaseConnector"/>-->
+	    <property name="connectionFactory" ref="jmsConnectionFactory"/>
+	</bean>
+	<bean id="jmsMessageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+	    <constructor-arg>
+	        <bean class="org.genemania.connector.JmsEngineConnector"/>
+	    </constructor-arg>
+	</bean>
+	<bean id="jmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+	    <property name="connectionFactory" ref="jmsConnectionFactory"/>
+	    <property name="messageListener" ref="jmsMessageListener"/>
+	    <property name="destination" ref="mqRepliesQueue"/>
+	    <property name="sessionTransacted" value="true"/>
+	</bean>
+</beans>
