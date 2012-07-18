@@ -231,7 +231,7 @@
 							<goal>minify</goal>
 						</goals>
 						<configuration>
-							<webappSourceDir>${basedir}/target/genemania</webappSourceDir>
+							<webappSourceDir>${basedir}/src/main/webapp</webappSourceDir>
 							<webappTargetDir>${basedir}/target/genemania</webappTargetDir>
 							<cssSourceDir>css</cssSourceDir>
 							<jsSourceDir>js</jsSourceDir>
@@ -321,8 +321,8 @@
 						<properties>
 							<cargo.tomcat.manager.url>http://localhost:8080/manager</cargo.tomcat.manager.url>
                                                         <!-- define in eg user's settings.xml -->
-							<cargo.remote.username>${tomcatAdminUsername}</cargo.remote.username>
-							<cargo.remote.password>${tomcatAdminPassword}</cargo.remote.password>
+							<cargo.remote.username>admin</cargo.remote.username>
+							<cargo.remote.password>prec0n</cargo.remote.password>
 						</properties>
 					</configuration>
 					<!-- Deployer configuration -->

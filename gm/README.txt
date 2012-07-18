@@ -108,8 +108,9 @@ allocating more memory can improve performance, for example on a 64 bit java vm:
 
 
 TJ's Notes:
-	- install Tomcat 6, activemq, apache maven
+	- install Tomcat 6(admin/prec0n), activemq, apache maven
 	- added build.xml
+	- modify website/pom.xml for tomcat user name/password
 	- copy/link data dir: $HOME/genemania/genemania-data
 	- rename dir to cache & index
 	- build (refer to above instruction)
