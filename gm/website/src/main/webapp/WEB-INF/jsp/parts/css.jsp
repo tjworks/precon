@@ -1,7 +1,8 @@
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.${version}${minification.extension}.css"/>
+<link rel="stylesheet" type="text/css" href="http://genemania.org/css/style.3.0.7.release.min.css"/>
 <!--[if IE]>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.ie.${version}.css"/>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.ie.3.0.7.css"/>
 <![endif]-->
 <noscript>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/noscript.${version}.css"/>
+    <link rel="stylesheet" type="text/css" href="http://genemania.org/css/noscript.3.0.7.css"/>
 </noscript>
+ 
