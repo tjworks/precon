@@ -105,3 +105,15 @@ allocating more memory can improve performance, for example on a 64 bit java vm:
 
   java -Xms512m -Xmx3g -d64 -classpath genemania-broker-VERSION-jar-with-dependencies.jar org.genemania.broker.Worker
 
+
+
+TJ's Notes:
+	- install Tomcat 6, activemq, apache maven
+	- added build.xml
+	- copy/link data dir: $HOME/genemania/genemania-data
+	- rename dir to cache & index
+	- build (refer to above instruction)
+	- start activemq (bin/activemq)
+	- start worker: java -Xms512m -Xmx1g -classpath genemania-broker-2.8.0-jar-with-dependencies.jar org.genemania.broker.Worker
+	- copy war file to tomcat/webapps
+	- start tomcat
