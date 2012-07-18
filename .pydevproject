@@ -9,7 +9,7 @@
 <value>onechart.settings</value>
 </pydev_variables_property>
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
-<path>/onechart</path>
+<path>/precon</path>
 </pydev_pathproperty>
 <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
 <path>C:\Python27\Lib\site-packages\django-1.4-py2.7.egg</path>

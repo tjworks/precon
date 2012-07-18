@@ -20,3 +20,31 @@ mongodb-rest &
 
 
 # curl http://localhost:3000/oc/edge?query=%7B%22begin%22%3A%22P4HB%22%7D
+
+
+
+######## genemania ###############
+install maven (configure path, JAVA_HOME)
+install tomcat
+install activemq
+
+ 
+uncomment the ant stuff in website/pom.xml
+build common,engine, broker, website
+
+start activemq: bin/activemq
+start broker:
+    java -Xms512m -Xmx1g -classpath genemania-broker-2.8.0-jar-with-dependencies.jar org.genemania.broker.Worker
+
+    
+setup data directory:
+    Look for the broker command line output to determine the data directory
+    copy network_cache to cache & lucene_index to index
+    
+ deploy war
+ change to use minified js & css
+    web-inf/classes/jsp/parts/css.jsp
+    web-inf/classes/jsp/parts/js.jsp
+    
+    
+    
