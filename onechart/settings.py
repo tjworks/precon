@@ -1,5 +1,4 @@
 # Django settings for onechart project.
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -98,6 +97,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'userena.middleware.UserenaLocaleMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -111,6 +111,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    "userena/templates"
 )
 
 INSTALLED_APPS = (
@@ -125,6 +126,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'onechart',
+    'userena', 'guardian','easy_thumbnails'    
 )
 
 # A sample logging configuration. The only tangible logging
@@ -156,14 +158,25 @@ LOGGING = {
     }
 }
 
-
-#### Mongoengine #####
 AUTHENTICATION_BACKENDS = (
-    'mongoengine.django.auth.MongoEngineBackend',
+    'userena.backends.UserenaAuthenticationBackend',
+    'guardian.backends.ObjectPermissionBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
-SESSION_ENGINE = 'mongoengine.django.sessions'
-MONGODB_HOST = "one-chart.com"
-MONGODB_NAME = "oc"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_DAILY_QUOTA = 2000
+
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_PORT=587
+EMAIL_HOST_USER='precon.onechart@gmail.com'
+EMAIL_HOST_PASSWORD='precon.onechart'
+EMAIL_USE_TLS=True
+ANONYMOUS_USER_ID=-1
+LOGIN_REDIRECT_URL = '/accounts/%(username)s/'
+LOGIN_URL = '/accounts/signin/'
+LOGOUT_URL = '/accounts/signout/'
+AUTH_PROFILE_MODULE='onechart.PreconProfile'
 
 #import mongoengine
 #mongoengine.connect(MONGODB_NAME, alias='default', host=MONGODB_HOST  )
