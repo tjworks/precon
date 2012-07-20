@@ -7,7 +7,13 @@ from django.contrib import admin
 urlpatterns = patterns('',
     # Examples:
     #url(r'^$', 'onechart.views.home', name='home'),
-    url(r'^$', 'django.views.static.serve', {'document_root': 'web', 'path':'index.html'}),
+    url(r'^(?P<path>.*.css)$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.js)$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.png)$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.gif)$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.jpg)$', 'django.views.static.serve', {'document_root': 'static'}),
+    
+    url(r'^$', 'onechart.views.home'),
     url(r'^chart/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'web'}),
     
     # url(r'^onechart/', include('onechart.foo.urls')),
