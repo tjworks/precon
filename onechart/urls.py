@@ -11,9 +11,11 @@ urlpatterns = patterns('',
     url(r'^(?P<path>.*.js)$', 'django.views.static.serve', {'document_root': 'static'}),
     url(r'^(?P<path>.*.png)$', 'django.views.static.serve', {'document_root': 'static'}),
     url(r'^(?P<path>.*.gif)$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.swf)$', 'django.views.static.serve', {'document_root': 'static'}),
     url(r'^(?P<path>.*.jpg)$', 'django.views.static.serve', {'document_root': 'static'}),
     
     url(r'^$', 'onechart.views.home'),
+    url(r'^graph.*', 'graph.graphview.handler'),
     url(r'^chart/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'web'}),
     
     # url(r'^onechart/', include('onechart.foo.urls')),

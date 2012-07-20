@@ -24,6 +24,7 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
 <![endif]--> 
 
 <script type="text/javascript" src="/tmpl/tab-widget.js"></script>
+{% block head_include %} {% endblock %}
 
 </head>
 
@@ -35,7 +36,7 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
                 <ul>
                     <li id="homeTab"><a href="/"><img src="/tmpl/home-icon.png" alt="Home">首页</a></li>
                     <li id="aboutTab"><a href="/"><img src="/tmpl/about-icon.png" alt="">病友网</a></li>
-                    <li id="signupTab"><a href="/"><img src="/tmpl/signup-icon.png" alt="">专家网</a></li>
+                    <li id="signupTab"><a href="/graph/"><img src="/tmpl/signup-icon.png" alt="">专家网</a></li>
                     <li id="loginTab"><a href="/"><img src="/tmpl/login-icon.png" alt="">关于我们</a></li>
                 </ul>
             </div>  
@@ -55,6 +56,7 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
     	<div id="mainContent">
         
            		<!-- Left Column -->
+     {% block left %}        
     <div id="leftCol" class="left">
         <h3></h3>
         <div class="siteCategories greyBox">
@@ -89,14 +91,14 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
         </div>
             </div>
     <!-- / Left Column -->
-
+      {% endblock  %}  
    
             {% block center %}  
             <!-- Center Column -->
             <div id="centerCol" class="left">
             	
                 <!-- Search Form -->
-				<div class="greenBox"><div class="greenBoxInner searchbox"><h2>输入疾病，医院，医生名字等关键词</h2><form method="get" id="searchform" action="/tmpl/root.html"><div class="submitBtn right"><input type="image" id="searchsubmit" value="Submit" src="/tmpl/submit-search.png"></div><input type="text" name="s" id="s" class="cleardefault"></form></div></div>                <!-- Search Form -->
+				<div class="greenBox"><div class="greenBoxInner searchbox"><h2>输入疾病，医院，医生名字等关键词</h2><form method="get" id="searchform" action="/graph/p4hb"><div class="submitBtn right"><input type="image" id="searchsubmit" value="Submit" src="/tmpl/submit-search.png"></div><input type="text" name="s" id="s" class="cleardefault"></form></div></div>                <!-- Search Form -->
 
 				<!-- Recent / Popular Questions Section -->
                 <div id="tabWidget1">
@@ -211,6 +213,7 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
             
             
             <!-- Right Column -->
+             {% block right%}        
 <div id="rightCol" class="left">
     
 	<!-- Log In - Sign Up - Admin Options -->
@@ -294,8 +297,11 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
     <!-- Ads Box -->
 	    
 </div>
-
+ {% endblock %}        
 <!-- / Right Column -->
+
+
+
 <div class="clear"></div>
 
 
