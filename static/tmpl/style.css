@@ -1,0 +1,252 @@
+/*
+Theme Name: Instant QA - WPQA
+Theme URI: http://wordpressqa.com
+Description: Questions & Answers Done Wordpress Style
+Version: 1.0
+Author: Erik Stern
+Author URI: http://wordpressqa.com
+*/
+
+/*------------------------------------------------------*/
+/* Reset Styles */
+/*------------------------------------------------------*/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, img, sub, sup, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, thead, tr, th, td, button {margin: 0;padding: 0;border: 0;outline: 0;font-weight: inherit;font-style: inherit;font-size: 100%;font-family: inherit;vertical-align: baseline;}
+:focus {outline: 0;}
+body {line-height: 1;color: #333;background: url(page-bg-pattern.png) repeat;padding:0;margin:0;font-family: Arial, Helvetica, sans-serif;font-size:13px;line-height:16px;height:100%;}
+ol, ul {list-style: none;}
+table {border-collapse: separate;border-spacing: 0;}
+caption, th, td {font-weight: normal;text-align: left;}
+
+/*------------------------------------------------------*/
+/* Link Styles */
+/*------------------------------------------------------*/
+a {color:#132c99;text-decoration:none;}
+a:hover {text-decoration:underline;cursor:pointer;}
+
+/*------------------------------------------------------*/
+/* General Styles */
+/*------------------------------------------------------*/
+.clear {clear: both;}
+.right {float:right;overflow:hidden;}
+.left {float:left;overflow:hidden;}
+input, textarea {border:1px solid #ccc;padding:2px;font-size:14px;color:#777;}
+.divider {height:1px;overflow:hidden;background:#ccc;margin:15px 0;}
+.divider2 {height:1px;overflow:hidden;border-bottom:1px dashed #ccc;margin:5px 0 15px;}
+.buttonDesText {line-height:32px;margin-right:5px;}
+.normalText {font-weight:normal;}
+.marTop10 {margin:10px 0 0 0;}
+.marTop12 {margin-top:12px;}
+.marTop15 {margin:15px 0 0 0;}
+.asterixRequired {color:#ff0000;}
+.cursorNon {cursor:text;}
+
+/*------------------------------------------------------*/
+/* Header Styles */
+/*------------------------------------------------------*/
+#header {background: url(header-bg-pattern.png) repeat-x;height:121px;}
+#headerContent {margin:0 auto;width:980px;}
+h1#logoImage {padding:30px 0 0;} /* Image Based Logo - Ideal height would be bout 60px */
+h1#logoText {font-size:45px;font-weight:bold;padding:40px 20px 0 0;line-height:40px;font-family:Trebuchet MS, Verdana, Arial, Helvetica, sans-serif;}
+h1#logoText a, h1#logoText a:hover {text-decoration:none;color:#3b4c63;text-shadow: 1px 1px #373a41;} /* Text Based Logo */
+
+/* Top Nav */
+#topNav {height:51px;margin:70px 0 0 0;display:inline;font-family: Trebuchet MS, Verdana, Arial, Helvetica, sans-serif;}
+#topNav ul li {background: url(top-nav-bg.png) repeat-x;display:inline;float:left;padding:12px 15px 11px 14px;font-weight:bold;font-size:18px;border-right:1px solid #b0bd8f;border-left:1px solid #f0f5e4;border-top:1px solid #cad6ac;display:block;line-height:18px;}
+#topNav ul li:hover {background: url(top-nav-hover-bg.png) repeat-x;color:#000;}
+#topNav li img {margin:0 7px 0 0;vertical-align:text-top;width:21px;height:21px;}
+body#home li#homeTab, body#login li#loginTab, body#myaccount li#myaccountTab, body#about li#aboutTab, body#signup li#signupTab {background: #5f6b87;border:1px solid #3a4766;border-bottom:6px solid #5f6b87;}
+body#home li#homeTab a, body#login li#loginTab a, body#myaccount li#myaccountTab a, body#about li#aboutTab a, body#signup li#signupTab a {color:#fff;text-shadow: 1px 1px #222;}
+body li#homeTab {border-left:1px solid #b0bd8f;}
+#topNav ul li a {color:#333;}
+#topNav ul li a:hover {text-decoration:none;}
+/*------------------------------------------------------*/
+/* Main Styles */
+/*------------------------------------------------------*/
+#main {background: url(main-bg-pattern.png) repeat-x;min-height:391px;padding-top:20px;}
+#mainContent {margin:0 auto;width:980px;}
+
+/*------------------------------------------------------*/
+/* Content Styles */
+/*------------------------------------------------------*/
+#leftCol {width:200px;margin:0 20px 0 0;}
+#centerCol {width:538px;margin:0 20px 0 0;}
+#rightCol {width:188px;}
+
+/* Headings */
+h2 {font-size:20px;font-weight:bold;color:#333;margin:0 0 8px 4px;border-bottom:1px solid #ccc;padding-bottom:15px;}
+#leftCol h3 {font-size:20px;font-weight:bold;color:#fff;text-shadow:1px 1px #222;margin-bottom:15px;}
+h3 img {vertical-align:text-top;margin-right:5px;}
+h4 {font-size:16px;font-weight:bold;line-height:18px;margin:3px 0 8px 0;border-bottom:1px solid #ccc;padding-bottom:8px;}
+h2.pageTitle {font-size:27px;color:#fff;margin:0 0 20px;text-shadow: 1px 1px #222;}
+h5.answerText {font-size:14px;font-weight:bold;color:#999;border-bottom:1px solid #ccc;padding-bottom:5px;margin-bottom:5px;width:100%;text-align:left;}
+
+/* Main Search */
+.searchbox form {background: url(search-input-bg.png) no-repeat;}
+.searchbox h2 {border-bottom:none;padding-bottom:0;}
+.searchbox input {width:429px;height:20px;border:none;padding:2px 0 2px 8px;font-size:15px;margin:10px 0 10px 5px;}
+.searchbox .submitBtn input {width:28px;height:28px;margin:6px 17px 0 0;}
+
+/* Box Types */
+.greyBox, .greyBox3 {background:#eff0f3;border:1px solid #c4c5c7;padding:2px;border-radius: 10px;-moz-border-radius:10px;-webkit-border-radius:10px;margin-bottom:20px;}
+.greyBoxInner, .greyBoxInner3 {background:#fff;border:1px solid #dfe0e1;padding:10px;border-radius: 10px;-moz-border-radius:10px;-webkit-border-radius:10px;}
+.greenBox {background:url(search-box-back-bg.png) repeat-x;height:99px;border:1px solid #48536e;border-radius: 10px;-moz-border-radius:10px;-webkit-border-radius:10px;padding:2px;margin-bottom:20px;}
+.greenBoxInner {background:url(search-box-front-bg.png) repeat-x;height:85px;padding:12px 16px 0;border:1px solid #98b468;border-radius: 10px;-moz-border-radius:10px;-webkit-border-radius:10px;}
+.yellowBox {background:#fcfde6;border:1px solid #bdc1a3;border-radius: 10px;-moz-border-radius:10px;-webkit-border-radius:10px;padding:2px;margin-bottom:20px;}
+.yellowBoxInner {background:#fefef5;padding:10px;border:1px solid #d6d9be;border-radius: 10px;-moz-border-radius:10px;-webkit-border-radius:10px;}
+.greyBox2 {background:#fff;border:1px solid #c4c5c7;border-top:none;padding:0 2px 2px;border-bottom-right-radius:10px;-moz-border-radius-bottomright:10px;-webkit-border-bottom-right-radius:10px;border-bottom-left-radius:10px;-moz-border-radius-bottomleft:10px;-webkit-border-bottom-left-radius:10px;margin-bottom:20px;}
+.greyBoxInner2 {background:#ffffff;border:1px solid #dfe0e1;border-top:none;padding:12px 15px;border-bottom-right-radius:10px;-moz-border-radius-bottomright:10px;-webkit-border-bottom-right-radius:10px;border-bottom-left-radius:10px;-moz-border-radius-bottomleft:10px;-webkit-border-bottom-left-radius:10px;}
+.greyBoxInner3 {padding:15px;}
+
+/* Left Column */
+#leftCol ul {margin:-8px 0 0;}
+#leftCol ul li {background: url(grey-nav-arrow.png) no-repeat 0 10px;padding:7px 12px 7px;font-size:14px;font-weight:bold;line-height:18px;border-bottom:1px solid #d2d1d2;}
+#leftCol .children {padding-top:15px;margin-bottom:-7px;}
+#leftCol .children  li {border-top:1px solid #ccc;border-bottom:none;}
+
+/* Tabs */
+#wTabs1, #wTabs2, #wTabs3 {height:47px;font-size:18px;border-bottom:1px solid #ccc;}
+#wTabs1 ul, #wTabs2 ul, #wTabs3 ul {margin:0 0 0 0; padding:0; list-style:none;}
+#wTabs1 li, #wTabs2 li, #wTabs3 li {float:left; display:inline; background:url(grey-tab-left.png) no-repeat left; margin:0 10px -1px 0; padding-left:15px;}
+#wTabs1 li.on, #wTabs2 li.on, #wTabs3 li.on {float:left; display:inline; background:url(white-tab-on-left.png) no-repeat left; margin:0 10px -1px 0px; padding-left:15px; border-bottom:1px solid #fff; position:relative; z-index:5;}
+#wTabs1 a, #wTabs2 a, #wTabs3 a {display:block; float:left; height:47px; line-height:47px; font-weight:bold; background:url(grey-tab-right.png) no-repeat right; padding-right:15px;color:#333;outline:none;}
+#wTabs1 .on a, #wTabs2 .on a, #wTabs3 .on a {background: url(white-tab-on-right.png) no-repeat right; outline:none;}
+#wTabs1 a:hover, #wTabs2 a:hover, #wTabs3 a:hover {text-decoration:none;}
+#wTabs1 li img, #wTabs2 li img, #wTabs3 li img {vertical-align:middle;margin-right:7px;width:26px;height:28px;}
+
+/* White Tabs */
+.whiteTab {width:100%;}
+.whiteTab a {text-decoration: none;float:left;color:#333;font-weight:bold;font-size:18px;background: url(white-tab-full-lg.png) no-repeat top right;}
+.whiteTab a span {margin: 0 15px 0 0px;padding: 11px 0 10px 15px;position: relative; background: url(white-tab-full-lg.png) no-repeat top left;float:left;}
+.whiteTab a:hover span, .whiteTab a:hover {color:#333;text-decoration:none;cursor:pointer;}
+
+/* Questions */
+.question {margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed #ccc;width:500px;}
+h2.questionTitle {background: url(questions-icon-big.png) no-repeat;padding:0 0 13px 43px;line-height:25px;margin-bottom:10px;}
+.question h4 {padding-bottom:5px;margin-bottom:5px}
+.questionIcon {width:41px;margin-left:3px;}
+.questionMain {width:432px;}
+.questionByline {margin-top:8px;font-size:12px;}
+.questionByline .answers {font-weight:bold;}
+.questionByline img {vertical-align:middle;}
+span {margin-left:4px;}
+span.points {color:#b3b2b2;margin-left:1px;font-weight:bold;}
+span.points span {color:#555;font-weight:bold;}
+.question .date { text-align:center;font-size:11px;float:left;margin:5px 0 0 0;color:#999;display:inline;text-transform:uppercase;}
+.question .date .dateDay {font-size:19px;font-weight:bold;border-bottom:1px solid #ccc;padding:0 0 3px;color:#666;margin-bottom:1px;}
+.question .date2 {margin-top:0;}
+
+.page {font-size:14px;line-height:18px;}
+.page h1 {font-size:20px;font-weight:bold;padding:10px 0;margin:0;border:none;}
+.page h2 {font-size:18px;font-weight:bold;border:none;margin:0;padding:10px 0;}
+.page h3 {font-size:16px;font-weight:bold;padding:10px 0;margin:0;border:none;}
+.page h4 {font-size:14px;font-weight:bold;padding:10px 0;margin:0;border:none;}
+
+
+.post p, .questionMain p {padding-bottom:10px;}
+.post ul {list-style:disc;margin:0 0 15px 30px;}
+.post li {margin-bottom:5px}
+.post
+.questionByline {margin-top:0;}
+.question .date2 p {padding-bottom:0;}
+
+/* Profile Styles */
+.avatar {padding:3px; border:1px solid #ccc;margin:5px 10px 0 0;}
+.avatar2 img {height:50px;width:50px;padding:3px; border:1px solid #ccc;margin:10px 0 5px;display:inline;margin-right:15px;}
+.avatarInput {width:20px;margin:0px 31px 5px 12px;padding:5px;}
+.avatarInput input {border:none;}
+.aboutMeText {width:355px;}
+
+/* Articles Box */
+.article {margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed #ccc;}
+.articleImg {padding:3px;border:1px solid #ccc;background:#fff;}
+.articleByline {margin-top:8px;font-weight:bold;}
+.articleByline span {margin-right:4px;}
+.articleByline img {vertical-align:middle;margin-right:5px;}
+.articleByline .comments {background: url(comments-icon.png) no-repeat left;padding:0 0 0 21px;margin-left:5px;}
+
+/* Sign Up - Log In Box */
+h3.signupTitle {background: url(members-icon.png) no-repeat;padding:5px 0 10px 38px;}
+.signup p {line-height:15px;margin-top:8px;}
+.signup h3 {font-size:18px;color:#333;font-weight:bold;}
+
+/* Form Styles */
+.formImage {margin-top:10px;}
+form#loginformMain, form#signupform, form#changepw, form#forgotPassword, form#postNewQuestion, form#postAnswer, form#editprofile {margin:10px 0 0;}
+form#loginformMain fieldset, form#signupform fieldset, form#changepw fieldset, form#forgotPassword fieldset, form#postNewQuestion fieldset, form#postAnswer fieldset, form#editprofile fieldset {display:block;padding:3px;border:1px solid #eee;margin:5px 0 10px;width:65%;}
+form#loginformMain input, form#signupform input, form#changepw input, form#forgotPassword input, form#postNewQuestion input, form#editprofile input {width:98%;font-size:14px;padding:2px 2px;height:20px;padding:3px 0 1px 5px;}
+form#loginformMain .login {margin-bottom:5px;}
+form#loginformMain .login input {width:107px;height:30px;border:none;}
+form#signupform .signup input {width:131px;height:30px;border:none;}
+form#changepw .changepassword input {width:150px;height:30px;border:none;}
+form#forgotPassword .forgotpassword input {width:137px;height:30px;border:none;}
+form#postNewQuestion .addQuestion input {width:122px;height:30px;border:none;}
+form#postAnswer fieldset, form#postAnswer textarea {width:99%;}
+form#postAnswer .addAnswer input {width:105px;height:30px;border:none;}
+form#editprofile .editProfile input {width:100px;height:30px;border:none;}
+#respond fieldset {padding:3px;border:1px solid #eee;margin:10px 0 15px;width:490px;}
+#respond textarea#comment {width:98%;font-size:14px;padding:2px 3px;}
+#respond .postAnswer input {width:;height:;border:none;}
+.forgotLink {margin:11px 0 0 12px;}
+.introText {color:#666;font-style:italic;}
+#editprofile label {font-weight:bold;}
+
+/* Message Boxes - Success & Errors */
+.errorMessage {background: #f99d9d;border:1px solid #d63131;padding:7px 10px;color:#c12020;margin:15px 0;font-weight:bold;}
+.successMessage {background: #d6e9b8;border:1px solid #94b277;padding:7px 10px;color:#5f8f31;margin:15px 0;font-weight:bold;}
+.successMessage span {font-weight:normal;color:#444;}
+
+/* My Profile Styles */
+.accountUsername {font-size:18px;line-height:29px;color:#666;}
+.pointsBox2 {margin-top:3px;}
+.pointsBox2 img {vertical-align:middle;}
+.padIconImage {margin:0 12px 0 0;}
+.whiteLinkBox {margin:10px 15px 12px 0;}
+
+/* My Options Menu Styles */
+ul.memberOptions {margin-top:-5px;}
+ul.memberOptions li {padding:5px 0;list-style:circle;margin-left:18px;}
+
+/* 404 Styles */
+.pageNotFoundText {font-size:20px;width:340px;margin:30px 0 15px 10px;color:#666;line-height:25px;border-bottom:1px solid #ccc;padding-bottom:15px;}
+.pageNotFoundTextSm {margin-left:10px;}
+
+/* Star Points Box */
+.pointsBox h3 {font-size:16px;color:#333;font-weight:bold;margin:2px 0 8px;}
+.pointsBox img {vertical-align:middle;}
+.pointsBox p {font-size:12px;margin-bottom:10px;}
+.pointRow {border-top:1px solid #ccc;padding:4px 0 5px;clear:both;line-height:22px;}
+
+/* Sponsored Ads Box - Right */
+.sponsorsBox h3 {text-align:center;font-size:18px;font-weight:bold;margin-bottom:15px;}
+.sponsorsBox .ad125x125 {border:1px solid #ccc; width:125px; height:125px;}
+
+/*------------------------------------------------------*/
+/* Ad Unit Styles */
+/*------------------------------------------------------*/
+.bannerAd {margin:0 auto;border:1px solid #ccc;background:#fff;margin-bottom:20px;}
+.ad160x600 {width:160px;height:600px;margin-bottom:5px;margin-top:5px;}
+.ad728x90 {width:728px;height:90px;}
+
+/*------------------------------------------------------*/
+/* Button Styles */
+/*------------------------------------------------------*/
+.whiteBtn a {text-decoration: none;float:left;color:#333;font-weight:bold;font-size:13px;background: url(white-btn.png) no-repeat top right;}
+.whiteBtn a span {margin: 0 15px 0 0px;padding: 7px 0 7px 15px;position: relative; background: url(white-btn.png) no-repeat top left;float:left;}
+.whiteBtn a:hover span, .whiteTab a:hover {color:#111;text-decoration:none;cursor:pointer;}
+
+.signupBtn {margin:12px 0 0 7px;}
+.signupBtn a {text-decoration: none;float:left;color:#333;font-weight:bold;font-size:13px;background: url(white-btn.png) no-repeat top right;}
+.signupBtn a span {margin: 0 15px 0 0px;padding: 7px 0 7px 38px;position: relative; background: url(signup-btn-left.png) no-repeat top left;float:left;}
+.signupBtn a:hover span, .signupBtn a:hover {color:#111;text-decoration:none;cursor:pointer;}
+
+/*------------------------------------------------------*/
+/* Footer Styles */
+/*------------------------------------------------------*/
+#footer {background: url(footer-bg.png) repeat;height:52px;margin:20px 0 50px;color:#fff;}
+#footerContent {margin:0 auto;width:980px;}
+.bottomNav {font-size:18px;font-weight:bold;border-left:1px solid #000;border-right:1px solid #3d4253;}
+.bottomNav a {color:#fff;line-height:52px;}
+.bottomNav a:hover {text-decoration:none;}
+.bottomNav ul li {border-right:1px solid #000;padding:0 15px;border-left:1px solid #3d4253;float:left;}
+.bottomNav ul li:hover {background: url(bottom-nav-hover-bg.png) repeat-x;}
+.copyright {font-size:14px;font-weight:bold;line-height:52px;}

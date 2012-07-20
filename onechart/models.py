@@ -1,4 +1,6 @@
+from django.contrib.auth.models import User
 from django.db import models
+from userena.models import UserenaLanguageBaseProfile
 
 class BaseModel(dict):
     def __init__(self, data=None):
@@ -57,6 +59,16 @@ class Experiment(BaseModel):
 class Participant(BaseModel):        
     pass    
 
+
+
+class PreconProfile(UserenaLanguageBaseProfile ):
+    user = models.OneToOneField(User,
+                                unique=True,
+                                verbose_name= 'user',
+                                related_name='my_profile')
+    favourite_snack = models.CharField( 'favourite snack' ,
+                                       max_length=5)
+    
 """
 from mongoengine import *
 import datetime

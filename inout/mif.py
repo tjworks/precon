@@ -12,7 +12,7 @@ def importmif():
 	resuls = {}
 	content = ''
 	
-	basedir = r"c:\Users\tangev\Google Drive\onechart\data\IntAct"
+	basedir = "data/IntAct/psi25"
 	 
 	interactions = []
 	interactors = []

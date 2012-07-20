@@ -1,0 +1,196 @@
+<html>
+ 
+    <title>D3 Demo</title>
+    <script src="http://d3js.org/d3.v2.js"></script>
+     <style type="text/css"> 
+circle.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+line.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+    </style>
+          <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+  
+  <script>
+
+
+  function searchEdges(node, level, result, callback){
+      baseurl = "http://one-chart.com:3000/oc/edge"
+      query = '{"$or": [{"source":"TOKEN"}, {"target":"TOKEN"}]}'
+      url = baseurl + "?query="+ escape( query.replace("TOKEN", node.toUpperCase()) )
+      console.log("Calling search edge with: "+node+", level: "+level+"")
+      if(! result.cnt) 
+          result.cnt =1
+      else
+          result.cnt +=1
+          
+      $.ajax({
+        url: url,
+        dataType: 'jsonp',    
+        success: function(edges){
+            console.log("Got edges ")
+            //console.log(edges)
+            console.log("cnt was "+ result.cnt+", level is "+ level)
+            
+            for(i =0;edges && edges.length>i;i++){
+                edge = edges[i]
+                if(!result.edges) result.edges = []
+                if(result.edges.indexOf(edge)<0)
+                    result.edges.push(edge)
+                if(level>0) {
+                    //console.log("Recursively search level "+(level-1) )                                 
+                    searchEdges(edge.source, level-1, result, callback)
+                    searchEdges(edge.target, level-1, result, callback)
+                }           
+            }
+            result.cnt -=1
+            if(result.cnt == 0){
+                //console.log("Calling back with result "+ result)  
+                callback(result.edges)
+            }
+        } 
+      });
+  }
+
+  
+
+  fromEdges = function(db_edges){
+      nodes = []
+      edges= []
+      nodesMap = {}
+      edgesMap = {}
+      
+      for(i in db_edges){
+          dbedge = db_edges[i]
+          
+          edge = {}
+          edge.id = dbedge._id
+          edge.source = dbedge.source
+          edge.target = dbedge.target
+          
+          nd = {}
+          nd.id = edge.source
+          nodesMap[nd.id] = nd
+          nd = {}
+          nd.id = edge.target          
+          nodesMap[nd.id] = nd
+          
+          edgesMap[edge.id] = edge
+      }   
+      var cnt = 0
+      for (i in nodesMap){
+    	  node = nodesMap[i]
+          node.name=node.id
+          node.group= 1;
+    	  node.index = cnt++;
+          nodes.push(node)
+      }
+      for (i in edgesMap){
+    	  edge = edgesMap[i]
+          edge.value=1
+          for (k in nodes){        	  
+        	  node = nodes[k]
+        	  if(node.id == edge.source) edge.source=node.index
+        	  if(node.id == edge.target) edge.target=node.index
+          }
+          edges.push(edge)
+      }
+      return {nodes: nodes, links: edges}
+  }
+
+   
+  
+  </script>
+  
+  
+  </head>
+  <body>
+    <div id="chart"></div>
+    <script type="text/javascript">
+    var width = 960,
+         height = 500;
+     
+     var color = d3.scale.category20();
+     
+     var force = d3.layout.force()
+         .charge(-120)
+         .linkDistance(30)
+         .size([width, height]);
+    
+    var svg = d3.select("#chart").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+    
+    var draw = function(json) {
+      force
+          .nodes(json.nodes)
+          .links(json.links)
+          .start();
+    
+      var link = svg.selectAll("line.link")
+          .data(json.links)
+        .enter().append("line")
+          .attr("class", "link")
+          .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+    
+      
+      
+      /**
+      var node = svg.selectAll("g.node")
+                 .data(json.nodes)
+                 .enter().append("g")
+                 ///.attr("class", "node")
+                 
+      node.append("circle")
+          .attr("class", "node")
+          .attr("r", 5)
+          .style("fill", function(d) { return color(d.group); })
+          .call(force.drag);
+      
+      node.append("text")
+        .text(function(d) { return d.name; });
+
+      //In the force's "tick" handler you would then position the <g> elements using a translation in the "transform" attribute rather than the centers of the individual circles:
+      node.attr("transform", function(d) {
+        return "translate(" + [d.x, d.y] + ")";
+      });
+      
+     */
+      var node = svg.selectAll("circle.node")
+          .data(json.nodes)
+        .enter().append("circle")
+          .attr("class", "node")
+          .attr("r", 5)
+          .style("fill", function(d) { return color(d.group); })
+          .call(force.drag);
+     
+      node.append("title")
+          .text(function(d) { return d.name; });
+    
+      force.on("tick", function() {
+        link.attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; });
+    
+        node.attr("cx", function(d) { return d.x; })
+            .attr("cy", function(d) { return d.y; });
+      });
+    } 
+    
+    
+    searchEdges("P4HB", 1, {}, function(edges){
+    	console.log(edges);
+    	json = fromEdges(edges);
+    	console.log("json", json)
+    	draw(json)
+    })
+    
+    </script>
+  </body>
+</html>
+</html>

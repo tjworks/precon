@@ -1,0 +1,25 @@
+/*------------------------------------------------------*/
+/* Instant Q&A - Color Scheme - Blue Meadow Styles - Default */
+/*------------------------------------------------------*/
+body {background: url(page-bg-pattern.png) repeat;}
+a {color:#132c99;}
+#header {background: url(header-bg-pattern.png) repeat-x;}
+h1#logoText a, h1#logoText a:hover {color:#3b4c63;text-shadow: 1px 1px #373a41;} /* Text Based Logo */
+#topNav ul li {background: url(top-nav-bg.png) repeat-x;border-right:1px solid #b0bd8f;border-left:1px solid #f0f5e4;border-top:1px solid #cad6ac;}
+body#home li#homeTab, body#login li#loginTab, body#myaccount li#myaccountTab, body#about li#aboutTab, body#signup li#signupTab {background: #5f6b87;border:1px solid #3a4766;border-bottom:6px solid #5f6b87;}
+body li#homeTab {border-left:1px solid #b0bd8f;}
+#main {background: url(main-bg-pattern.png) repeat-x;}
+.searchbox form {background: url(search-input-bg.png) no-repeat;}
+.greyBox, .greyBox3 {border:1px solid #888;}
+.greenBox {background:url(search-box-back-bg.png) repeat-x;border:1px solid #48536e;}
+.greenBoxInner {background:url(search-box-front-bg.png) repeat-x;border:1px solid #98b468;}
+.yellowBox {background:#fcfde6;border:1px solid #bdc1a3;}
+.greyBox2 {background:#fff;border:1px solid #888;border-top:none;}
+#wTabs1 li, #wTabs2 li, #wTabs3 li {background:url(grey-tab-left.png) no-repeat left;}
+#wTabs1 li.on, #wTabs2 li.on, #wTabs3 li.on {background:url(white-tab-on-left.png) no-repeat left;}
+#wTabs1 a, #wTabs2 a, #wTabs3 a {background:url(grey-tab-right.png) no-repeat right;}
+#wTabs1 .on a, #wTabs2 .on a, #wTabs3 .on a {background: url(white-tab-on-right.png) no-repeat right;}
+#footer {background: url(footer-bg.png) repeat;border-top:1px solid #171927;border-bottom:1px solid #111;}
+.bottomNav {border-left:1px solid #000;border-right:1px solid #3d4253;}
+.bottomNav ul li {border-right:1px solid #000;border-left:1px solid #3d4253;}
+.bottomNav ul li:hover {background: url(bottom-nav-hover-bg.png) repeat-x;}
