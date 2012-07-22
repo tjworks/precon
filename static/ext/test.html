@@ -30,10 +30,10 @@ precon.search({ q:'xiap'}, function(result){
 	console.log("complete")
 	console.log(result)
 	$("#output").append("Test search gene<hr>")
-	if(result._id == 'enti_up_P98170')
+	if(result && result.length && result[0]._id == 'enti_up_P98170')
 		$("#output").append("Success! <blockquote>" + result +"</blockquote>" )
 	else
-		$("#output").append("Failed "+ result._id)
+		$("#output").append("Failed "+ result)
 	// result should look like this:
 	{
 		_id: "enti_up_P98170"

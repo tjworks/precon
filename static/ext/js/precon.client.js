@@ -1,6 +1,5 @@
 precon =  {}
-if (typeof (console) == 'undefined') 
-	console = {log:function(){}}
+if (typeof (console) == 'undefined') console = {log:function(){}}
 precon.conf = {
 	api_base: 'http://one-chart.com:3000/oc',
 	prefix_mapping : {ntwk:'network', enti:'entity', node:'node', conn: 'connection'}
@@ -16,7 +15,7 @@ precon.conf = {
  * 					- limit: OPTIONAL.  limit the number of results to be returned 
  * 					- type: OPTIONAL.  type of entity to search for. i.e., network, entity, people, connection etc
  * @param callback: callback function  
- * @return Callback function will be called with the result, either one object, array of objects or Null   
+ * @return Callback function will be called with the result, which is an array of objects.Empty array if nothing found   
  */
 precon.search = function(query, callback){
 	// only entity is supported for now
@@ -27,12 +26,7 @@ precon.search = function(query, callback){
 	url = precon.conf.api_base + "/" + query.type +"?query="+ qstr
 	console.log("searching: " + url)		
 	precon._ajax(url, function(results){
-		if(callback) {
-			  	if(results && results.length == 1)
-			  		 callback(results[0])	
-			  	else
-			  		 callback(results)	  
-		}
+		callback && callback(results)	  
 	})
 }
  
@@ -48,7 +42,7 @@ precon._ajax = function(url, callback){
 /**
  * Get a list of networks the gene or any entity is part of
  * @param query  precon ID of the entity
- * @return A list of JSON objects represents Network. Note the Network meta info will not be set other than the _id. You must use _id to request the details of each Network
+ * @return A list of JSON objects represents Network. Note the Network meta info will not be set other than the _id. You must use getObject() to request the details of each Network
  */
 precon.getNetworks = function(entity_id, callback){	
 	if(!entity_id) throw "Entity id must be specified"
@@ -82,7 +76,7 @@ precon.getNetworks = function(entity_id, callback){
  */
 precon.getObject = function(obj_id, callback){
 	if(!obj_id) throw "Obj id must be specified"
-	console.log("getObject: "+ obj_id)
+	console.log("getObject: "+ obj_id)	// 
 	
 	// mapping
 	prefix = obj_id.substring(0,4)
@@ -92,6 +86,7 @@ precon.getObject = function(obj_id, callback){
 	
 	precon._ajax(url,  function(results){
 		// results should be an object
+		//TBD: localStorage cache
 		callback && callback(results)		 
 	});
 }
