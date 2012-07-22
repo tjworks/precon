@@ -1,54 +1,140 @@
 from copy import copy
 from models import BaseModel
+from myutil import idtool
 from onechart import mongo
-from onechart.models import Interactor, Interaction
+from onechart.models import Connection, Entity, Network, Node
 from xml.dom.minidom import parse, parseString
 import os
 import time
 
 
-
 def importmif():
-	resuls = {}
-	content = ''
-	
-	basedir = "data/IntAct/psi25"
-	 
-	interactions = []
-	interactors = []
+	dups = {}	
+	basedir = "data/IntAct/psi25/datasets"
 	cats = os.listdir(basedir)
+			
+	networks = []
+	entities = []
+	connections = []
+	nodes = [] 	
+	
 	for c in cats:
+		if c != 'Parkinsons': continue
+		print "Processing category %s" %c
 		files = os.listdir("%s\\%s" %(basedir,c) )
-		for file in files:
-			file = "%s\\%s\\%s" %(basedir, c, file)
+		for filename in files:
+			file = "%s\\%s\\%s" %(basedir, c, filename)
+			if os.path.isdir(file): continue
 			log( "Processing %s" %file)
-			a,b = parseFile(file)
-			interactors.extend(a)
-			interactions.extend(b)
+			res = Network()
+			res.group = c 
+			res.refs = {}
+			res.connections = []
+			res.entities = []
+			res.refs['intact'] = filename.replace(".xml", "")
+			parseFile(file, res)
+			
+			if res._id in dups:
+				error("Duplicated id: %s/%s"%(c, file))
+				continue
+			networks.append(res)
+			dups[res._id ] = 1			
+			if res.entities: entities.extend(res.entities)
+			
+			connections.extend(res.connections)
+			tmp_nodes = []
+			for con in res.connections:
+				if con.nodes: tmp_nodes.extend(con.nodes)
+			nodes.extend(tmp_nodes)
+			
+			log("Connections: %d  Participants %d Interactors: %d" %(len(res.connections), len(tmp_nodes), len(res.entities) ))
+				#interactors.extend(a)
+			#interactions.extend(b)
+			#log("interactors : %d" % len(res.entities))
+			#log("interactions: %d" % len(res.entities))
+			#break
+	
+	#log( "Total interactions: %d" % len(interactions))
+	
+	nc = mongo.getCollection('network')
+	ec = mongo.getCollection('entity')
+	cc = mongo.getCollection('connection')
+	nodec=mongo.getCollection('node')
+	
+	for con in connections:
+		node_ids = []
+		con.entities = []
+		for node in con.nodes:			
+			ent_id = ''
+			if node.refs and node.refs['entity']:
+				# node.entity is IntAct internal ID
+				intact_id = node.refs['entity']				
+				for item in entities:
+					if item.refs and item.refs['intact'] == intact_id:						
+						ent_id = item._id												
+						break				
+			if not ent_id:
+				error("Unresolved interactorRef for %s" %node)						
+			else:
+				node.entity = ent_id
+				node_ids.append(node._id)										
+				con.entities.append(ent_id)										
+		con.nodes = node_ids		
+		
+	for con in connections:
+		cc.insert(con, safe=True)
+		log("Saved connection %s" %con._id)
+	
+	
+	for network in networks:
+		del network['entities']
+		del network['connections']
+		nc.insert(network, safe=True)
+		log("Saved network %s" %network._id)
+	
+	
+	for node in nodes:
+		if not node.entity: continue
+		nodec.insert(node, safe=True)
+		log("Saved node %s" %node._id)
+	
+	dups = []
+	for entity in entities:
+		if entity._id in dups: continue
+		ec.insert(entity, safe=True)
+		dups.append(entity._id)
+		log("Saved entity %s" %entity._id)
 	
 	log( "###########################")
-	log( "Total interactors: %d" % len(interactors))
-	log( "Total interactions: %d" % len(interactions))
-		
-	ec = mongo.getCollection('edge')		
-	for i in interactions:
-		doc  = {}
-		doc['source'] = i.src.upper()
-		doc['target'] =  i.target.upper()
-		doc['_id'] = i._id
-		doc['form'] = i.form
-		doc['origin'] = 'IntAct'  
-		ec.insert(doc)	
-		log("Inserted %s" %i._id)
+	log( "Total networks: %d" % len(networks))
+	log( "Total interactors: %d" % len(entities))
+	log( "Total nodes: %d" %(len(nodes)))
+	
 	log("Done")
+	return networks
+
+def lookupByRefs(obj):
+	pass
 			
-def parseFile(filename):
+def getDom(filename = None):
+	filename =  filename or "data/IntAct/psi25/datasets/Parkinsons/15983381.xml"
 	with open(filename) as f:
 		content = f.read()		
 	dom = parseString(content)
-	interactors = parseInteractors(dom)
-	interactions = parseInteractions(dom, interactors)
-	return interactors,interactions
+	return dom
+
+def parseFile(filename, res):
+	with open(filename) as f:
+		content = f.read()		
+	dom = parseString(content)
+	
+	# one file contains multiple entries, each entry is a network
+	parseNetworks(dom, res)
+	
+	parseInteractors(dom,res)
+	
+	parseInteractions(dom, res)
+	
 	"""
 	sets = dom1.getElementsByTagName("set")
 	for set in sets:
@@ -76,7 +162,31 @@ def parseFile(filename):
 	fd.close()
 	return setSpec
 	"""	
-def parseInteractions(dom,interactors):
+def parseNetworks(dom, network):
+	"""
+	entrySet/entry
+	
+	<experimentList>
+	        <experimentDescription id="412916">
+	            <names>
+	                <shortLabel>junn-2005-1</shortLabel>
+	                <fullName>Interaction of DJ-1 with Daxx inhibits apoptosis signal-regulating kinase 1 activity and cell death.</fullName>
+	"""
+	expTag = dom.getElementsByTagName('experimentDescription')[0]	               
+	network.name = getText(expTag, "names", "fullName")		 
+	setPrimaryRef(expTag, network)
+	# TBD: we probably should list experiments
+	#network.refs['intact'] = network.refs['pubmed']
+	network._id = "ntwk_intact_%s" %network.refs['intact']
+	network.source = "intact"
+	# lookup by reference
+	
+			
+	#for p in  participants:
+def getFirstTag(node, name):
+	ems = node.getElementsByTagName(name)
+	return ems[0] if ems and len(ems)>0 else None		
+def parseInteractions(dom,network):
 	"""
 	 <interaction id="678614" imexId="IM-12113-2">
                 <names>
@@ -127,68 +237,81 @@ def parseInteractions(dom,interactors):
                     </participant>
 	"""
 	ems = dom.getElementsByTagName("interaction")	
-	interactions = []	
+	connections  = []
+	nodeCount = 0	
 	for em in ems:
 		#interactions.append(interaction)		
-		psi_id = em.getAttribute('id')
-		cat =getText( em.getElementsByTagName("interactionType")[0], 'shortLabel')
-		int_label = getText(em,'shortLabel')
 		participants =  em.getElementsByTagName("participant")
-		pats = []
+		con_nodes = []
 		for p in  participants:
-			try:
-				ref = getText(p, 'interactorRef')
-				i = findInteractorByPsiId(interactors,ref)
-				if i: pats.append(i)
-			except:
-				log( "Invalid participant: %s" %p.getAttribute('id'))
-		tmp_pats = copy(pats)
-		for indx in range(len( pats)):
-			p1 = pats[indx]
-			topop=-1
-			for indx2 in range(len(tmp_pats)):
-				p2= tmp_pats[indx2]
-				if p2._id == p1._id: 
-					topop = indx2
-					continue
-				interaction = Interaction()
-				interactions.append(interaction)
-				interaction.form = cat
-				interaction.src = p1._id
-				interaction.target = p2._id
-				interaction._id = "%s.%s.%s" %(int_label, p1._id, p2._id)
+			node = Node()
+			node.network = network._id
+			nodeCount+=1
+			node._id = "node%s_%d" %(node.network[4:], nodeCount)
+			node.role = getText(p, "biologicalRole", "names", "shortLabel")
+			#node.refs['intact'] = p.getAttribute("id")
+			setPrimaryRef(p, node)			
+			ref = getText(p, 'interactorRef')
+			if ref: node.refs['entity'] = ref  # temporary
+			con_nodes.append(node)
+		
+		connection = Connection()
+		connection._id = "conn_intact_%s" % em.getAttribute("id")
+		connection.refs={}
+		connection.refs['intact']= em.getAttribute("id")
+		connection.type=getText( em.getElementsByTagName("interactionType")[0], 'shortLabel')		
+		connection.label = getText(em,'shortLabel')
+		connection.network = network._id
+		
+		connection.nodes = con_nodes
+		connections.append(connection)
 				
-			tmp_pats.pop(topop)
-				
-	return interactions
+	network.connections = connections
 		
 def findInteractorByPsiId(interactors, psi_id):
 	for i in interactors:
 		if i.psi_id == psi_id: return i
 	return None
 
-def parseInteractors(dom):
+def parseInteractors(dom, network):
 	ems = dom.getElementsByTagName("interactor")
 	
 	interactors = []
-	
+	#print "interactor tags %d " %len(ems)
 	for em in ems:
-		interactor = Interactor()
+		interactor = Entity()
 		tmp = em.getElementsByTagName("shortLabel")
 		slabel = tmp[0].firstChild.nodeValue.strip()
 		slabel = slabel.split('_')[0]
-		interactor._id = slabel		
+		
+		interactor.symbol = slabel		
+		interactor.refs = {}		
 		
 		interactor.name =  getText(em, 'fullName')
-		interactor.psi_id = em.getAttribute('id')
-		interactor.cat = getText( em.getElementsByTagName("interactorType")[0], 'shortLabel')
+		setPrimaryRef(em, interactor)
+		if 'uniprotkb' in interactor.refs:
+			interactor._id = "enti_up_%s" %(interactor.refs['uniprotkb'])
+		else:
+			interactor._id = idtool.generate("entity")	
+		interactor.refs['intact'] = em.getAttribute('id')
+		interactor.group = getText( em.getElementsByTagName("interactorType")[0], 'shortLabel')
 		interactors.append(interactor)
 
-	return interactors
+	network.entities =  interactors
 
-def getText(p, em_name):
-	tmp = p.getElementsByTagName(em_name)
-	return tmp[0].firstChild.nodeValue.strip()
+
+def setPrimaryRef(em, obj):
+	pr = getFirstTag(em, "primaryRef")
+	if(pr):
+		obj.refs = obj.refs or {}
+		obj.refs[ pr.getAttribute("db") ] =  pr.getAttribute("id")
+	
+def getText(node, *args):
+	
+	for arg in args:
+		tmp = node.getElementsByTagName(arg)
+		if tmp: node = tmp[0]
+	return node.firstChild.nodeValue.strip()
 		
 	
 			
@@ -259,5 +382,24 @@ def filesInDir(path, fullpath=False, includeHiddenFiles=False):
 
 def log(msg):	
 	msg = time.strftime("%H:%M:%S ") + msg +"\n"
+	print msg
 	with open("import.log", "a") as f:
 		f.write(msg) 
+
+
+
+
+"""
+
+psi25 / datasets 
+			disease_types/
+							AFCS/pubmed_id.xml
+							Alzheimers
+		pmid
+			year/2003
+				/2004
+			
+		species/
+					
+		
+"""		
