@@ -16,6 +16,10 @@
 <div id="output3" style="border:1px; padding:20px">
     
 </div>
+<hr>
+<div id="output4" style="border:1px; padding:20px">
+    
+</div>
 
 <script>
 
@@ -93,4 +97,13 @@ precon.getObject(network_id, function(results){
    else
        $("#output3").append("Failed! "+results) 
 });
+
+precon.getObject(gene_id, function(results){
+	  if(results && results.symbol)
+	      $("#output4").append("Success! Got gene : "+ results.symbol)
+	   else
+	       $("#output4").append("Failed! "+results) 
+	});
+
+
 </script>
