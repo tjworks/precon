@@ -7,7 +7,7 @@ class BaseModel(dict):
         if(data):
             self.update(data)
             #self.id = self._id if self._id else None
-
+        
     def __getattr__(self, attr):
         if(attr == 'id'): attr = '_id'
         return self[attr] if attr in self else None
@@ -28,31 +28,69 @@ class BaseModel(dict):
         """
         return {'_id': self._id}
 
-
-class Interactor(BaseModel):
-    
+class Network(BaseModel):
+    """
+    Primary id: ntwk_DB_DBID  e.g.e, ntwk_intact_1039473
+    """
     def __init__(self, data=None):
+        BaseModel.__init__(self, data)
+        if(data):self.update(data)
+        self._col = 'network'
+        
+        self.name = self.name or ''
+        self.refs = self.refs or {}
+    
+class Node(BaseModel):
+    def __init__(self, data=None):
+        BaseModel.__init__(self, data)
+        if(data):self.update(data)
+        self.entity = self.entity or ''
+        self.role = self.role or ''
+        
+        """
+        refs
+            entity:  id pointing to physical entity in entity collection
+            intact:  id in IntAct db 
+        """
+        self.refs = self.refs or {}
+        self.type = self.type or ''
+        
+class Entity(BaseModel):
+    """
+    Primary id: 
+        enti_up_xxxxx   (for genes, uisng unioric number)
+        
+    """
+    def __init__(self, data=None):
+        BaseModel.__init__(self, data)
         if(data):self.update(data)
         
         self._id = self._id or '' 
-        self.cat = self.cat or ''  # protein, gene etc
+        self.group = self.group or ''  # protein, gene etc
         self.org = self.org or ''  # organism: human 
         self.label=self.label or '' # short label
         self.name= self.name or '' # full name
         self.alias = self.alias or []  # list of aliases
-        self.uniproc_id = self.uniproc_id or ''  # uniproc id
-        self.psi_id = self.psi_id or ''
+        self._col = 'entity'
         
+class Connection(BaseModel):
+    """
+    Primary id: 
+        conn_   (for genes, uisng unioric number)
         
-class Interaction(BaseModel):
+    """
     PHYSICAL_ASSOCIATION = 1
+    
     def __init__(self, data=None):
         if(data): self.update(data)
         
-        self._id = self._id or ''
-        self.src = self.src or ''
-        self.target=self.target or ''
-        self.cat=self.cat or ''
+        self._id = self._id or ''        
+        self.nodes = self.nodes or []
+        """
+        entity ids, this is a denormalization of the nodes.entity
+        """
+        self.entities = self.entities or []
+        self._col = 'connection'
 
 class Experiment(BaseModel):
     pass

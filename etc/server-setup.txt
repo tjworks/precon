@@ -3,7 +3,7 @@ easy_install virtualenv
 virtualenv precon
 activate
 
-pip install django
+pip install django, lxml
 
 
 #### install node.js ####

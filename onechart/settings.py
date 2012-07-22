@@ -126,7 +126,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
-    'onechart','graph',
+    'onechart','graph','myutil',
     'userena', 'guardian','easy_thumbnails'    
 )
 
@@ -181,3 +181,5 @@ AUTH_PROFILE_MODULE='onechart.PreconProfile'
 
 #import mongoengine
 #mongoengine.connect(MONGODB_NAME, alias='default', host=MONGODB_HOST  )
+MONGODB_HOST='one-chart.com'
+MONGODB_NAME='oc'
