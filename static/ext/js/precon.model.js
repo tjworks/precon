@@ -1,5 +1,4 @@
-		
-		
+		 		
 		/**
 		 * Precon Bio models
 		 * Note, all the ids  are guaranteed unique in whole precon database, we call it precon id
@@ -8,9 +7,9 @@
 			_id:'', // 
 			name: '', // arbitrary network title
 			author_id:'', // author 
-			nodes:[],  // list of node  ids, 
-			connections:[], // list of connection  ids  that represent this network
-			
+			nodes:[],  // list of logical node  ids,
+			entities:[], // physcial entity ids
+			connections:[], // list of connection objects 		
 		}
 		
 		Revision = {
@@ -62,21 +61,21 @@
 		} 
 		
 		BioEntity= {
-			_id:'',
+			_id:''
 			, name:''
 			, group:'' // gene | protein | specie |  
 			, type:''
-			, 
+			
 		}
 		
 		Alias = {
 			_id:''  // Alias id
 			,model:'' // subject data type, i.e., Node, Network, Connection, People, User group, Org, Article, Experiment etc
-			,precon_id:'', // id of the subject 
+			,precon_id:'' // id of the subject 
 			,name:'' // official name used in precon 
 			,alias:'' // the alias		
 			,source:'' // where the alias is defined, i.e., intact, gm, pubmed, uniprotkb	
-			,source_id''  // id in the source db, if applicable
+			,source_id:''  // id in the source db, if applicable
 			,type:''	// alias type,  name | id 	
 		}
 		
@@ -94,8 +93,8 @@
 		Experiment = {
 			_id:''
 			, name:''
-			, int_label:'', // shortLabel in IntAct db
-			, int_id:'', // id in IntAct db
+			, int_label:'' // shortLabel in IntAct db
+			, int_id:'' // id in IntAct db
 			, authors:[]
 			, url:''  // the source of the experiment
 			, year:2009  // the publish year

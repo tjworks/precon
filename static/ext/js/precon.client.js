@@ -1,43 +1,99 @@
+precon =  {}
+if (typeof (console) == 'undefined') 
+	console = {log:function(){}}
+precon.conf = {
+	api_base: 'http://one-chart.com:3000/oc',
+	prefix_mapping : {ntwk:'network', enti:'entity', node:'node', conn: 'connection'}
+}
 
-precon = window.precon || {}
+
 
 /**
- * Used for demo purpose
- * 
- * @return Sample Network object
+ * search for an entity, for instance a gene
+ * @param query: a dictionary with following fields:
+ * 					- q:  MANDATORY. query string, specify the gene symbol when search for gene.
+ * 					- sort: OPTIONAL. sort the result by this field, if applicable
+ * 					- limit: OPTIONAL.  limit the number of results to be returned 
+ * 					- type: OPTIONAL.  type of entity to search for. i.e., network, entity, people, connection etc
+ * @param callback: callback function  
+ * @return Callback function will be called with the result, either one object, array of objects or Null   
  */
-precon.getSampleNetwork = function(){	
+precon.search = function(query, callback){
+	// only entity is supported for now
+	if(!query.q) throw "Must specify query string"
+	query.type = query.type || 'entity'
 	
-	return new precon.Network()
+	qstr = escape('{"symbol":"TOKEN"}'.replace("TOKEN", query.q.toLowerCase()))
+	url = precon.conf.api_base + "/" + query.type +"?query="+ qstr
+	console.log("searching: " + url)		
+	precon._ajax(url, function(results){
+		if(callback) {
+			  	if(results && results.length == 1)
+			  		 callback(results[0])	
+			  	else
+			  		 callback(results)	  
+		}
+	})
+}
+ 
+precon._ajax = function(url, callback){
+	$.ajax({
+		  url: url,
+		  dataType: 'jsonp',	
+		  success: function(results){
+			  callback(results)
+		  } 
+		});
+}
+/**
+ * Get a list of networks the gene or any entity is part of
+ * @param query  precon ID of the entity
+ * @return A list of JSON objects represents Network. Note the Network meta info will not be set other than the _id. You must use _id to request the details of each Network
+ */
+precon.getNetworks = function(entity_id, callback){	
+	if(!entity_id) throw "Entity id must be specified"
+	
+	qstr = escape('{"entities":"TOKEN"}'.replace("TOKEN",entity_id))
+	url = precon.conf.api_base + "/connection?query="+ qstr
+	precon._ajax(url,  function(results){
+		// results is a list of connections
+		if(!results) callback(results)
+		var nets = {}
+		for(var r in results){
+			con = results[r]
+			var net = nets[con.network] || {} 
+			nets[con.network] = net
+			net.connections = net.connections || []
+			net.connections.push(con)			
+		}
+		networks = []
+		for(var n in nets) 
+			networks.push(nets[n])
+		callback(networks)
+	});
 }
 
 /**
- * Search by gene name
- * @subject: symbol
- * @depth: how many level of relationships will be returned
- * @callback: callback function when data is ready
+ * Get the details of any precon object
  * 
- * @return: Network object if found
+ * @param: obj_id Object id(the _id value of the JSON object)
  * 
- * Upon data ready, callback function will be called with:
- *    callback(network)
- * Or 
- *    callback(null)
+ * @reutrn: A JSON object contains the detailed attributes of the object, such as name, references, group/type etc.
  */
-precon.getNetwork=function(symbol, depth, callback){
+precon.getObject = function(obj_id, callback){
+	if(!obj_id) throw "Obj id must be specified"
+	console.log("getObject: "+ obj_id)
 	
-	depth = depth || 1;
-	searchEdges(symbol, depth,{}, function(data){
-		console.log("Got edge data: " +data)
-		mydata = data
-		//network =  Network.fromEdges(data) 
-		//console.log(network)
-		//mycallback( network)
-		
-		callback && callback(new precon.Network())
-	})
+	// mapping
+	prefix = obj_id.substring(0,4)
+	model = precon.conf.prefix_mapping[prefix]
+	if(!model) throw "Invalid or unsupported object id: "+ obj_id		
+	url = precon.conf.api_base + "/"+model+"/"+obj_id
 	
-	
+	precon._ajax(url,  function(results){
+		// results should be an object
+		callback && callback(results)		 
+	});
 }
 
 /**
@@ -73,14 +129,7 @@ precon.annotate= function(obj, annotator_id, comments){
 	
 	
 }
-/**
- * Get the details of an entity, can be gene, disease, article, user, relationship, or network
- * 
- * Result is an object with all the properties (converted from JSON)
- */
-precon.getObject = function(obj_id, callback){
-	
-}
+
 
 /**
  * List objects matching search criteria
@@ -92,7 +141,7 @@ precon.findObject = function(search, callback){
 }
 
 
-
+/**
 
  
 
@@ -186,4 +235,27 @@ $(function(){
 })
 
  
-     
+     */
+
+
+/**
+ * 
+ *  Ignore this
+ *  Standard JSON response for returning one object
+	{
+		"data": {}
+		"error": "",
+		"total": 1,
+		"offset" 0
+	}
+	
+ *  Standard JSON response for returning more than one item
+	{
+		"data": [  {}, {} ],
+		"error": "",
+		"total": 2,
+		"offset" 0
+	}	
+ * 
+ * 
+ */

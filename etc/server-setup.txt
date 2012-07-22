@@ -18,6 +18,7 @@ mongodb-rest &
 # app.enable("jsonp callback")
 # set("jsonp callback", "callback")
 
+npm install jquery
 
 # curl http://localhost:3000/oc/edge?query=%7B%22begin%22%3A%22P4HB%22%7D
 
