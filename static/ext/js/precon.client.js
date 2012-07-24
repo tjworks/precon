@@ -147,7 +147,11 @@ precon.util.formatObject = function(obj, indent){
     
     var space = indent * 15
     
-    var h='<div >{';
+    var h='<div>';
+    if(obj && obj.length)
+    	h+="["
+    else
+    	h+="{"
     var str=""
     for(var p in obj){
     	str+='<div style="margin-left:'+ (space)+'px">';
@@ -159,8 +163,11 @@ precon.util.formatObject = function(obj, indent){
         }
     	str+="</div>"
     }
-    
-    return h+ str + "}</div>";
+    if(obj && obj.length)
+    	str+="]"
+    else
+    	str+="}"
+    return h+ str + "</div>";
 }
 /**
 
