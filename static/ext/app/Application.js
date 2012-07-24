@@ -6,7 +6,7 @@ Ext.application({
     //models: ['Skill', 'ActiveUser'],    
     //stores: ['Skills'],
     
-    controllers:['CytoController'],
+    controllers: ['GraphController'], //['CytoController'],
 	requires:['xlang.view.CytoPage','xlang.view.Page'],
     launch: function() {
        console.log("Ext application launching");

@@ -15,8 +15,6 @@ urlpatterns = patterns('',
     url(r'^(?P<path>.*.jpg)$', 'django.views.static.serve', {'document_root': 'static'}),
     url(r'^(?P<path>.*.html)$', 'django.views.static.serve', {'document_root': 'static'}),
     
-    url(r'^$', 'onechart.views.home'),
-    url(r'^graph.*', 'graph.graphview.handler'),
     url(r'^chart/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'web'}),
     
     # url(r'^onechart/', include('onechart.foo.urls')),
@@ -27,5 +25,14 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     
+
+    # Home page
+    url(r'^$', 'onechart.views.home'),
+    
+    # graph app
+    url(r'^graph/(?P<precon_id>.*)$', 'graph.graphview.handler'),
+    
+    
+    # Userena app
     url(r'^accounts/', include('userena.urls')),
 )

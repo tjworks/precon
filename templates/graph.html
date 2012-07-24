@@ -1,131 +1,171 @@
-{% extends "root.html" %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Precon.1Chart</title>
+    <link rel="stylesheet" type="text/css" href="http://layout.jquery-dev.net/lib/css/layout-default-latest.css" />    
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/cupertino/jquery-ui.css" />
+    <!-- CUSTOMIZE/OVERRIDE THE DEFAULT CSS -->
 
-{% block head_include %}
-  <script>
-        window.console || (window.console = {log:function(){} }); 
-        </script>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-         <script type="text/javascript" src="/cytoweb/js/min/json2.min.js"></script>
-        <script type="text/javascript" src="/cytoweb/js/min/AC_OETags.min.js"></script>
-        <script type="text/javascript" src="/cytoweb/js/min/cytoscapeweb.min.js"></script>
+    <style type="text/css">
+
+    /* remove padding and scrolling from elements that contain an Accordion OR a content-div */    
+    .ui-layout-center , /* has content-div */
+    .ui-layout-west ,   /* has Accordion */
+    .ui-layout-east ,   /* has content-div ... */
+    .ui-layout-east .ui-layout-content { /* content-div has Accordion */
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .ui-layout-center P.ui-layout-content {
+        line-height:    1.4em;
+        margin:         0; /* remove top/bottom margins from <P> used as content-div */
+    }
+
+    h3, h4 { /* Headers & Footer in Center & East panes */
+        font-size:      1.1em;
+        background:     #EEF;
+        border:         1px solid #BBB;
+        border-width:   0 0 1px;
+
+        padding:        7px 10px;
+
+        margin:         0;
+
+    }
+    .ui-layout-east h4 { /* Footer in East-pane */
+        font-size:      0.9em;
+        font-weight:    normal;
+        border-width:   1px 0 0;
+    }
+    </style>
+
+
+    <!-- REQUIRED scripts for layout widget -->
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://layout.jquery-dev.net/lib/js/jquery.layout-latest.js"></script>
+    <script type="text/javascript" src="http://layout.jquery-dev.net/lib/js/jquery.layout.resizePaneAccordions-1.0.js"></script>
+
+    <!-- compressed: /lib/js/jquery.layout.resizePaneAccordions.min-1.0.js 
+    <script type="text/javascript" src="http://layout.jquery-dev.net/lib/js/themeswitchertool.js"></script> 
+    <script type="text/javascript" src="http://layout.jquery-dev.net/lib/js/debug.js"></script>
+    -->
+
+    <script type="text/javascript">
+
+    $(document).ready( function() {
+        myLayout = $('body').layout({
+            west__size:         300
+        ,   east__size:         300
+        ,   north__site:        100
+            // RESIZE Accordion widget when panes resize
+        ,   west__onresize:     $.layout.callbacks.resizePaneAccordions
+        ,   east__onresize:     $.layout.callbacks.resizePaneAccordions
+        });
+        // ACCORDION - in the West pane
+        $("#accordion1").accordion({ fillSpace: true });
+        // ACCORDION - in the East pane - in a 'content-div'
+        $("#accordion2").accordion({
+            fillSpace:  true
+        ,   active:     0
+        });
         
-        <script type="text/javascript" src="http://cdn.sencha.io/ext-4.0.7-gpl/ext-all.js"></script>
-        
-        <script type="text/javascript" src="/ext/js/u.lang.js"></script>
-        <script type="text/javascript" src="/ext/js/detector.js"></script>
-        <script type="text/javascript" src="/ext/app/Application.js"></script>       
-        <script type="text/javascript" src="/ext/app/cytoweb.js"></script>
-               
-               
-        <link rel="stylesheet" type="text/css" href="http://cdn.sencha.io/ext-4.0.7-gpl/resources/css/ext-all.css">              
-        <style>
-            * { margin: 0; padding: 0; font-family: Helvetica, Arial, Verdana, sans-serif; }
-            html, body { height: 100%; width: 100%; padding: 0; margin: 0; background-color: #f0f0f0; }
-            body { line-height: 1.5; color: #000000; font-size: 14px;
-             }
-            /* The Cytoscape Web container must have its dimensions set. */
-            #cytoscapeweb { width: 100%; height: 80%; }
-            #note { width: 100%; text-align: center; padding-top: 1em; }
-            .link { text-decoration: underline; color: #0b94b1; cursor: pointer; }
-        </style>
-        
-        
-<style>
-     
- #cytoscapeweb { width: 100%; height: 100%; }
-            #note { width: 100%; text-align: center; padding-top: 1em; }
-            .link { text-decoration: underline; color: #0b94b1; cursor: pointer; }
+        // THEME SWITCHER
+        //addThemeSwitcher('.ui-layout-north',{ top: '12px', right: '5px' });
+        // if a new theme is applied, it could change the height of some content,
+        // so call resizeAll to 'correct' any header/footer heights affected
+        // NOTE: this is only necessary because we are changing CSS *AFTER LOADING* using themeSwitcher
+        setTimeout( myLayout.resizeAll, 10 ); /* allow time for browser to re-render with new theme */
+    });
+    </script>
 
-.box{       
-    margin:10px;
-    padding:10px;
-    background-attachment: scroll;
-    background-clip: border-box;
-    background-color: transparent;
-    background-origin: padding-box;
-    
-    border: solid 1px #555;
-    color: #444;
-    display: block;
-    line-height: normal;
-    outline-color: #444;
-    outline-style: none;
-    position: relative;
-    vertical-align: baseline;
+    <!--  precon scripts -->
+    <script type="text/javascript" src="/ext/js/precon.client.js"></script>
+    <script>
+	    $(document).ready( function() {
+	        var path = document.location.pathname
+	        var precon_id = path.replace("/graph/", "")
+	        if(precon_id){
+	        	precon.getObject(precon_id, function(obj){
+	        		// display the object meta info(dev purpose)
+	        		$("#section_east_1").html("Object: <pre>"+ precon.util.formatObject(obj)+"</pre>")	        		
+	        	})
+	        	if(precon_id.indexOf('ntwk') == 0){
+	        		// display the network connection raw data(dev purpose)
+		        	precon.getNetworkConnections(precon_id, function(obj){
+	                    $("#section_east_2").html("Network Connections: <pre>"+ precon.util.formatObject(obj)+"</pre>")                  
+	                })
+	        	}
+	        }
+	    });
+    </script>
+</head>
 
-    background-color: #F4F4F4;
-    background-color: #F4F4F4;
-  
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    
-    -moz-box-shadow: 1px 1px 5px #999;
-    -webkit-box-shadow: 3px 3px 5px #999;
-       box-shadow: 5px 5px 5px  #999;
-}
+<body>
 
 
-header{
-    height:60px;
-    background: #48A5DF;    
-}
-header h1{
-    color:white;
-    font-size:1.5em;
-    padding:20px 20px;  
-    
-}
 
-#searchbox{
-    margin:20px auto;
-    width:300px;
-    height:150px;
-    
-}
+<div class="ui-layout-north ui-widget-content" style="display: none;">
 
-#cyoverlay {
-
-    z-index:-1;
-    
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%
-    
-    
-}
-a {
- text-decoration:none
-
-}
-#mainContent {
-    height:450px
-}
-</style>
-
-{% endblock %}
-
-{% block left %}{% endblock %}
-{% block center %}
-
-<div>Type Gene Name: <input type=text name=gene_name id=gene_name> <input type=button value="Search" id="btn_search"></div>
- <div id="extframe" style="width:100%;height:100%">
-       
-       <!-- <div id="cytoscapeweb">
-            Cytoscape Web will replace the contents of this div with your graph.
-        </div>
-         <div id="note">
-            <span class="link" id="color">Color me surprised</span>
-        </div>
-        -->
+    <div style="float: right; margin-right: 160px;">
+        <a href="/">Home</a> | <a href="#">How It Works</a> | <a href="#">About</a>
     </div>
 
-{% endblock %}
+   Precon 1-Chart Alpha
+</div>
 
 
-{% block right%}
 
-info panel
+<div class="ui-layout-south ui-widget-content" style="display: none;"> Footer </div>
 
-{% endblock %}
+
+<div class="ui-layout-center" style="display: none;" id="layout_center"> 
+    <h3 class="ui-widget-header">Center Pane</h3>
+    <div class="ui-layout-content ui-widget-content" id="graph_pane">
+        <h2>Graph goes here: id=graph_pane</h2>
+    </div>
+    <h3>Graph tool bar goes here</h3>
+</div>
+
+<div class="ui-layout-west" style="display: none;" id="layout_west">
+
+    <div id="accordion1" class="basic">
+           <h3><a href="#">Section 1</a></h3>
+           <div id="section_west_1">
+               <h5>West Pane</h5>
+           </div>
+            <h3><a href="#">Section 2</a></h3>
+            <div id="section_west_2">
+                <h5>Hello</h5>
+            </div>
+    </div>
+</div>
+
+<div class="ui-layout-east" style="display: none;" id="layout_east">
+
+    <h3 class="ui-widget-header">Info Pane</h3>
+    <div class="ui-layout-content">
+
+        <div id="accordion2" class="basic">
+            <h3><a href="#">Section 1</a></h3>
+            <div id="section_east_1">
+              Details about node/link can go here
+            </div>
+
+            <h3><a href="#">Section 2</a></h3>
+            <div id="section_east_2">
+                <h5>What goes here</h5>
+                <p>Additional info</p>
+            </div>
+        </div>
+    </div>
+    <h4 class="ui-widget-content ui-state-hover">Some other stuff</h4>
+
+</div>
+</body>
+
+</html> 

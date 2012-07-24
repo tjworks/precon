@@ -258,7 +258,7 @@ def parseInteractions(dom,network):
 		connection = Connection()
 		connection._id = "conn_intact_%s" % em.getAttribute("id")
 		connection.refs={}
-		connection.refs['intact']= em.getAttribute("id")
+		setPrimaryRef(em, connection)
 		connection.type=getText( em.getElementsByTagName("interactionType")[0], 'shortLabel')		
 		connection.label = getText(em,'shortLabel')
 		connection.network = network._id

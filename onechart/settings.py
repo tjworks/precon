@@ -181,5 +181,5 @@ AUTH_PROFILE_MODULE='onechart.PreconProfile'
 
 #import mongoengine
 #mongoengine.connect(MONGODB_NAME, alias='default', host=MONGODB_HOST  )
-MONGODB_HOST='one-chart.com'
+MONGODB_HOST='mongo.one-chart.com'
 MONGODB_NAME='oc'

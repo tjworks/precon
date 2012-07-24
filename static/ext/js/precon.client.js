@@ -1,7 +1,7 @@
 precon =  {}
 if (typeof (console) == 'undefined') console = {log:function(){}}
 precon.conf = {
-	api_base: 'http://one-chart.com:3000/oc',
+	api_base: 'http://mongo.one-chart.com:3000/oc',
 	prefix_mapping : {ntwk:'network', enti:'entity', node:'node', conn: 'connection'}
 }
 
@@ -68,6 +68,21 @@ precon.getNetworks = function(entity_id, callback){
 }
 
 /**
+ * Get all connections belong to the network
+ * @param network_id 
+ * @return list of connection objects 
+ */
+
+precon.getNetworkConnections=function(network_id, callback){
+	if(!network_id) throw "network_id must be specified"
+	qstr = escape('{"network":"'+ network_id+'"}')
+	url = precon.conf.api_base + "/connection?query="+ qstr
+	
+	precon._ajax(url,  function(results){
+		callback && callback(results)		 
+	});
+}
+/**
  * Get the details of any precon object
  * 
  * @param: obj_id Object id(the _id value of the JSON object)
@@ -89,17 +104,6 @@ precon.getObject = function(obj_id, callback){
 		//TBD: localStorage cache
 		callback && callback(results)		 
 	});
-}
-
-/**
- * get a list of connections for the node
- * @param node_id
- * @param callback
- * 
- * @return array list of Edge object
- */
-precon.getConnections = function(node_id, callback){
-	
 }
 
 
@@ -135,7 +139,29 @@ precon.findObject = function(search, callback){
 	
 }
 
-
+precon.util = {}
+precon.util.formatObject = function(obj, indent){
+    
+    indent = indent || 1;
+    if(indent==5) return obj+""
+    
+    var space = indent * 15
+    
+    var h='<div >{';
+    var str=""
+    for(var p in obj){
+    	str+='<div style="margin-left:'+ (space)+'px">';
+    	str+="<font color=green><b>"+ p+"</b></font>: "
+    	if(typeof obj[p] == 'string' || typeof obj[p] == 'number'){
+            str+=  obj[p];
+        }else{
+            str+=  precon.util.formatObject(obj[p], indent+1)
+        }
+    	str+="</div>"
+    }
+    
+    return h+ str + "}</div>";
+}
 /**
 
  

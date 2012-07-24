@@ -2,3 +2,10 @@
 *.bak
 *.class
 .svn/
+build/
+data/
+gm/
+gmc/
+*.log
+d3/
+.settings/

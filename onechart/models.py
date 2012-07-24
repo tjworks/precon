@@ -79,13 +79,23 @@ class Connection(BaseModel):
         conn_   (for genes, uisng unioric number)
         
     """
-    PHYSICAL_ASSOCIATION = 1
     
     def __init__(self, data=None):
         if(data): self.update(data)
         
         self._id = self._id or ''        
+        
+        """
+        Arbitrary References
+            pubmed: pubmed id, i.e., 15102471            
+            intact: intact id, i.e., EBI-2433438
+        """
+        self.refs = self.refs or  {}
+        """
+        Wrapper over physical entities
+        """
         self.nodes = self.nodes or []
+        
         """
         entity ids, this is a denormalization of the nodes.entity
         """

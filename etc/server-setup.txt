@@ -48,4 +48,50 @@ setup data directory:
     web-inf/classes/jsp/parts/js.jsp
     
     
+######ubuntu ##############
+useradd -m -s /bin/bash oc
+passwd oc
+# set sudo user:   
+#visudo
+#  oc ALL=(ALL)  NOPASSWD:    ALL
+# 
+# from this point using ec2-user
+su - oc
+mkdir .ssh
+chmod 700 .ssh
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAIEAxzAH6sn1k9eF65+oXTpiWMAkZUmwJMpTrNfizEHwUM23o9Ry7IHRu0dD4PO2ShLcCRjTYfbo5prJau6XxacrswJ4FUma3/aUbetbdw+vvgx56cZ0/mKVNRi9HjlXo522k2uMSpkeTe8TkFtT0oUJpElx8U3r8AFVsHxlFEqC6dU= tjworks" > ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/*
+
+
+# configure GIT ssh key
+
+sudo apt-get update
+sudo apt-get install git curl
+
+curl -o setuptools-0.6c11-py2.7.egg http://pypi.python.org/packages/2.7/s/setuptools/setuptools-0.6c11-py2.7.egg#md5=fe1f997bc722265116870bc7919059ea 
+sudo sh setuptools-0.6c11-py2.7.egg
+
+sudo easy_install django
+
+
+### install mongo
+# as root:
+echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" > /etc/apt/sources.list.d/10gen.list
+
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+sudo apt-get update
+sudo apt-get install mongodb-10gen
+
+# setup data path & permission
+
+#sudo service mongodb start
+
+
+### install node.js
+sudo apt-get install python-software-properties
+sudo add-apt-repository ppa:chris-lea/node.js
+sudo apt-get update
+sudo apt-get install nodejs npm
+
+
     
