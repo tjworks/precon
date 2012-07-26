@@ -79,6 +79,25 @@ precon.getNetworkConnections=function(network_id, callback){
 	url = precon.conf.api_base + "/connection?query="+ qstr
 	
 	precon._ajax(url,  function(results){
+		// now we have a list of connections, next we get all the nodes & entities
+		
+		// Temporary hack, prepare a connection object
+		for (var c in results){
+			 var con = results[c];
+			 var nids = con.nodes;
+			 con.nodes = []
+			 var entity_ids = con.entities;
+			 for(var i =0;nids && i<nids.length;i++){
+				var node ={}
+				node._id = nids[i];
+				node.entity = entity_ids[i]
+				if(node.entity)
+					node.label = node.entity.substring(8)
+				else
+					node.label = node._id.replace(/^.*_(\d+)$/, "$1")
+				con.nodes[i] = node
+			 }			 
+		}
 		callback && callback(results)		 
 	});
 }
