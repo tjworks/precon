@@ -79,7 +79,7 @@ class Connection(BaseModel):
         conn_   (for genes, uisng unioric number)
         
     """
-    
+    PREFIX="conn"
     def __init__(self, data=None):
         if(data): self.update(data)
         
@@ -101,6 +101,30 @@ class Connection(BaseModel):
         """
         self.entities = self.entities or []
         self._col = 'connection'
+
+      
+class Publication(BaseModel):
+    """
+    Primary id: 
+        publ_           
+    """
+    PREFIX = 'publ'
+    def __init__(self, data=None):
+        if(data): self.update(data)
+        
+        self._id = self._id or ''        
+        
+        """
+        Arbitrary References
+            pubmed: pubmed id, i.e., 15102471            
+            intact: intact id, i.e., EBI-2433438
+        """
+        self.refs = self.refs or  {}
+        
+        """
+        entity ids, this is a denormalization of the nodes.entity
+        """
+        self._col = 'publication'
 
 class Experiment(BaseModel):
     pass

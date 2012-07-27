@@ -42,7 +42,8 @@
     }
     </style>
 
-
+    <style type="text/css">
+    </style>
     <!-- REQUIRED scripts for layout widget -->
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -85,6 +86,7 @@
 
     <!--  precon scripts -->
     <script type="text/javascript" src="/ext/js/precon.client.js"></script>
+    <script type="text/javascript" src="/ext/js/precon.search.js"></script>
     <script>
 	    $(document).ready( function() {
 	        var path = document.location.pathname
@@ -136,7 +138,9 @@
     <div id="accordion1" class="basic">
            <h3><a href="#">Section 1</a></h3>
            <div id="section_west_1">
-               <h5>West Pane</h5>
+               <p>Type disease, Gene, Pubmed ID</p>
+               <input class="large" id="searchtxt" value="21263130">
+               <button id="searchbtn">Go</button>
            </div>
             <h3><a href="#">Section 2</a></h3>
             <div id="section_west_2">

@@ -1,8 +1,8 @@
 from django.core.management.base import NoArgsCommand
 from optparse import make_option
 import os,sys,time,traceback
-from inout import mif
-modules = "myutil.management.commands.myshell, inout.mif"
+
+modules = "myutil.management.commands.myshell, inout.mif, inout"
 
     
 class Command(NoArgsCommand):

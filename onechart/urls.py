@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^(?P<path>.*.html)$', 'django.views.static.serve', {'document_root': 'static'}),
     
     url(r'^chart/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'web'}),
+        
     
     # url(r'^onechart/', include('onechart.foo.urls')),
 
@@ -32,6 +33,11 @@ urlpatterns = patterns('',
     # graph app
     url(r'^graph/(?P<precon_id>.*)$', 'graph.graphview.handler'),
     
+    # search/proxy
+    url(r'^proxy/(?P<target>.*)$', 'onechart.proxy.handler'),
+    
+    # search/proxy
+    url(r'^search', 'onechart.search.handler'),
     
     # Userena app
     url(r'^accounts/', include('userena.urls')),

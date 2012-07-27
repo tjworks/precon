@@ -10,7 +10,7 @@ Python and modules
 - Install setup_tools for python: http://pypi.python.org/pypi/setuptools
 - Install modules::
 
-	easy_install django pymongo
+	easy_install django pymongo	requests
 
 Git and Checkout
 ----------------

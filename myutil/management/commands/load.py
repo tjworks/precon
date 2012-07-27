@@ -20,10 +20,12 @@ class Command(NoArgsCommand):
     requires_model_validation = True
 
     def handle(self, *args, **options):
-        from inout import mif 
-        mif.importmif()
+        #from inout import mif 
+        #mif.importmif()
         #self.registery()
         
+        from inout import demo
+        demo.load()        
         
     def registery(self):        
         import urllib2

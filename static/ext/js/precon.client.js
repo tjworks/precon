@@ -125,7 +125,22 @@ precon.getObject = function(obj_id, callback){
 	});
 }
 
-
+/**
+ * Get the details of a publication
+ * 
+ * @param: obj_id Object id(the _id value of the JSON object)
+ * 
+ * @reutrn: A JSON object contains the detailed attributes of the object, such as name, references, group/type etc.
+ */
+precon.getPublication = function(pubmed_id, callback){
+	target = "/proxy/http://togows.dbcls.jp/entry/pubmed/"+ pubmed_id+""  	
+	console.log("Retrieving publication "+pubmed_id)		
+	$.ajax(escape(target)).done(function(res, status, jxhr){
+		 result=res
+		 console.log(res)				
+		 
+	})			 
+}
 /**
  * Get a list of references
  * 
