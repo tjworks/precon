@@ -2,10 +2,11 @@
 Thunder Chen<nkchenz@gmail.com> 2007.9.1
 """
 from myutil.objdict import ObjDict
-#from object_dict import object_dict
+from xml.etree.ElementTree import XMLParser, TreeBuilder
 import re
-import xml.etree.ElementTree as ET
 import requests
+import xml.etree.ElementTree as ET
+#from object_dict import object_dict
 
 class XML2Dict(object):
 
@@ -52,7 +53,7 @@ class XML2Dict(object):
         return self.fromstring(f.read()) 
 
     def fromstring(self, s):
-        """parse a string"""
+        """parse a string"""                
         t = ET.fromstring(s)
         root_tag, root_tree = self._namespace_split(t.tag, self._parse_node(t))
         return ObjDict({root_tag: root_tree})
@@ -76,8 +77,11 @@ class XML2Dict(object):
         r = requests.get(url)
          
         if r.status_code == 200:
-            content = r.text
-            content = unicode(content.decode("latin"))
+            from django.utils.encoding import smart_str, smart_unicode
+            #a = u'\xa1'
+            content = smart_str(r.text)
+            #content = unicode(r.text, "utf-8")
+            #content = unicode(content.decode("utf-8"))
             #memcache.add(url, content, 60 * 60)
             return self.fromstring(content)
         return None

@@ -12,9 +12,18 @@ import traceback
 
 
 def load():
+	"""
+	Load pubmed abstract by using Togows
 	
-	pubmeds = '19465464;18945920;17476361;8165821;11602624;11602624;19245656;11602624;19245656;11602624;19245656;11602624;19245656;11602624;19245656;16732470;20600832; 20577046;15358229;15358229;18006825;17062558;15849206;20407744;19918015;19564453;19653109;19375425;20299480;20442309;19679549;19752085;17638885;18212742;16125352;18387000;20053525;18358555'.split(";")
+	Usage:
+		
+		python manage.py load		
+		
+	"""
 	
+	pubmeds = '19465464;18945920;17476361;8165821;11602624;11602624;19245656;11602624;19245656;11602624;19245656;11602624;19245656;11602624;19245656;16732470;20600832; 20577046;15358229;15358229;18006825;17062558;15849206;20407744;19918015;19564453;19653109;19375425;20299480;20442309;19679549;19752085;17638885;18212742;16125352;18387000;20053525;18358555'.split(";")	
+	pubmeds = '12384179,21263130,21060860,20872241,20453838,19330030,17529967,17529973'.split(",")
+	pubmeds = '22129971,22451849'.split(",")
 	url = "http://togows.dbcls.jp/entry/pubmed/$ID?format=xml"
 
 	"""
@@ -49,7 +58,11 @@ def load():
 			pub._id = "%s%s" %(pub.PREFIX, pid)
 			pub.refs= {'pubmed': pid}
 			pub.name= article['ArticleTitle']['value'] if article.ArticleTitle else ''
-			pub.abstract=article['Abstract']['AbstractText']['value'] if article.Abstract else ''
+			pub.abstract = ''
+			if article.Abstract and article.Abstract.AbstractText:
+				texts = [ article.Abstract.AbstractText ] if not isinstance(article.Abstract.AbstractText, list) else article.Abstract.AbstractText
+				pub.abstract= "\n\n".join([ text['value'] for text in texts ]) 
+								
 			pub.language=article['Language']['value'] if article.Language else ''
 			pubs.append(pub) 
 			
@@ -73,12 +86,17 @@ def load():
 					pub.authors.append(people['_id'])				
 			#print authors			
 		except:
-			print "ERROR: %s" %traceback.format_exc()		
+			print "ERROR: %s" %traceback.format_exc()	
+			break	
 			
 	pubc = mongo.getCollection('publication')
 	for pub in pubs:
-		pubc.insert(pub)
-		print "Inserted pub: %s" %pub
+		try:
+			pubc.insert(pub)
+			print "Inserted pub: %s" %pub
+		except:
+			print "ERROR %s"  %traceback.format_exc()
+		
 	"""
 	nc = mongo.getCollection('network')
 	ec = mongo.getCollection('entity')
