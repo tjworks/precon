@@ -1,13 +1,21 @@
 from django.contrib.auth.models import User
 from django.db import models
+from myutil import idtool
+from onechart import mongo
 from userena.models import UserenaLanguageBaseProfile
+import logging, re
+logger = logging.getLogger(__name__)
 
+
+CLEANUP_PATTERN = re.compile(r'[()\s]')
 class BaseModel(dict):
     def __init__(self, data=None):
-        if(data):
-            self.update(data)
+        if(data):self.update(data)
             #self.id = self._id if self._id else None
-        
+        if not self._id:
+            # create a default id
+            self._id= idtool.generate(self._col)
+            
     def __getattr__(self, attr):
         if(attr == 'id'): attr = '_id'
         return self[attr] if attr in self else None
@@ -22,68 +30,98 @@ class BaseModel(dict):
         if(attr == 'id'): attr = '_id'
         self[attr] = value
 
+    
+
+    def save(self):
+        col = mongo.getCollection(self._col)
+        logger.debug("Persisting %s: %s" %(self._col, self))
+        self._id = self.cleanup_id(self._id)
+        col.save(self, safe=True)
+        logger.debug("Done")
+        
+        if self._save: self._save()
+            
+    def cleanup_id(self, id):
+        return CLEANUP_PATTERN.sub('', id).lower()
+          
     def PK(self):
         """
         Helper method to return a Mongo query based on primary key
         """
         return {'_id': self._id}
 
-class Network(BaseModel):
+class BioModel(BaseModel):    
+    def __init__(self, data=None):
+        BaseModel.__init__(self, data)
+        
+
+class Network(BioModel):
     """
     Primary id: ntwk_DB_DBID  e.g.e, ntwk_intact_1039473
     """
+    _col = 'network'
     def __init__(self, data=None):
-        BaseModel.__init__(self, data)
-        if(data):self.update(data)
-        self._col = 'network'
-        
+        BioModel.__init__(self, data)
+            
         self.name = self.name or ''
         self.refs = self.refs or {}
+        self.visibility = self.visibility or 'private'
     
-class Node(BaseModel):
-    def __init__(self, data=None):
-        BaseModel.__init__(self, data)
-        if(data):self.update(data)
-        self.entity = self.entity or ''
+        # Non persistent field
+        self._connections = self._connections or []
+    
+    def _save(self):
+        logger.debug("Performing network specific saving")
+        for con in self._connections:
+            con.save()
+            
+class Node(BioModel):
+    _col="node"
+    def __init__(self, data=None, entity=None):
+        BioModel.__init__(self, data)
+        if(entity):
+            self.entity = entity._id            
+            self.label = self.label or entity.label or entity.name
+            self.group = self.group or entity.group
+            
+            self._entity = entity 
         self.role = self.role or ''
+    
+    def _save(self):
+        logger.debug("Performing Node specific saving")
+        if self._entity: self._entity.save()
         
-        """
-        refs
-            entity:  id pointing to physical entity in entity collection
-            intact:  id in IntAct db 
-        """
-        self.refs = self.refs or {}
-        self.type = self.type or ''
-        
-class Entity(BaseModel):
+class Entity(BioModel):
     """
     Primary id: 
         enti_up_xxxxx   (for genes, uisng unioric number)
         
     """
+    _col='entity'
     def __init__(self, data=None):
-        BaseModel.__init__(self, data)
-        if(data):self.update(data)
+        BioModel.__init__(self, data)
         
-        self._id = self._id or '' 
         self.group = self.group or ''  # protein, gene etc
-        self.org = self.org or ''  # organism: human 
+        self.cats = self.cats or {}  #  dictionary of categories organism: human 
         self.label=self.label or '' # short label
         self.name= self.name or '' # full name
         self.alias = self.alias or []  # list of aliases
-        self._col = 'entity'
+        self.dbref = self.dbref or {}  # DB reference, such as UniProcKB or CHEBI etc
+        self.refs = self.refs or {}
         
-class Connection(BaseModel):
+        # Non persisten fields        
+        
+        
+class Connection(BioModel):
     """
     Primary id: 
         conn_   (for genes, uisng unioric number)
         
     """
-    PREFIX="conn"
+    _col="connection"
     def __init__(self, data=None):
-        if(data): self.update(data)
-        
-        self._id = self._id or ''        
+        BioModel.__init__(self, data)
+            
         
         """
         Arbitrary References
@@ -95,24 +133,27 @@ class Connection(BaseModel):
         Wrapper over physical entities
         """
         self.nodes = self.nodes or []
-        
+        self.type  = self.type or ''
+                
         """
-        entity ids, this is a denormalization of the nodes.entity
+        entity objects
         """
-        self.entities = self.entities or []
-        self._col = 'connection'
+        self._entities = self._entities or []        
+        self._nodes = self._nodes or []        
 
+    def _save(self):
+        logger.debug("Performing Connection specific saving")
+        for node in self._nodes:
+            node.save()
       
-class Publication(BaseModel):
+class Publication(BioModel):
     """
     Primary id: 
         publ_           
-    """
-    PREFIX = 'publ'
+    """    
+    _col="publication"    
     def __init__(self, data=None):
-        if(data): self.update(data)
-        
-        self._id = self._id or ''        
+        BioModel.__init__(self, data)
         
         """
         Arbitrary References
@@ -120,17 +161,19 @@ class Publication(BaseModel):
             intact: intact id, i.e., EBI-2433438
         """
         self.refs = self.refs or  {}
+
+class Association(BaseModel):
+    _col = 'association'
+    _index=['name']
+    def __init__(self, data=None):
+        BaseModel.__init__(self, data)
         
-        """
-        entity ids, this is a denormalization of the nodes.entity
-        """
-        self._col = 'publication'
+        self.name= self.name or ''
+        self.group = self.group or ''
+        if self.name: self._id = 'asso_%s' %self.name
 
-class Experiment(BaseModel):
+class Experiment(BioModel):
     pass
-class Participant(BaseModel):        
-    pass    
-
 
 
 class PreconProfile(UserenaLanguageBaseProfile ):
@@ -141,6 +184,8 @@ class PreconProfile(UserenaLanguageBaseProfile ):
     favourite_snack = models.CharField( 'favourite snack' ,
                                        max_length=5)
     
+
+
 """
 from mongoengine import *
 import datetime

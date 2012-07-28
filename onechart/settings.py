@@ -143,11 +143,30 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugFalse'
         }
     },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler'
+        },
+        'filelog':{
+            'level':'DEBUG',
+            'when':'midnight',
+            'filename':'/tmp/precon.log',
+            'class':'logging.handlers.TimedRotatingFileHandler',
+            'formatter':'verbose'
         }
     },
     'loggers': {
@@ -155,6 +174,11 @@ LOGGING = {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
+        },
+        #catch all
+        '': {
+            'handlers': ['filelog','console'],
+            'level': 'DEBUG'
         },
     }
 }
@@ -182,4 +206,4 @@ AUTH_PROFILE_MODULE='onechart.PreconProfile'
 #import mongoengine
 #mongoengine.connect(MONGODB_NAME, alias='default', host=MONGODB_HOST  )
 MONGODB_HOST='mongo.one-chart.com'
-MONGODB_NAME='oc'
+MONGODB_NAME='octest'
