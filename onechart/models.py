@@ -1,9 +1,11 @@
 from django.contrib.auth.models import User
 from django.db import models
 from myutil import idtool
+from myutil.dateutil import getTime
 from onechart import mongo
 from userena.models import UserenaLanguageBaseProfile
-import logging, re
+import logging
+import re
 logger = logging.getLogger(__name__)
 
 
@@ -11,10 +13,9 @@ CLEANUP_PATTERN = re.compile(r'[()\s]')
 class BaseModel(dict):
     def __init__(self, data=None):
         if(data):self.update(data)
-            #self.id = self._id if self._id else None
-        if not self._id:
-            # create a default id
-            self._id= idtool.generate(self._col)
+        #self.id = self._id if self._id else None
+        if not self._id: self._id= idtool.generate(self._col)
+        
             
     def __getattr__(self, attr):
         if(attr == 'id'): attr = '_id'
@@ -30,12 +31,13 @@ class BaseModel(dict):
         if(attr == 'id'): attr = '_id'
         self[attr] = value
 
-    
-
     def save(self):
         col = mongo.getCollection(self._col)
         logger.debug("Persisting %s: %s" %(self._col, self))
+                
         self._id = self.cleanup_id(self._id)
+        self.creat_tm = self.create_tm or getTime()
+        self.update_tm =  getTime()
         col.save(self, safe=True)
         logger.debug("Done")
         
@@ -66,6 +68,7 @@ class Network(BioModel):
         self.name = self.name or ''
         self.refs = self.refs or {}
         self.visibility = self.visibility or 'private'
+        self.owner = self.owner or ''
     
         # Non persistent field
         self._connections = self._connections or []
@@ -141,6 +144,9 @@ class Connection(BioModel):
         self._entities = self._entities or []        
         self._nodes = self._nodes or []        
 
+    def validate(self):
+        if(len( self.nodes) != len(self.entities)):
+            raise Exception("Number of nodes and entities in a connection should agree")
     def _save(self):
         logger.debug("Performing Connection specific saving")
         for node in self._nodes:
@@ -183,35 +189,3 @@ class PreconProfile(UserenaLanguageBaseProfile ):
                                 related_name='my_profile')
     favourite_snack = models.CharField( 'favourite snack' ,
                                        max_length=5)
-    
-
-
-"""
-from mongoengine import *
-import datetime
-# Create your models here.
-
-class User(Document):
-    email=StringField(required=True, primary_key=True)
-    password=StringField(required=True)
-    meta = { 'indexes': ['email'] }
-
-class Edge(Document):
-    begin = StringField(required=True)
-    end = StringField(required=True)
-    interaction = StringField(required=False)
-    level=IntField(default=0)
-    author=ReferenceField(User)
-    tags=ListField(field=StringField())
-    #meta = { 'indexes': ['begin', 'end', {'fields':'author', 'sparse':True} ] }
-class Network(Document):
-    name = StringField(required=True)
-    category = StringField()
-    version = IntField(default=1)
-    tmstamp = DateTimeField(default=datetime.datetime.now)
-    owner=ReferenceField(User)
-    edges=ListField(field=ReferenceField(Edge))
-    meta = { 'indexes': ['name', 'owner'] }
-    
-    
-"""    

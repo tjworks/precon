@@ -68,6 +68,12 @@ precon.getNetworks = function(entity_id, callback){
 }
 
 /**
+ * List networks
+ */
+precon.listNetworks = function(callback){
+	
+}
+/**
  * Get all connections belong to the network
  * @param network_id 
  * @return list of connection objects 
@@ -137,10 +143,22 @@ precon.getPublication = function(pubmed_id, callback){
 	console.log("Retrieving publication "+pubmed_id)		
 	$.ajax(escape(target)).done(function(res, status, jxhr){
 		 result=res
-		 console.log(res)				
-		 
+		 console.log(res)						 
 	})			 
 }
+
+/**
+ * Get a list of valid connection types
+ * 
+ * @return an array of Association object
+ */
+precon.getAllAssociations(callback){
+	url = precon.conf.api_base + "/association"	
+	precon._ajax(url,  function(results){	 
+		callback && callback(results)
+	}
+}
+
 /**
  * Get a list of references
  * 

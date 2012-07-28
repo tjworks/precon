@@ -89,8 +89,10 @@ class CSVLoader(object):
 			nodeB = nodes[entityB._id] if entityB._id in nodes else self.newNode(entityB)
 			nodes[entityA._id] = nodeA
 			nodes[entityB._id] = nodeB	
+			con.entities=[entityA._id, entityB._id] # this is for search
 			con.nodes = [nodeA._id, nodeB._id]		
 			con._nodes = [nodeA, nodeB]
+			
 			
 			con.refs = {}
 			
