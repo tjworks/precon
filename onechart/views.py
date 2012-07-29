@@ -9,3 +9,10 @@ def home(req):
 	#ctx = gf_template.get_context(req, {})
 	ctx = RequestContext(req, {})
 	return HttpResponse(template.render(ctx))
+
+
+def schema(req):
+	"""
+	Show database schema
+	"""
+	

@@ -11,10 +11,10 @@ import re
 
 @require_http_methods(["GET", "POST", "HEAD"])
 def handler(req):
-	q = req.REQUEST.get("q")
+	q = req.REQUEST.get("tag")
 	if not q: return SmartResponse(Exception("Missing parameter: q"), req)
 	
-	
-	
+	data= ["hello", "haha", "hello2"]
+	return SmartResponse(data, req)
 	return SmartResponse("OK", req)
 

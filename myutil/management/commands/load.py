@@ -106,7 +106,7 @@ def load_pubmeds(ids=None):
             article = doc.PubmedArticleSet.PubmedArticle.MedlineCitation.Article
             
             pub = Publication()
-            pub._id = "%s%s" %(pub.PREFIX, pid)
+            pub._id = "publ_pubmed%s" % (pid)
             pub.refs= {'pubmed': pid}
             pub.name= article['ArticleTitle']['value'] if article.ArticleTitle else ''
             pub.abstract = ''
@@ -139,7 +139,7 @@ def load_pubmeds(ids=None):
             #print authors            
         except:
             print "ERROR: %s" %traceback.format_exc()    
-            break    
+                
             
     pubc = mongo.getCollection('publication')
     for pub in pubs:

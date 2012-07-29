@@ -67,3 +67,14 @@ def db():
 
 class ValidationError(Exception):
     pass
+
+
+
+
+def createIndexes():
+    pass
+    """
+    db.network.ensureIndex({ "name" : 1 },{ "name" : "name", "background" : true });
+    
+    """
+    

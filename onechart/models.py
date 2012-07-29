@@ -36,7 +36,7 @@ class BaseModel(dict):
         logger.debug("Persisting %s: %s" %(self._col, self))
                 
         self._id = self.cleanup_id(self._id)
-        self.creat_tm = self.create_tm or getTime()
+        self.create_tm = self.create_tm or getTime()
         self.update_tm =  getTime()
         col.save(self, safe=True)
         logger.debug("Done")
@@ -147,6 +147,8 @@ class Connection(BioModel):
     def validate(self):
         if(len( self.nodes) != len(self.entities)):
             raise Exception("Number of nodes and entities in a connection should agree")
+        if not self.network:
+            raise Exception("Missing required field: network")
     def _save(self):
         logger.debug("Performing Connection specific saving")
         for node in self._nodes:

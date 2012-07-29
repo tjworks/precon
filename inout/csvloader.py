@@ -41,7 +41,7 @@ class CSVLoader(object):
 			entityA = None
 			dbid = 	self.getCol('NodeA_DBID',row )
 			if dbid:
-				dbid = dbid.upper()
+				dbid = dbid.lower()
 				_id = 'enti_%s' %dbid			
 				if _id not in entities: 				
 					entityA = Entity()
@@ -62,7 +62,7 @@ class CSVLoader(object):
 			entityB = None
 			dbid = 	self.getCol('NodeB_DBID',row,  False)
 			if dbid:
-				dbid = dbid.upper()
+				dbid = dbid.lower()
 				_id = 'enti_%s' %dbid			
 				if _id not in entities: 				
 					entityB = Entity()
@@ -105,17 +105,20 @@ class CSVLoader(object):
 					pair = p.split(':')
 					refs = pair[1].split(';')
 					if len(refs) == 1: refs = pair[1]
-					con.refs[pair[0].upper().strip()] = refs
+					con.refs[pair[0].lower().strip()] = refs
 			
 			
 			networkName = self.getCol('Network',row) or 'DEFAULT'
 			network = networks[networkName] if networkName in networks else Network()
 			network.name = networkName
+			network.owner='precon'
 			networks[networkName]  = network
 			
 			network._connections = network._connections or []
 			network._connections.append(con)
 			
+			con.network = network._id
+			con.owner='precon'
 		#TBD, error
 		return networks, self.errors
 	def newNode(self, entity):

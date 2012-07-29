@@ -1,8 +1,8 @@
 precon =  {}
 if (typeof (console) == 'undefined') console = {log:function(){}}
 precon.conf = {
-	api_base: 'http://mongo.one-chart.com:3000/oc',
-	prefix_mapping : {ntwk:'network', enti:'entity', node:'node', conn: 'connection'}
+	api_base: 'http://mongo.one-chart.com:3000/octest',
+	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection'}
 }
 
 
@@ -31,6 +31,7 @@ precon.search = function(query, callback){
 }
  
 precon._ajax = function(url, callback){
+	console.log("Performing ajax query: "+url)
 	$.ajax({
 		  url: url,
 		  dataType: 'jsonp',	
@@ -40,30 +41,55 @@ precon._ajax = function(url, callback){
 		});
 }
 /**
- * Get a list of networks the gene or any entity is part of
- * @param query  precon ID of the entity
+ * Get a list of networks matching specified query
+ * @param query  a dict contain the criteria, such as entity, network, pubmed etc. Value must be precon ID. For example:
+ *  
+ * 					precon.getNetworks( { entity: enti_up_203947 }, callback)
+ * 					precon.getNetworks( { network: netw_238887 }, callback)
+ * 
+ * 
+ * 					
  * @return A list of JSON objects represents Network. Note the Network meta info will not be set other than the _id. You must use getObject() to request the details of each Network
  */
-precon.getNetworks = function(entity_id, callback){	
-	if(!entity_id) throw "Entity id must be specified"
+precon.searchNetworks = function(query, callback){
+	qstr = ''
+	if(query.entity)
+		qstr = escape('{"entities":"TOKEN"}'.replace("TOKEN",query.entity))
+	else if(query.network)
+		qstr = escape('{"network":"TOKEN"}'.replace("TOKEN",query.network))
+	else if(query.pubmed)
+		qstr = escape('{"refs.pubmed":"TOKEN"}'.replace("TOKEN",query.pubmed))
+	else if(query.owner)
+		qstr = escape('{"owner":"TOKEN"}'.replace("TOKEN",query.owner))
+	else
+		throw "No query criteria specified"
 	
-	qstr = escape('{"entities":"TOKEN"}'.replace("TOKEN",entity_id))
 	url = precon.conf.api_base + "/connection?query="+ qstr
+	
 	precon._ajax(url,  function(results){
 		// results is a list of connections
-		if(!results) callback(results)
+		if(!results || !results.length) callback(results)
 		var nets = {}
+		var ids = []
 		for(var r in results){
 			con = results[r]
+			if( ids.indexOf(con.network )>=0) continue
+			ids.push(con.network)
 			var net = nets[con.network] || {} 
-			nets[con.network] = net
+			nets[con.network] = net			
 			net.connections = net.connections || []
-			net.connections.push(con)			
+			net.connections.push(con)
+			net._id = con.network			
 		}
-		networks = []
-		for(var n in nets) 
-			networks.push(nets[n])
-		callback(networks)
+		// now get network properties
+		if(ids && ids.length)
+			precon.getObjects(ids, function(networks){			
+				for(var n in networks) 
+					var network = networks[n]
+					network.connections = nets[network._id].connections
+				callback(networks)
+			})
+		
 	});
 }
 
@@ -132,31 +158,44 @@ precon.getObject = function(obj_id, callback){
 }
 
 /**
- * Get the details of a publication
+ * Get list of objects
  * 
- * @param: obj_id Object id(the _id value of the JSON object)
+ * @param: obj_ids array of Object id(the _id value of the JSON object)
  * 
- * @reutrn: A JSON object contains the detailed attributes of the object, such as name, references, group/type etc.
+ * @reutrn: A list of JSON objects contains the detailed attributes of the object
  */
-precon.getPublication = function(pubmed_id, callback){
-	target = "/proxy/http://togows.dbcls.jp/entry/pubmed/"+ pubmed_id+""  	
-	console.log("Retrieving publication "+pubmed_id)		
-	$.ajax(escape(target)).done(function(res, status, jxhr){
-		 result=res
-		 console.log(res)						 
-	})			 
+precon.getObjects = function(obj_ids, callback){
+	if(!obj_ids || !obj_ids.length) throw "An array of Obj ids must be specified"
+	console.log("getObjects: "+ obj_ids)	// 
+	
+	// mapping
+	prefix = obj_ids[0].substring(0,4)
+	model = precon.conf.prefix_mapping[prefix]
+	if(!model) throw "Invalid or unsupported object id: "+ obj_ids
+	
+	ids= obj_ids.join('","')
+	qstr = escape('{"_id":{"$in": ["TOKEN"]}}'.replace("TOKEN",ids))
+	
+	url = precon.conf.api_base + "/"+model+"?query="+qstr
+	
+	precon._ajax(url,  function(results){
+		// results should be an object
+		//TBD: localStorage cache
+		callback && callback(results)		 
+	});
 }
+
 
 /**
  * Get a list of valid connection types
  * 
  * @return an array of Association object
  */
-precon.getAllAssociations(callback){
+precon.getAllAssociations=function(callback){
 	url = precon.conf.api_base + "/association"	
 	precon._ajax(url,  function(results){	 
 		callback && callback(results)
-	}
+	});
 }
 
 /**
@@ -192,6 +231,11 @@ precon.findObject = function(search, callback){
 }
 
 precon.util = {}
+precon.util.truncate = function(str, length){
+	length = length || 12
+	if(str.length<length) return str
+	return str.substring(0,length)+"..."	
+}
 precon.util.formatObject = function(obj, indent){
     
     indent = indent || 1;

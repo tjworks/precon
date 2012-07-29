@@ -40,10 +40,40 @@
         font-weight:    normal;
         border-width:   1px 0 0;
     }
+    .side-section ul{
+        margin:0px
+        font-size: 1em;
+        padding-left:10px;
+        list-style-type:none
+    }
+     .side-section li{
+        padding: 0px         
+    }
+    .ui-accordion .ui-accordion-content {
+        padding: 10px
+    }
+    
+	.side-section a {
+	    color: #666666;
+	    padding: 0.2em 0.5em;
+	    text-decoration: none;
+	       -moz-border-radius: 0.3em;
+	    -webkit-border-radius: 0.3em;
+	            border-radius: 0.3em;
+	}
+	
+    .ui-autocomplete {
+    
+        width:200px
+    }
+    
+    
     </style>
 
     <style type="text/css">
     </style>
+    
+    <link rel="stylesheet" href="/fcbkcomplete/style.css" type="text/css" media="screen" charset="utf-8" />
     <!-- REQUIRED scripts for layout widget -->
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -51,6 +81,20 @@
     <script type="text/javascript" src="http://layout.jquery-dev.net/lib/js/jquery.layout-latest.js"></script>
     <script type="text/javascript" src="http://layout.jquery-dev.net/lib/js/jquery.layout.resizePaneAccordions-1.0.js"></script>
 
+
+    <script>
+
+  $(function() {   
+
+   
+
+  });
+  
+  
+
+  </script> 
+
+    
     <!-- compressed: /lib/js/jquery.layout.resizePaneAccordions.min-1.0.js 
     <script type="text/javascript" src="http://layout.jquery-dev.net/lib/js/themeswitchertool.js"></script> 
     <script type="text/javascript" src="http://layout.jquery-dev.net/lib/js/debug.js"></script>
@@ -88,28 +132,7 @@
     <script type="text/javascript" src="/ext/js/precon.client.js"></script>
     <script type="text/javascript" src="/ext/js/precon.search.js"></script>
     <script>
-        // test code    
-        $(document).ready( function() {
-	        var path = document.location.pathname
-	        var precon_id = path.replace("/graph/", "")
-	        if(precon_id){
-	        	precon.getObject(precon_id, function(obj){
-	        		// display the object meta info(dev purpose)
-	        		$("#section_east_1").html("Object: <pre>"+ precon.util.formatObject(obj)+"</pre>")	        		
-	        	})
-	        	if(precon_id.indexOf('ntwk') == 0){
-	        		// display the network connection raw data(dev purpose)
-		        	precon.getNetworkConnections(precon_id, function(obj){
-	                    $("#section_east_2").html("Network Connections: <pre>"+ precon.util.formatObject(obj)+"</pre>")                  
-	                })
-	        	}
-	        }
-	        
-	        
-	        var allnetworks = 
-	        
-	        
-	    });
+       
     </script>
 </head>
 
@@ -132,9 +155,9 @@
 
 
 <div class="ui-layout-center" style="display: none;" id="layout_center"> 
-    <h3 class="ui-widget-header">Center Pane</h3>
+    <h3 class="ui-widget-header" id="graph-title">Center Pane</h3>
     <div class="ui-layout-content ui-widget-content" id="graph_pane">
-        <h2>Graph goes here: id=graph_pane</h2>
+       
     </div>
     <h3>Graph tool bar goes here</h3>
 </div>
@@ -143,13 +166,38 @@
 
     <div id="accordion1" class="basic">
            <h3><a href="#">Section 1</a></h3>
-           <div id="section_west_1">
-               <p>Type disease, Gene, Pubmed ID</p>
-               <input class="large" id="searchtxt" value="21263130">
-               <button id="searchbtn">Go</button>
+           <div id="section_west_1" class="side-section">
+               
+               
+               
+               <div id="ui-widget">
+                    
+                    <p>Type disease, Gene, Pubmed ID</p>
+                    
+          
+
+                        <input id="searchtxt"  class="ui-autocomplete-input"></input>
+                           <!-- 
+                           <input class="ui-autocomplete-input"/>
+							<ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all">
+							  <li class="ui-menu-item">
+							    <a class="ui-corner-all">item 1</a>
+							  </li>							 
+							</ul>
+							 -->    
+			            <button id="searchbtn">Go</button>
+			        
+                                        
+               </div>
+               
+               <h5>Found Networks:</h5>
+               <div id="foundnetworks" style="min-height:200px">
+               </div>
+               <h5>My Networks:</h5>
+               <div id="mynetworks"></div>
            </div>
-            <h3><a href="#">My Networks</a></h3>
-            <div id="section_west_2">
+            <h3><a href="#"></a></h3>
+            <div id="section_west_2" class="side-section">
                
             </div>
     </div>
@@ -162,12 +210,12 @@
 
         <div id="accordion2" class="basic">
             <h3><a href="#">Section 1</a></h3>
-            <div id="section_east_1">
+            <div id="section_east_1" class="side-section">
               Details about node/link can go here
             </div>
 
             <h3><a href="#">Section 2</a></h3>
-            <div id="section_east_2">
+            <div id="section_east_2" class="side-section">
                 <h5>What goes here</h5>
                 <p>Additional info</p>
             </div>
