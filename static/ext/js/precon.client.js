@@ -69,30 +69,47 @@ precon.searchNetworks = function(query, callback){
 	precon._ajax(url,  function(results){
 		// results is a list of connections
 		if(!results || !results.length) callback(results)
+		console.log("############  got " + results.length+" records ###########")
 		var nets = {}
 		var ids = []
 		for(var r in results){
 			con = results[r]
-			if( ids.indexOf(con.network )>=0) continue
-			ids.push(con.network)
+			if( ids.indexOf(con.network )<0)
+				ids.push(con.network)
 			var net = nets[con.network] || {} 
-			nets[con.network] = net			
-			net.connections = net.connections || []
-			net.connections.push(con)
+			nets[con.network] = net	
+			net.connections = net.connections || []  // ids
+			net._connections = net._connections || []
+			net._connections.push(con)
+			net.connections.push(con._id)
 			net._id = con.network			
 		}
 		// now get network properties
 		if(ids && ids.length)
 			precon.getObjects(ids, function(networks){			
-				for(var n in networks) 
+				for(var n in networks){ 
 					var network = networks[n]
+					network._connections = nets[network._id]._connections
 					network.connections = nets[network._id].connections
-				callback(networks)
+					precon.preload(network)
+				}
+				callback && callback(networks)
 			})
 		
 	});
 }
 
+precon.preload = function(network){
+	console.debug("preloading "+ network._id)
+    // preload the nodes
+	var ids = []
+    for(var c in network._connections){
+    	var conn = network._connections[c]    	
+    	ids = ids.concat (conn.nodes )    	    	
+    }   
+	if(ids.length>0)
+		precon.getObjects(ids)  // preload cache
+}
 /**
  * List networks
  */
@@ -103,7 +120,7 @@ precon.listNetworks = function(callback){
  * Get all connections belong to the network
  * @param network_id 
  * @return list of connection objects 
- */
+ 
 
 precon.getNetworkConnections=function(network_id, callback){
 	if(!network_id) throw "network_id must be specified"
@@ -133,6 +150,7 @@ precon.getNetworkConnections=function(network_id, callback){
 		callback && callback(results)		 
 	});
 }
+*/
 /**
  * Get the details of any precon object
  * 
@@ -143,7 +161,13 @@ precon.getNetworkConnections=function(network_id, callback){
 precon.getObject = function(obj_id, callback){
 	if(!obj_id) throw "Obj id must be specified"
 	console.log("getObject: "+ obj_id)	// 
-	
+	obj_id = obj_id.trim()
+	//TBD: use localStorage cache instead so it can persist
+	if(obj_id in precon.cache) {
+		console.log("Cache hit: "+ obj_id)
+		callback && callback( precon.cache[obj_id] )
+		return
+	}	
 	// mapping
 	prefix = obj_id.substring(0,4)
 	model = precon.conf.prefix_mapping[prefix]
@@ -152,10 +176,15 @@ precon.getObject = function(obj_id, callback){
 	
 	precon._ajax(url,  function(results){
 		// results should be an object
-		//TBD: localStorage cache
+		precon.encache( results )
 		callback && callback(results)		 
 	});
 }
+
+precon.encache=function(obj){
+	precon.cache[obj._id] = obj
+}
+precon.cache = {}
 
 /**
  * Get list of objects
@@ -165,10 +194,11 @@ precon.getObject = function(obj_id, callback){
  * @reutrn: A list of JSON objects contains the detailed attributes of the object
  */
 precon.getObjects = function(obj_ids, callback){
-	if(!obj_ids || !obj_ids.length) throw "An array of Obj ids must be specified"
+	if(!obj_ids || obj_ids.length == 0 ) throw "An array of Obj ids must be specified"
 	console.log("getObjects: "+ obj_ids)	// 
 	
 	// mapping
+	if(!obj_ids[0]) return
 	prefix = obj_ids[0].substring(0,4)
 	model = precon.conf.prefix_mapping[prefix]
 	if(!model) throw "Invalid or unsupported object id: "+ obj_ids
@@ -179,8 +209,11 @@ precon.getObjects = function(obj_ids, callback){
 	url = precon.conf.api_base + "/"+model+"?query="+qstr
 	
 	precon._ajax(url,  function(results){
-		// results should be an object
-		//TBD: localStorage cache
+		// results should be a list
+		for(var r in results){
+			var obj = results[r]
+			precon.encache(obj)
+		}
 		callback && callback(results)		 
 	});
 }
@@ -239,7 +272,7 @@ precon.util.truncate = function(str, length){
 precon.util.formatObject = function(obj, indent){
     
     indent = indent || 1;
-    if(indent==5) return obj+""
+    if(indent==8) return obj+""
     
     var space = indent * 15
     
@@ -253,7 +286,11 @@ precon.util.formatObject = function(obj, indent){
     	str+='<div style="margin-left:'+ (space)+'px">';
     	str+="<font color=green><b>"+ p+"</b></font>: "
     	if(typeof obj[p] == 'string' || typeof obj[p] == 'number'){
-            str+=  obj[p];
+    		var tmp = obj[p].substring(0,4)
+    		if(p == '_id' || (obj.length && tmp in precon.conf.prefix_mapping ))
+    			str+=  "<a href='#' onclick='showObj(\"" +obj[p]+"\")' style='color:blue'>"+ obj[p]+"</a>";
+    		else
+    			str+=  obj[p];
         }else{
             str+=  precon.util.formatObject(obj[p], indent+1)
         }

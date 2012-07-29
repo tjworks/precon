@@ -11,9 +11,9 @@ $(document).ready( function() {
     	})
     	if(precon_id.indexOf('netw') == 0 || precon_id.indexOf('ntwk') == 0){
     		// display the network connection raw data(dev purpose)
-        	precon.getNetworkConnections(precon_id, function(obj){
-                $("#section_east_2").html("Network Connections: <pre>"+ precon.util.formatObject(obj)+"</pre>")
-                $("#graph_pane").html("Network Connections: <pre>"+ precon.util.formatObject(obj)+"</pre>")
+        	precon.searchNetworks({network:precon_id}, function(obj){
+                $("#section_east_2").html("Network Data: <pre>"+ precon.util.formatObject(obj)+"</pre>")
+                $("#graph_pane").html("Network Data: <pre>"+ precon.util.formatObject(obj)+"</pre>")
             })
     	}
     }
@@ -29,7 +29,9 @@ $(document).ready( function() {
                 lists += '<li><input type=checkbox><a href="/graph/' + network._id  +'">'+  precon.util.truncate(network.name, 20)+'</a></li>'
             }
             lists+="</UL>"
-            $("#mynetworks").html(lists)	
+            $("#mynetworks").html(lists)
+            
+            
     })
     
     
@@ -37,6 +39,7 @@ $(document).ready( function() {
 
 
 /******* End of Demonstration code  *****************/
+
 
 
 
@@ -73,9 +76,13 @@ function doSearch(){
 	         $("#foundnetworks").html(lists)	
 		});	
 }
-function parseSearchToken(token){	
-	
+function parseSearchToken(token){		
 	if(/^\d{7,}$/.test(token)) return {pubmed: token}
-	
-	
 } 
+
+function showObj(obj_id){
+	precon.getObject(obj_id, function(obj){
+		console.log("Yeah" + obj)
+		$("#section_east_1").html("Object: <pre>"+ precon.util.formatObject(obj)+"</pre>")
+	})	
+}
