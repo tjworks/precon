@@ -1,7 +1,7 @@
 precon =  {}
 if (typeof (console) == 'undefined') console = {log:function(){}}
 precon.conf = {
-	api_base: 'http://mongo.one-chart.com:3000/octest',
+	api_base: 'http://mongo.one-chart.com:3000/oc',
 	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection'}
 }
 
