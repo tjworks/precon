@@ -11,6 +11,8 @@
             'Ext.data.*',
             'Ext.util.*',
             'Ext.ux.statusbar.StatusBar',
+            'Ext.ux.RowExpander',
+            'Ext.selection.CheckboxModel',
             'Ext.tip.QuickTipManager',
             'Ext.ux.LiveSearchGridPanel'
         ]);
@@ -68,7 +70,8 @@
     });
     
     // create the Grid, see Ext.
-    grid=Ext.create('Ext.ux.LiveSearchGridPanel', {
+   // grid=Ext.create('Ext.ux.LiveSearchGridPanel', {
+   	 grid=Ext.create('Ext.grid.Panel', {
         store: store,
         columnLines: true,
         columns: [
@@ -108,7 +111,13 @@
        // renderTo: Ext.getBody(),
         viewConfig: {
             stripeRows: true
-        }
+        },
+        plugins: [ {
+        	ptype:'rowexpander',
+        	rowBodyTpl:[
+        	 '<b>Author</b>: Nathan, D. M., J. B. Buse, et al.<br><b>Year:</b> 2008<br><b>Reference:</b> Diabetes care 32(1): 193-203.</br><b>Abstract:</b><br>the consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'
+        	]	
+        }]
     });
 
    var reabstract='<h2>Author:</h2> Nathan, D. M., J. B. Buse, et al.<br><h2>Year:</h2> 2008<h2>Reference:</h2>Diabetes care 32(1): 193-203.<br><h2>Abstract:</h2>he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.';
@@ -128,7 +137,7 @@
                                             height: 30,
                                             style:'background-color:blue; color:white;',
                                             bodyStyle:'background-color:#99BDE8; color:white; font-Size: 40 !important;',
-                                            html: 'ÆÕ¿µ×¨¼ÒÍø'
+                                            html: 'ï¿½Õ¿ï¿½×¨ï¿½ï¿½ï¿½ï¿½'
                                         },{
                                             region: 'west',
                                             collapsible: false, border: false,
@@ -251,19 +260,19 @@
                                           },{
                                             region: 'center',
                                             border: false,
-                                            title:"Literatures",
+                                            title:"",
                                             //layout:"fit",
                                             items:[
-                                               {
-                                                    xtype: 'panel',
-                                                    title:'',
-                                                    height:450,
-                                                    items:[grid]
-                                                },
                                                 {
                                                     xtype: 'panel',
-                                                    title:'',
-                                                    html:reabstract
+                                                    title:'Networks',
+                                                    height: 300,
+                                                    html:"here lists the networks"
+                                                },
+                                               {
+                                                    xtype: 'panel',
+                                                    title:'Literature',
+                                                    items:[grid]
                                                 }
                                             ]
                                           }]
