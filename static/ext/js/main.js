@@ -267,7 +267,8 @@
                                                     xtype: 'panel',
                                                     title:'Networks',
                                                     height: 300,
-                                                    items:[grid]
+                                                    // items:[grid]
+                                                    html:'here lists the networks'
                                                 },
                                                {
                                                     xtype: 'panel',
