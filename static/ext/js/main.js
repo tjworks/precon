@@ -4,23 +4,30 @@
             paths: {
                 'Ext.ux': '/ext/extjs/ux'
             }
-        });
+    });
     
-        Ext.require([
-            'Ext.grid.*',
-            'Ext.data.*',
-            'Ext.util.*',
-            'Ext.ux.statusbar.StatusBar',
-            'Ext.ux.RowExpander',
-            'Ext.selection.CheckboxModel',
-            'Ext.tip.QuickTipManager',
-            'Ext.ux.LiveSearchGridPanel'
-        ]);
-        
+Ext.require([
+    'Ext.grid.*',
+    'Ext.data.*',
+    'Ext.util.*',
+    'Ext.ux.statusbar.StatusBar',
+    'Ext.ux.RowExpander',
+    'Ext.selection.CheckboxModel',
+    'Ext.tip.QuickTipManager',
+    'Ext.ux.LiveSearchGridPanel'
+]);
+
                 
-                Ext.onReady(function(){
-                // sample static data for the store
-    var myData = [
+Ext.onReady(function(){
+	
+	//render the year date format
+	function renderYear(value,p,record) {
+		console.log("test");
+		return new Date(value);
+	}
+	
+	// sample static data for the store
+    var literatureData = [
          ['Adler, A. I., E. J. Shaw, et al','2009', 'Newer agents for blood glucose control in type 2 diabetes: summary of NICE guidance',' BMJ 338: b1668','Abstract for one: The consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
          ['Dowling, R. J., M. Zakikhani, et al.','2007', 'Metformin inhibits mammalian target of rapamycin-dependent translation initiation in breast cancer cells','Cancer research 67(22): 10804-10812','Abstract for 2: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
          ['Libby, G., L. A. Donnelly, et al.','2009', 'New users of metformin are at low risk of incident cancer: a cohort study among people with type 2 diabetes.','Diabetes care 32(9): 1620-1625','Abstract for 3: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
@@ -29,36 +36,9 @@
          ['Shu, Y., S. A. Sheardown, et al.','2007', 'Effect of genetic variation in the organic cation transporter 1 (OCT1) on metformin action.','The Journal of clinical investigation 117(5): 1422-1431','Abstract for 5: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
          ['Viollet, B., B. Guigas, et al.','2009', 'AMP-activated protein kinase in the regulation of hepatic energy metabolism: from physiology to therapeutic perspectives','Acta physiologica 196(1): 81-98','Abstract for 6: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.']
     ];
-
-    /**
-     * Custom function used for column renderer
-     * @param {Object} val
-     */
-    function change(val){
-        if(val > 0){
-            return '<span style="color:green;">' + val + '</span>';
-        }else if(val < 0){
-            return '<span style="color:red;">' + val + '</span>';
-        }
-        return val;
-    }
-
-    /**
-     * Custom function used for column renderer
-     * @param {Object} val
-     */
-    function pctChange(val){
-        if(val > 0){
-            return '<span style="color:green;">' + val + '%</span>';
-        }else if(val < 0){
-            return '<span style="color:red;">' + val + '%</span>';
-        }
-        return val;
-    }        
-    
     
     // create the data store
-    var store = Ext.create('Ext.data.ArrayStore', {
+    var literatureStore = Ext.create('Ext.data.ArrayStore', {
         fields: [
            {name: 'author'},
            {name: 'year'},
@@ -66,13 +46,12 @@
            {name: 'reference'},
            {name:'abstract'}
         ],
-        data: myData
+        data: literatureData
     });
     
     // create the Grid, see Ext.
-    grid=Ext.create('Ext.ux.LiveSearchGridPanel', {
-   	// grid=Ext.create('Ext.grid.Panel', {
-        store: store,
+   var literatureGrid=Ext.create('Ext.ux.LiveSearchGridPanel', {
+        store: literatureStore,
         columnLines: true,
         columns: [
             {
@@ -87,6 +66,7 @@
                 width    : 45, 
                 sortable : true, 
                 //renderer : 'usMoney', 
+               // renderer: renderYear,
                 dataIndex: 'year'
             },
             {
@@ -115,192 +95,252 @@
         plugins: [ {
         	ptype:'rowexpander',
         	rowBodyTpl:[
-        	 '<b>Author</b>: Nathan, D. M., J. B. Buse, et al.<br><b>Year:</b> 2008<br><b>Reference:</b> Diabetes care 32(1): 193-203.</br><b>Abstract:</b><br>the consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'
+        	 '<b>Author</b>: {author}<br><b>',
+        	 'Year:</b> {year}<br>',
+        	 '<b>Reference:</b> {reference}</br>',
+        	 '<b>Abstract:</b><br>{abstract}'
         	]	
         }]
     });
 
-   var reabstract='<h2>Author:</h2> Nathan, D. M., J. B. Buse, et al.<br><h2>Year:</h2> 2008<h2>Reference:</h2>Diabetes care 32(1): 193-203.<br><h2>Abstract:</h2>he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.';
-              
-                    Ext.create('Ext.Viewport', {
-                                        layout: {
-                                            type: 'border'
-                                            ,padding: 5
-                                        },
-                                        defaults: {
-                                            split: true
-                                        },
-                                        items: [{
-                                            region: 'north',
-                                            collapsible: false, border: false,
-                                            split: true,
-                                            height: 30,
-                                            style:'background-color:blue; color:white;',
-                                            bodyStyle:'background-color:#99BDE8; color:white; font-Size: 40 !important;',
-                                            html: '�տ�ר����'
-                                        },{
-                                            region: 'west',
-                                            collapsible: false, border: false,
-                                            id:'west',
-                                            split: true,
-                                            width: '60%',
-                                            html: '',
-                                            dockedItems: [
-                                                {
-                                                    xtype: 'toolbar',
-                                                    dock: 'top',
-                                                    items: [
-                                                                    {
-                                                                        xtype: 'button', 
-                                                                        text : 'Create Node',
-                                                                        iconCls:'x-btn-inner node',
-                                                                        tooltip:'Display available geocoders',
-                                                                        handler : function() {
-                                                                            console.log("test");
-                                                                        }
-                                                                   },
-                                                                   {
-                                                                        xtype: 'button', 
-                                                                        text : 'Create Link',
-                                                                        iconCls:'x-btn-inner link',
-                                                                        tooltip:'Display available geocoders',
-                                                                        handler : function() {
-                                                                            console.log("test identify");
-                                                                        }
-                                                                   },
-                                                                   {
-                                                                        xtype: 'button', 
-                                                                        text : 'Remove Node/Link',
-                                                                        iconCls:'x-btn-inner remove',
-                                                                        tooltip:'Display available geocoders',
-                                                                        handler : function() {
-                                                                            console.log("test");
-                                                                        }
-                                                                   },
-                                                                   {
-                                                                        text : 'Links',
-                                                                        iconCls:'x-btn-inner links',
-                                                                        handler : function() {
-                                                                            console.log("test");
-                                                                        },
-                                                                        menu : [
-                                                                                {
-                                                                                    text : 'About Our Company',
-                                                                                    cls : '',
-                                                                                    handler : function() {
-                                                                                        window
-                                                                                                .open(
-                                                                                                        'http://www.co.pierce.wa.us/pc/abtus/ourorg/at/at.htm',
-                                                                                                        'metaData');
-                                                                                    }
-                                                                                },
-                                                                                {
-                                                                                    text : 'Feedbacks',
-                                                                                    cls : '',
-                                                                                    handler : function() {
-                                                                                        window
-                                                                                                .open(
-                                                                                                        'http://www.co.pierce.wa.us/pc/abtus/ourorg/aud/',
-                                                                                                        'metaData');
-                                                                                    }
-                                                                                }
-                                                                        ]
-                                                                   },
-                                                                   {
-                                                                        xtype: 'button', 
-                                                                        text : 'Help',
-                                                                        iconCls:'x-btn-inner help',
-                                                                        tooltip:'Display available geocoders',
-                                                                        handler : function() {
-                                                                            console.log("test");
-                                                                        }
-                                                                    }
-                                                            ]
-                                                },
-                                                {
-                                                    xtype: 'toolbar',
-                                                    dock: 'bottom',
-                                                    items: [
-                                                                {xtype:"tbspacer", width:200, id:"tbarspace"},
-                                                                {xtype:"label", width:100},
-                                                                {xtype:"textfield", width:400, fieldLabel:"Names to filter", labelAlign:"right",allowBlank:true},
-                                                                { xtype: 'button', text: '', iconCls:"filter",
-                                                                   handler: function() {
-                                                                          alert("Peng!!!!!!!!!!!!");
-                                                                   }
-                                                                 }
-                                                           ]
-                                                }
-                                             ],
-                                             listeners: {
-                                                 afterrender: {
-                                                     element:'',
-                                                     fn: function() {
-                                                         
-                                                         //update the button toolbar space width
-                                                         setTimeout(function(){
-                                                                Ext.getCmp("tbarspace").setWidth(Ext.get("west-body").getWidth(true)*0.4);
-                                                                createGraph();
-                                                            },300);
-                                                            setTimeout(function(){
-                                                                fireEvents();
-                                                            },600);
-                                                         console.log('western panel rendered');
-                                            //Ext.getCmp('west').getEl().on('contextmenu', function(e) {
-                                                                        
-                                                         }
-                                                 },
-                                                 resize: {
-                                                     element:'',
-                                                     fn:function() {
-                                                         createGraph();
-                                                     }
-                                                 }
-                                             }
-                                          },{
-                                            region: 'center',
-                                            border: false,
-                                            title:"",
-                                            //layout:"fit",
-                                            items:[
-                                                { 
-                                                    xtype: 'panel',
-                                                    title:'Networks',
-                                                    height: 300,
-                                                    // items:[grid]
-                                                    html:'here lists the networks'
-                                                },
-                                               {
-                                                    xtype: 'panel',
-                                                    title:'Literature',
-                                                    items:[grid]
-                                                }
-                                            ]
-                                          }]
-                                    })
-                    
+
+// sample static data for the store
+    var networkData = [
+         ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
+         ['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111'],
+          ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
+         ['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111']
+    ];
     
-                
-                
-                /*
-                var apanel=Ext.create('Ext.panel.Panel', {
-                                                        title: 'Hello',
-                                                        width: 700,
-                                                        height:700,
-                                                        id:'testpanel',
-                                                        html: '<div id="mygraph">World!</p>',
-                                                        renderTo: Ext.getBody()
-                                                    });
-                                                  apanel.show();*/
-                
-                
-                //createGraph();
-                
-                
-                    
-                  
-                    //Ext.select("svg").on("contextmenu",function(){contextMenu.show()})
+    // create the data store
+    var literatureStore = Ext.create('Ext.data.ArrayStore', {
+        fields: [
+           {name: 'name'},
+           {name: 'ctime'},
+           {name: 'creator'},
+           {name: 'description'}
+        ],
+        data: networkData
     });
+    
+    // create the Grid, see Ext.
+   var networkGrid=Ext.create('Ext.ux.LiveSearchGridPanel', {
+        store: literatureStore,
+        columnLines: true,
+        columns: [
+            {
+                text     : 'Network Name',
+               // flex     : 1,
+                sortable : false, 
+                width: 85,
+                dataIndex: 'name'
+            },
+            {
+                text     : 'Create Date', 
+                width    : 75, 
+                sortable : true, 
+                renderer : 'renderYear', 
+                dataIndex: 'ctime'
+            },
+            {
+                text     : 'Creator', 
+                width    : 75, 
+                sortable : true, 
+                dataIndex: 'creator'
+               // renderer: change
+            },
+            {
+                text     : 'Description', 
+                width    : 75, 
+                flex:1,
+                sortable : true, 
+                dataIndex: 'description'
+               // renderer: change
+            }
+        ],
+        height: 450,
+        width: 'auto',
+        title: '',
+       // renderTo: Ext.getBody(),
+        viewConfig: {
+        	id:'gv',
+            stripeRows: false
+        }
+    });
+
+	Ext.create('Ext.Viewport', {
+	                    layout: {
+	                        type: 'border'
+	                        ,padding: 5
+	                    },
+	                    defaults: {
+	                        split: true
+	                    },
+	                    items: [{
+	                        region: 'north',
+	                        collapsible: false, border: false,
+	                        split: true,
+	                        height: 30,
+	                        style:'background-color:blue; color:white;',
+	                        bodyStyle:'background-color:#99BDE8; color:white; font-Size: 40 !important;',
+	                        html: '�տ�ר����'
+	                    },{
+	                        region: 'west',
+	                        collapsible: false, 
+	                        border: false,
+	                        id:'west',
+	                        width: '60%',
+	                        html: '',
+	                        dockedItems: [
+	                            {
+	                                xtype: 'toolbar',
+	                                dock: 'top',
+	                                items: [
+	                                                {
+	                                                    xtype: 'button', 
+	                                                    text : 'Create Node',
+	                                                    iconCls:'x-btn-inner node',
+	                                                    tooltip:'Display available geocoders',
+	                                                    handler : function() {
+	                                                        console.log("test");
+	                                                    }
+	                                               },
+	                                               {
+	                                                    xtype: 'button', 
+	                                                    text : 'Create Link',
+	                                                    iconCls:'x-btn-inner link',
+	                                                    tooltip:'Display available geocoders',
+	                                                    handler : function() {
+	                                                        console.log("test identify");
+	                                                    }
+	                                               },
+	                                               {
+	                                                    xtype: 'button', 
+	                                                    text : 'Remove Node/Link',
+	                                                    iconCls:'x-btn-inner remove',
+	                                                    tooltip:'Display available geocoders',
+	                                                    handler : function() {
+	                                                        console.log("test");
+	                                                    }
+	                                               },
+	                                               {
+	                                                    text : 'Links',
+	                                                    iconCls:'x-btn-inner links',
+	                                                    handler : function() {
+	                                                        console.log("test");
+	                                                    },
+	                                                    menu : [
+	                                                            {
+	                                                                text : 'About Our Company',
+	                                                                cls : '',
+	                                                                handler : function() {
+	                                                                    window
+	                                                                            .open(
+	                                                                                    'http://www.co.pierce.wa.us/pc/abtus/ourorg/at/at.htm',
+	                                                                                    'metaData');
+	                                                                }
+	                                                            },
+	                                                            {
+	                                                                text : 'Feedbacks',
+	                                                                cls : '',
+	                                                                handler : function() {
+	                                                                    window
+	                                                                            .open(
+	                                                                                    'http://www.co.pierce.wa.us/pc/abtus/ourorg/aud/',
+	                                                                                    'metaData');
+	                                                                }
+	                                                            }
+	                                                    ]
+	                                               },
+	                                               {
+	                                                    xtype: 'button', 
+	                                                    text : 'Help',
+	                                                    iconCls:'x-btn-inner help',
+	                                                    tooltip:'Display available geocoders',
+	                                                    handler : function() {
+	                                                        console.log("test");
+	                                                    }
+	                                                }
+	                                        ]
+	                            },
+	                            {
+	                                xtype: 'toolbar',
+	                                dock: 'bottom',
+	                                items: [
+	                                            {xtype:"tbspacer", width:200, id:"tbarspace"},
+	                                            {xtype:"label", width:100},
+	                                            {xtype:"textfield", width:400, fieldLabel:"Names to filter", labelAlign:"right",allowBlank:true},
+	                                            { xtype: 'button', text: '', iconCls:"filter",
+	                                               handler: function() {
+	                                                      alert("Peng!!!!!!!!!!!!");
+	                                               }
+	                                             }
+	                                       ]
+	                            }
+	                         ],
+	                         listeners: {
+	                             afterrender: {
+	                                 element:'',
+	                                 fn: function() {
+	                                     
+	                                     //update the button toolbar space width
+	                                     setTimeout(function(){
+	                                            Ext.getCmp("tbarspace").setWidth(Ext.get("west-body").getWidth(true)*0.4);
+	                                            createGraph();
+	                                        },300);
+	                                        setTimeout(function(){
+	                                            fireEvents();
+	                                        },600);
+	                                     console.log('western panel rendered');
+	                        //Ext.getCmp('west').getEl().on('contextmenu', function(e) {
+	                                                    
+	                                     }
+	                             },
+	                             resize: {
+	                                 element:'',
+	                                 fn:function() {
+	                                     createGraph();
+	                                 }
+	                             }
+	                         }
+	                      },{
+	                        region: 'center',
+	                        //border: false,
+	                        title:"",
+	                        //align:'stretch',
+	                        layout:"border",
+	                        items:[
+	                            { 
+	                                //xtype: 'panel',
+	                                region:'north',
+	                                title:'Networks',
+	                                split:true,
+	                                height: 200,
+	                                items:[networkGrid]
+	                                //html:'here lists the networks'
+	                            },
+	                            {
+	                            	xtype:'tabpanel',
+	                            	region:'center',
+	                            	plain: true,
+	                            	activeTab:0,
+	                            	items: [
+	                                	 {
+	                                	 	title:'General Info',
+	                                	 	html:'<b>Entity Name</b>: AMPK<br><b>Entity Type:</b>Node<br><b>Entity Other infos:</b>blah blah <br><blah>'
+	                                	 },
+	                                	 {
+	                                            title:'Literature',
+	                                            items:[literatureGrid]
+	                                    }
+	                            	]
+	                            }
+	                          
+	                        ]
+	                      }]
+            })
+    });
+    
 function showLiterature(name) {
     alert("this will display literatures on the right");
 }

@@ -185,7 +185,13 @@ Ext.define('Ext.ux.LiveSearchGridPanel', {
                  var td = Ext.fly(me.view.getNode(idx)).down('td'),
                      cell, matches, cellHTML;
                  while(td) {
-                     cell = td.down('.x-grid-cell-inner');
+                     //following 4 lines changed by Xiongjiu Liao on 2012/07/30
+                     var treatedTd = td;
+                     var subTd = td.down('td');
+                     if(subTd) treatedTd = subTd;
+                     cell = treatedTd.down('.x-grid-cell-inner');
+                     
+                     //cell = td.down('.x-grid-cell-inner');
                      matches = cell.dom.innerHTML.match(me.tagsRe);
                      cellHTML = cell.dom.innerHTML.replace(me.tagsRe, me.tagsProtect);
                      
@@ -206,7 +212,10 @@ Ext.define('Ext.ux.LiveSearchGridPanel', {
                      });
                      // update cell html
                      cell.dom.innerHTML = cellHTML;
-                     td = td.next();
+                    
+                    //following one changed by Xiongjiu Liao on 2012/07/30
+                    td=treatedTd.next();
+                    // td = td.next();
                  }
              }, me);
 
