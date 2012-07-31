@@ -263,7 +263,7 @@
                                             title:"",
                                             //layout:"fit",
                                             items:[
-                                                {
+                                                { 
                                                     xtype: 'panel',
                                                     title:'Networks',
                                                     height: 300,
