@@ -70,8 +70,8 @@
     });
     
     // create the Grid, see Ext.
-   // grid=Ext.create('Ext.ux.LiveSearchGridPanel', {
-   	 grid=Ext.create('Ext.grid.Panel', {
+    grid=Ext.create('Ext.ux.LiveSearchGridPanel', {
+   	// grid=Ext.create('Ext.grid.Panel', {
         store: store,
         columnLines: true,
         columns: [
@@ -267,7 +267,7 @@
                                                     xtype: 'panel',
                                                     title:'Networks',
                                                     height: 300,
-                                                    html:"here lists the networks"
+                                                    items:[grid]
                                                 },
                                                {
                                                     xtype: 'panel',
