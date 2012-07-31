@@ -6,8 +6,10 @@ from django.views.decorators.http import require_http_methods
 
 @require_http_methods(["GET", "POST", "HEAD"])
 def handler(req, precon_id=None):
-    template = loader.get_template('graph.html')
-    template = loader.get_template('ext.html')
+    if req.REQUEST.get('old'):
+        template = loader.get_template('graph.html')
+    else:
+        template = loader.get_template('ext.html')
     #ctx = gf_template.get_context(req, {})
     ctx = RequestContext(req, {})
     
