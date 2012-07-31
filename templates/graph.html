@@ -40,6 +40,14 @@
         font-weight:    normal;
         border-width:   1px 0 0;
     }
+    #layout_north {
+        background: #23658B;
+        color:white
+    }
+    #layout_north a {
+        color:white;
+        text-decoration:none
+    }
     .side-section ul{
         margin:0px
         font-size: 1em;
@@ -54,7 +62,6 @@
     }
     
 	.side-section a {
-	    color: #666666;
 	    padding: 0.2em 0.5em;
 	    text-decoration: none;
 	       -moz-border-radius: 0.3em;
@@ -124,19 +131,27 @@
     <script>
        
     </script>
+       
+    <script type="text/javascript" src="/ext/d3/d3.v2.js"></script>
+    <script type="text/javascript" src="/ext/d3/fisheye.js"></script>       
+    <script type="text/javascript"  src="/ext/extjs/ext-all.js"></script> 
+    <!--  <script type="text/javascript"  src="/ext/extjs/ext-all-debug-w-comments.js"></script>  -->  
+    <script type="text/javascript" src="/ext/js/forcednetwork.js"></script>
+    <script type="text/javascript" src="/ext/js/main.js"></script>
+    
 </head>
 
 <body>
 
 
 
-<div class="ui-layout-north ui-widget-content" style="display: none;">
+<div class="ui-layout-north ui-widget-content" style="display: none;" id="layout_north">
 
     <div style="float: right; margin-right: 160px;">
         <a href="/">Home</a> | <a href="#">How It Works</a> | <a href="#">About</a>
     </div>
 
-   Precon 1-Chart Alpha
+    <b>Precon 1-Chart Alpha</b>
 </div>
 
 
@@ -146,7 +161,7 @@
 
 <div class="ui-layout-center" style="display: none;" id="layout_center"> 
     <h3 class="ui-widget-header" id="graph-title">Center Pane</h3>
-    <div class="ui-layout-content ui-widget-content" id="graph_pane">
+    <div class="ui-layout-content ui-widget-content" id="ext-frame">
        
     </div>
     <h3>Graph tool bar goes here</h3>
@@ -162,7 +177,7 @@
                
                <div id="ui-widget">
                     
-                    <p>Type disease, Gene, Pubmed ID</p>
+                    <p>Type disease, gene, Pubmed</p>
                     
           
 

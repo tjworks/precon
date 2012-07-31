@@ -81,8 +81,7 @@ function parseSearchToken(token){
 } 
 
 function showObj(obj_id){
-	precon.getObject(obj_id, function(obj){
-		console.log("Yeah" + obj)
+	precon.getObject(obj_id, function(obj){		
 		$("#section_east_1").html("Object: <pre>"+ precon.util.formatObject(obj)+"</pre>")
 	})	
 }

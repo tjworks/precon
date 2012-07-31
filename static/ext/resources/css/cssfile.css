@@ -1,0 +1,123 @@
+     /*Define the toolbar styles*/
+    .x-btn-inner{
+		background-position:0 0;
+		background-repeat:no-repeat;
+		font-size:13px;
+		font-weight:bold;
+		color:#474665;
+		padding-left: 20px ;
+		}
+	.node {
+		background-image:url(../images/node.png);
+		}
+	.link {
+		background-image:url(../images/link.png);
+		}
+	.zoomin {
+		background-image:url(../images/zoomin.png);
+		}
+	.zoomout{
+		background-image:url(../images/zoomout.png);
+		}
+	.pan {
+		background-image:url(../images/pan.png);
+		}
+	.tools {
+		background-image:url(../images/tools.png);
+		}
+	.links {
+		background-image:url(../images/links.png);
+		}
+	.help {
+		background-image:url(../images/help.png);
+		}
+	.filter {
+		background-image:url(../images/find.png);
+	}
+	.remove {
+		background-image:url(../images/delete.png);
+	}
+	
+	
+	
+	
+/** following were moved from original d3ext.html */	
+	
+path.link {
+  fill: none;
+  stroke: red;
+  stroke-width: 2px;
+}
+
+marker#licensing {
+  fill: green;
+}
+
+path.link.decreases{
+  stroke: blue;
+}
+
+path.link.beinguptaken 
+ {
+  fill:none;
+  stroke:red;
+  stroke-dasharray: 0,2 1;
+}
+
+path.link.activates{
+  stroke-dasharray: 4,5 2;
+  stroke:red
+}
+
+path.link.inhibits
+{
+  stroke: green;
+}
+
+path.link.stimulats 
+ {
+  fill:none;
+  stroke:red;
+}
+
+path.link.association{
+  stroke-dasharray: 4,5 2;
+  stroke:red
+}
+
+path.link.physical_interaction {
+  stroke: green;
+}
+
+path.link.predicted {
+  fill:none;
+  stroke:red;
+  stroke-dasharray: 0,2 1;
+}
+
+path.link.activates {
+  stroke-dasharray: 4,5 2;
+  stroke:red
+}
+
+path.link.pathway {
+  stroke-dasharray: 1,2 3;
+  stroke:green;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+}
+
+text.shadow {
+  stroke: #fff;
+  stroke-width: 3px;
+  stroke-opacity: .8;
+}

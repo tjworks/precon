@@ -7,15 +7,7 @@ from django.contrib import admin
 urlpatterns = patterns('',
     # Examples:
     #url(r'^$', 'onechart.views.home', name='home'),
-    url(r'^(?P<path>.*.css)$', 'django.views.static.serve', {'document_root': 'static'}),
-    url(r'^(?P<path>.*.js)$', 'django.views.static.serve', {'document_root': 'static'}),
-    url(r'^(?P<path>.*.png)$', 'django.views.static.serve', {'document_root': 'static'}),
-    url(r'^(?P<path>.*.gif)$', 'django.views.static.serve', {'document_root': 'static'}),
-    url(r'^(?P<path>.*.swf)$', 'django.views.static.serve', {'document_root': 'static'}),
-    url(r'^(?P<path>.*.jpg)$', 'django.views.static.serve', {'document_root': 'static'}),
-    url(r'^(?P<path>.*.html)$', 'django.views.static.serve', {'document_root': 'static'}),
-    
-    url(r'^chart/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'web'}),
+    url(r'^(?P<path>.*.(css|js|png|gif|swf|jpg|html))$', 'django.views.static.serve', {'document_root': 'static'}),
         
     
     # url(r'^onechart/', include('onechart.foo.urls')),
@@ -42,3 +34,14 @@ urlpatterns = patterns('',
     # Userena app
     url(r'^accounts/', include('userena.urls')),
 )
+
+
+"""
+    url(r'^(?P<path>.*.js)$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.png)$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.gif)$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.swf)$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.jpg)$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.html)$', 'django.views.static.serve', {'document_root': 'static'}),
+    """
+    

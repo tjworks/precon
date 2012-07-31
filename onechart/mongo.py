@@ -76,5 +76,6 @@ def createIndexes():
     """
     db.network.ensureIndex({ "name" : 1 },{ "name" : "name", "background" : true });
     
+    db.system.js.find().forEach(function(u){eval(u._id + " = " + u.value);});
     """
     
