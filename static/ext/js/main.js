@@ -312,6 +312,21 @@ Ext.onReady(function(){
 	                        title:"",
 	                        //align:'stretch',
 	                        layout:"border",
+	                        tbar:[{
+						                xtype: 'button',
+						                text: 'Search Database By:',
+						                tooltip: 'Find Previous Row',
+						                iconCls:"filter",
+						                handler: function() {alert('peng !!!!');}
+						            },
+						            {
+						                 xtype: 'textfield',
+						                 name: 'searchInterestField',
+						                 hideLabel: true,
+						                 width: 200,
+						                 listeners: {
+						                 }
+						            }],
 	                        items:[
 	                            { 
 	                                //xtype: 'panel',

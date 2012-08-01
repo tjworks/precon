@@ -98,27 +98,29 @@ Ext.define('Ext.ux.OneChartLiveSearchGridPanel', {
                 scope: me
             }, 'Case sensitive'];
 
+       /*
         me.tbar = [{
-                xtype: 'button',
-                text: 'Search Database By:',
-                tooltip: 'Find Previous Row',
-                iconCls:"filter",
-                handler: function() {alert('peng !!!!');},
-                scope: me
-            },
-            {
-                 xtype: 'textfield',
-                 name: 'searchInterestField',
-                 hideLabel: true,
-                 width: 200,
-                 listeners: {
-                     change: {
-                         fn: me.onInterestTextFieldChange,
-                         scope: this,
-                         buffer: 100
-                     }
-                 }
-            }];
+                       xtype: 'button',
+                       text: 'Search Database By:',
+                       tooltip: 'Find Previous Row',
+                       iconCls:"filter",
+                       handler: function() {alert('peng !!!!');},
+                       scope: me
+                   },
+                   {
+                        xtype: 'textfield',
+                        name: 'searchInterestField',
+                        hideLabel: true,
+                        width: 200,
+                        listeners: {
+                            change: {
+                                fn: me.onInterestTextFieldChange,
+                                scope: this,
+                                buffer: 100
+                            }
+                        }
+                   }];*/
+       
       /*
         me.tbar = Ext.create('Ext.ux.StatusBar', {
                          defaultText: me.defaultStatusText,
