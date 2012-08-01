@@ -179,7 +179,7 @@ Ext.onReady(function(){
 	Ext.create('Ext.Viewport', {
 	                    layout: {
 	                        type: 'border'
-	                        ,padding: '70 0 0 0'
+	                        ,padding: '52 0 0 0'
 	                    },
 	                    defaults: {
 	                        split: true
