@@ -1,4 +1,6 @@
- Ext.Loader.setConfig({
+var networkJson=[];
+
+Ext.Loader.setConfig({
             enabled: true,
             disableCaching: true,
             paths: {
@@ -20,12 +22,6 @@ Ext.require([
 
                 
 Ext.onReady(function(){
-	
-	//render the year date format
-	function renderYear(value,p,record) {
-		console.log("test");
-		return new Date(value);
-	}
 	
 	// sample static data for the store
     var literatureData = [
@@ -112,70 +108,6 @@ Ext.onReady(function(){
         }]
     });
 
-
-// sample static data for the store
-    var networkData = [
-         ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
-         ['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111'],
-          ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
-         ['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111']
-    ];
-    
-    // create the data store
-    var literatureStore = Ext.create('Ext.data.ArrayStore', {
-        fields: [
-           {name: 'name'},
-           {name: 'ctime'},
-           {name: 'creator'},
-           {name: 'description'}
-        ],
-        data: networkData
-    });
-    
-    // create the Grid, see Ext.
-   var networkGrid=Ext.create('Ext.ux.OneChartLiveSearchGridPanel', {
-        store: literatureStore,
-        columnLines: true,
-        columns: [
-            {
-                text     : 'Network Name',
-               // flex     : 1,
-                sortable : false, 
-                width: 85,
-                dataIndex: 'name'
-            },
-            {
-                text     : 'Create Date', 
-                width    : 75, 
-                sortable : true, 
-                renderer : 'renderYear', 
-                dataIndex: 'ctime'
-            },
-            {
-                text     : 'Creator', 
-                width    : 75, 
-                sortable : true, 
-                dataIndex: 'creator'
-               // renderer: change
-            },
-            {
-                text     : 'Description', 
-                width    : 75, 
-                flex:1,
-                sortable : true, 
-                dataIndex: 'description'
-               // renderer: change
-            }
-        ],
-        height: 'auto',
-        width: 'auto',
-        title: '',
-       // renderTo: Ext.getBody(),
-        viewConfig: {
-        	id:'gv',
-            stripeRows: false
-        }
-    });
 
 	Ext.create('Ext.Viewport', {
 	                    layout: {
@@ -398,9 +330,6 @@ Ext.onReady(function(){
             })
     });
     
-function showLiterature(name) {
-    alert("this will display literatures on the right");
-}
 
 function showTips(e) {
     //var htmlcontent='Entity Name: '+e.target.name+'</br>Related Literatures: <a onclick=showLiterature("'+e.target.name+'")>5</a>';
@@ -412,8 +341,6 @@ function showTips(e) {
         });
         
     gtip.showAt([e.clientX+5,e.clientY]);
-    
-    //console.log(e.target);
 }   
 
 function addSelectStyle(el) {
@@ -489,10 +416,85 @@ function fireEvents() {
     
 }  
 
-function readJson(dataJson) {
-	
-	
+/**
+ * Call precon.client.quickSearch to get a list of networks
+ * 
+ * No returns. This function will initialize/update the network table.
+ * 
+ */
+function initApp() {
+	var userid=location.href.substring(location.href.lastIndexOf('\/')+1);
+	if (userid.length>0)
+	   precon.quickSearch(userid, function() {
+	   	
+	   });
 }
+
+
+// sample static data for the store
+    var networkData = [
+         ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
+         ['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111'],
+          ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
+         ['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111']
+    ];
+    
+    // create the data store
+    var literatureStore = Ext.create('Ext.data.ArrayStore', {
+        fields: [
+           {name: 'name'},
+           {name: 'ctime'},
+           {name: 'creator'},
+           {name: 'description'}
+        ],
+        data: networkData
+    });
+    
+    // create the Grid, see Ext.
+   var networkGrid=Ext.create('Ext.ux.OneChartLiveSearchGridPanel', {
+        store: literatureStore,
+        columnLines: true,
+        columns: [
+            {
+                text     : 'Network Name',
+               // flex     : 1,
+                sortable : false, 
+                width: 85,
+                dataIndex: 'name'
+            },
+            {
+                text     : 'Create Date', 
+                width    : 75, 
+                sortable : true, 
+                renderer : 'renderYear', 
+                dataIndex: 'ctime'
+            },
+            {
+                text     : 'Creator', 
+                width    : 75, 
+                sortable : true, 
+                dataIndex: 'creator'
+               // renderer: change
+            },
+            {
+                text     : 'Description', 
+                width    : 75, 
+                flex:1,
+                sortable : true, 
+                dataIndex: 'description'
+               // renderer: change
+            }
+        ],
+        height: 'auto',
+        width: 'auto',
+        title: '',
+       // renderTo: Ext.getBody(),
+        viewConfig: {
+        	id:'gv',
+            stripeRows: false
+        }
+    });
+
 
 function createGraph() {
     Ext.select("svg").remove();
