@@ -179,20 +179,12 @@ Ext.onReady(function(){
 	Ext.create('Ext.Viewport', {
 	                    layout: {
 	                        type: 'border'
-	                        ,padding: 5
+	                        ,padding: '70 0 0 0'
 	                    },
 	                    defaults: {
 	                        split: true
 	                    },
 	                    items: [{
-	                        region: 'north',
-	                        collapsible: false, border: false,
-	                        split: true,
-	                        height: 30,
-	                        style:'background-color:blue; color:white;',
-	                        bodyStyle:'background-color:#99BDE8; color:white; font-Size: 40 !important;',
-	                        html: '�տ�ר����'
-	                    },{
 	                        region: 'west',
 	                        collapsible: false, 
 	                        border: false,
