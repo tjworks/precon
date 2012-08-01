@@ -54,7 +54,6 @@ nodes = "blood glucose concentration,Organic cation transporter 1 (OCT1),AMPK,gl
 
 function validateKeyword(req, callback){
 	term = req.term
-	_TMPVAR = 0	
 	console.log("validating term")
 	precon.quickSearch(term, function(results){
 		console.log("kw search results by "+term, results)

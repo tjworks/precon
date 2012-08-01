@@ -9,6 +9,13 @@ precon.conf = {
 /**
  * Search by keywords, such as pubmed id, gene symbol/name, network name or people's name
  * 
+ * Results is a list of potential matches, with a mximum of 20. Each potential match is an object. For example, if you search for 'AMP', you will get:
+ * 		[
+ * 			{label:"Research about AMPK", value:"publ320394726"},   // matched a publication with id: publ320394726
+ * 			{label:"AMPK", value:"enti_up_P20394"}, // matched an entity with id enti_up_P20394
+ *          ...
+ *       ]
+ * 
  */
 precon.quickSearch = function(query, callback){
 	// only entity is supported for now
