@@ -1,11 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- saved from url=(0034)/instant-qa/ -->
 <html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-
-<title> Precon-1Chart</title>
+<title>Precon-1Chart</title>
 <link rel="stylesheet" type="text/css" href="/tmpl/style.css"> 
-<link rel="stylesheet" type="text/css" href="/tmpl/blue-meadow-styles.css"> 
 <!--[if IE]>
 <style type="text/css">
 ul.addtoany_list a img{filter:alpha(opacity=70)}
@@ -22,47 +19,36 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
 <!--[if IE 7]>
 	<link rel="stylesheet" type="text/css" href="http://wordpressqa.com/instant-qa/wp-content/themes/instant-qa/styles-ie7.css"/>
 <![endif]--> 
+{% block css_include %} {% endblock %}
 
-<script type="text/javascript" src="/tmpl/tab-widget.js"></script>
-{% block head_include %} {% endblock %}
-
-<style>
- body {
-    
-        transparent url('http://static.jquery.com/ui/images/body_bg.jpg') no-repeat center top
-    }
- #footer {
-    margin:0px 0px
- }
-</style>
+{% block js_include %} {% endblock %}
 </head>
 
-<body id="home" class=" hasGoogleVoiceExt">
-<div id="footer">
-        <div id="footerContent">
-            <div class="bottomNav right">
-                <ul>
-                    <li><a href="/">普康病友网</a></li>
-                    <li><a href="/graph">普康专家网</a></li>
-                    <li><a href="/">How It Works</a></li>
-                    <li><a href="/">Sign Up</a></li>
-                    <li><a href="/">Log In</a></li>
-                    
-                   </ul>
-                                        
-            </div>
-                 
-            <div class="clear"></div>
-        </div>
-    
-    </div>
-     
-    <!-- / Main Section -->
+<body id="home">
 
-
-	<!-- Footer Section -->
+{% block headernav %}
+<div id="myheader">
+        <div id="myheaderContent">
+         <div class="myheaderNav right">
+             <ul>
+                 <li><a href="/">普康病友网</a></li>
+                 <li><a href="/graph">普康专家网</a></li>
+                 <li><a href="/">How It Works</a></li>
+                 <li><a href="/">Sign Up</a></li>
+                 <li><a href="/">Log In</a></li>                    
+                </ul>                                       
+         </div>                 
+         <div class="clear"></div>
+     </div>
+ 
+</div>
+{% endblock %}     
     
-    <!-- / Footer Section -->
-        		
+
+{% block main %}
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
 
 </body></html>
