@@ -1,92 +1,58 @@
+<link rel="stylesheet" href="test/qunit/qunit.css">
+<script src="test/qunit/qunit.js"></script>
+
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="js/precon.model.js"></script>
 <script type="text/javascript" src="js/precon.client.js"></script>
 
-
-<h1>Testing</h1>
-
-<div id="output" style="border:1px; padding:20px">
-	
-</div>
-<hr>
-<div id="output2" style="border:1px; padding:20px">
-    
-</div>
-<hr>
-<div id="output3" style="border:1px; padding:20px">
-    
-</div>
-<hr>
-<div id="output4" style="border:1px; padding:20px">
-    
-</div>
-
 <script>
 
+var network_id = 'ntwk_intact_20541250'
 
-
-
-precon.search({ q:'xiap'}, function(result){
-	console.log("complete")
-	console.log(result)
-	$("#output").append("Test search gene<hr>")
-	if(result && result.length && result[0]._id == 'enti_up_P98170')
-		$("#output").append("Success! <blockquote>" + result +"</blockquote>" )
-	else
-		$("#output").append("Failed "+ result)
-	// result should look like this:
-	{
-		_id: "enti_up_P98170"
-		group: "protein"
-		label: ""
-		name: "E3 ubiquitin-protein ligase XIAP"
-		org: ""
-		refs: {
-				intact: "184153"
-				uniprotkb: "P98170"
-		}
-		intact: "184153"
-		uniprotkb: "P98170"
-		symbol: "xiap"
-	}
-	
+test( "hello test", function() {
+	  ok( 1 == "1", "Passed!" );
 });
+
+asyncTest( "getObject", 1, function() {
+
+    precon.getObject(network_id, function(obj){
+    	ok(obj._id == network_id, "Got expected network")
+    	start();
+    })
+	 
+});
+
+
+asyncTest( "search", 1, function() {
+
+    precon.search({q:'xiap'}, function(result){
+                 
+	    ok(result && result.length && result[0]._id == 'enti_up_P98170', "Did not get expected entity")
+	    start();
+	    // result should look like this:
+	    {
+	        _id: "enti_up_P98170"
+	        group: "protein"
+	        label: ""
+	        name: "E3 ubiquitin-protein ligase XIAP"
+	        org: ""
+	        refs: {
+	                intact: "184153"
+	                uniprotkb: "P98170"
+	        }
+	        intact: "184153"
+	        uniprotkb: "P98170"
+	        symbol: "xiap"
+	    }
+        
+        start();
+    })
+     
+});
+
 
 // test 2
 gene_id = 'enti_up_P98170'
-precon.getNetworks(gene_id, function(results){
-	
-	if(results) { // is an array of networks
-		console.log(results)
-		$("#output2").append("Success! Got " + results.length+" networks")
-	}
-	else
-		$("#output2").append("Faild!")
-	// each object in the results is a Network object contain:
-	//     _id: network id
-	//     connections: a list of connection objects like below:		
-	/**
-	{
-		_id: "conn_intact_184154"
-		entities: [ 
-		 "enti_up_O43464",
-		 "enti_up_P98170"
-		]
-		group: ""
-		label: "omi-xiap"
-		network: "ntwk_intact_11602612"  // network_id this connection belongs to
-		nodes: [
-			 "node_intact_11602612_1",
-			 "node_intact_11602612_2"
-			 ]
-		length: 2		
-		refs: 
-			{ intact: "184154" }
-				
-		type: "physical association"	
-	}
-	*/
-});
 
 //test 3
 network_id = 'ntwk_intact_11602612'
@@ -99,11 +65,54 @@ precon.getObject(network_id, function(results){
 });
 
 precon.getObject(gene_id, function(results){
-	  if(results && results.symbol)
-	      $("#output4").append("Success! Got gene : "+ results.symbol)
-	   else
-	       $("#output4").append("Failed! "+results) 
-	});
+      if(results && results.symbol)
+          $("#output4").append("Success! Got gene : "+ results.symbol)
+       else
+           $("#output4").append("Failed! "+results) 
+    });
 
+
+precon.getObject(gene_id, function(results){
+    
+    if(results) { // is an array of networks
+        console.log(results)
+        $("#output2").append("Success! Got " + results.length+" networks")
+    }
+    else
+        $("#output2").append("Faild!")
+    // each object in the results is a Network object contain:
+    //     _id: network id
+    //     connections: a list of connection objects like below:        
+    /**
+    {
+        _id: "conn_intact_184154"
+        entities: [ 
+         "enti_up_O43464",
+         "enti_up_P98170"
+        ]
+        group: ""
+        label: "omi-xiap"
+        network: "ntwk_intact_11602612"  // network_id this connection belongs to
+        nodes: [
+             "node_intact_11602612_1",
+             "node_intact_11602612_2"
+             ]
+        length: 2       
+        refs: 
+            { intact: "184154" }
+                
+        type: "physical association"    
+    }
+    */
+});
 
 </script>
+
+</head>
+<body>
+  
+  
+
+<div id="qunit"></div>
+</body>
+
