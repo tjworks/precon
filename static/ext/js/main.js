@@ -14,7 +14,8 @@ Ext.require([
     'Ext.ux.RowExpander',
     'Ext.selection.CheckboxModel',
     'Ext.tip.QuickTipManager',
-    'Ext.ux.LiveSearchGridPanel'
+    'Ext.ux.LiveSearchGridPanel',
+    'Ext.ux.OneChartLiveSearchGridPanel'
 ]);
 
                 
@@ -132,7 +133,7 @@ Ext.onReady(function(){
     });
     
     // create the Grid, see Ext.
-   var networkGrid=Ext.create('Ext.ux.LiveSearchGridPanel', {
+   var networkGrid=Ext.create('Ext.ux.OneChartLiveSearchGridPanel', {
         store: literatureStore,
         columnLines: true,
         columns: [
@@ -166,7 +167,7 @@ Ext.onReady(function(){
                // renderer: change
             }
         ],
-        height: 450,
+        height: 'auto',
         width: 'auto',
         title: '',
        // renderTo: Ext.getBody(),
@@ -189,6 +190,8 @@ Ext.onReady(function(){
 	                        collapsible: false, 
 	                        border: false,
 	                        id:'west',
+	                        title:'Network Graph',
+	                        collapsible:true,
 	                        width: '60%',
 	                        html: '',
 	                        dockedItems: [
@@ -316,6 +319,7 @@ Ext.onReady(function(){
 	                                title:'Networks Selections',
 	                                split:true,
 	                                height: 200,
+	                                autoScroll:true,
 	                                collapsible:true,
 	                                items:[networkGrid]
 	                                //html:'here lists the networks'
