@@ -313,9 +313,10 @@ Ext.onReady(function(){
 	                            { 
 	                                //xtype: 'panel',
 	                                region:'north',
-	                                title:'Networks',
+	                                title:'Networks Selections',
 	                                split:true,
 	                                height: 200,
+	                                collapsible:true,
 	                                items:[networkGrid]
 	                                //html:'here lists the networks'
 	                            },
@@ -323,15 +324,44 @@ Ext.onReady(function(){
 	                            	xtype:'tabpanel',
 	                            	region:'center',
 	                            	plain: true,
+	                            	collapsible:true,
+	                            	title:'Network Entity',
+	                            	
 	                            	activeTab:0,
+	                            	split:true,
 	                            	items: [
 	                                	 {
-	                                	 	title:'General Info',
+	                                	 	title:'Entity Info',
+	                                	 	autoScroll:true,
 	                                	 	html:'<b>Entity Name</b>: AMPK<br><b>Entity Type:</b>Node<br><b>Entity Other infos:</b>blah blah <br><blah>'
 	                                	 },
 	                                	 {
-	                                            title:'Literature',
+	                                            title:'Entity Literature',
+	                                            autoScroll:true,
 	                                            items:[literatureGrid]
+	                                    }
+	                            	]
+	                            },
+	                             {
+	                            	xtype:'tabpanel',
+	                            	region:'south',
+	                            	plain: true,
+	                            	height:200,
+	                            	collapsible:true,
+	                            	title:'Network People',
+	                            	split:true,
+	                            	activeTab:0,
+	                            	autoScroll:true,
+	                            	items: [
+	                                	 {
+	                                	 	title:'Most Pouplar',
+	                                	 	autoScroll:true,
+	                                	 	html:'<table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">T.J Tang </a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="resources/images/star.png" width="16" height="16" /><img src="resources/images/star.png" width="16" height="16" /><img src="resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table><br><table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">Xudong Dai </a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="resources/images/star.png" width="16" height="16" /><img src="resources/images/star.png" width="16" height="16" /><img src="resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table><br><table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">John Dong</a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="resources/images/star.png" width="16" height="16" /><img src="resources/images/star.png" width="16" height="16" /><img src="resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table>'
+	                                	 },
+	                                	 {
+	                                            title:'Most Recent',
+	                                            autoScroll:true,
+	                                            html:'<table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">Xuanxuan Tang </a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="resources/images/star.png" width="16" height="16" /><img src="resources/images/star.png" width="16" height="16" /><img src="resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table><br><table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">Xudong Dai </a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="resources/images/star.png" width="16" height="16" /><img src="resources/images/star.png" width="16" height="16" /><img src="resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table><br><table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">John Dong</a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="resources/images/star.png" width="16" height="16" /><img src="resources/images/star.png" width="16" height="16" /><img src="resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table>'
 	                                    }
 	                            	]
 	                            }
