@@ -39,14 +39,10 @@ $(document).ready( function() {
 
 
 /******* End of Demonstration code  *****************/
-
-
-
-
 $(document).ready( function() {
-	
+	 console.log("ready search");
 	 $( "#searchtxt" ).autocomplete({
-	      source: validateKeyword(),
+	      source: validateKeyword,
 	      minLength:2
 	    });
 	$("#searchbtn").click(doSearch)
@@ -56,8 +52,14 @@ $(document).ready( function() {
 pubmedids ='19465464,18945920,17476361,8165821,11602624,11602624,19245656,11602624,11602624,11602624,19245656,16732470,20600832, 20577046,15358229,15358229,18006825,17062558,15849206,20407744,19918015,19564453,19653109,19375425,20299480,20442309,19679549,19752085,17638885,18212742,16125352,18387000,20053525,18358555,12384179,21263130,21060860,20872241,20453838,19330030,17529967,17529973,22129971,22451849'.split(',')    
 nodes = "blood glucose concentration,Organic cation transporter 1 (OCT1),AMPK,glucose synthesis,lipid synthesis,protein synthesis,fatty acid oxidation,glucose uptake,respiratory-chain complex 1,fructose-1,6-bisphosphatase,fatty acid synthase,acetyl CoA carboxylase(ACC),mTORC1,TSC2,cancer risk,prostate cancer risk,pancreatic cancer risk,breast cancer,cancer (cell lines),cancer (animal models),type 2 diabete,angiogenesis,Metformin (1,1-dimethylbiguanide),AMPK".split(",")
 
-function validateKeyword(){
-	return pubmedids.concat(nodes)
+function validateKeyword(req, callback){
+	term = req.term
+	_TMPVAR = 0	
+	console.log("validating term")
+	precon.quickSearch(term, function(results){
+		console.log("kw search results by "+term, results)
+		callback(results)
+	})		  
 }
 function doSearch(){
 		var val = $("#searchtxt").attr("value")

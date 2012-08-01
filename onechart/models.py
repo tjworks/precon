@@ -169,6 +169,8 @@ class Publication(BioModel):
             intact: intact id, i.e., EBI-2433438
         """
         self.refs = self.refs or  {}
+        self.pubmed_id = self.pubmed_id or ''
+        self.authors = self.authors or []
 
 class Association(BaseModel):
     _col = 'association'
@@ -191,3 +193,4 @@ class PreconProfile(UserenaLanguageBaseProfile ):
                                 related_name='my_profile')
     favourite_snack = models.CharField( 'favourite snack' ,
                                        max_length=5)
+prefix_mapping =  {'netw':'network' , 'ntwk':'network', 'enti':'entity', 'node':'node', 'conn': 'connection', 'publ':'publication'}

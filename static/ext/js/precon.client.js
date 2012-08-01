@@ -2,36 +2,32 @@ precon =  {}
 if (typeof (console) == 'undefined') console = {log:function(){}}
 precon.conf = {
 	api_base: 'http://mongo.one-chart.com:3000/oc',
-	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection'}
+	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication'}
 }
-
 
 
 /**
- * search for an entity, for instance a gene
- * @param query: a dictionary with following fields:
- * 					- q:  MANDATORY. query string, specify the gene symbol when search for gene.
- * 					- sort: OPTIONAL. sort the result by this field, if applicable
- * 					- limit: OPTIONAL.  limit the number of results to be returned 
- * 					- type: OPTIONAL.  type of entity to search for. i.e., network, entity, people, connection etc
- * @param callback: callback function  
- * @return Callback function will be called with the result, which is an array of objects.Empty array if nothing found   
+ * Search by keywords, such as pubmed id, gene symbol/name, network name or people's name
+ * 
  */
-precon.search = function(query, callback){
+precon.quickSearch = function(query, callback){
 	// only entity is supported for now
-	if(!query.q) throw "Must specify query string"
-	query.type = query.type || 'entity'
+	if(!query) throw "Must specify query string"
 	
-	qstr = escape('{"symbol":"TOKEN"}'.replace("TOKEN", query.q.toLowerCase()))
-	url = precon.conf.api_base + "/" + query.type +"?query="+ qstr
-	console.log("searching: " + url)		
-	precon._ajax(url, function(results){
-		callback && callback(results)	  
-	})
+	//qstr = escape('{_id:{$regex:/^TOKEN/}}'.replace("TOKEN", query.toLowerCase()))
+	url = "/search.json?term="+ query
+	console.log("searching: " + url)
+	$.ajax({
+		  url: url,
+		  dataType: 'json',	
+		  success: function(results){
+			  callback(results)
+		  } 
+		});	
 }
  
 precon._ajax = function(url, callback){
-	console.log("Performing ajax query: "+url)
+	console.log("Performing ajax query: "+ unescape(url))
 	$.ajax({
 		  url: url,
 		  dataType: 'jsonp',	
@@ -49,7 +45,8 @@ precon._ajax = function(url, callback){
  * 
  * 
  * 					
- * @return A list of JSON objects represents Network. Note the Network meta info will not be set other than the _id. You must use getObject() to request the details of each Network
+ * @return A list of JSON objects represents Network. Note the actually connection objects will be stored in _connections property and the connections property only has the IDs. 
+ *   	   In addition, the nodes property for each connection contains the IDs only. You need to call getObject(node_id) to get the details about the node
  */
 precon.searchNetworks = function(query, callback){
 	qstr = ''
@@ -110,12 +107,7 @@ precon.preload = function(network){
 	if(ids.length>0)
 		precon.getObjects(ids)  // preload cache
 }
-/**
- * List networks
- */
-precon.listNetworks = function(callback){
-	
-}
+
 /**
  * Get all connections belong to the network
  * @param network_id 
@@ -234,12 +226,12 @@ precon.getAllAssociations=function(callback){
 /**
  * Get a list of references
  * 
- * @param obj_id either the edge id or node id
+ * @param obj_id connection id
  * @param callback
  * 
  * @return array list of Reference object
  */
-precon.getReferences = function(obj_id, callback){
+precon.getPubmedReferences = function(obj_id, callback){
 	
 	
 }

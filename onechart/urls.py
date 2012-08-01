@@ -10,8 +10,6 @@ urlpatterns = patterns('',
     url(r'^assets/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'static'}),
     url(r'^(?P<path>.*.(css|js|png|gif|swf|jpg|html))$', 'django.views.static.serve', {'document_root': 'static'}),
     
-        
-    
     # url(r'^onechart/', include('onechart.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
