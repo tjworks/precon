@@ -5,7 +5,7 @@ from django.views.decorators.http import require_http_methods
 
 @require_http_methods(["GET", "POST", "HEAD"])
 def home(req):
-	template = loader.get_template('root.html')
+	template = loader.get_template('home.html')
 	#ctx = gf_template.get_context(req, {})
 	ctx = RequestContext(req, {})
 	return HttpResponse(template.render(ctx))
