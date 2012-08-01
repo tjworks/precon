@@ -13,7 +13,7 @@ import re
 def handler(req):
 	q = req.REQUEST.get("term")
 	if not q: return SmartResponse(Exception("Missing parameter: term"), req)
-	q = {'_id':{'$regex': '^%s' %q } }
+	q = {'_id':{'$regex': '^%s' %q.lower() } }
 	ret = []
 	tmp = []
 	for r in mongo.getCollection('indices').find(q):
@@ -21,11 +21,11 @@ def handler(req):
 		for id, name in r['names'].items():
 			if id in tmp: continue;
 			tmp.append(id)
-			name = name[0:20]
+			name = name[0:80]
 			if id[0:4] in models.prefix_mapping:
 				col = models.prefix_mapping[id[0:4]]
 				name = "%s: %s" %(col, name)
-			ret.append( {'label':name, 'value':id} )
+			ret.append( {'label':name, 'value':name, '_id':id} )
 		if(len(ret)>20): break  # max 20 results
 				
 	return SmartResponse(ret, req)	

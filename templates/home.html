@@ -19,9 +19,65 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
 <!--[if IE 7]>
 	<link rel="stylesheet" type="text/css" href="http://wordpressqa.com/instant-qa/wp-content/themes/instant-qa/styles-ie7.css"/>
 <![endif]--> 
+
 {% block css_include %} {% endblock %}
 
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
+<!--  precon scripts -->
+<script type="text/javascript" src="/ext/js/precon.client.js"></script>
+<script type="text/javascript" src="/ext/js/precon.search.js"></script>
+
 {% block js_include %} {% endblock %}
+
+<style>
+.ui-autocomplete-input {
+    font-size:2em;
+    padding:10px;
+    width:500px;    
+    
+    height:40px
+}
+
+ul.ui-autocomplete.ui-menu{
+   
+     border-top: 1px solid #96d1f8;
+  background: #00B7F9;
+  background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#CCC));
+  background: -webkit-linear-gradient(top, #FFF, #CCC);
+  background: -moz-linear-gradient(top, #FFF, #CCC);
+  background: -ms-linear-gradient(top, #FFF, #00B7F9);
+  background: -o-linear-gradient(top, #FFF, #00B7F9);
+  
+   padding: 0.5em 0.5em;
+   -webkit-border-radius: 16px;
+   -moz-border-radius: 16px;
+   border-radius: 16px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   
+   
+   width:620px;
+   overflow:hidden;
+}
+
+li.ui-menu-item {
+    padding:3px 5px
+}
+.ui-state-hover, .ui-autocomplete li:hover
+{
+    padding: 3px 0px   ; 
+    background:#CCC;
+    outline:none;
+}
+</style>
+<script>
+
+
+
+</script>
 </head>
 
 <body id="home">
@@ -46,6 +102,24 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
     
 
 {% block main %}
+ <div class="clear"></div>
+ <div class="ui-widget" id="search-box" align="center">
+                    
+       
+           <input id="searchtxt"  class="ui-autocomplete-input bgcolor"></input>
+              <!-- 
+              <input class="ui-autocomplete-input"/>
+               <ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all">
+                 <li class="ui-menu-item">
+                   <a class="ui-corner-all">item 1</a>
+                 </li>                          
+               </ul>
+                -->    
+           
+           <button id="search-btn" class="rounded">  &nbsp;&nbsp;GO &nbsp;&nbsp;</button>               
+  </div>
+
+
 {% endblock %}
 
 {% block footer %}

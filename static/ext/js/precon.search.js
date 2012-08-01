@@ -3,7 +3,7 @@
 $(document).ready( function() {
     var path = document.location.pathname
     var precon_id = path.replace("/graph/", "")
-    if(precon_id){
+    if(precon_id && precon_id.length>4){
     	precon.getObject(precon_id, function(obj){
     		// display the object meta info(dev purpose)
     		$("#section_east_1").html("Object: <pre>"+ precon.util.formatObject(obj)+"</pre>")
@@ -16,10 +16,13 @@ $(document).ready( function() {
                 $("#graph_pane").html("Network Data: <pre>"+ precon.util.formatObject(obj)+"</pre>")
             })
     	}
+    	
+    	
     }
     
     
     // list my networks
+   
     precon.searchNetworks({owner:'precon'}, function(networks){
     	console.log("Got precon's networks", networks)
     	
@@ -33,7 +36,7 @@ $(document).ready( function() {
             
             
     })
-    
+   
     
 });
 
@@ -43,7 +46,11 @@ $(document).ready( function() {
 	 console.log("ready search");
 	 $( "#searchtxt" ).autocomplete({
 	      source: validateKeyword,
-	      minLength:2
+	      minLength:2,
+	      select: function(event, ui) {
+	    	  console.log("selected ", ui)
+	    	  document.location='/graph/'+ ui.item._id	    	  
+	      }	    	
 	    });
 	$("#searchbtn").click(doSearch)
 	 

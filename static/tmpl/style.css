@@ -300,3 +300,39 @@ body li#homeTab {border-left:1px solid #b0bd8f;}
 .myheaderNav ul li {border-right:1px solid #000;border-left:1px solid #3d4253;}
 .myheaderNav ul li:hover {background: url(bottom-nav-hover-bg.png) repeat-x;}
 
+.bgcolor {
+  border-top: 1px solid #96d1f8;
+  background: #00B7F9;
+  background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#CCC));
+  background: -webkit-linear-gradient(top, #FFF, #CCC);
+  background: -moz-linear-gradient(top, #FFF, #CCC);
+  background: -ms-linear-gradient(top, #FFF, #00B7F9);
+  background: -o-linear-gradient(top, #FFF, #00B7F9);
+ 
+   padding: 1em 1em;
+   -webkit-border-radius: 16px;
+   -moz-border-radius: 16px;
+   border-radius: 16px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   
+}
+
+.rounded{
+    -webkit-border-radius: 8px;
+   -moz-border-radius:8px;
+   border-radius: 8px;
+
+}
+#search-btn {
+    font-size:2em;
+    padding:0.5em;
+    
+    
+}    
+#search-box{
+    margin:100px auto;
+    
+}

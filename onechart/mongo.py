@@ -110,7 +110,6 @@ def insertJS():
                            keywords.push(obj.pubmed_id);
                            keywords = keywords.concat( chop(obj.name) );
                            keywords.push(obj.name)
-                           obj.name=obj.pubmed_id+", "+ obj.name                           
                            insertKeywords(keywords,obj);                    
                     });                    
                     db.entity.find().forEach( function(obj){                           
@@ -118,8 +117,7 @@ def insertJS():
                            keywords.push(obj.symbol)
                            keywords = keywords.concat( chop(obj.name) )
                            keywords.push(obj.name)
-                           if(obj.name)
-                               obj.name=obj.symbol +", "+ obj.name
+                         
                            insertKeywords(keywords,obj);                    
                     });
                     
