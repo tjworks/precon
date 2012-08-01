@@ -202,7 +202,8 @@ Ext.onReady(function(){
 	                                                {
 	                                                    xtype: 'button', 
 	                                                    text : 'Create Node',
-	                                                    iconCls:'x-btn-inner node',
+	                                                    //iconCls:'x-btn-inner node',
+	                                                    icon:"/ext/resources/images/node.png",
 	                                                    tooltip:'Display available geocoders',
 	                                                    handler : function() {
 	                                                        console.log("test");
@@ -211,7 +212,8 @@ Ext.onReady(function(){
 	                                               {
 	                                                    xtype: 'button', 
 	                                                    text : 'Create Link',
-	                                                    iconCls:'x-btn-inner link',
+	                                                    //iconCls:'x-btn-inner link',
+	                                                    icon:"/ext/resources/images/link.png",
 	                                                    tooltip:'Display available geocoders',
 	                                                    handler : function() {
 	                                                        console.log("test identify");
@@ -220,7 +222,8 @@ Ext.onReady(function(){
 	                                               {
 	                                                    xtype: 'button', 
 	                                                    text : 'Remove Node/Link',
-	                                                    iconCls:'x-btn-inner remove',
+	                                                    //iconCls:'x-btn-inner remove',
+	                                                    icon:"/ext/resources/images/link_.png",
 	                                                    tooltip:'Display available geocoders',
 	                                                    handler : function() {
 	                                                        console.log("test");
@@ -228,7 +231,8 @@ Ext.onReady(function(){
 	                                               },
 	                                               {
 	                                                    text : 'Links',
-	                                                    iconCls:'x-btn-inner links',
+	                                                    //iconCls:'x-btn-inner links',
+	                                                    icon:"/ext/resources/images/links.png",
 	                                                    handler : function() {
 	                                                        console.log("test");
 	                                                    },
@@ -258,7 +262,8 @@ Ext.onReady(function(){
 	                                               {
 	                                                    xtype: 'button', 
 	                                                    text : 'Help',
-	                                                    iconCls:'x-btn-inner help',
+	                                                    //iconCls:'x-btn-inner help',
+	                                                    icon:"/ext/resources/images/help.png",
 	                                                    tooltip:'Display available geocoders',
 	                                                    handler : function() {
 	                                                        console.log("test");
@@ -273,7 +278,9 @@ Ext.onReady(function(){
 	                                            {xtype:"tbspacer", width:200, id:"tbarspace"},
 	                                            {xtype:"label", width:100},
 	                                            {xtype:"textfield", width:400, fieldLabel:"Names to filter", labelAlign:"right",allowBlank:true},
-	                                            { xtype: 'button', text: '', iconCls:"filter",
+	                                            { xtype: 'button', text: '', 
+	                                               //iconCls:"filter",
+	                                               icon:"/ext/resources/images/find.png",
 	                                               handler: function() {
 	                                                      alert("Peng!!!!!!!!!!!!");
 	                                               }
@@ -316,7 +323,8 @@ Ext.onReady(function(){
 						                xtype: 'button',
 						                text: 'Search Database By:',
 						                tooltip: 'Find Previous Row',
-						                iconCls:"filter",
+						                //iconStyle:'color:#04408C; font-size:11px',
+						                icon:"/ext/resources/images/find.png",
 						                handler: function() {alert('peng !!!!');}
 						            },
 						            {
