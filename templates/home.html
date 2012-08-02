@@ -51,9 +51,6 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
 				    <li><a href="#login-box" id="signin-link" class="login-window">登录</a></li>
 				    <li><a id="userid" class=""></a></li>   
 				 {% endif %}
-                       
-                 
-                                               
                 </ul>                                       
          </div>                 
          <div class="clear"></div>
@@ -83,6 +80,7 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
               <label style="color:red" id="login-error"></label>  
              <div>
              </fieldset>
+             {% csrf_token %}
        </form>
     </div>
 
