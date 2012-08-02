@@ -1,3 +1,4 @@
+
 Ext.Loader.setConfig({
             enabled: true,
             disableCaching: true,
@@ -20,7 +21,9 @@ Ext.require([
 
                 
 Ext.onReady(function(){
-	
+     //init the Network Graph
+     initApp();	
+     
 	// sample static data for the store
     var literatureData = [
          ['Adler, A. I., E. J. Shaw, et al','2009', 'Newer agents for blood glucose control in type 2 diabetes: summary of NICE guidance',' BMJ 338: b1668','Abstract for one: The consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
@@ -107,229 +110,232 @@ Ext.onReady(function(){
     });
  
     //initApp check the url configure and initialize Grid tables for network.
-    initApp();
-	
-	Ext.create('Ext.Viewport', {
-	                    layout: {
-	                        type: 'border'
-	                        ,padding: '52 0 0 0'
-	                    },
-	                    defaults: {
-	                        split: true
-	                    },
-	                    items: [{
-	                        region: 'west',
-	                        collapsible: false, 
-	                        border: false,
-	                        id:'west',
-	                        title:'Network Graph',
-	                        collapsible:true,
-	                        width: '60%',
-	                        html: '',
-	                        dockedItems: [
-	                            {
-	                                xtype: 'toolbar',
-	                                dock: 'top',
-	                                items: [
-	                                                {
-	                                                    xtype: 'button', 
-	                                                    text : 'Create Node',
-	                                                    //iconCls:'x-btn-inner node',
-	                                                    icon:"/ext/resources/images/node.png",
-	                                                    tooltip:'Display available geocoders',
-	                                                    handler : function() {
-	                                                        console.log("test");
-	                                                    }
-	                                               },
-	                                               {
-	                                                    xtype: 'button', 
-	                                                    text : 'Create Link',
-	                                                    //iconCls:'x-btn-inner link',
-	                                                    icon:"/ext/resources/images/link.png",
-	                                                    tooltip:'Display available geocoders',
-	                                                    handler : function() {
-	                                                        console.log("test identify");
-	                                                    }
-	                                               },
-	                                               {
-	                                                    xtype: 'button', 
-	                                                    text : 'Remove Node/Link',
-	                                                    //iconCls:'x-btn-inner remove',
-	                                                    icon:"/ext/resources/images/link_.png",
-	                                                    tooltip:'Display available geocoders',
-	                                                    handler : function() {
-	                                                        console.log("test");
-	                                                    }
-	                                               },
-	                                               {
-	                                                    text : 'Links',
-	                                                    //iconCls:'x-btn-inner links',
-	                                                    icon:"/ext/resources/images/links.png",
-	                                                    handler : function() {
-	                                                        console.log("test");
-	                                                    },
-	                                                    menu : [
-	                                                            {
-	                                                                text : 'About Our Company',
-	                                                                cls : '',
-	                                                                handler : function() {
-	                                                                    window
-	                                                                            .open(
-	                                                                                    'http://www.co.pierce.wa.us/pc/abtus/ourorg/at/at.htm',
-	                                                                                    'metaData');
-	                                                                }
-	                                                            },
-	                                                            {
-	                                                                text : 'Feedbacks',
-	                                                                cls : '',
-	                                                                handler : function() {
-	                                                                    window
-	                                                                            .open(
-	                                                                                    'http://www.co.pierce.wa.us/pc/abtus/ourorg/aud/',
-	                                                                                    'metaData');
-	                                                                }
-	                                                            }
-	                                                    ]
-	                                               },
-	                                               {
-	                                                    xtype: 'button', 
-	                                                    text : 'Help',
-	                                                    //iconCls:'x-btn-inner help',
-	                                                    icon:"/ext/resources/images/help.png",
-	                                                    tooltip:'Display available geocoders',
-	                                                    handler : function() {
-	                                                        console.log("test");
-	                                                    }
-	                                                }
-	                                        ]
-	                            },
-	                            {
-	                                xtype: 'toolbar',
-	                                dock: 'bottom',
-	                                items: [
-	                                            {xtype:"tbspacer", width:200, id:"tbarspace"},
-	                                            {xtype:"label", width:100},
-	                                            {xtype:"textfield", width:400, fieldLabel:"Names to filter", labelAlign:"right",allowBlank:true},
-	                                            { xtype: 'button', text: '', 
-	                                               //iconCls:"filter",
-	                                               icon:"/ext/resources/images/find.png",
-	                                               handler: function() {
-	                                                      alert("Peng!!!!!!!!!!!!");
-	                                               }
-	                                             }
-	                                       ]
-	                            }
-	                         ],
-	                         listeners: {
-	                             afterrender: {
-	                                 element:'',
-	                                 fn: function() {
-	                                     
-	                                     //update the button toolbar space width
-	                                     setTimeout(function(){
-	                                            Ext.getCmp("tbarspace").setWidth(Ext.get("west-body").getWidth(true)*0.4);
-	                                            createGraph();
-	                                        },300);
-	                                        setTimeout(function(){
-	                                            fireEvents();
-	                                        },600);
-	                                     console.log('western panel rendered');
-	                        //Ext.getCmp('west').getEl().on('contextmenu', function(e) {
-	                                                    
-	                                     }
-	                             },
-	                             resize: {
-	                                 element:'',
-	                                 fn:function() {
-	                                     createGraph();
-	                                 }
-	                             }
-	                         }
-	                      },{
-	                        region: 'center',
-	                        //border: false,
-	                        title:"",
-	                        //align:'stretch',
-	                        layout:"border",
-	                        tbar:[{
-						                xtype: 'button',
-						                text: 'Search Database By:',
-						                tooltip: 'Find Previous Row',
-						                //iconStyle:'color:#04408C; font-size:11px',
-						                icon:"/ext/resources/images/find.png",
-						                handler: function() {alert('peng !!!!');}
-						            },
-						            {
-						                 xtype: 'textfield',
-						                 name: 'searchInterestField',
-						                 hideLabel: true,
-						                 width: 200,
-						                 listeners: {
-						                 }
-						            }],
-	                        items:[
-	                            { 
-	                                //xtype: 'panel',
-	                                region:'north',
-	                                title:'Networks Selections',
-	                                split:true,
-	                                height: 200,
-	                                autoScroll:true,
-	                                collapsible:true,
-	                                items:[networkGrid]
-	                                //html:'here lists the networks'
-	                            },
-	                            {
-	                            	xtype:'tabpanel',
-	                            	region:'center',
-	                            	plain: true,
-	                            	collapsible:true,
-	                            	title:'Network Entity',
-	                            	
-	                            	activeTab:0,
-	                            	split:true,
-	                            	items: [
-	                                	 {
-	                                	 	title:'Entity Info',
-	                                	 	autoScroll:true,
-	                                	 	html:'<b>Entity Name</b>: AMPK<br><b>Entity Type:</b>Node<br><b>Entity Other infos:</b>blah blah <br><blah>'
-	                                	 },
-	                                	 {
-	                                            title:'Entity Literature',
-	                                            autoScroll:true,
-	                                            items:[literatureGrid]
-	                                    }
-	                            	]
-	                            },
-	                             {
-	                            	xtype:'tabpanel',
-	                            	region:'south',
-	                            	plain: true,
-	                            	height:200,
-	                            	collapsible:true,
-	                            	title:'Network People',
-	                            	split:true,
-	                            	activeTab:0,
-	                            	autoScroll:true,
-	                            	items: [
-	                                	 {
-	                                	 	title:'Most Pouplar',
-	                                	 	autoScroll:true,
-	                                	 	html:'<table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="/ext/resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">T.J Tang </a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table><br><table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="/ext/resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">Xudong Dai </a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table><br><table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="/ext/resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">John Dong</a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table>'
-	                                	 },
-	                                	 {
-	                                            title:'Most Recent',
-	                                            autoScroll:true,
-	                                            html:'<table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="/ext/resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">Xuanxuan Tang </a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table><br><table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="/ext/resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">Xudong Dai </a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table><br><table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="/ext/resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">John Dong</a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table>'
-	                                    }
-	                            	]
-	                            }
-	                          
-	                        ]
-	                      }]
-            })
-    });
-    
+  
+
+});
+
+
+function createViewPort() {
+			viewport=Ext.create('Ext.Viewport', {
+			                    layout: {
+			                        type: 'border'
+			                        ,padding: '52 0 0 0'
+			                    },
+			                    defaults: {
+			                        split: true
+			                    },
+			                    items: [{
+			                        region: 'west',
+			                        collapsible: false, 
+			                        border: false,
+			                        id:'west',
+			                        title:'Network Graph',
+			                        collapsible:true,
+			                        width: '60%',
+			                        html: '',
+			                        dockedItems: [
+			                            {
+			                                xtype: 'toolbar',
+			                                dock: 'top',
+			                                items: [
+			                                                {
+			                                                    xtype: 'button', 
+			                                                    text : 'Create Node',
+			                                                    //iconCls:'x-btn-inner node',
+			                                                    icon:"/ext/resources/images/node.png",
+			                                                    tooltip:'Display available geocoders',
+			                                                    handler : function() {
+			                                                        console.log("test");
+			                                                    }
+			                                               },
+			                                               {
+			                                                    xtype: 'button', 
+			                                                    text : 'Create Link',
+			                                                    //iconCls:'x-btn-inner link',
+			                                                    icon:"/ext/resources/images/link.png",
+			                                                    tooltip:'Display available geocoders',
+			                                                    handler : function() {
+			                                                        console.log("test identify");
+			                                                    }
+			                                               },
+			                                               {
+			                                                    xtype: 'button', 
+			                                                    text : 'Remove Node/Link',
+			                                                    //iconCls:'x-btn-inner remove',
+			                                                    icon:"/ext/resources/images/link_.png",
+			                                                    tooltip:'Display available geocoders',
+			                                                    handler : function() {
+			                                                        console.log("test");
+			                                                    }
+			                                               },
+			                                               {
+			                                                    text : 'Links',
+			                                                    //iconCls:'x-btn-inner links',
+			                                                    icon:"/ext/resources/images/links.png",
+			                                                    handler : function() {
+			                                                        console.log("test");
+			                                                    },
+			                                                    menu : [
+			                                                            {
+			                                                                text : 'About Our Company',
+			                                                                cls : '',
+			                                                                handler : function() {
+			                                                                    window
+			                                                                            .open(
+			                                                                                    'http://www.co.pierce.wa.us/pc/abtus/ourorg/at/at.htm',
+			                                                                                    'metaData');
+			                                                                }
+			                                                            },
+			                                                            {
+			                                                                text : 'Feedbacks',
+			                                                                cls : '',
+			                                                                handler : function() {
+			                                                                    window
+			                                                                            .open(
+			                                                                                    'http://www.co.pierce.wa.us/pc/abtus/ourorg/aud/',
+			                                                                                    'metaData');
+			                                                                }
+			                                                            }
+			                                                    ]
+			                                               },
+			                                               {
+			                                                    xtype: 'button', 
+			                                                    text : 'Help',
+			                                                    //iconCls:'x-btn-inner help',
+			                                                    icon:"/ext/resources/images/help.png",
+			                                                    tooltip:'Display available geocoders',
+			                                                    handler : function() {
+			                                                        console.log("test");
+			                                                    }
+			                                                }
+			                                        ]
+			                            },
+			                            {
+			                                xtype: 'toolbar',
+			                                dock: 'bottom',
+			                                items: [
+			                                            {xtype:"tbspacer", width:200, id:"tbarspace"},
+			                                            {xtype:"label", width:100},
+			                                            {xtype:"textfield", width:400, fieldLabel:"Names to filter", labelAlign:"right",allowBlank:true},
+			                                            { xtype: 'button', text: '', 
+			                                               //iconCls:"filter",
+			                                               icon:"/ext/resources/images/find.png",
+			                                               handler: function() {
+			                                                      alert("Peng!!!!!!!!!!!!");
+			                                               }
+			                                             }
+			                                       ]
+			                            }
+			                         ],
+			                         listeners: {
+			                             afterrender: {
+			                                 element:'',
+			                                 fn: function() {
+			                                     
+			                                     //update the button toolbar space width
+			                                     setTimeout(function(){
+			                                            Ext.getCmp("tbarspace").setWidth(Ext.get("west-body").getWidth(true)*0.4);
+			                                            createGraph();
+			                                        },300);
+			                                        setTimeout(function(){
+			                                            fireEvents();
+			                                        },600);
+			                                     console.log('western panel rendered');
+			                        //Ext.getCmp('west').getEl().on('contextmenu', function(e) {
+			                                                    
+			                                     }
+			                             },
+			                             resize: {
+			                                 element:'',
+			                                 fn:function() {
+			                                     createGraph();
+			                                 }
+			                             }
+			                         }
+			                      },{
+			                        region: 'center',
+			                        //border: false,
+			                        title:"",
+			                        //align:'stretch',
+			                        layout:"border",
+			                        tbar:[{
+								                xtype: 'button',
+								                text: 'Search Database By:',
+								                tooltip: 'Find Previous Row',
+								                //iconStyle:'color:#04408C; font-size:11px',
+								                icon:"/ext/resources/images/find.png",
+								                handler: function() {alert('peng !!!!');}
+								            },
+								            {
+								                 xtype: 'textfield',
+								                 name: 'searchInterestField',
+								                 hideLabel: true,
+								                 width: 200,
+								                 listeners: {
+								                 }
+								            }],
+			                        items:[
+			                            { 
+			                                //xtype: 'panel',
+			                                region:'north',
+			                                title:'Networks Selections',
+			                                split:true,
+			                                height: 200,
+			                                autoScroll:true,
+			                                collapsible:true,
+			                                items:[networkGrid]
+			                                //html:'here lists the networks'
+			                            },
+			                            {
+			                            	xtype:'tabpanel',
+			                            	region:'center',
+			                            	plain: true,
+			                            	collapsible:true,
+			                            	title:'Network Entity',
+			                            	
+			                            	activeTab:0,
+			                            	split:true,
+			                            	items: [
+			                                	 {
+			                                	 	title:'Entity Info',
+			                                	 	autoScroll:true,
+			                                	 	html:'<b>Entity Name</b>: AMPK<br><b>Entity Type:</b>Node<br><b>Entity Other infos:</b>blah blah <br><blah>'
+			                                	 },
+			                                	 {
+			                                            title:'Entity Literature',
+			                                            autoScroll:true,
+			                                            items:[literatureGrid]
+			                                    }
+			                            	]
+			                            },
+			                             {
+			                            	xtype:'tabpanel',
+			                            	region:'south',
+			                            	plain: true,
+			                            	height:200,
+			                            	collapsible:true,
+			                            	title:'Network People',
+			                            	split:true,
+			                            	activeTab:0,
+			                            	autoScroll:true,
+			                            	items: [
+			                                	 {
+			                                	 	title:'Most Pouplar',
+			                                	 	autoScroll:true,
+			                                	 	html:'<table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="/ext/resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">T.J Tang </a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table><br><table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="/ext/resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">Xudong Dai </a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table><br><table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="/ext/resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">John Dong</a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table>'
+			                                	 },
+			                                	 {
+			                                            title:'Most Recent',
+			                                            autoScroll:true,
+			                                            html:'<table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="/ext/resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">Xuanxuan Tang </a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table><br><table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="/ext/resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">Xudong Dai </a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table><br><table width="363" height="40" border="0" style="background-color:#CCFFFF"><tr><td width="51" rowspan="2"><div align="center"><img src="/ext/resources/images/edit-user.png" width="24" height="24" /></div></td><td width="302"><a href="one-chart.com" class="style3">John Dong</a></td></tr><tr><td height="24"><span class="style2">Partner at One-chart.com </span></td></tr><tr><td width="51"><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/star.png" width="16" height="16" /><img src="/ext/resources/images/dark_star.png" width="16" height="16" /></td><td><em>"<a href="#">Expernet is a well-designed company...."</a></em></td></tr></table>'
+			                                    }
+			                            	]
+			                            }
+			                          
+			                        ]
+			                      }]
+		            })
+		 }   
 
 function showTips(e) {
     //var htmlcontent='Entity Name: '+e.target.name+'</br>Related Literatures: <a onclick=showLiterature("'+e.target.name+'")>5</a>';
@@ -520,6 +526,10 @@ function initNetwork(networkJson) {
 	 else {
 	 	netowrkGrid.getStore().loadRecords(networkStore.getRange());
 	 }
+	 
+	 if (typeof viewport=="undefined")
+	     					createViewPort();
+	 
 }
 
 function createGraph() {
