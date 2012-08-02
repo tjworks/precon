@@ -438,7 +438,7 @@ function initApp() {
 function initNetwork(networkJson) {
 // sample static data for the store
     
-    if (networkJson.length <=0) {
+    if (networkJson.count <=0) {
 	    networkJson = [
 	            ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
 	            ['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111'],
@@ -449,6 +449,15 @@ function initNetwork(networkJson) {
     else {
     	console.log('initNetwork called and a quickSearch returned value as:');
     	console.log(networkJson);
+    	networkJson=[];
+    	for (var i=0; i<networkJson.count; i++) {
+	    	var anetwork=[];
+	    	anetwork.push(networkJson[i].id);
+	    	anetwork.push(networkJson[i].create_tm);
+	    	anetwork.push(networkJson[i].owner);
+	    	anetwork.push(networkJson[i].type);
+	    	networkJson.push(anetwork);
+	    }
     }
     
     // create the data store
