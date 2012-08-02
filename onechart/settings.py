@@ -203,6 +203,7 @@ LOGIN_URL = '/accounts/signin/'
 LOGOUT_URL = '/accounts/signout/'
 AUTH_PROFILE_MODULE='onechart.PreconProfile'
 
+USERENA_ACTIVATION_REQUIRED=False
 #import mongoengine
 #mongoengine.connect(MONGODB_NAME, alias='default', host=MONGODB_HOST  )
 MONGODB_HOST='mongo.one-chart.com'
