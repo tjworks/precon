@@ -25,8 +25,6 @@ urlpatterns = patterns('',
     # graph app
     url(r'^graph/(?P<precon_id>.*)$', 'graph.graphview.handler'),
     
-    # search/proxy
-    url(r'^proxy/(?P<target>.*)$', 'onechart.proxy.handler'),
     
     # search/proxy
     url(r'^search', 'onechart.search.handler'),

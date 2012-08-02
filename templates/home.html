@@ -24,80 +24,68 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
+
 <!--  precon scripts -->
 <script type="text/javascript" src="/ext/js/precon.client.js"></script>
 <script type="text/javascript" src="/ext/js/precon.search.js"></script>
 
 {% block js_include %} {% endblock %}
 
-<style>
-.ui-autocomplete-input {
-    font-size:2em;
-    padding:10px;
-    width:500px;    
-    
-    height:40px
-}
-
-ul.ui-autocomplete.ui-menu{
-   
-     border-top: 1px solid #96d1f8;
-  background: #00B7F9;
-  background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#CCC));
-  background: -webkit-linear-gradient(top, #FFF, #CCC);
-  background: -moz-linear-gradient(top, #FFF, #CCC);
-  background: -ms-linear-gradient(top, #FFF, #00B7F9);
-  background: -o-linear-gradient(top, #FFF, #00B7F9);
-  
-   padding: 0.5em 0.5em;
-   -webkit-border-radius: 16px;
-   -moz-border-radius: 16px;
-   border-radius: 16px;
-   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
-   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
-   box-shadow: rgba(0,0,0,1) 0 1px 0;
-   text-shadow: rgba(0,0,0,.4) 0 1px 0;
-   
-   
-   width:620px;
-   overflow:hidden;
-}
-
-li.ui-menu-item {
-    padding:3px 5px
-}
-.ui-state-hover, .ui-autocomplete li:hover
-{
-    padding: 3px 0px   ; 
-    background:#CCC;
-    outline:none;
-}
-</style>
-<script>
-
-
-
-</script>
 </head>
 
 <body id="home">
 
 {% block headernav %}
+<script type="text/javascript" src="/ext/js/users.js"></script>
 <div id="myheader">
         <div id="myheaderContent">
          <div class="myheaderNav right">
              <ul>
-                 <li><a href="/">普康病友网</a></li>
-                 <li><a href="/graph">普康专家网</a></li>
-                 <li><a href="/">How It Works</a></li>
-                 <li><a href="/">Sign Up</a></li>
-                 <li><a href="/">Log In</a></li>                    
+                 <li><a href="/">首页</a></li>
+                 <li><a href="/graph">普康一历</a></li>                 
+                 <li><a href="/">如何工作</a></li>
+                 {% if user.username %}
+                    <li><a id="userid" class="">Hi, {{ user.username }}</a></li>
+                    <li><a id="signout-link" href="#">退出</a></li>
+                 {% else %}
+				    <li><a href="#login-box" id="signin-link" class="login-window">登录</a></li>
+				    <li><a id="userid" class=""></a></li>   
+				 {% endif %}
+                       
+                 
+                                               
                 </ul>                                       
          </div>                 
          <div class="clear"></div>
      </div>
  
 </div>
+
+    <div id="login-box" class="login-popup">
+        <a href="#" class="close"><img src="/ext/resources/images/close_pop.png" class="btn_close" title="Close Window" alt="Close" /></a>
+        <form method="post" class="signin" action="/accounts/signin" id="login-form">
+       
+             <input type='hidden' name='csrfmiddlewaretoken' value='eiR9OMLcy6Hgig7B8TZwwqNei6S6NIlC' />
+             <fieldset class="textbox">
+             <label class="username">
+             <span>Username or Email</span>
+             <input id="username" name="identification" value="" type="text" autocomplete="on" placeholder="Enter username or email">
+             </label>
+             <label class="password">
+             <span>Password</span>
+             <input id="password" name="password" value="" type="password" placeholder="Password">                
+             </label>                
+             <button class="submit button" type="button" id="signin-btn">Sign in</button>
+             
+              <!-- <input type="checkbox" name="remember_me" id="id_remember_me" style="display:inline;width:30px" /> <label for="id_remember_me">Remember me for a month</label> -->
+              <label for="id_remember_me" style="color:#FFF"><input type="checkbox" name="signup" id="id_signup" style="display:inline;width:30px" /> I'm new user</label>
+              
+              <label style="color:red" id="login-error"></label>  
+             <div>
+             </fieldset>
+       </form>
+    </div>
+
 {% endblock %}     
     
 
@@ -116,7 +104,7 @@ li.ui-menu-item {
                </ul>
                 -->    
            
-           <button id="search-btn" class="rounded">  &nbsp;&nbsp;GO &nbsp;&nbsp;</button>               
+           <button id="search-btn" class="button">  &nbsp;&nbsp;GO &nbsp;&nbsp;</button>               
   </div>
 
 
