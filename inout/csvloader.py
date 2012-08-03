@@ -111,7 +111,7 @@ class CSVLoader(object):
 			networkName = self.getCol('Network',row) or 'DEFAULT'
 			network = networks[networkName] if networkName in networks else Network()
 			network.name = networkName
-			network.owner='precon'
+			network.owner='peop_precon'
 			networks[networkName]  = network
 			
 			network._connections = network._connections or []

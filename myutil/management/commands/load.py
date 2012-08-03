@@ -1,10 +1,10 @@
-
 from django.core.management.base import NoArgsCommand, BaseCommand
-from inout import demo
 from myutil import idtool
+from myutil.objdict import ObjDict
 from myutil.xml2dict import XML2Dict
 from onechart import mongo
-from onechart.models import Association, Publication
+from onechart.models import Association, Publication, People
+from onechart.mongo import db
 from optparse import make_option
 import os
 import sys
@@ -23,6 +23,9 @@ class Command(BaseCommand):
         Performs various data importing tasks.
         
         python manage.py load csv -f demodata.csv
+        python manage.py load pubmed   # load demo pubmed articles
+        python manage.py load demodata     # load demo data
+        python manage.py load init        # other initial data
         """
 
     requires_model_validation = True
@@ -30,17 +33,43 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         #from inout import mif 
         #mif.importmif()
-        #self.registery()
-        
+        #self.registery()        
         if args[0] == 'csv':            
             load_csv( options.get('inputfile', None))            
-        if args[0] == 'init':
-            init_data()
         if args[0] == 'pubmed':
             load_pubmeds( options.get('ids', None))
+        func = getattr(sys.modules[__name__], args[0])
+        if func:
+            func()
+        else:
+            print "Invalid subcommand %s" %args[0]
+      
 
-def init_data():    
+
+def mongo_scripts():
+    mydb= db()
+    for f in filesInDir("etc/mongo"):
+        if f.find(".js")<0: continue
+        funcname = f.replace(".js", "")
+        handle = open("etc/mongo/%s" %f,'r')
+        funcbody = handle.read()
+        handle.close()
+        print "Load function: %s" %funcname
+        mydb.system.js.save({'_id':funcname, 'value':funcbody}, safe=True)            
+    print "Done"
+    # db.system.js.find().forEach(function(u){eval(u._id + " = " + u.value);});
+    
+    
+def demodata():
+    # precon user
+    precon = People({'first':'precon', 'last':'onechart'})
+    precon._id = "peop_precon"
+    precon.save()    
+    
+def initdata():    
     populate_associations()
+    
+    
     
 def populate_associations():
     names = 'decreases,being uptaken ,activates,inhibits,stimulats,inhibits,activates,associated with reduced risk'.split(',')
