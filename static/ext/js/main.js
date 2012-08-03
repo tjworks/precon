@@ -477,15 +477,15 @@ function initNetwork(networkObjects) {
 	    	anetworkObject=networkObjects[i]._connections;
 	    	console.log('networkobject i');
 	    	console.log(anetworkObject);
-	    	console.log(anetworkObject);
 	    	for (var j=0; j<=anetworkObject.length; j++) {
-	    		
 	    		var anodes=[];
-	    		networkObject_conn=anetworkObject[j];
+	    		networkObject_conn=anetworkObject[j].entities;
 	    		console.log('here is the connection object');
 	    		console.log(networkObject_conn);
-	    		for (var k=0; k<=networkObject_conn.entities.length;k++) {
-	    			var anode=networkObject_conn.entities[k];
+	    		for (var k=0; k<=networkObject_conn.length;k++) {
+	    			var anode=networkObject_conn[k];
+	    			console.log('here is the connection object[k]');
+	    			console.log(networkObject_conn[k]);
 	    			anodes.push(anode);
 	    		}
 	    		
