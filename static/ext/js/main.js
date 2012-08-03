@@ -503,8 +503,6 @@ function initNetwork(networkObjects) {
 	    	}
 	    }
 	    
-	    //call the createGraph to draw the nodes and links
-	    createGraph();
     }
     
     // create the data store
@@ -602,7 +600,7 @@ function createGraph() {
         graph.addNode("cancer (animal models)");
         graph.addNode("type 2 diabete");
         graph.addNode("angiogenesis");*/
-    for (var i=0; i<nodeJson.length; i++) {
+    for (var i=0; i<nodesJson.length; i++) {
     	graph.addNode(nodesJson[i]);
     }
 
