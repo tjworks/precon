@@ -492,7 +492,7 @@ function initNetwork(networkObjects) {
 	    			}
 	    		}
 	    		
-	    		linksJson=linksJson.contact(alink);
+	    		linksJson=linksJson.concat(alink);
 	    		nodesJson=nodesJson.concat[anodes];
 	    	}
 	    }
