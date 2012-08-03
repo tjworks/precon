@@ -71,7 +71,7 @@ precon.searchNetworks = function(query, callback){
 	else if(query.network)
 		qstr = escape('{"network":"TOKEN"}'.replace("TOKEN",query.network))
 	else if(query.publication)
-		qstr = escape('{"refs.pubmed":"TOKEN"}'.replace("TOKEN",query.pubmed))
+		qstr = escape('{"refs.pubmed":"TOKEN"}'.replace("TOKEN",query.publication.substring(4)))
 	else if(query.people)
 		qstr = escape('{"owner":"TOKEN"}'.replace("TOKEN",query.people))
 	else{
