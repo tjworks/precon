@@ -474,9 +474,11 @@ function initNetwork(networkObjects) {
 	    	anetwork.push(networkObjects[i].owner);
 	    	anetwork.push('with '+networkObjects[i].connections.count+' links');
 	    	networkJson.push(anetwork);
-	    	var anetworkObject=networkObjects[i];
+	    	anetworkObject=networkObjects[i];
 	    	console.log('networkobject i');
 	    	console.log(anetworkObject);
+	    	console.log(anetworkObject['_connections']);
+	    	console.log(anetworkObject._connections);
 	    	for (var j=0; j<=anetworkObject._connections.length; j++) {
 	    		
 	    		var anodes=[];
