@@ -450,7 +450,7 @@ function initNetwork(networkObjects) {
 		return
 	}
   
-    networkJson=[]
+    networkJson=[];
     nodesJson=[];
     linksJson=[];
     if (networkObjects.length <=0) {
@@ -493,7 +493,7 @@ function initNetwork(networkObjects) {
 	    		}
 	    		
 	    		linksJson=linksJson.concat(alink);
-	    		nodesJson=nodesJson.concat[anodes];
+	    		nodesJson=nodesJson.concat(anodes);
 	    	}
 	    }
 	    
