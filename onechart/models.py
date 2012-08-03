@@ -6,6 +6,7 @@ from onechart import mongo
 from userena.models import UserenaLanguageBaseProfile
 import logging
 import re
+import time
 logger = logging.getLogger(__name__)
 
 
@@ -13,6 +14,8 @@ CLEANUP_PATTERN = re.compile(r'[()\s]')
 class BaseModel(dict):
     def __init__(self, data=None):
         if(data):self.update(data)
+        else:
+            self.create_tm = time.time()
         #self.id = self._id if self._id else None
         if not self._id: self._id= idtool.generate(self._col)
         
@@ -185,7 +188,20 @@ class Association(BaseModel):
 class Experiment(BioModel):
     pass
 
-
+class People(BioModel):    
+    """
+    Primary id: 
+        peopXXXX           
+    """    
+    _col="people"    
+    def __init__(self, data=None):
+        BioModel.__init__(self, data)
+        self.first = self.first or ''
+        self.last =self.last or ''
+        self.middle = self.middle or ''
+        
+        
+        
 class PreconProfile(UserenaLanguageBaseProfile ):
     user = models.OneToOneField(User,
                                 unique=True,

@@ -2,7 +2,7 @@ precon =  {}
 if (typeof (console) == 'undefined') console = {log:function(){}}
 precon.conf = {
 	api_base: 'http://mongo.one-chart.com:3000/oc',
-	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication'}
+	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication',peop:'people'}
 }
 
 
@@ -73,7 +73,7 @@ precon.searchNetworks = function(query, callback){
 	else if(query.publication)
 		qstr = escape('{"refs.pubmed":"TOKEN"}'.replace("TOKEN",query.pubmed))
 	else if(query.people)
-		qstr = escape('{"owner":"TOKEN"}'.replace("TOKEN",query.owner))
+		qstr = escape('{"owner":"TOKEN"}'.replace("TOKEN",query.people))
 	else{
 		console.log("Invalid query:", query)
 		throw "Not a valid query specification: "+ query
