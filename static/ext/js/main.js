@@ -451,12 +451,17 @@ function initNetwork(networkObjects) {
 	}
   
     networkJson=[]
+    nodesJson=[];
+    linksJson=[];
     if (networkObjects.length <=0) {
     	    networkJson = [
-    	            ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
-	            ['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111'],
-	             ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
-	            ['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111']
+    	    
+    	        /*
+					['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
+								['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111'],
+								 ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
+								['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111']*/
+				
 	       ];
     }
     else {
@@ -464,12 +469,36 @@ function initNetwork(networkObjects) {
     	//networkJson=[];
     	for (var i=0; i<networkObjects.length; i++) {
 	    	var anetwork=[];
-	    	anetwork.push(networkObjects[i].id);
+	    	anetwork.push(networkObjects[i]._id);
 	    	anetwork.push(networkObjects[i].create_tm);
 	    	anetwork.push(networkObjects[i].owner);
-	    	anetwork.push(networkObjects[i].type);
+	    	anetwork.push('with '+networkObjects[i].connections.count+' links');
 	    	networkJson.push(anetwork);
+	    	
+	    	for (var j=0; j<=networkObjects[i]._connections.length; j++) {
+	    		
+	    		var anodes=[];
+	    		for (var k=0; k<=networkObjects[i]._connections[j].entities.length;k++) {
+	    			var anode=networkObjects[i]._connections[j].entities[k];
+	    			anodes.push(anode);
+	    		}
+	    		
+	    		var alink=[];
+	    		for(var l=0; l<=anodes.length;l++) {
+	    			for (var m=0; m<=anodes.length; m++) {
+	    				if (l!=m) {
+	    					alink.push({'from':anodes[l], 'to':anodes[m]});
+	    				}
+	    			}
+	    		}
+	    		
+	    		linksJson=linksJson.contact(alink);
+	    		nodesJson=nodesJson.concat[anodes];
+	    	}
 	    }
+	    
+	    //call the createGraph to draw the nodes and links
+	    createGraph();
     }
     
     // create the data store
@@ -536,11 +565,6 @@ function initNetwork(networkObjects) {
 	 if (typeof viewport=="undefined")
 	     					createViewPort();
 	
-	
-    
-    
-    
-    
 	 
 }
 
@@ -548,54 +572,62 @@ function createGraph() {
     Ext.select("svg").remove();
     graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
     //graph = new myGraph("#west-body");
+    /*
     graph.addNode("Metforming");
-    graph.addNode("AMPK");
-    graph.addNode("blood glucose concentration");
-    graph.addNode("Organic cation transporter 1 (OCT1)");
-    graph.addNode("glucose synthesis");
-    graph.addNode("lipid synthesis");
-    graph.addNode("protein synthesis");
-    graph.addNode("fatty acid oxidation");
-    graph.addNode("glucose uptake");
-    graph.addNode("respiratory-chain complex 1");
-    graph.addNode("fructose-1,6-bisphosphatase");
-    graph.addNode("fatty acid synthase");
-    graph.addNode("acetyl CoA carboxylase(ACC)");
-    graph.addNode("mTORC1");
-    graph.addNode("TSC2");
-    graph.addNode("cancer risk");
-    graph.addNode("prostate cancer risk");
-    graph.addNode("pancreatic cancer risk");
-    graph.addNode("breast cancer");
-    graph.addNode("cancer (cell lines)");
-    graph.addNode("cancer (animal models)");
-    graph.addNode("type 2 diabete");
-    graph.addNode("angiogenesis");
+        graph.addNode("AMPK");
+        graph.addNode("blood glucose concentration");
+        graph.addNode("Organic cation transporter 1 (OCT1)");
+        graph.addNode("glucose synthesis");
+        graph.addNode("lipid synthesis");
+        graph.addNode("protein synthesis");
+        graph.addNode("fatty acid oxidation");
+        graph.addNode("glucose uptake");
+        graph.addNode("respiratory-chain complex 1");
+        graph.addNode("fructose-1,6-bisphosphatase");
+        graph.addNode("fatty acid synthase");
+        graph.addNode("acetyl CoA carboxylase(ACC)");
+        graph.addNode("mTORC1");
+        graph.addNode("TSC2");
+        graph.addNode("cancer risk");
+        graph.addNode("prostate cancer risk");
+        graph.addNode("pancreatic cancer risk");
+        graph.addNode("breast cancer");
+        graph.addNode("cancer (cell lines)");
+        graph.addNode("cancer (animal models)");
+        graph.addNode("type 2 diabete");
+        graph.addNode("angiogenesis");*/
+    for (var i=0; i<nodeJson.length; i++) {
+    	graph.addNode(nodesJson[i]);
+    }
 
-    graph.addLink("Metforming", "blood glucose concentration","decreases");
-    graph.addLink("Metforming", "Organic cation transporter 1 (OCT1)","beinguptaken");
-    graph.addLink("Metforming", "AMPK","activates");
-    graph.addLink("Metforming", "respiratory-chain complex 1","association");
-    graph.addLink("Metforming", "fructose-1,6-bisphosphatase","association");
-    graph.addLink("Metforming", "cancer risk","association");
-    graph.addLink("Metforming", "prostate cancer risk","association");
-    graph.addLink("Metforming", "pancreatic cancer risk","pathway");
-    graph.addLink("Metforming", "breast cancer","inhibits");
-    graph.addLink("Metforming", "cancer (cell lines)","inhibits");
-    graph.addLink("Metforming", "cancer (animal models)","inhibits");
-    graph.addLink("Metforming", "type 2 diabete","inhibits");
-    graph.addLink("Metforming", "angiogenesis","inhibits");
-    graph.addLink("AMPK", "glucose synthesis","inhibits");
-    graph.addLink("AMPK", "lipid synthesis","inhibits");
-    graph.addLink("AMPK", "protein synthesis","inhibits");
-    graph.addLink("AMPK", "fatty acid oxidation","stimulats");
-    graph.addLink("AMPK", "glucose uptake","stimulats");
-    graph.addLink("AMPK", "respiratory-chain complex 1","decreases");
-    graph.addLink("AMPK", "fatty acid synthase","decreases");
-    graph.addLink("AMPK", "acetyl CoA carboxylase(ACC)","inhibits");
-    graph.addLink("AMPK", "mTORC1","inhibits");
-    graph.addLink("AMPK", "TSC2","activates");
+ 	for (var i=0; i<linksJson.length; i++) {
+    	graph.addLink(linksJson[i].from,linksJson[i].to);
+    }
     
+    /*
+    graph.addLink("Metforming", "blood glucose concentration","decreases");
+        graph.addLink("Metforming", "Organic cation transporter 1 (OCT1)","beinguptaken");
+        graph.addLink("Metforming", "AMPK","activates");
+        graph.addLink("Metforming", "respiratory-chain complex 1","association");
+        graph.addLink("Metforming", "fructose-1,6-bisphosphatase","association");
+        graph.addLink("Metforming", "cancer risk","association");
+        graph.addLink("Metforming", "prostate cancer risk","association");
+        graph.addLink("Metforming", "pancreatic cancer risk","pathway");
+        graph.addLink("Metforming", "breast cancer","inhibits");
+        graph.addLink("Metforming", "cancer (cell lines)","inhibits");
+        graph.addLink("Metforming", "cancer (animal models)","inhibits");
+        graph.addLink("Metforming", "type 2 diabete","inhibits");
+        graph.addLink("Metforming", "angiogenesis","inhibits");
+        graph.addLink("AMPK", "glucose synthesis","inhibits");
+        graph.addLink("AMPK", "lipid synthesis","inhibits");
+        graph.addLink("AMPK", "protein synthesis","inhibits");
+        graph.addLink("AMPK", "fatty acid oxidation","stimulats");
+        graph.addLink("AMPK", "glucose uptake","stimulats");
+        graph.addLink("AMPK", "respiratory-chain complex 1","decreases");
+        graph.addLink("AMPK", "fatty acid synthase","decreases");
+        graph.addLink("AMPK", "acetyl CoA carboxylase(ACC)","inhibits");
+        graph.addLink("AMPK", "mTORC1","inhibits");
+        graph.addLink("AMPK", "TSC2","activates");*/
 
     
     /*
