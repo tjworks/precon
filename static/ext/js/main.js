@@ -482,8 +482,9 @@ function initNetwork(networkObjects) {
 	    	for (var j=0; j<=anetworkObject._connections.length; j++) {
 	    		
 	    		var anodes=[];
-	    		for (var k=0; k<=anetworkObject._connections[j].entities.length;k++) {
-	    			var anode=anetworkObject._connections[j].entities[k];
+	    		networkObject_conn=anetworkObject._connections[j];
+	    		for (var k=0; k<=networkObject_conn.entities.length;k++) {
+	    			var anode=networkObject_conn.entities[k];
 	    			anodes.push(anode);
 	    		}
 	    		
