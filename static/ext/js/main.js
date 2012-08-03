@@ -477,20 +477,20 @@ function initNetwork(networkObjects) {
 	    	anetworkObject=networkObjects[i]._connections;
 	    	console.log('networkobject i');
 	    	console.log(anetworkObject);
-	    	for (var j=0; j<=anetworkObject.length; j++) {
+	    	for (var j=0; j<anetworkObject.length; j++) {
 	    		var anodes=[];
 	    		networkObject_conn=anetworkObject[j].entities;
 	    		console.log('here is the connection object');
 	    		console.log(networkObject_conn);
 	    		for (var k=0; k<=networkObject_conn.length;k++) {
 	    			var anode=networkObject_conn[k];
-	    			console.log('here is the connection object[k]');
+	    			console.log('here is the entity object[k]');
 	    			console.log(networkObject_conn[k]);
 	    			anodes.push(anode);
 	    		}
 	    		
 	    		var alink=[];
-	    		for(var l=0; l<=anodes.length;l++) {
+	    		for(var l=0; l<anodes.length;l++) {
 	    			for (var m=0; m<=anodes.length; m++) {
 	    				if (l!=m) {
 	    					alink.push({'from':anodes[l], 'to':anodes[m]});
