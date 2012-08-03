@@ -57,16 +57,27 @@ precon._ajax = function(url, callback){
  */
 precon.searchNetworks = function(query, callback){
 	qstr = ''
+	if(!query) throw "No query criteria specified"
+	if(typeof(query) == 'string'){
+		var prefix = query.substring(0,4);
+		var model = precon.conf.prefix_mapping[prefix]
+		if(!model) throw "ID format is not supported"
+		var obj = {}
+		obj[model] = query
+		query = obj 
+	}
 	if(query.entity)
 		qstr = escape('{"entities":"TOKEN"}'.replace("TOKEN",query.entity))
 	else if(query.network)
 		qstr = escape('{"network":"TOKEN"}'.replace("TOKEN",query.network))
-	else if(query.pubmed)
+	else if(query.publication)
 		qstr = escape('{"refs.pubmed":"TOKEN"}'.replace("TOKEN",query.pubmed))
-	else if(query.owner)
+	else if(query.people)
 		qstr = escape('{"owner":"TOKEN"}'.replace("TOKEN",query.owner))
-	else
-		throw "No query criteria specified"
+	else{
+		console.log("Invalid query:", query)
+		throw "Not a valid query specification: "+ query
+	}
 	
 	url = precon.conf.api_base + "/connection?query="+ qstr
 	

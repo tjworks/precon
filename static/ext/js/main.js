@@ -21,8 +21,7 @@ Ext.require([
 
                 
 Ext.onReady(function(){
-     //init the Network Graph
-     initApp();	
+    
      
 	// sample static data for the store
     var literatureData = [
@@ -56,7 +55,7 @@ Ext.onReady(function(){
     });
     
     // create the Grid, see Ext.
-   var literatureGrid=Ext.create('Ext.ux.LiveSearchGridPanel', {
+    literatureGrid=Ext.create('Ext.ux.LiveSearchGridPanel', {
         store: literatureStore,
         columnLines: true,
         columns: [
@@ -110,7 +109,8 @@ Ext.onReady(function(){
     });
  
     //initApp check the url configure and initialize Grid tables for network.
-  
+   //init the Network Graph
+   initApp();	
 
 });
 
@@ -431,7 +431,7 @@ function fireEvents() {
 function initApp() {
 	var userid=location.href.substring(location.href.lastIndexOf('\/')+1);
 	if (userid.length>0)
-	   precon.quickSearch(userid, initNetwork);
+	   precon.searchNetworks(userid, initNetwork);
 }
 
 
@@ -441,27 +441,31 @@ function initApp() {
  * No returns. This function will initialize/update the network table.
  * 
  */
-function initNetwork(networkJson) {
+function initNetwork(networkObjects) {
 // sample static data for the store
-    
-    if (networkJson.count <=0) {
-	    networkJson = [
-	            ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
+	if(!networkObjects){
+		console.log("Error: no result")
+		return
+	}
+  
+    networkJson=[]
+    if (networkObjects.length <=0) {
+    	    networkJson = [
+    	            ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
 	            ['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111'],
 	             ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
 	            ['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111']
 	       ];
     }
     else {
-    	console.log('initNetwork called and a quickSearch returned value as:');
-    	console.log(networkJson);
-    	networkJson=[];
-    	for (var i=0; i<networkJson.count; i++) {
+    	console.log('initNetwork called and a quickSearch returned value as:', networkObjects);    	
+    	//networkJson=[];
+    	for (var i=0; i<networkObjects.length; i++) {
 	    	var anetwork=[];
-	    	anetwork.push(networkJson[i].id);
-	    	anetwork.push(networkJson[i].create_tm);
-	    	anetwork.push(networkJson[i].owner);
-	    	anetwork.push(networkJson[i].type);
+	    	anetwork.push(networkObjects[i].id);
+	    	anetwork.push(networkObjects[i].create_tm);
+	    	anetwork.push(networkObjects[i].owner);
+	    	anetwork.push(networkObjects[i].type);
 	    	networkJson.push(anetwork);
 	    }
     }
@@ -480,7 +484,7 @@ function initNetwork(networkJson) {
     // create the Grid, see Ext.
     if (typeof networkGrid=="undefined") {
 	    networkGrid=Ext.create('Ext.ux.OneChartLiveSearchGridPanel', {
-	        store: literatureStore,
+	        store: networkStore,
 	        columnLines: true,
 	        columns: [
 	            {
@@ -529,6 +533,12 @@ function initNetwork(networkJson) {
 	 
 	 if (typeof viewport=="undefined")
 	     					createViewPort();
+	
+	
+    
+    
+    
+    
 	 
 }
 
