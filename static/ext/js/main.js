@@ -474,12 +474,14 @@ function initNetwork(networkObjects) {
 	    	anetwork.push(networkObjects[i].owner);
 	    	anetwork.push('with '+networkObjects[i].connections.count+' links');
 	    	networkJson.push(anetwork);
-	    	
-	    	for (var j=0; j<=networkObjects[i]._connections.length; j++) {
+	    	var anetworkObject=networkObjects[i];
+	    	console.log('networkobject i');
+	    	console.log(anetworkObject);
+	    	for (var j=0; j<=anetworkObject._connections.length; j++) {
 	    		
 	    		var anodes=[];
-	    		for (var k=0; k<=networkObjects[i]._connections[j].entities.length;k++) {
-	    			var anode=networkObjects[i]._connections[j].entities[k];
+	    		for (var k=0; k<=anetworkObject._connections[j].entities.length;k++) {
+	    			var anode=anetworkObject._connections[j].entities[k];
 	    			anodes.push(anode);
 	    		}
 	    		
