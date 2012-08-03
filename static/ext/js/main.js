@@ -443,6 +443,8 @@ function initApp() {
  */
 function initNetwork(networkObjects) {
 // sample static data for the store
+   console.log('here is the returns from JT. ');
+   console.log(networkObjects);
 	if(!networkObjects){
 		console.log("Error: no result")
 		return
