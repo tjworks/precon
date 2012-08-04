@@ -108,6 +108,10 @@ Ext.onReady(function(){
         	]	
         }]
     });
+    
+    nodesJson = []
+    linksJson = []
+    if (typeof viewport=="undefined") createViewPort();
  
    //init the Network Graph
    initApp();	
@@ -283,7 +287,7 @@ function createViewPort() {
 			                                height: 200,
 			                                autoScroll:true,
 			                                collapsible:true,
-			                                items:[networkGrid]
+			                                items:[] //networkGrid
 			                                //html:'here lists the networks'
 			                            },
 			                            {
@@ -435,6 +439,8 @@ function initApp() {
 	if (objid){
 		precon.searchNetworks(objid, initNetwork);			
 	}
+	
+	showMainObject()
 }
 
 // get the object id from the URL, if it's available
@@ -456,6 +462,7 @@ function showMainObject(){
 			title:title,
 			html:html,
 			autoScroll:true,
+			closable:true
 		})
 		Ext.getCmp("infopanel").setActiveTab(tab)
 		
@@ -498,7 +505,11 @@ function initNetwork(networkObjects) {
 		console.log("Error: no result")
 		return
 	}
-  
+	currentNetworks = networkObjects 
+	
+	graphModel = new precon.NetworkGraph()
+	graph.setModel(graphModel)
+	
     networkJson=[];
     nodesJson=[];
     linksJson=[];
@@ -514,8 +525,15 @@ function initNetwork(networkObjects) {
 	       ];
     }
     else {
-    	console.log('initNetwork called and a quickSearch returned value as:', networkObjects);    	
+    	console.log('initNetwork called and a quickSearch returned value as:', networkObjects);
+    	networkObjects.forEach(function(netObj){
+    		var n = new precon.Network(netObj)
+    		graphModel.addNetwork(n);
+    	});
+    	
+    	
     	//networkJson=[];
+    	/**
     	for (var i=0; i<networkObjects.length; i++) {
 	    	var anetwork=[];
 	    	anetwork.push(networkObjects[i]._id);
@@ -572,7 +590,7 @@ function initNetwork(networkObjects) {
 	    			if(nodesJson.indexOf(node)<0) nodesJson.push(node)
 	    		});	    		
 	    	}
-	    }
+	    } // end for */
 	    
     }
     
@@ -647,8 +665,10 @@ function initNetwork(networkObjects) {
 }
 
 function createGraph() {
+	console.log("Recreating graph")
     Ext.select("svg").remove();
     graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
+    
     //graph = new myGraph("#west-body");
     /*
     graph.addNode("Metforming");
@@ -674,6 +694,7 @@ function createGraph() {
         graph.addNode("cancer (animal models)");
         graph.addNode("type 2 diabete");
         graph.addNode("angiogenesis");*/
+    /**
     for (var i=0; i<nodesJson.length; i++) {
     	graph.addNode(nodesJson[i]);
     }
@@ -681,7 +702,7 @@ function createGraph() {
  	for (var i=0; i<linksJson.length; i++) {
     	graph.addLink(linksJson[i].from,linksJson[i].to);
     }
-    
+    */
     /*
     graph.addLink("Metforming", "blood glucose concentration","decreases");
         graph.addLink("Metforming", "Organic cation transporter 1 (OCT1)","beinguptaken");

@@ -2,10 +2,16 @@
 <script src="test/qunit/qunit.js"></script>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-<script type="text/javascript" src="js/precon.model.js"></script>
-<script type="text/javascript" src="js/precon.client.js"></script>
 
+<script type="text/javascript" src="js/precon.client.js"></script>
+<script type="text/javascript" src="js/precon.model.js"></script>
 <script>
+
+function dummyHandler(){	
+	if(!arguments) return
+	console.log("dummy: " , arguments)
+	
+}
 
 var network_id = 'ntwk_intact_20541250'
 
@@ -13,42 +19,37 @@ test( "hello test", function() {
 	  ok( 1 == "1", "Passed!" );
 });
 
-asyncTest( "getObject", 1, function() {
+asyncTest("Graph test", 2, function(){
+	var netid = 'netw120728200827100249'
+	precon.getObject(netid, function(netObj){
+		ok("Got network by id")
+		
+		
+		precon.searchNetworks(netid, function(netObjs){
+			network =new precon.Network(netObjs[0])
+		
+			graph = new precon.NetworkGraph()
+	        
+	        // bind events handler
+	        graph.bind('add.network', dummyHandler)
+	        graph.bind('add.connection', dummyHandler)
+	        graph.bind('add.node', dummyHandler)        
+	        
+	        graph.addNetwork(network)
+	        ok("good")
+	        start();
+		});		
+		
+	});
+})
 
+asyncTest( "getObject", 1, function() {
     precon.getObject(network_id, function(obj){
     	ok(obj._id == network_id, "Got expected network")
     	start();
-    })
-	 
+    })	 
 });
 
-
-asyncTest( "search", 1, function() {
-
-    precon.search({q:'abi1'}, function(result){
-                 
-	    ok(result && result.length && result[0]._id == 'enti_up_Q8CBW3', "Expecting enti_up_Q8CBW3 but got "+ result[0]._id)
-	    start();
-	    // result should look like this:
-	    {
-	        _id: "enti_up_Q8CBW3"
-	        group: "protein"
-	        label: ""
-	        name: "E3 ubiquitin-protein ligase XIAP"
-	        org: ""
-	        refs: {
-	                intact: "184153"
-	                uniprotkb: "P98170"
-	        }
-	        intact: "184153"
-	        uniprotkb: "P98170"
-	        symbol: "xiap"
-	    }
-        
-        start();
-    })
-     
-});
 
 
 pubmed_id = 'publ19653109'
@@ -73,3 +74,39 @@ asyncTest( "Get publication", 1, function() {
 <div id="qunit"></div>
 </body>
 
+
+
+<script>
+
+/**
+ 
+ 
+asyncTest( "search", 1, function() {
+
+    precon.search({q:'abi1'}, function(result){
+                 
+        ok(result && result.length && result[0]._id == 'enti_up_Q8CBW3', "Expecting enti_up_Q8CBW3 but got "+ result[0]._id)
+        start();
+        // result should look like this:
+        {
+            _id: "enti_up_Q8CBW3"
+            group: "protein"
+            label: ""
+            name: "E3 ubiquitin-protein ligase XIAP"
+            org: ""
+            refs: {
+                    intact: "184153"
+                    uniprotkb: "P98170"
+            }
+            intact: "184153"
+            uniprotkb: "P98170"
+            symbol: "xiap"
+        }
+        
+        start();
+    })
+     
+});
+
+
+ */</script>

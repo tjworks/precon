@@ -105,8 +105,7 @@ precon.searchNetworks = function(query, callback){
 			net.connections.push(con._id)
 			net._id = con.network
 		}
-		for(var n in nets)
-			precon.preload(nets[n])
+		//for(var n in nets)  precon.preload(nets[n])
 		
 		// now get network properties
 		if(ids && ids.length)
@@ -115,6 +114,7 @@ precon.searchNetworks = function(query, callback){
 					var network = networks[n]
 					network._connections = nets[network._id]._connections
 					network.connections = nets[network._id].connections
+					network.isComplete = false
 					
 				}
 				callback && callback(networks)
@@ -221,7 +221,21 @@ precon.getObjects = function(obj_ids, callback){
 	model = precon.conf.prefix_mapping[prefix]
 	if(!model) throw "Invalid or unsupported object id: "+ obj_ids
 	
-	ids= obj_ids.join('","')
+	var hits = []
+	var misses = []
+	obj_ids.forEach(function(id){
+		if(id in precon.cache) hits.push(id)
+		else misses.push(id)
+	})
+	if(misses.length == 0){
+		results = []
+		hits.forEach(function(id){
+			results.push( precon.cache[id] )
+		})
+		callback && callback(results);
+		return;
+	}
+	ids= misses.join('","')
 	qstr = escape('{"_id":{"$in": ["TOKEN"]}}'.replace("TOKEN",ids))
 	
 	url = precon.conf.api_base + "/"+model+"?query="+qstr
@@ -232,6 +246,9 @@ precon.getObjects = function(obj_ids, callback){
 			var obj = results[r]
 			precon.encache(obj)
 		}
+		hits.forEach(function(id){
+			results.push( precon.cache[id] )
+		})
 		callback && callback(results)		 
 	});
 }

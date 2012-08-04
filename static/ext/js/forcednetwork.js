@@ -1,9 +1,41 @@
 function myGraph(el,w,h) {
-
+	var graph = this;
+	this.setModel=function(graphModel){
+		this.model = graphModel
+		
+		this.model.bind('add.connection', this._addLink)
+		this.model.bind('add.node', this._addNode)
+	}
     // Add and remove elements on the graph object
-    this.addNode = function (id) {
-        nodearray.push({"id":id});
+    this.addNode = function (node, attrs) {
+    	var id = null;
+    	if(typeof(node ) == 'string'){
+    		id = node
+    		node={}
+    	}
+    	else{
+    		id = node.getId()    		    	
+    	}   
+    	node.id = id
+    	if(findNode(id)) return;    	
+        nodearray.push(node);
         update();
+    }
+    this._addNode = function(evt, data){
+    	console.log("Adding node", data.node.getLabel())
+    	if(data.node)
+    		graph.addNode(data.node)
+    }
+    this._addLink= function(evt, data){
+    	console.log("Adding connection", data.connection)
+    	if(data.connection ){
+    		var nodes = data.connection.getNodes(function(nodes){
+    			if(nodes && nodes.length ==2){    		
+    				console.log("Adding link "+ nodes[0].getId()+", "+ nodes[1].getId())
+    				graph.addLink(nodes[0].getId(), nodes[1].getId(), data.connection.getType())
+    			}
+    		})    		
+    	}
     }
 
     this.removeNode = function (id) {
@@ -146,7 +178,7 @@ function myGraph(el,w,h) {
             .attr("class", "nodetext")
             .attr("dx", 12)
             .attr("dy", ".35em")
-            .text(function(d) {return d.id});
+            .text(function(d) {return d.getLabel()});
 
         node.exit().remove();
         var lastobj={"lastdr":0,
@@ -190,7 +222,7 @@ function myGraph(el,w,h) {
         //create the context menu
     };
     
-
+   
     // Make it all go
     update();
 }

@@ -35,6 +35,8 @@ class BaseModel(dict):
         self[attr] = value
 
     def save(self):
+        if self.beforeSave: self.beforeSave()
+        
         col = mongo.getCollection(self._col)
         logger.debug("Persisting %s: %s" %(self._col, self))
                 
@@ -44,7 +46,7 @@ class BaseModel(dict):
         col.save(self, safe=True)
         logger.debug("Done")
         
-        if self._save: self._save()
+        if self.afterSave: self.afterSave()
             
     def cleanup_id(self, id):
         return CLEANUP_PATTERN.sub('', id).lower()
@@ -76,10 +78,13 @@ class Network(BioModel):
         # Non persistent field
         self._connections = self._connections or []
     
-    def _save(self):
+    def beforeSave(self):
+        self.con_count = len(self._connections)
+        
+    def afterSave(self):
         logger.debug("Performing network specific saving")
         for con in self._connections:
-            con.save()
+            con.save()        
             
 class Node(BioModel):
     _col="node"
@@ -93,7 +98,7 @@ class Node(BioModel):
             self._entity = entity 
         self.role = self.role or ''
     
-    def _save(self):
+    def afterSave(self):
         logger.debug("Performing Node specific saving")
         if self._entity: self._entity.save()
         
@@ -152,7 +157,7 @@ class Connection(BioModel):
             raise Exception("Number of nodes and entities in a connection should agree")
         if not self.network:
             raise Exception("Missing required field: network")
-    def _save(self):
+    def afterSave(self):
         logger.debug("Performing Connection specific saving")
         for node in self._nodes:
             node.save()
