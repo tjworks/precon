@@ -21,9 +21,12 @@ urlpatterns = patterns('',
 
     # Home page
     url(r'^$', 'onechart.views.home'),
+        
+    url(r'^howto$', 'onechart.views.home'),
     
     # graph app
     url(r'^graph/(?P<precon_id>.*)$', 'graph.graphview.handler'),
+    
     
     
     # search/proxy

@@ -1,4 +1,5 @@
 
+
 Ext.Loader.setConfig({
             enabled: true,
             disableCaching: true,
@@ -108,7 +109,6 @@ Ext.onReady(function(){
         }]
     });
  
-    //initApp check the url configure and initialize Grid tables for network.
    //init the Network Graph
    initApp();	
 
@@ -291,16 +291,11 @@ function createViewPort() {
 			                            	region:'center',
 			                            	plain: true,
 			                            	collapsible:true,
-			                            	title:'Network Entity',
-			                            	
+			                            	title:'Info Panel',
+			                            	id:'infopanel',
 			                            	activeTab:0,
 			                            	split:true,
-			                            	items: [
-			                                	 {
-			                                	 	title:'Entity Info',
-			                                	 	autoScroll:true,
-			                                	 	html:'<b>Entity Name</b>: AMPK<br><b>Entity Type:</b>Node<br><b>Entity Other infos:</b>blah blah <br><blah>'
-			                                	 },
+			                            	items: [			                                	 
 			                                	 {
 			                                            title:'Entity Literature',
 			                                            autoScroll:true,
@@ -334,8 +329,11 @@ function createViewPort() {
 			                          
 			                        ]
 			                      }]
-		            })
-		 }   
+		            }); // end of createViewport
+
+	// fire event
+	$(document).trigger(precon.event.ViewportCreated)
+}   // end function
 
 function showTips(e) {
     //var htmlcontent='Entity Name: '+e.target.name+'</br>Related Literatures: <a onclick=showLiterature("'+e.target.name+'")>5</a>';
@@ -429,9 +427,40 @@ function fireEvents() {
  * 
  */
 function initApp() {
-	var userid=location.href.substring(location.href.lastIndexOf('\/')+1);
-	if (userid.length>0)
-	   precon.searchNetworks(userid, initNetwork);
+	// events binding 
+	$(document).bind(precon.event.ViewportCreated, showMainObject)
+	
+	
+	objid = getObjectIdFromUrl()	
+	if (objid){
+		precon.searchNetworks(objid, initNetwork);			
+	}
+}
+
+// get the object id from the URL, if it's available
+function getObjectIdFromUrl(){
+	var matcher = location.href.match(/graph\/([^\/]*)$/)
+	if(matcher) return matcher[1]
+	return ''
+}
+
+function showMainObject(){	
+	objid = getObjectIdFromUrl()
+	if(!objid) return
+	precon.getObject(objid, function(obj){
+		var json = precon.util.formatObject(obj)
+		var title =  obj.name || obj.title || obj.label
+		Ext.getCmp("west").setTitle( precon.getObjectType(objid) + ": "+  title)
+		title = precon.util.shortTitle(title)
+		var tab = Ext.getCmp("infopanel").add({
+			title:title,
+			html:json,
+			autoScroll:true,
+		})
+		Ext.getCmp("infopanel").setActiveTab(tab)
+		
+		
+	});	
 }
 
 
@@ -472,39 +501,47 @@ function initNetwork(networkObjects) {
 	    	anetwork.push(networkObjects[i]._id);
 	    	anetwork.push(networkObjects[i].create_tm);
 	    	anetwork.push(networkObjects[i].owner);
-	    	anetwork.push('with '+networkObjects[i].connections.count+' links');
+	    	anetwork.push('with '+networkObjects[i].connections.length+' links');
 	    	networkJson.push(anetwork);
-	    	anetworkObject=networkObjects[i]._connections;
-	    	console.log('networkobject i');
-	    	console.log(anetworkObject);
-	    	for (var j=0; j<anetworkObject.length; j++) {
+	    	//anetworkObject=networkObjects[i]._connections;
+	    	//console.log('networkobject i');
+	    	//console.log(anetworkObject);
+	    	conns = networkObjects[i]._connections
+	    	for (var j=0; conns && j<conns.length; j++) {
 	    		var anodes=[];
-	    		networkObject_conn=anetworkObject[j].entities;
-	    		console.log('here is the connection object');
-	    		console.log(networkObject_conn);
-	    		for (var k=0; k<=networkObject_conn.length;k++) {
-	    			var anode=networkObject_conn[k];
-	    			console.log('here is the entity object[k]');
-	    			console.log(networkObject_conn[k]);
-	    			anodes.push(anode);
+	    		networkObject_conn=conns[j]
+	    		for (var k=0;networkObject_conn.nodes&& k<=networkObject_conn.nodes.length;k++) {
+	    			var anode=networkObject_conn.nodes[k];	    		
+	    			if(anodes.indexOf(anode)<0)
+	    				anodes.push(anode);
 	    		}
 	    		
 	    		var alink=[];
-	    		for(var l=0; l<anodes.length;l++) {
-	    			for (var m=0; m<=anodes.length; m++) {
-	    				if (l!=m) {
-	    					alink.push({'from':anodes[l], 'to':anodes[m]});
-	    				}
-	    			}
+	    		if(anodes.length>2){
+		    		for(var l=0; l<anodes.length;l++) {
+		    			for (var m=0; m<=anodes.length; m++) {
+		    				if (l!=m) {
+		    					alink.push({'from':anodes[l], 'to':anodes[m]});
+		    				}
+		    			}
+		    		}
 	    		}
-	    		
-	    		linksJson=linksJson.concat(alink);
-	    		nodesJson=nodesJson.concat(anodes);
+	    		else {
+	    			alink.push({'from':anodes[0], 'to':anodes[1]});
+	    		}
+	    		alink.forEach(function(link){
+	    			if(linksJson.indexOf(link)<0) linksJson.push(link)
+	    		});
+	    		anodes.forEach(function(node){
+	    			if(nodesJson.indexOf(node)<0) nodesJson.push(node)
+	    		});	    		
 	    	}
 	    }
 	    
     }
     
+    console.log("All nodes:", nodesJson)
+    console.log("All links:", linksJson)
     // create the data store
     var networkStore = Ext.create('Ext.data.ArrayStore', {
         fields: [
@@ -569,6 +606,7 @@ function initNetwork(networkObjects) {
 	 if (typeof viewport=="undefined")
 	     					createViewPort();
 	
+	 
 	 
 }
 

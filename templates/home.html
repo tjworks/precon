@@ -43,7 +43,7 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
              <ul>
                  <li><a href="/">首页</a></li>
                  <li><a href="/graph">普康一历</a></li>                 
-                 <li><a href="/">如何工作</a></li>
+                 <li><a href="/howto">如何工作</a></li>
                  {% if user.username %}
                     <li><a id="userid" class="">Hi, {{ user.username }}</a></li>
                     <li><a id="signout-link" href="#">退出</a></li>
@@ -90,8 +90,8 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
 {% block main %}
  <div class="clear"></div>
  <div class="ui-widget" id="search-box" align="center">
-                    
-       
+           <div style="color:white">Sample Pubmed: <a href="/graph/publ11602624"> 11602624 </a> | Sample Network: <a href="/graph/netw120728200827100249"> Metfrom in </a>
+           </div>  
            <input id="searchtxt"  class="ui-autocomplete-input bgcolor"></input>
               <!-- 
               <input class="ui-autocomplete-input"/>

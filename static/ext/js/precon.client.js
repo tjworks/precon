@@ -5,6 +5,12 @@ precon.conf = {
 	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication',peop:'people'}
 }
 
+precon.getObjectType = function(objid){
+	var prefix = objid.substring(0,4);
+	var model = precon.conf.prefix_mapping[prefix]
+	if(!model) throw "Unrecognized ID format: "+ objid
+	return model
+}
 
 /**
  * Search by keywords, such as pubmed id, gene symbol/name, network name or people's name
@@ -61,7 +67,7 @@ precon.searchNetworks = function(query, callback){
 	if(typeof(query) == 'string'){
 		var prefix = query.substring(0,4);
 		var model = precon.conf.prefix_mapping[prefix]
-		if(!model) throw "ID format is not supported"
+		if(!model) throw "ID format is not supported: "+ query
 		var obj = {}
 		obj[model] = query
 		query = obj 
@@ -97,8 +103,11 @@ precon.searchNetworks = function(query, callback){
 			net._connections = net._connections || []
 			net._connections.push(con)
 			net.connections.push(con._id)
-			net._id = con.network			
+			net._id = con.network
 		}
+		for(var n in nets)
+			precon.preload(nets[n])
+		
 		// now get network properties
 		if(ids && ids.length)
 			precon.getObjects(ids, function(networks){			
@@ -106,7 +115,7 @@ precon.searchNetworks = function(query, callback){
 					var network = networks[n]
 					network._connections = nets[network._id]._connections
 					network.connections = nets[network._id].connections
-					precon.preload(network)
+					
 				}
 				callback && callback(networks)
 			})
@@ -122,8 +131,7 @@ precon.preload = function(network){
     	var conn = network._connections[c]    	
     	ids = ids.concat (conn.nodes )    	    	
     }   
-	if(ids.length>0)
-		precon.getObjects(ids)  // preload cache
+	if(ids.length>0) precon.getObjects(ids)  // preload cache
 }
 
 /**
@@ -311,6 +319,14 @@ precon.util.formatObject = function(obj, indent){
     else
     	str+="}"
     return h+ str + "</div>";
+}
+precon.util.shortTitle=function(title, max){
+	max = max || 20
+	return title.substring(0, max) +"..." // TBD: smarter
+}
+precon.event = {
+	ViewportCreated:'ViewPortCreated'
+		
 }
 /**
 

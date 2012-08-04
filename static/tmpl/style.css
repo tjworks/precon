@@ -128,7 +128,7 @@ h2.questionTitle {background: url(questions-icon-big.png) no-repeat;padding:0 0 
 .questionByline {margin-top:8px;font-size:12px;}
 .questionByline .answers {font-weight:bold;}
 .questionByline img {vertical-align:middle;}
-span {margin-left:4px;}
+
 span.points {color:#b3b2b2;margin-left:1px;font-weight:bold;}
 span.points span {color:#555;font-weight:bold;}
 .question .date { text-align:center;font-size:11px;float:left;margin:5px 0 0 0;color:#999;display:inline;text-transform:uppercase;}
