@@ -448,13 +448,13 @@ function showMainObject(){
 	objid = getObjectIdFromUrl()
 	if(!objid) return
 	precon.getObject(objid, function(obj){
-		var json = precon.util.formatObject(obj)
+		var html = renderObject(obj)
 		var title =  obj.name || obj.title || obj.label
 		Ext.getCmp("west").setTitle( precon.getObjectType(objid) + ": "+  title)
 		title = precon.util.shortTitle(title)
 		var tab = Ext.getCmp("infopanel").add({
 			title:title,
-			html:json,
+			html:html,
 			autoScroll:true,
 		})
 		Ext.getCmp("infopanel").setActiveTab(tab)
@@ -462,7 +462,27 @@ function showMainObject(){
 		
 	});	
 }
-
+function renderObject(obj){
+	console.log("Rendering object: ", obj)
+	if(precon.getObjectType(obj._id) =='publication' ){
+		var authors = ''
+		if(obj.authors){
+			obj.authors.forEach(function(author){
+				if(authors) authors+=", ";
+				authors += (author.first?author.first.substring(0,1):'') +" "+ author.last
+			});			
+		}
+			
+		
+		html="<table><tr><th>Title:</td><td>"+obj.name+"</td></tr>"
+		html+="<tr><th>Authors:</th><td>" + authors +"</td></tr>"
+		html+="<tr><th>Abstract:</th><td>" + obj.abstract +"</td></tr>"
+		html+="</table>"
+		return html
+	}	
+	return precon.util.formatObject(obj)
+	
+}
 
 /**
  * Call precon.client.quickSearch to get a list of networks

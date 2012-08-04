@@ -476,3 +476,16 @@ form.signin input::-webkit-input-placeholder { color:#bbb; text-shadow:0 0 2px #
 }
 .button:hover { background:#ddd; }
 /************** End of login form **********************/
+
+
+
+/******************************************************/
+#infopanel th {
+  color:#5f6b87;
+  font-weight:bold;
+  padding:5px;
+}
+#infopanel td {
+  padding:5px;
+}
+
