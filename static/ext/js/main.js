@@ -508,10 +508,18 @@ function initNetwork(networkObjects) {
 	    	//console.log(anetworkObject);
 	    	conns = networkObjects[i]._connections
 	    	for (var j=0; conns && j<conns.length; j++) {
+	    		
 	    		var anodes=[];
 	    		networkObject_conn=conns[j]
+	    		console.log("!!! Nodes: " , networkObject_conn.nodes)
 	    		for (var k=0;networkObject_conn.nodes&& k<=networkObject_conn.nodes.length;k++) {
-	    			var anode=networkObject_conn.nodes[k];	    		
+	    			var anode=networkObject_conn.nodes[k];
+	    			if(!anode) continue
+	    			console.log("###", anode)
+
+	    			// temp hack, will load nodes object later
+	    			anode = anode+""	    			
+	    			anode = anode.substring(anode.length - 5)
 	    			if(anodes.indexOf(anode)<0)
 	    				anodes.push(anode);
 	    		}
@@ -529,8 +537,16 @@ function initNetwork(networkObjects) {
 	    		else {
 	    			alink.push({'from':anodes[0], 'to':anodes[1]});
 	    		}
+	    		
 	    		alink.forEach(function(link){
-	    			if(linksJson.indexOf(link)<0) linksJson.push(link)
+	    			var found = false
+	    			linksJson.forEach( function(lk){
+	    				if(link.from == lk.from && link.to ==lk.to ){ 
+	    					found = true
+	    				}
+	    			});	    			
+	    			if(!found) linksJson.push(link)
+	    				
 	    		});
 	    		anodes.forEach(function(node){
 	    			if(nodesJson.indexOf(node)<0) nodesJson.push(node)
