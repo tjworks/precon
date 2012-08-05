@@ -1,27 +1,52 @@
+
+
+
+/***
+ * 
+ * Events:
+ * 	selectionchanged
+ *  mouseover
+ *  mouseout
+ *  click
+ *  dblclick
+ *  
+ *  
+ * 
+ * @param el
+ * @param w
+ * @param h
+ * @returns
+ */
 function myGraph(el,w,h) {
+	$d = d3.select;
 	var graph = this;
 	var observable = $({})
+	
 	this.on = function(eventType,  handler){
 		observable.on(eventType, handler);
 	}
 	this.setModel=function(graphModel){
-		this.model = graphModel
-		
+		this.model = graphModel		
 		this.model.bind('add.connection', this._addLink)
 		this.model.bind('add.node', this._addNode)
 	}
-	// register internal events handler
-	/**
+	this.getModel =function(){
+		return this.model
+	}
+	
+	// register internal events handler	
 	this.on('mouseover', function(evt, target){
-		
-		target.attr('width', Math.ceil( target.attr('width') * 2 ) )
-		target.attr('height', Math.ceil( target.attr('height') * 2 ) )
+		var r = $d(target).attr('r')
+		$d(target).classed('state-highlight', true).attr('r', r*2  )		
 	})
 	this.on('mouseout', function(evt, target){
-		target.attr('width', Math.ceil( target.attr('width') / 2 ) )
-		target.attr('height', Math.ceil( target.attr('height') / 2 ) )
+		var r = $d(target).attr('r')
+		$d(target).classed('state-highlight', false).attr('r', r/2  )				
 	})
-	*/
+	this.on('click', function(evt, target){		
+		var selected= graph.model.select(target.__data__)
+		$d(target).classed('state-selected', selected);		
+	})
 	
     // Add and remove elements on the graph object
     this.addNode = function (node, attrs) {
@@ -160,13 +185,15 @@ function myGraph(el,w,h) {
            .style("fill","none");
     */
     var eventsProxy= function(obj){
+    	
     	if(d3.event.detail >1){
+    		console.log("It's a 2" + d3.event.detail)
     		observable.trigger('dblclick', d3.event.target, d3.event )
     	}
     	else{
     		observable.trigger(d3.event.type, d3.event.target, d3.event)
     	}    	
-    	//console.log(d3.event)
+    	
     }
     var force = d3.layout.force()
         .gravity(.01)
@@ -274,3 +301,4 @@ function myGraph(el,w,h) {
     // Make it all go
     update();
 }
+

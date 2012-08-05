@@ -121,3 +121,15 @@ text.shadow {
   stroke-width: 3px;
   stroke-opacity: .8;
 }
+
+
+.state-selected {  	
+  	fill:yellow;
+  	stroke:#000
+}
+
+.state-highlight {
+	stroke:yellow;	
+	fill: #333;
+	stroke-width:4px;
+}

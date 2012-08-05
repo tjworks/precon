@@ -6,6 +6,24 @@ precon.NetworkGraph = function(){
 	var entities = []
 	var graphModel = this
 	
+	var selections = []
+	
+	var getId = function(obj){ return obj.getId?obj.getId() : obj.id}
+	this.select=function(object){
+		var selected = true;					
+		for(var i=0; i<selections.length;i++){
+			var sel = selections[i]
+			if(getId(sel) == getId(object)){
+				selections.splice(i, 1);
+				selected= false;
+				break;
+			}			
+		}
+		if(selected) selections.push(object);
+		jq.trigger("selectionchanged", object, selected, selections);
+		return selected;
+	};		
+	
 	this.trigger=function(){
 		jq.trigger.apply(jq, arguments)
 	}
@@ -73,6 +91,7 @@ precon.NetworkGraph = function(){
 	
 	return this
 }
+
 
 
 precon.Network = function(rawdata){

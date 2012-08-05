@@ -300,11 +300,11 @@ function createViewPort() {
 			                            	activeTab:0,
 			                            	split:true,
 			                            	items: [			                                	 
-			                                	 {
+			                                	 /**{
 			                                            title:'Entity Literature',
 			                                            autoScroll:true,
 			                                            items:[literatureGrid]
-			                                    }
+			                                    }*/
 			                            	]
 			                            },
 			                             {
@@ -461,7 +461,7 @@ function showMainObject(){
 		Ext.getCmp("west").setTitle( precon.getObjectType(objid) + ": "+  title)
 		title = precon.util.shortTitle(title)
 		var tab = Ext.getCmp("infopanel").add({
-			title:title,
+			title:'Summary',
 			html:html,
 			autoScroll:true,
 			closable:true
@@ -549,6 +549,7 @@ function initNetwork(networkObjects) {
 	       ];
     }
     else {
+    	//graphModel = mygraph.getModel();
     	console.log('initNetwork called and a quickSearch returned value as:', networkObjects);
     	networkObjects.forEach(function(netObj){
     		var n = new precon.Network(netObj)
@@ -700,6 +701,10 @@ function createGraph() {
 		console.log("Creating graph")    
 		mygraph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
 		
+		
+		mygraph.on("click", function(evt, target){
+			//console.log("dblclick", evt, target.__data__)			
+		});		
 		mygraph.on("dblclick", function(evt, target){
 			console.log("dblclick", evt, target.__data__)
 			showObject(target.__data__)
@@ -710,7 +715,7 @@ function createGraph() {
 		});
 		mygraph.on("mouseover",function(evt, target){
             // alert('mouse over lines '+d.id);            
-            addSelectStyle(d3.event.currentTarget);
+            
             showTips(d3.event);
 		});
 	}
