@@ -1,5 +1,9 @@
 function myGraph(el,w,h) {
 	var graph = this;
+	var observable = $({})
+	this.on = function(eventType,  handler){
+		observable.on(eventType, handler);
+	}
 	this.setModel=function(graphModel){
 		this.model = graphModel
 		
@@ -22,22 +26,25 @@ function myGraph(el,w,h) {
         update();
     }
     this._addNode = function(evt, data){
-    	console.log("Adding node", data.node)
+    	//console.log("Adding node", data.node)
     	if(data.node)
     		graph.addNode(data.node)
     }
     this._addLink= function(evt, data){
-    	console.log("Adding connection", data.connection)
+    	//console.log("Adding connection", data.connection)
     	if(data.connection ){
     			var nodes = data.connection.getNodeIds()
     			if(nodes && nodes.length ==2){    		
-    				console.log("Adding link "+ nodes[0]+", "+ nodes[1])
+    				//console.log("Adding link "+ nodes[0]+", "+ nodes[1])
     				var link = data.connection
     				link.source = findNode(nodes[0])    				
     				link.target= findNode(nodes[1])
-    				if(link.source && link.target){
+    				if(link.source && link.target && link.source!=link.target){
+    					for(var i=0;i<linkarray.length;i++){
+    					//	if(linkarray[i].getId() == link.getId()) return
+    					}    					
     					//linkarray.push(link)
-    					graph.addLink(nodes[0] , nodes[1], data.connection.getType())
+    					graph.addLink(nodes[0] , nodes[1], data.connection.getType(), data.connection.getId())
     				}    					
     				//graph.addLink(nodes[0].getId(), nodes[1].getId(), data.connection.getType())
     			}
@@ -79,10 +86,10 @@ function myGraph(el,w,h) {
         update();
     }
     
-    this.addLink = function (source, target,type) {
+    this.addLink = function (source, target,type, id) {
     	if (findNode(source)!=null && findNode(target)!=null&&findNode(source)!=findNode(target)) {
     		
-        	linkarray.push({"source":findNode(source),"target":findNode(target), "type":type});
+        	linkarray.push({"source":findNode(source),"target":findNode(target), "type":type, "id":id});
     		update();
     	}
     }
@@ -139,13 +146,22 @@ function myGraph(el,w,h) {
            .style("stroke","#000")
            .style("fill","none");
     */
+    var eventsProxy= function(obj){
+    	if(d3.event.detail >1){
+    		observable.trigger('dblclick', d3.event.target, d3.event )
+    	}
+    	else{
+    		observable.trigger(d3.event.type, d3.event.target, d3.event)
+    	}    	
+    	//console.log(d3.event)
+    }
     var force = d3.layout.force()
         .gravity(.01)
         .distance(200)
         .charge(-100)
         .size([w, h]);
 
-    var nodearray = force.nodes(),
+     nodearray = force.nodes(),
         linkarray = force.links();
     var withinWindow=function(d) {
     	if ((d.target.x<0) || (d.target.y<0) ||(d.target.x>w) ||(d.target.y>h)|| (d.source.x<0) || (d.source.y<0) ||(d.source.x>w) ||(d.source.y>h) ) {
@@ -156,31 +172,34 @@ function myGraph(el,w,h) {
     var update = function () {
 	      //console.log(linkarray);
 	      //console.log(nodearray);
-	      console.log("Updating: ", linkarray, nodearray)
+	     console.log("Updating")
 	     var svg = d3.select(el).select("svg")
 	     if(svg) svg.remove()
-	       var vis = d3.select(el).append("svg:svg")
+	     var vis = d3.select(el).append("svg:svg")
         .attr("width", w)
         .attr("name","forcenet")
         .attr("height", h);
         
 	      
-	     // if (typeof linkg =="undefined")
-		      linkg=vis.append("svg:g");
+	      // if (typeof linkg =="undefined")
+		  linkg=vis.append("svg:g");
 		  link=linkg.selectAll("path")
-	    	   .data(linkarray);
-          link.enter().append("svg:path")
-           		   .attr("id",function(d){return d.source.id+"---"+d.target.id})
-        		   .attr("class",function(d){return "link "+d.type;});
-       
-          link.exit().remove();
+	    	   .data(linkarray, function(d){return d.id});
+	      link.enter().append("svg:path")
+	       		   .attr("id",function(d){return d.source.id+"---"+d.target.id})
+	    		   .attr("class",function(d){return "link "+d.type;});
+	   
+	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy )
+	      link.exit().remove();
 
         var node = vis.selectAll("g.node")
             .data(nodearray, function(d) { return d.id;});
 
         var nodeEnter = node.enter().append("g")
-            .attr("class", "node")
+            .attr("class", "node")            
             .call(force.drag);
+        
+        nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy )
 
         nodeEnter.append("circle")
             .attr("class", "circle")

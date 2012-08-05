@@ -363,7 +363,8 @@ function hideTips() {
     }
 
 function fireEvents() {
-    
+	// see the events binding in createGraph()	
+    /**
     d3.selectAll("g").on("mouseover",function(d){
                // alert('mouse over lines '+d.id);
                console.log(d);
@@ -371,18 +372,19 @@ function fireEvents() {
                 showTips(d3.event);
     });
            
-    d3.selectAll("g").on("dbclick",function(d){
-                //alert('double clicked nodes '+d.id);
-                //console.log(d3.event);
-                }
-        );  
+    d3.selectAll("g").on("click",function(d){
+    	if(d3.event.detail > 1){
+    		// double clicked
+    		showObject(d)
+    	}    	   
+    });  
     
     d3.selectAll("g").on("mouseout",function(d){
                // alert('mouse over lines '+d.id);
               //  console.log(d3.event);
                 hideTips();
     });
-           
+    */       
     contextMenu = new Ext.menu.Menu({
                   items: [
                             
@@ -464,11 +466,33 @@ function showMainObject(){
 			autoScroll:true,
 			closable:true
 		})
-		Ext.getCmp("infopanel").setActiveTab(tab)
-		
-		
+		Ext.getCmp("infopanel").setActiveTab(tab)		
 	});	
 }
+
+function showObject(obj){
+	if('getRawdata' in obj){
+		obj = obj.getRawdata()
+		var tab =  Ext.getCmp("infopanel").getComponent(obj._id)
+		if(!tab){
+			var html = renderObject(obj)
+			var title =  obj.name || obj.title || obj.label
+			var title = precon.util.shortTitle(title)
+			tab = Ext.getCmp("infopanel").add({
+				title:title,
+				html:html,
+				id:obj._id,
+				autoScroll:true,
+				closable:true
+			})
+		}
+		Ext.getCmp("infopanel").setActiveTab(tab)
+	}
+	else{
+		console.log("Unrecognized object: ", obj)
+	}
+}
+
 function renderObject(obj){
 	console.log("Rendering object: ", obj)
 	if(precon.getObjectType(obj._id) =='publication' ){
@@ -508,7 +532,7 @@ function initNetwork(networkObjects) {
 	currentNetworks = networkObjects 
 	
 	graphModel = new precon.NetworkGraph()
-	graph.setModel(graphModel)
+	mygraph.setModel(graphModel)
 	
     networkJson=[];
     nodesJson=[];
@@ -672,15 +696,20 @@ function createGraph() {
 	//Ext.select("svg").remove();
 	//graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
 	
-	if(!window.graph){
+	if(!window.mygraph){
 		console.log("Creating graph")    
-		graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
+		mygraph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
+		
+		mygraph.on("dblclick", function(evt, target){
+			console.log("dblclick", evt, target.__data__)
+			showObject(target.__data__)
+		});		
 	}
 	else{
 		console.log("Redraw graph")    
 		// redraw
 		//Ext.select("svg").remove();
-		graph.redraw(Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true))
+		mygraph.redraw(Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true))
 	}
 	
     //graph = new myGraph("#west-body");
@@ -825,7 +854,7 @@ $(document).ready(function() {
             'title':    'Add Node',
             'buttons':  [
                 {caption:'OK', callback: function(){
-                        graph.addNode($("#dialog_node_name").val());
+                        mygraph.addNode($("#dialog_node_name").val());
                     }
                 },
                 {caption:'Cancel', callback: function(){}} 
@@ -840,7 +869,7 @@ $(document).ready(function() {
             'title':    'Add Link',
             'buttons':  [
                 {caption:'OK', callback: function(){
-                        graph.addLink($("#dialog_link_sname").val(), $("#dialog_link_dname").val(),$("#dialog_link_type").val());
+                        mygraph.addLink($("#dialog_link_sname").val(), $("#dialog_link_dname").val(),$("#dialog_link_type").val());
                     }
                 },
                 {caption:'Cancel', callback: function(){}} 

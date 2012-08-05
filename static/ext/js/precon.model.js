@@ -103,6 +103,9 @@ precon.Network = function(rawdata){
 	this.getNodes = function(){
 		// TBD
 	}	
+	this.getRawdata = function(){
+		return rawdata
+	}
 	return this
 }
 
@@ -142,6 +145,9 @@ precon.Connection = function(rawdata){
 	this.setNodes = function(nds){
 		nodes = nds
 	}
+	this.getRawdata = function(){
+		return rawdata
+	}
 	return this
 }
 precon.Node = function(rawdata){	
@@ -155,6 +161,9 @@ precon.Node = function(rawdata){
 	this.getEntity = function(){	
 		return rawdata.entity // this is entity ID
 	}	 
+	this.getRawdata = function(){
+		return rawdata
+	}
 	return this
 }
 
