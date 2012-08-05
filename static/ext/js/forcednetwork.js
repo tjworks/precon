@@ -29,11 +29,11 @@ function myGraph(el,w,h) {
 		this.model = graphModel		
 		this.model.bind('add.connection', this._addLink)
 		this.model.bind('add.node', this._addNode)
+		this.model.bind("selectionchanged", this._selectionChanged)
 	}
 	this.getModel =function(){
 		return this.model
-	}
-	
+	}	
 	// register internal events handler	
 	this.on('mouseover', function(evt, target){
 		var r = $d(target).attr('r')
@@ -42,12 +42,14 @@ function myGraph(el,w,h) {
 	this.on('mouseout', function(evt, target){
 		var r = $d(target).attr('r')
 		$d(target).classed('state-highlight', false).attr('r', r/2  )				
-	})
+	});
 	this.on('click', function(evt, target){		
-		var selected= graph.model.select(target.__data__)
-		$d(target).classed('state-selected', selected);		
-	})
-	
+		graph.model.select(target.__data__)
+	});	
+	this._selectionChanged = function(evt, sel){
+		//console.log("selected: ",sel.selected,  sel.target.getId(), $d( "[name="+ sel.target.getId() +"]" ))
+		$d( "[name="+ sel.target.getId() +"]" ).classed('state-selected', sel.selected);		
+	}
     // Add and remove elements on the graph object
     this.addNode = function (node, attrs) {
     	var id = null;

@@ -20,15 +20,17 @@ precon.NetworkGraph = function(){
 			}			
 		}
 		if(selected) selections.push(object);
-		jq.trigger("selectionchanged", object, selected, selections);
+		jq.trigger("selectionchanged",{selected:selected, target:object, selections:selections} );
 		return selected;
 	};		
 	
 	this.trigger=function(){
 		jq.trigger.apply(jq, arguments)
+		return this;
 	}
 	this.bind=function(){
 		jq.bind.apply(jq, arguments)
+		return this;
 	}
 	
 	this.addNetwork=function(netObj){
@@ -42,6 +44,7 @@ precon.NetworkGraph = function(){
 				graphModel.addConnection(con);
 			});
 		});
+		return this;
 	}
 	this.addConnection=function(con){
 		var conId = isObject(con)? con.getId(): con
@@ -64,6 +67,7 @@ precon.NetworkGraph = function(){
 		else{
 			//TBD: load by Id
 		}		
+		return this;
 	}
 	this.addNode=function(node){
 		var nodeId = typeof(node) == 'object'?node.getId(): node
@@ -86,9 +90,9 @@ precon.NetworkGraph = function(){
 			graphModel.trigger('add.node', {
 				target:obj
 			})
-		})			
-	}
-	
+		})	
+		return this;
+	}	
 	return this
 }
 
