@@ -44,11 +44,28 @@ function myGraph(el,w,h) {
 		$d(target).classed('state-highlight', false).attr('r', r/2  )				
 	});
 	this.on('click', function(evt, target){		
-		graph.model.select(target.__data__)
+		graph.model.toggle(target.__data__)
 	});	
 	this._selectionChanged = function(evt, sel){
 		//console.log("selected: ",sel.selected,  sel.target.getId(), $d( "[name="+ sel.target.getId() +"]" ))
-		$d( "[name="+ sel.target.getId() +"]" ).classed('state-selected', sel.selected);		
+		/**
+		sel.target.forEach(function(target){
+			$d( "[name="+ target.getId() +"]" ).classed('state-selected', sel.selected);
+		})
+		*/
+		if(!graph.model) return
+		var selections = graph.model.getSelections()
+		nodearray.forEach(function(mynode){
+			var selected = false;
+			for(var i=0; i <selections.length; i++){
+				var hisel =  selections[i]
+				if(mynode.getId() == hisel.getId())
+					selected = true;
+			}	
+			$d( "[name="+ mynode.getId() +"]" ).classed('state-selected', selected);
+		});
+		
+				
 	}
     // Add and remove elements on the graph object
     this.addNode = function (node, attrs) {
@@ -71,20 +88,20 @@ function myGraph(el,w,h) {
     		graph.addNode(data.node)
     }
     this._addLink= function(evt, data){
-    	//console.log("Adding connection", data.connection)
+    	console.log("Adding connection", data.connection)
     	if(data.connection ){
-    			var nodes = data.connection.getNodeIds()
+    			var nodes = data.connection.getNodes()
     			if(nodes && nodes.length ==2){    		
     				//console.log("Adding link "+ nodes[0]+", "+ nodes[1])
     				var link = data.connection
-    				link.source = findNode(nodes[0])    				
-    				link.target= findNode(nodes[1])
+    				link.source = findNode(nodes[0].getId())    				
+    				link.target= findNode(nodes[1].getId())
     				if(link.source && link.target && link.source!=link.target){
     					for(var i=0;i<linkarray.length;i++){
     					//	if(linkarray[i].getId() == link.getId()) return
     					}    					
     					//linkarray.push(link)
-    					graph.addLink(nodes[0] , nodes[1], data.connection.getType(), data.connection.getId())
+    					graph.addLink(nodes[0].getId(), nodes[1].getId(), data.connection.getType(), data.connection.getId())
     				}    					
     				//graph.addLink(nodes[0].getId(), nodes[1].getId(), data.connection.getType())
     			}
@@ -214,7 +231,7 @@ function myGraph(el,w,h) {
     var update = function () {
 	      //console.log(linkarray);
 	      //console.log(nodearray);
-	     console.log("Updating")
+	     //console.log("Updating")
 	     var svg = d3.select(el).select("svg")
 	     if(svg) svg.remove()
 	     var vis = d3.select(el).append("svg:svg")
@@ -294,6 +311,7 @@ function myGraph(el,w,h) {
         // Restart the force layout.
         force.start();
         
+        graph._selectionChanged()
         //create the context menu
     };
     

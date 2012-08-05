@@ -160,7 +160,7 @@ function createViewPort() {
 			                                                    icon:"/ext/resources/images/link.png",
 			                                                    tooltip:'Display available geocoders',
 			                                                    handler : function() {
-			                                                        console.log("test identify");
+			                                                        createLink()
 			                                                    }
 			                                               },
 			                                               {
@@ -471,10 +471,26 @@ function showMainObject(){
 			autoScroll:true,
 			closable:true
 		})
-		Ext.getCmp("infopanel").setActiveTab(tab)		
+		Ext.getCmp("infopanel").setActiveTab(tab)	
+		
+		$("#publication-abstract").find(".entity-name").click( addNodeFromAbstract)
 	});	
 }
-
+function addNodeFromAbstract(evt, obj){
+	var label = $(this).text() 
+	id = label.replace(/[()\s]/g, '')
+	graphModel.addNode( {_id:id, label: label } )
+}
+function createLink(){
+	var selections = graphModel.getSelections()
+	if(selections.length!=2){
+		alert("You must select exactly 2 nodes first")
+		return;
+	}
+	// TBD: type, ref etc
+	var con = {nodes: [selections[0], selections[1]]}
+	graphModel.addConnection(con);	
+}
 function showObject(obj){
 	if('getRawdata' in obj){
 		obj = obj.getRawdata()
@@ -520,7 +536,7 @@ function renderObject(obj){
 			ab = ab.replace(re, '<a href="#" class="entity-name">$1</a>')  
 		});
 		
-		html+="<tr><th>Abstract:</th><td>" + ab +"</td></tr>"		
+		html+="<tr><th>Abstract:</th><td id='publication-abstract'>" + ab +"</td></tr>"		
 		
 		html+="</table>"
 		return html
@@ -539,42 +555,17 @@ function initNetwork(networkObjects) {
 // sample static data for the store
    console.log('here is the returns from JT. ');
    console.log(networkObjects);
-	if(!networkObjects){
+	if(!networkObjects || networkObjects.length == 0){
 		console.log("Error: no result")
 		return
 	}
 	
-	graphModel = new precon.NetworkGraph()
-	mygraph.setModel(graphModel)
-	graphModel.bind("add.network", function(){		
-		networkStore.loadData( graphModel.getNetworkList() )	
-	})
-    
-    networkJson = [    	    
-    	        
-					['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
-								['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111'],
-								 ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
-								['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111']
-					];
 	
-    if (networkObjects.length <=0) {
-    		// show sample network    	    
-    }
-    else {
-    	//graphModel = mygraph.getModel();
-    	console.log('initNetwork called and a quickSearch returned value as:', networkObjects);
-    	networkObjects.forEach(function(netObj){
-    		var n = new precon.Network(netObj)
-    		graphModel.addNetwork(n);
-    	});	    
-    }
-    
-    console.log("All nodes:", nodesJson)
-    console.log("All links:", linksJson)
-    // create the data store
-    // create the Grid, see Ext.
-	 
+	
+	networkObjects.forEach(function(netObj){
+		var n = new precon.Network(netObj)
+		graphModel.addNetwork(n);
+	});	    
 }
 function createNetworkGrid(){
 	if(window.networkGrid) return;
@@ -672,81 +663,19 @@ function createGraph() {
             
             showTips(d3.event);
 		});
+		
+		graphModel = new precon.NetworkGraph()
+		mygraph.setModel(graphModel)
+		graphModel.bind("add.network", function(){		
+			networkStore.loadData( graphModel.getNetworkList() )	
+		})
 	}
 	else{
 		console.log("Redraw graph")    
 		// redraw
 		//Ext.select("svg").remove();
 		mygraph.redraw(Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true))
-	}
-	
-    //graph = new myGraph("#west-body");
-    /*
-    graph.addNode("Metforming");
-        graph.addNode("AMPK");
-        graph.addNode("blood glucose concentration");
-        graph.addNode("Organic cation transporter 1 (OCT1)");
-        graph.addNode("glucose synthesis");
-        graph.addNode("lipid synthesis");
-        graph.addNode("protein synthesis");
-        graph.addNode("fatty acid oxidation");
-        graph.addNode("glucose uptake");
-        graph.addNode("respiratory-chain complex 1");
-        graph.addNode("fructose-1,6-bisphosphatase");
-        graph.addNode("fatty acid synthase");
-        graph.addNode("acetyl CoA carboxylase(ACC)");
-        graph.addNode("mTORC1");
-        graph.addNode("TSC2");
-        graph.addNode("cancer risk");
-        graph.addNode("prostate cancer risk");
-        graph.addNode("pancreatic cancer risk");
-        graph.addNode("breast cancer");
-        graph.addNode("cancer (cell lines)");
-        graph.addNode("cancer (animal models)");
-        graph.addNode("type 2 diabete");
-        graph.addNode("angiogenesis");*/
-    /**
-    for (var i=0; i<nodesJson.length; i++) {
-    	graph.addNode(nodesJson[i]);
-    }
-
- 	for (var i=0; i<linksJson.length; i++) {
-    	graph.addLink(linksJson[i].from,linksJson[i].to);
-    }
-    */
-    /*
-    graph.addLink("Metforming", "blood glucose concentration","decreases");
-        graph.addLink("Metforming", "Organic cation transporter 1 (OCT1)","beinguptaken");
-        graph.addLink("Metforming", "AMPK","activates");
-        graph.addLink("Metforming", "respiratory-chain complex 1","association");
-        graph.addLink("Metforming", "fructose-1,6-bisphosphatase","association");
-        graph.addLink("Metforming", "cancer risk","association");
-        graph.addLink("Metforming", "prostate cancer risk","association");
-        graph.addLink("Metforming", "pancreatic cancer risk","pathway");
-        graph.addLink("Metforming", "breast cancer","inhibits");
-        graph.addLink("Metforming", "cancer (cell lines)","inhibits");
-        graph.addLink("Metforming", "cancer (animal models)","inhibits");
-        graph.addLink("Metforming", "type 2 diabete","inhibits");
-        graph.addLink("Metforming", "angiogenesis","inhibits");
-        graph.addLink("AMPK", "glucose synthesis","inhibits");
-        graph.addLink("AMPK", "lipid synthesis","inhibits");
-        graph.addLink("AMPK", "protein synthesis","inhibits");
-        graph.addLink("AMPK", "fatty acid oxidation","stimulats");
-        graph.addLink("AMPK", "glucose uptake","stimulats");
-        graph.addLink("AMPK", "respiratory-chain complex 1","decreases");
-        graph.addLink("AMPK", "fatty acid synthase","decreases");
-        graph.addLink("AMPK", "acetyl CoA carboxylase(ACC)","inhibits");
-        graph.addLink("AMPK", "mTORC1","inhibits");
-        graph.addLink("AMPK", "TSC2","activates");*/
-
-    
-    /*
-    graph.addLink("Cause", "Effect","predicted");
-        graph.addNode("A");
-        graph.addNode("B");
-        graph.addLink("A", "B","pathway");
-        graph.addNode("Stand Alone");*/
-    
+	}	
     
 }
     /*

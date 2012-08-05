@@ -1,7 +1,5 @@
 (function(){
 	
-
-
 precon.NetworkGraph = function(){
 	var jq = $(this)
 	var networks = []
@@ -13,21 +11,37 @@ precon.NetworkGraph = function(){
 	var selections = []
 	
 	var getId = function(obj){ return obj.getId?obj.getId() : obj.id}
-	this.select=function(object){
-		var selected = true;					
-		for(var i=0; i<selections.length;i++){
-			var sel = selections[i]
-			if(getId(sel) == getId(object)){
-				selections.splice(i, 1);
-				selected= false;
-				break;
-			}			
-		}
-		if(selected) selections.push(object);
-		jq.trigger("selectionchanged",{selected:selected, target:object, selections:selections} );
+	this.deselect = function(objects){ return this._select(objects, false) }
+	this.select = function(objects){ return this._select(objects, true) }	
+	this.toggle = function(object){ 
+		for(var i=0;i<selections.length;i++){
+			var mysel = selections[i]
+			if(getId(mysel) == getId(object))
+				return graphModel._select(object, false);				
+		};
+		return graphModel._select(object, true);
+	}
+	
+	this._select=function(objects, toSelect){
+		var selected = true;	
+		if(! ('length' in objects)) 
+			objects = [objects]
+		//var old = copy(selections)
+		objects.forEach(function(object){
+			for(var i=0; i<selections.length;i++){
+				var sel = selections[i]
+				if(getId(sel) == getId(object)){
+					selections.splice(i, 1);					
+					break;
+				}			
+			}
+			if(toSelect) selections.push(object);
+		});
+		
+		jq.trigger("selectionchanged",{selected:toSelect, target:objects, selections:selections} );
 		return selected;
 	};		
-	
+	this.getSelections = function(){ return selections }
 	this.trigger=function(){
 		jq.trigger.apply(jq, arguments)
 		return this;
@@ -50,14 +64,21 @@ precon.NetworkGraph = function(){
 		});
 		return this;
 	}
+	/**
+	 * Add a connection to the graph. Can be a precon.Connection object or a json
+	 * When using json, a list of nodes(2 or more) are required. Each node in the nodes array can be id or Node object
+	 */
 	this.addConnection=function(con){
-		var conId = isObject(con)? con.getId(): con
-		var found= false
+		var conId = getId(con);
+		var found= null
 		connections.forEach(function(myCon){
-			if(myCon.getId() == conId ) found = true; // already have it
+			if(myCon.getId() == conId ) found = myCon; // already have it
 		})
-		if(found) return;
-		if(typeof(con) == 'object'){
+		if(found) return found;
+		
+		if(isObject(con)){
+			if(!(con instanceof precon.Connection))
+				con = new precon.Connection(con)
 			// add nodes
 			con.getNodes(function(nodes){
 				nodes.forEach(function(node){ graphModel.addNode(node) })
@@ -79,33 +100,38 @@ precon.NetworkGraph = function(){
 	 * returns the precon.Node object
 	 */
 	this.addNode=function(node){
-		var nodeId = typeof(node) == 'object'?node.getId(): node
-		var found = false
+		var nodeId = getId(node);
+		var found = null
 		nodes.forEach(function(myNode){
-			if(myNode.getId() == nodeId) found = true
+			if(myNode.getId() == nodeId) found = myNode
 		});
-		if(found) return;
-		if( isObject(node) ){
+		if(found) return found;
+		
+		if(isObject(node) ){
+			if(! (node instanceof precon.Node) )
+				node = new precon.Node(node)
 			nodes.push(node)
 			graphModel.trigger('add.node', {
 				node:node
 			})
-			return;
-		};
+			return node;
+		}
 		// TBD: using ajax queue to ensure no multiple same requests happen same time
 		precon.getObject(nodeId, function(obj){
 			obj = new precon.Node(obj)
 			nodes.push(obj)
 			graphModel.trigger('add.node', {
-				target:obj
+				node:obj
 			})
 		})	
-		return this;
+		return node;
 	}	
+	
+	this.getNodes = function(){ return nodes }
+	this.getConnections= function(){ return connections }
 	//this result is consumed by Ext store
 	this.getNetworkList = function(){
-		var array = []
-		console.log("Total net", networks)
+		var array = []		
 		networks.forEach(function(net){
 			var a = [ net.getRawdata().name, '', net.getRawdata().owner, net.getRawdata().source, net.getRawdata().group  ];
 			array.push(a)
@@ -145,6 +171,7 @@ precon.Network = function(rawdata){
 	this.getNodes = function(){
 		// TBD
 	}	
+	/** do not change the rawdata, it's read only */
 	this.getRawdata = function(){
 		return rawdata
 	}
@@ -153,8 +180,14 @@ precon.Network = function(rawdata){
 
 
 precon.Connection = function(rawdata){
-	var nodes = []
 	var rawdata = rawdata || {}
+	if(!rawdata._id){
+		// create new id
+		rawdata._id = 'conn' + getRandom()
+	}
+	if(! (rawdata.nodes && rawdata.nodes.length>1))
+		throw "Must at least provide to nodes"
+		
 	this.getId = function(){
 		return rawdata._id
 	}
@@ -165,28 +198,29 @@ precon.Connection = function(rawdata){
 		return rawdata.nodes
 	}
 	this.getNodes = function(callback){
-		if(nodes.length){
-			if(callback) callback(nodes)			
-			return nodes
+		if(rawdata.nodes[0] instanceof precon.Node){
+			if(callback) callback(rawdata.nodes)			
+			return rawdata.nodes
 		}		
 		 
-		// nodes is list of node IDs
-		if(rawdata.nodes){
-			precon.getObjects(rawdata.nodes, function(objs){
-				var nodes = []
-				for(var i=0; objs && i<objs.length;i++){
-					nodes.push( new precon.Node(objs[i]) )
-				}
-				callback && callback(nodes);
-				
-			});				
-		}
+		// nodes is list of node IDs		
+		precon.getObjects(rawdata.nodes, function(objs){
+			var nodes = []
+			for(var i=0; objs && i<objs.length;i++){
+				nodes.push( new precon.Node(objs[i]) )
+			}
+			rawdata.nodes = nodes
+			callback && callback(nodes);
+			
+		});				
+		
 		if(callback)  callback([])
 		return []
 	}	
 	this.setNodes = function(nds){
-		nodes = nds
+		rawdata.nodes = nds
 	}
+	/** do not change the rawdata, it's read only */
 	this.getRawdata = function(){
 		return rawdata
 	}
@@ -207,6 +241,7 @@ precon.Node = function(rawdata){
 	this.getEntity = function(){	
 		return rawdata.entity // this is entity ID
 	}	 
+	/** do not change the rawdata, it's read only */
 	this.getRawdata = function(){
 		return rawdata
 	}
@@ -214,56 +249,39 @@ precon.Node = function(rawdata){
 }
 
 
+/**** Helper functions ****/
 
-function copy(o){
-  var copy = Object.create( Object.getPrototypeOf(o) );
-  var propNames = Object.getOwnPropertyNames(o);
- 
-  propNames.forEach(function(name){
-    var desc = Object.getOwnPropertyDescriptor(o, name);
-    Object.defineProperty(copy, name, desc);
-  });
- 
-  return copy;
-}
- 
-
-function isObject(obj){
-	return typeof(obj) == 'object'
-}
-
-
-})();
-/**
-$.Class('precon.DatabaseObject',	
-	{
-	},	
-	{
-	  init: function( rawdata ) {	
-	    // rawdata from DB
-	    this.rawdata = rawdata || {}
-	  },
-	  
-	  getName:function(){
-		  return this.rawdata.name || this.rawdata.label
-	  },
-	  
-	  getData: function(){
-		  return this.rawdata
-	  }
+	function copy(o){
+	  var copy = Object.create( Object.getPrototypeOf(o) );
+	  var propNames = Object.getOwnPropertyNames(o);
+	 
+	  propNames.forEach(function(name){
+	    var desc = Object.getOwnPropertyDescriptor(o, name);
+	    Object.defineProperty(copy, name, desc);
+	  });
+	 
+	  return copy;
 	}
-);
+	 
+	
+	function isObject(obj){
+		return typeof(obj) == 'object'
+	}
 
-precon.DatabaseObject('precon.Network', {
-	init: function(rawdata){
-		this._super(rawdata)
-	},
-	getTitle: function(){
-		return this.name || this.title
-	}	
-})
+	function getId(obj){
+		if(typeof(obj) == 'string') return obj
+		if(obj.getId) return obj.getId()
+		return obj._id
+	}
+	
+	function getRandom(){
+		return new Date().getTime() +'' +  Math.round( Math.random( ) * 1000 )
+	}
+	
 
-*/
+		
+})();
+
 
 /**
 
