@@ -111,6 +111,7 @@ Ext.onReady(function(){
     
     nodesJson = []
     linksJson = []
+    createNetworkGrid()
     if (typeof viewport=="undefined") createViewPort();
  
    //init the Network Graph
@@ -281,13 +282,14 @@ function createViewPort() {
 			                        items:[
 			                            { 
 			                                //xtype: 'panel',
+			                            	xtype:'tabpanel',
 			                                region:'north',
-			                                title:'Networks Selections',
+			                                title:'Overview',
 			                                split:true,
 			                                height: 200,
 			                                autoScroll:true,
 			                                collapsible:true,
-			                                items:[] //networkGrid
+			                                items:[networkGrid] //networkGrid
 			                                //html:'here lists the networks'
 			                            },
 			                            {
@@ -295,7 +297,7 @@ function createViewPort() {
 			                            	region:'center',
 			                            	plain: true,
 			                            	collapsible:true,
-			                            	title:'Info Panel',
+			                            	title:'Details',
 			                            	id:'infopanel',
 			                            	activeTab:0,
 			                            	split:true,
@@ -306,7 +308,9 @@ function createViewPort() {
 			                                            items:[literatureGrid]
 			                                    }*/
 			                            	]
-			                            },
+			                            }
+			                            
+			                            /**,
 			                             {
 			                            	xtype:'tabpanel',
 			                            	region:'south',
@@ -330,6 +334,7 @@ function createViewPort() {
 			                                    }
 			                            	]
 			                            }
+			                            */
 			                          
 			                        ]
 			                      }]
@@ -538,24 +543,23 @@ function initNetwork(networkObjects) {
 		console.log("Error: no result")
 		return
 	}
-	currentNetworks = networkObjects 
 	
 	graphModel = new precon.NetworkGraph()
 	mygraph.setModel(graphModel)
-	
-    networkJson=[];
-    nodesJson=[];
-    linksJson=[];
-    if (networkObjects.length <=0) {
-    	    networkJson = [
-    	    
-    	        /*
+	graphModel.bind("add.network", function(){		
+		networkStore.loadData( graphModel.getNetworkList() )	
+	})
+    
+    networkJson = [    	    
+    	        
 					['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
 								['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111'],
 								 ['AMPK function studies','7/30/2012', 'Xiongjiu Liao', 'This network was created for demo purpose'],
-								['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111']*/
-				
-	       ];
+								['Metforming studies','7/29/2012', 'J.T.', 'This network was created for teaching course 101.111']
+					];
+	
+    if (networkObjects.length <=0) {
+    		// show sample network    	    
     }
     else {
     	//graphModel = mygraph.getModel();
@@ -563,141 +567,82 @@ function initNetwork(networkObjects) {
     	networkObjects.forEach(function(netObj){
     		var n = new precon.Network(netObj)
     		graphModel.addNetwork(n);
-    	});
-    	
-    	
-    	//networkJson=[];
-    	/**
-    	for (var i=0; i<networkObjects.length; i++) {
-	    	var anetwork=[];
-	    	anetwork.push(networkObjects[i]._id);
-	    	anetwork.push(networkObjects[i].create_tm);
-	    	anetwork.push(networkObjects[i].owner);
-	    	anetwork.push('with '+networkObjects[i].connections.length+' links');
-	    	networkJson.push(anetwork);
-	    	//anetworkObject=networkObjects[i]._connections;
-	    	//console.log('networkobject i');
-	    	//console.log(anetworkObject);
-	    	conns = networkObjects[i]._connections
-	    	for (var j=0; conns && j<conns.length; j++) {
-	    		
-	    		var anodes=[];
-	    		networkObject_conn=conns[j]
-	    		console.log("!!! Nodes: " , networkObject_conn.nodes)
-	    		for (var k=0;networkObject_conn.nodes&& k<=networkObject_conn.nodes.length;k++) {
-	    			var anode=networkObject_conn.nodes[k];
-	    			if(!anode) continue
-	    			console.log("###", anode)
-
-	    			// temp hack, will load nodes object later
-	    			anode = anode+""	    			
-	    			anode = anode.substring(anode.length - 5)
-	    			if(anodes.indexOf(anode)<0)
-	    				anodes.push(anode);
-	    		}
-	    		
-	    		var alink=[];
-	    		if(anodes.length>2){
-		    		for(var l=0; l<anodes.length;l++) {
-		    			for (var m=0; m<=anodes.length; m++) {
-		    				if (l!=m) {
-		    					alink.push({'from':anodes[l], 'to':anodes[m]});
-		    				}
-		    			}
-		    		}
-	    		}
-	    		else {
-	    			alink.push({'from':anodes[0], 'to':anodes[1]});
-	    		}
-	    		
-	    		alink.forEach(function(link){
-	    			var found = false
-	    			linksJson.forEach( function(lk){
-	    				if(link.from == lk.from && link.to ==lk.to ){ 
-	    					found = true
-	    				}
-	    			});	    			
-	    			if(!found) linksJson.push(link)
-	    				
-	    		});
-	    		anodes.forEach(function(node){
-	    			if(nodesJson.indexOf(node)<0) nodesJson.push(node)
-	    		});	    		
-	    	}
-	    } // end for */
-	    
+    	});	    
     }
     
     console.log("All nodes:", nodesJson)
     console.log("All links:", linksJson)
     // create the data store
-    var networkStore = Ext.create('Ext.data.ArrayStore', {
-        fields: [
-           {name: 'name'},
-           {name: 'ctime'},
-           {name: 'creator'},
-           {name: 'description'}
-        ],
-        data: networkJson
-    });
-    
     // create the Grid, see Ext.
-    if (typeof networkGrid=="undefined") {
-	    networkGrid=Ext.create('Ext.ux.OneChartLiveSearchGridPanel', {
-	        store: networkStore,
-	        columnLines: true,
-	        columns: [
-	            {
-	                text     : 'Network Name',
-	               // flex     : 1,
-	                sortable : false, 
-	                width: 85,
-	                dataIndex: 'name'
-	            },
-	            {
-	                text     : 'Create Date', 
-	                width    : 75, 
-	                sortable : true, 
-	                renderer : 'renderYear', 
-	                dataIndex: 'ctime'
-	            },
-	            {
-	                text     : 'Creator', 
-	                width    : 75, 
-	                sortable : true, 
-	                dataIndex: 'creator'
-	               // renderer: change
-	            },
-	            {
-	                text     : 'Description', 
-	                width    : 75, 
-	                flex:1,
-	                sortable : true, 
-	                dataIndex: 'description'
-	               // renderer: change
-	            }
-	        ],
-	        height: 'auto',
-	        width: 'auto',
-	        title: '',
-	       // renderTo: Ext.getBody(),
-	        viewConfig: {
-	        	id:'gv',
-	            stripeRows: false
-	        }
-	    });
-	 }
-	 else {
-	 	netowrkGrid.getStore().loadRecords(networkStore.getRange());
-	 }
-	 
-	 if (typeof viewport=="undefined")
-	     					createViewPort();
-	
-	 
 	 
 }
-
+function createNetworkGrid(){
+	if(window.networkGrid) return;
+	
+	networkStore = Ext.create('Ext.data.ArrayStore', {
+        fields: [
+           {name: 'name'},           
+           {name: 'ctime'},
+           {name: 'creator'}           
+           ,{name: 'source'}
+           ,{name: 'group'}
+           //,{name: 'description'}           
+        ],
+        data: []       
+    });
+    
+    networkGrid=Ext.create('Ext.ux.OneChartLiveSearchGridPanel', {
+        store: networkStore,
+        columnLines: true,
+        columns: [
+            {
+                text     : 'Network Name',
+                flex     : 1,
+                sortable : false,                 
+                dataIndex: 'name'
+            },
+            {
+                text     : 'Create Date', 
+                width    : 70, 
+                sortable : true, 
+                renderer : 'renderYear', 
+                dataIndex: 'ctime'
+            },
+            {
+                text     : 'Creator', 
+                width    : 70, 
+                sortable : true, 
+                dataIndex: 'creator'
+               // renderer: change
+            },
+            {
+                text     : 'Source', 
+                width    : 75, 
+                flex:1,
+                sortable : true, 
+                dataIndex: 'source'
+               // renderer: change
+            },
+            {
+                text     : 'Group', 
+                width    : 75, 
+                flex:1,
+                sortable : true, 
+                dataIndex: 'group'
+               // renderer: change
+            }
+        ],
+        height: 'auto',
+        width: 'auto',
+        title: 'Network List',
+       // renderTo: Ext.getBody(),
+        viewConfig: {
+        	id:'gv',
+            stripeRows: false
+        }
+    });
+		 
+}
 function createGraph() {
 	//console.log("Recreating graph")
     //

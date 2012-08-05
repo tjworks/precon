@@ -40,7 +40,7 @@ precon.quickSearch = function(query, callback){
 }
  
 precon._ajax = function(url, callback){
-	console.log("Performing ajax query: "+ unescape(url))
+	//console.log("Performing ajax query: "+ unescape(url))
 	$.ajax({
 		  url: url,
 		  dataType: 'jsonp',	
@@ -178,7 +178,7 @@ precon.getNetworkConnections=function(network_id, callback){
  */
 precon.getObject = function(obj_id, callback){
 	if(!obj_id) throw "Obj id must be specified"
-	console.log("getObject: "+ obj_id)	// 
+	//console.log("getObject: "+ obj_id)	// 
 	obj_id = obj_id.trim()
 	//TBD: use localStorage cache instead so it can persist
 	if(obj_id in precon.cache) {
@@ -213,7 +213,7 @@ precon.cache = {}
  */
 precon.getObjects = function(obj_ids, callback){
 	if(!obj_ids || obj_ids.length == 0 ) throw "An array of Obj ids must be specified"
-	console.log("getObjects: "+ obj_ids)	// 
+	//console.log("getObjects: "+ obj_ids)	// 
 	
 	// mapping
 	if(!obj_ids[0]) return

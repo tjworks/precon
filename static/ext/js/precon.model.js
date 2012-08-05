@@ -1,3 +1,7 @@
+(function(){
+	
+
+
 precon.NetworkGraph = function(){
 	var jq = $(this)
 	var networks = []
@@ -69,6 +73,11 @@ precon.NetworkGraph = function(){
 		}		
 		return this;
 	}
+	/**
+	 * Add a node to the graph. Can be a precon.Node object or a json. 
+	 * If providing a JSON object, must have at least _id, name attributes
+	 * returns the precon.Node object
+	 */
 	this.addNode=function(node){
 		var nodeId = typeof(node) == 'object'?node.getId(): node
 		var found = false
@@ -93,6 +102,16 @@ precon.NetworkGraph = function(){
 		})	
 		return this;
 	}	
+	//this result is consumed by Ext store
+	this.getNetworkList = function(){
+		var array = []
+		console.log("Total net", networks)
+		networks.forEach(function(net){
+			var a = [ net.getRawdata().name, '', net.getRawdata().owner, net.getRawdata().source, net.getRawdata().group  ];
+			array.push(a)
+		});
+		return array
+	}
 	return this
 }
 
@@ -173,8 +192,12 @@ precon.Connection = function(rawdata){
 	}
 	return this
 }
+
 precon.Node = function(rawdata){	
 	var rawdata = rawdata || {}
+	if(!rawdata._id || !rawdata.label)
+		throw "Missing _id or label"
+	
 	this.getId = function(){
 		return rawdata._id
 	}
@@ -208,6 +231,9 @@ function copy(o){
 function isObject(obj){
 	return typeof(obj) == 'object'
 }
+
+
+})();
 /**
 $.Class('precon.DatabaseObject',	
 	{
@@ -342,3 +368,4 @@ Experiment = {
 }
 
 */
+
