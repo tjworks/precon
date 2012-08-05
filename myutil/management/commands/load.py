@@ -46,6 +46,9 @@ class Command(BaseCommand):
       
 
 
+demo_pubmeds = ('19465464;18945920;17476361;8165821;11602624;11602624;19245656;11602624;19245656;11602624;19245656;11602624;19245656;11602624;19245656;16732470;20600832; 20577046;15358229;15358229;18006825;17062558;15849206;20407744;19918015;19564453;19653109;19375425;20299480;20442309;19679549;19752085;17638885;18212742;16125352;18387000;20053525;18358555;' +
+           '12384179;21263130;21060860;20872241;20453838;19330030;17529967;17529973;'+
+           '22129971;22451849').split(";")
 def mongo_scripts():
     mydb= db()
     for f in filesInDir("etc/mongo"):
@@ -95,14 +98,39 @@ def load_csv(filename=None):
             network.save()
             
             
-
+def ukpmc(ids=None):
+    """
+    Given a pubmed id, Load entities into DB from UKPMC
+    """
+    ids = ids.split(",") if ids else demo_pubmeds
+    
+    url = 'http://ukpmc.ac.uk/abstract/MED/'
+    import requests,re
+    col = mongo.getCollection('publication')
+    for id in ids:
+        print "#### proceesing %s" %id
+        p = col.find_one({'_id':'publ%s'%id})
+        pub = Publication( p )
+        u = "%s%s" %(url, id)
+        r = requests.get(u)         
+        if r.status_code == 200:
+                from django.utils.encoding import smart_str, smart_unicode            
+                content = smart_str(r.text)
+                entities = {}
+                for m in re.finditer(r'<span class="(disease|protein|geneOntology|species|chemical)".*?_blank">(.*?)</a></span>', content):
+                    group = m.group(1)
+                    group = 'go' if group == 'geneOntology' else group.lower()                
+                    e = {'name': m.group(2).lower(), 'group': group}
+                    entities[e['name']] = e
+                pub.entities = []
+                for en, item in entities.items():
+                    pub.entities.append(item)
+                if(pub.entities):                    
+                    pub.save()     
+                    print("Saved %d items" %(len(entities)))           
+            
 def load_pubmeds(ids=None):
-    if not ids:
-        pubmeds = '19465464;18945920;17476361;8165821;11602624;11602624;19245656;11602624;19245656;11602624;19245656;11602624;19245656;11602624;19245656;16732470;20600832; 20577046;15358229;15358229;18006825;17062558;15849206;20407744;19918015;19564453;19653109;19375425;20299480;20442309;19679549;19752085;17638885;18212742;16125352;18387000;20053525;18358555'.split(";")    
-        pubmeds.extend(  '12384179,21263130,21060860,20872241,20453838,19330030,17529967,17529973'.split(",") )
-        pubmeds.extend( '22129971,22451849'.split(","))
-    else:
-        pubmeds = ids.split(",")
+    ids = ids.split(",") if ids else demo_pubmeds
         
     url = "http://togows.dbcls.jp/entry/pubmed/$ID?format=xml"
 

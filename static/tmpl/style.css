@@ -248,8 +248,8 @@ ul.memberOptions li {padding:5px 0;list-style:circle;margin-left:18px;}
 .bottomNav a {color:#fff;line-height:52px;}
 .bottomNav a:hover {text-decoration:none;}
 .bottomNav ul li {border-right:1px solid #000;padding:0 15px;border-left:1px solid #3d4253;float:left;}
-.bottomNav ul li:hover {background: url(bottom-nav-hover-bg.png) repeat-x;}
-.copyright {font-size:14px;font-weight:bold;line-height:52px;}
+/** .bottomNav ul li:hover {background: url(bottom-nav-hover-bg.png) repeat-x;} 
+.copyright {font-size:14px;font-weight:bold;line-height:52px;}*/
 
 
 
@@ -279,7 +279,7 @@ body li#homeTab {border-left:1px solid #b0bd8f;}
 #footer {background: url(footer-bg.png) repeat;border-top:1px solid #171927;border-bottom:1px solid #111;}
 .bottomNav {border-left:1px solid #000;border-right:1px solid #3d4253;}
 .bottomNav ul li {border-right:1px solid #000;border-left:1px solid #3d4253;}
-.bottomNav ul li:hover {background: url(bottom-nav-hover-bg.png) repeat-x;}
+
 
 
 
@@ -293,12 +293,10 @@ body li#homeTab {border-left:1px solid #b0bd8f;}
 .myheaderNav a {color:#fff;line-height:52px;}
 .myheaderNav a:hover {text-decoration:none;}
 .myheaderNav ul li {border-right:1px solid #000;padding:0 15px;border-left:1px solid #3d4253;float:left;}
-.myheaderNav ul li:hover {background: url(bottom-nav-hover-bg.png) repeat-x;}
 
 #myheader {background: url(footer-bg.png) repeat;border-top:1px solid #171927;border-bottom:1px solid #111;}
 .myheaderNav {border-left:1px solid #000;border-right:1px solid #3d4253;}
 .myheaderNav ul li {border-right:1px solid #000;border-left:1px solid #3d4253;}
-.myheaderNav ul li:hover {background: url(bottom-nav-hover-bg.png) repeat-x;}
 
 .bgcolor {
   border-top: 1px solid #96d1f8;
@@ -489,3 +487,8 @@ form.signin input::-webkit-input-placeholder { color:#bbb; text-shadow:0 0 2px #
   padding:5px;
 }
 
+.entity-name {
+	padding: 0px 3px;
+	
+	font-weight: bold
+}

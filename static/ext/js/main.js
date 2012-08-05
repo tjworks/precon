@@ -503,11 +503,20 @@ function renderObject(obj){
 				authors += (author.first?author.first.substring(0,1):'') +" "+ author.last
 			});			
 		}
-			
+		
 		
 		html="<table><tr><th>Title:</td><td>"+obj.name+"</td></tr>"
 		html+="<tr><th>Authors:</th><td>" + authors +"</td></tr>"
-		html+="<tr><th>Abstract:</th><td>" + obj.abstract +"</td></tr>"
+		
+		var entities = obj.entities || []
+		ab = obj.abstract
+		entities.forEach(function(en){
+			var re = new RegExp("("+ en.name+")", 'gi')
+			ab = ab.replace(re, '<a href="#" class="entity-name">$1</a>')  
+		});
+		
+		html+="<tr><th>Abstract:</th><td>" + ab +"</td></tr>"		
+		
 		html+="</table>"
 		return html
 	}	
@@ -868,6 +877,7 @@ $(document).ready(function() {
             'title':    'Add Node',
             'buttons':  [
                 {caption:'OK', callback: function(){
+                		// TBD: add to NetworkGraph model object
                         mygraph.addNode($("#dialog_node_name").val());
                     }
                 },
@@ -883,6 +893,7 @@ $(document).ready(function() {
             'title':    'Add Link',
             'buttons':  [
                 {caption:'OK', callback: function(){
+                		// TBD: add to NetworkGraph model object                	
                         mygraph.addLink($("#dialog_link_sname").val(), $("#dialog_link_dname").val(),$("#dialog_link_type").val());
                     }
                 },

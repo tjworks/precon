@@ -179,6 +179,8 @@ class Publication(BioModel):
         self.refs = self.refs or  {}
         self.pubmed_id = self.pubmed_id or ''
         self.authors = self.authors or []
+        self.abstract = self.abstract or  ''
+        self.entities = self.entities or []  # { id:'', name:'', group:''}
 
 class Association(BaseModel):
     _col = 'association'
