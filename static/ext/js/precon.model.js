@@ -116,11 +116,13 @@ precon.Connection = function(rawdata){
 	this.getType = function(){
 		return rawdata.type
 	}
-	
+	this.getNodeIds=function(){
+		return rawdata.nodes
+	}
 	this.getNodes = function(callback){
 		if(nodes.length){
-			callback && callback(nodes)
-			return
+			if(callback) callback(nodes)			
+			return nodes
 		}		
 		 
 		// nodes is list of node IDs
@@ -131,9 +133,11 @@ precon.Connection = function(rawdata){
 					nodes.push( new precon.Node(objs[i]) )
 				}
 				callback && callback(nodes);
+				
 			});				
 		}
-		callback && callback([])
+		if(callback)  callback([])
+		return []
 	}	
 	this.setNodes = function(nds){
 		nodes = nds

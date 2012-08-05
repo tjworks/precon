@@ -22,20 +22,26 @@ function myGraph(el,w,h) {
         update();
     }
     this._addNode = function(evt, data){
-    	console.log("Adding node", data.node.getLabel())
+    	console.log("Adding node", data.node)
     	if(data.node)
     		graph.addNode(data.node)
     }
     this._addLink= function(evt, data){
     	console.log("Adding connection", data.connection)
     	if(data.connection ){
-    		var nodes = data.connection.getNodes(function(nodes){
+    			var nodes = data.connection.getNodeIds()
     			if(nodes && nodes.length ==2){    		
-    				console.log("Adding link "+ nodes[0].getId()+", "+ nodes[1].getId())
-    				graph.addLink(nodes[0].getId(), nodes[1].getId(), data.connection.getType())
+    				console.log("Adding link "+ nodes[0]+", "+ nodes[1])
+    				var link = data.connection
+    				link.source = findNode(nodes[0])    				
+    				link.target= findNode(nodes[1])
+    				if(link.source && link.target){
+    					//linkarray.push(link)
+    					graph.addLink(nodes[0] , nodes[1], data.connection.getType())
+    				}    					
+    				//graph.addLink(nodes[0].getId(), nodes[1].getId(), data.connection.getType())
     			}
-    		})    		
-    	}
+    	}    		    	
     }
 
     this.removeNode = function (id) {
@@ -75,11 +81,12 @@ function myGraph(el,w,h) {
     
     this.addLink = function (source, target,type) {
     	if (findNode(source)!=null && findNode(target)!=null&&findNode(source)!=findNode(target)) {
+    		
         	linkarray.push({"source":findNode(source),"target":findNode(target), "type":type});
     		update();
     	}
     }
-
+     
     var findNode = function(id) {
         for (var i in nodearray) {if (nodearray[i]["id"] === id) return nodearray[i]};
         return null;
@@ -149,6 +156,14 @@ function myGraph(el,w,h) {
     var update = function () {
 	      //console.log(linkarray);
 	      //console.log(nodearray);
+	      console.log("Updating: ", linkarray, nodearray)
+	     var svg = d3.select(el).select("svg")
+	     if(svg) svg.remove()
+	       var vis = d3.select(el).append("svg:svg")
+        .attr("width", w)
+        .attr("name","forcenet")
+        .attr("height", h);
+        
 	      
 	     // if (typeof linkg =="undefined")
 		      linkg=vis.append("svg:g");
@@ -158,7 +173,6 @@ function myGraph(el,w,h) {
            		   .attr("id",function(d){return d.source.id+"---"+d.target.id})
         		   .attr("class",function(d){return "link "+d.type;});
        
-
           link.exit().remove();
 
         var node = vis.selectAll("g.node")
@@ -222,7 +236,9 @@ function myGraph(el,w,h) {
         //create the context menu
     };
     
-   
+    this.redraw = function(){
+    	update()
+    }
     // Make it all go
     update();
 }

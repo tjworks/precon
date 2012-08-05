@@ -665,10 +665,24 @@ function initNetwork(networkObjects) {
 }
 
 function createGraph() {
-	console.log("Recreating graph")
-    Ext.select("svg").remove();
-    graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
-    
+	//console.log("Recreating graph")
+    //
+    //graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
+	console.log("Creating graph")    
+	//Ext.select("svg").remove();
+	//graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
+	
+	if(!window.graph){
+		console.log("Creating graph")    
+		graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
+	}
+	else{
+		console.log("Redraw graph")    
+		// redraw
+		//Ext.select("svg").remove();
+		graph.redraw(Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true))
+	}
+	
     //graph = new myGraph("#west-body");
     /*
     graph.addNode("Metforming");
