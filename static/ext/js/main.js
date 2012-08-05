@@ -704,6 +704,15 @@ function createGraph() {
 			console.log("dblclick", evt, target.__data__)
 			showObject(target.__data__)
 		});		
+		mygraph.on("contextmenu",function(evt, target){
+            d3.event.preventDefault();
+            contextMenu.showAt([d3.event.clientX,d3.event.clientY]);
+		});
+		mygraph.on("mouseover",function(evt, target){
+            // alert('mouse over lines '+d.id);            
+            addSelectStyle(d3.event.currentTarget);
+            showTips(d3.event);
+		});
 	}
 	else{
 		console.log("Redraw graph")    

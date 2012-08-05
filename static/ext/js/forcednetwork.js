@@ -10,6 +10,19 @@ function myGraph(el,w,h) {
 		this.model.bind('add.connection', this._addLink)
 		this.model.bind('add.node', this._addNode)
 	}
+	// register internal events handler
+	/**
+	this.on('mouseover', function(evt, target){
+		
+		target.attr('width', Math.ceil( target.attr('width') * 2 ) )
+		target.attr('height', Math.ceil( target.attr('height') * 2 ) )
+	})
+	this.on('mouseout', function(evt, target){
+		target.attr('width', Math.ceil( target.attr('width') / 2 ) )
+		target.attr('height', Math.ceil( target.attr('height') / 2 ) )
+	})
+	*/
+	
     // Add and remove elements on the graph object
     this.addNode = function (node, attrs) {
     	var id = null;
@@ -189,7 +202,7 @@ function myGraph(el,w,h) {
 	       		   .attr("id",function(d){return d.source.id+"---"+d.target.id})
 	    		   .attr("class",function(d){return "link "+d.type;});
 	   
-	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy )
+	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 	      link.exit().remove();
 
         var node = vis.selectAll("g.node")
@@ -199,7 +212,7 @@ function myGraph(el,w,h) {
             .attr("class", "node")            
             .call(force.drag);
         
-        nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy )
+        nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 
         nodeEnter.append("circle")
             .attr("class", "circle")
