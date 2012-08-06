@@ -233,7 +233,7 @@ function myGraph(el,w,h) {
     //Return true if a directoned link already exists, other return false;
     var withinLinkArray=function(d) {
     	for (var m=0; m<linkarray.length;m++) {
-		  	if (m.source.id==d.source.id && m.target.id==d.target.id) return true;
+		  	if (linkarray[m].source.id==d.source.id && linkarray[m].target.id==d.target.id) return true;
 		}
 		return false;
     }
