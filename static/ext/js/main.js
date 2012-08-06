@@ -452,7 +452,7 @@ function initApp() {
 
 // get the object id from the URL, if it's available
 function getObjectIdFromUrl(){
-	var matcher = location.href.match(/graph\/([^\/]*)$/)
+	var matcher = location.href.match(/graph\/([^\/]*?)[#\?]?$/)
 	if(matcher) return matcher[1]
 	return ''
 }
@@ -478,40 +478,44 @@ function showMainObject(){
 }
 function addNodeFromAbstract(evt, obj){
 	var label = $(this).text() 
-	id = label.replace(/[()\s]/g, '')
+	id ='enti_' +
+	
+	label.replace(/[()\s]/g, '')
 	graphModel.addNode( {_id:id, label: label } )
 }
 function createLink(){
 	var selections = graphModel.getSelections()
-	if(selections.length!=2){
+	var nodes = []
+	selections.forEach(function(obj){
+		if(obj instanceof precon.Node) 
+			nodes.push(obj)
+	})
+	if(nodes.length!=2){
 		alert("You must select exactly 2 nodes first")
 		return;
 	}
 	// TBD: type, ref etc
-	var con = {nodes: [selections[0], selections[1]]}
+	var con = {nodes: [nodes[0], nodes[1]]}
 	graphModel.addConnection(con);	
 }
 function showObject(obj){
-	if('getRawdata' in obj){
-		obj = obj.getRawdata()
-		var tab =  Ext.getCmp("infopanel").getComponent(obj._id)
-		if(!tab){
-			var html = renderObject(obj)
-			var title =  obj.name || obj.title || obj.label
-			var title = precon.util.shortTitle(title)
-			tab = Ext.getCmp("infopanel").add({
-				title:title,
-				html:html,
-				id:obj._id,
-				autoScroll:true,
-				closable:true
-			})
-		}
-		Ext.getCmp("infopanel").setActiveTab(tab)
+	if('getRawdata' in obj) obj = obj.getRawdata()
+	
+	var tab =  Ext.getCmp("infopanel").getComponent(obj._id)
+	if(!tab){
+		var html = renderObject(obj)
+		var title =  obj.name || obj.title || obj.label
+		var title = precon.util.shortTitle(title)
+		tab = Ext.getCmp("infopanel").add({
+			title:title,
+			html:html,
+			id:obj._id,
+			autoScroll:true,
+			closable:true
+		})
 	}
-	else{
-		console.log("Unrecognized object: ", obj)
-	}
+	Ext.getCmp("infopanel").setActiveTab(tab)
+	
 }
 
 function renderObject(obj){
@@ -541,6 +545,11 @@ function renderObject(obj){
 		html+="</table>"
 		return html
 	}	
+	else if(precon.getObjectType(obj._id) =='connection' ){
+		//TBD: temp hack
+		obj.label = obj.source.getLabel() + " - " + obj.target.getLabel() 
+	}
+	
 	return precon.util.formatObject(obj)
 	
 }

@@ -113,6 +113,7 @@ precon.NetworkGraph = function(){
 			graphModel.trigger('add.node', {
 				node:node
 			})
+			precon.encache(node); // add to cache so it can looked up later
 			return node;
 		}
 		// TBD: using ajax queue to ensure no multiple same requests happen same time
@@ -196,6 +197,14 @@ precon.Connection = function(rawdata){
 	this.getType = function(){
 		return rawdata.type
 	}
+	this.getLabel = function() { 
+		if(rawdata.label) return rawdata.label
+		if(nodes.length>1){
+			return nodes[0].label +"-"+ node[1].label
+		}
+		if(rawdata.nodes.length>1)
+			return rawdata.nodes[0] +"-"+ rawdata.node[1]
+	}
 	this.getNodeIds=function(){
 		return rawdata.nodes
 	}
@@ -219,6 +228,7 @@ precon.Connection = function(rawdata){
 	}	
 	this.setNodes = function(nds){
 		//rawdata.nodes = nds
+		nodes = nds
 	}
 	/** do not change the rawdata, it's read only */
 	this.getRawdata = function(){
@@ -278,7 +288,7 @@ precon.Node = function(rawdata){
 		return new Date().getTime() +'' +  Math.round( Math.random( ) * 1000 )
 	}
 	
-
+	
 		
 })();
 

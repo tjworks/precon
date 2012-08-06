@@ -6,6 +6,7 @@ precon.conf = {
 }
 
 precon.getObjectType = function(objid){
+	if(!objid) return ''
 	var prefix = objid.substring(0,4);
 	var model = precon.conf.prefix_mapping[prefix]
 	if(!model) throw "Unrecognized ID format: "+ objid
@@ -321,7 +322,8 @@ precon.util.formatObject = function(obj, indent){
     	str+='<div style="margin-left:'+ (space)+'px">';
     	str+="<font color=green><b>"+ p+"</b></font>: "
     	if(typeof obj[p] == 'string' || typeof obj[p] == 'number'){
-    		var tmp = obj[p].substring(0,4)
+    		var tmp = obj[p];
+    		tmp = typeof(tmp) == 'string'? tmp.substring(0,4): tmp
     		if(p == '_id' || (obj.length && tmp in precon.conf.prefix_mapping ))
     			str+=  "<a href='#' onclick='showObj(\"" +obj[p]+"\")' style='color:blue'>"+ obj[p]+"</a>";
     		else
@@ -339,7 +341,7 @@ precon.util.formatObject = function(obj, indent){
 }
 precon.util.shortTitle=function(title, max){
 	max = max || 20
-	return title.substring(0, max) +"..." // TBD: smarter
+	return title? title.substring(0, max) +"..." : title// TBD: smarter
 }
 precon.event = {
 	ViewportCreated:'ViewPortCreated'

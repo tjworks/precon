@@ -129,7 +129,11 @@ text.shadow {
 }
 
 .state-highlight {
-	stroke:yellow;	
-	fill: #333;
-	stroke-width:4px;
+    stroke:yellow;  
+    fill: #333;
+    stroke-width:4px;
+}
+path.link.state-highlight {
+    stroke:yellow;      
+    stroke-width:5px;
 }

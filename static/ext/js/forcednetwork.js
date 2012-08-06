@@ -37,6 +37,7 @@ function myGraph(el,w,h) {
 	// register internal events handler	
 	this.on('mouseover', function(evt, target){
 		var r = $d(target).attr('r')
+		console.log("Mouseover", $d(target))
 		$d(target).classed('state-highlight', true).attr('r', r*2  )		
 	})
 	this.on('mouseout', function(evt, target){
@@ -145,8 +146,8 @@ function myGraph(el,w,h) {
     
     this.addLink = function (source, target,type, id) {
     	if (findNode(source)!=null && findNode(target)!=null&&findNode(source)!=findNode(target)) {
-    		
-        	linkarray.push({"source":findNode(source),"target":findNode(target), "type":type, "id":id});
+    		var linkobj = {"source":findNode(source),"target":findNode(target), "type":type, "id":id, getId:function(){return this.id}, _id:id}
+        	linkarray.push(linkobj);
     		update();
     	}
     }
