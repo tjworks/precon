@@ -180,7 +180,8 @@ function myGraph(el,w,h) {
         .attr("height", h);
     
     //Create the Marker for path arrow
-      defs.append("svg:marker")
+     var defs = vis.append("svg:defs");
+     defs.append("svg:marker")
 	    .attr("id", "arrowhead")
 	    .attr("viewBox", "0 -5 10 10")
 	    .attr("refX", 15)
