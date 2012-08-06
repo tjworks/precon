@@ -230,6 +230,14 @@ function myGraph(el,w,h) {
     	else return true;
     };
     
+    //Return true if a directoned link already exists, other return false;
+    var withinLinkArray=function(d) {
+    	for (var m=0; m<linkarray.length;m++) {
+		  	if (m.source.id==d.source.id && m.target.id==d.target.id) return true;
+		}
+		return false;
+    }
+    
     var update = function () {
 	     //console.log(linkarray);
 	     //console.log(nodearray);
@@ -263,7 +271,7 @@ function myGraph(el,w,h) {
 	    	   .data(linkarray, function(d){return d.id});
 	      link.enter()
 	      .append("svg:path")
-  		  .attr("id",function(d){return d.source.id+"---"+d.target.id})
+  		  .attr("id",function(d){return d.source.id+"-"+d.target.id})
 		  .attr("class",function(d){return "link "+d.type;})
 		  .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
 	   
@@ -300,10 +308,13 @@ function myGraph(el,w,h) {
         
         force.on("tick", function() {
        	  link.attr("d", function(d) {
-       	  	  
+       	  	       //insert a random disturbance to allow multiple links between two points. 
 				   var dx = d.target.x - d.source.x,
 				       dy = d.target.y - d.source.py,
-				       dr = Math.sqrt(dx * dx + dy * dy)*(1+Math.random()/10);
+				       dr = withinLinkArray(d)?Math.sqrt(dx * dx + dy * dy)*(1+Math.random()/5):Math.sqrt(dx * dx + dy * dy);
+				   
+				  
+				  
 			//	if (withinWindow(d)) { 
 		/*
 					   lastobj.lastdr=dr;
