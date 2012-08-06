@@ -243,16 +243,19 @@ function myGraph(el,w,h) {
         
 	       //Create the Marker for path arrow
 	     var defs = vis.append("svg:defs");
-	     defs.append("svg:marker")
+     	 defs.selectAll("marker")
+			.data(["decreases", "beinguptaken", "activates", "inhibits", "stimulats", "association", "physical_interaction", "predicted", "activates", "pathway"])
+  			.enter()
+  			.append("svg:marker")
 		    .attr("id", "arrowhead")
-		    .attr("viewBox", "0 -5 10 10")
+		    .attr("viewBox", "0 -3 13 13")
 		    .attr("refX", 15)
 		    .attr("refY", -1.5)
 		    .attr("markerWidth", 6)
 		    .attr("markerHeight", 6)
 		    .attr("orient", "auto")
 		    .append("svg:path")
-		    .attr("d", "M0,-5L10,0L0,5");
+		    .attr("d", "M0,-3L13,0L0,3");
 	    
 	      // if (typeof linkg =="undefined")
 		  linkg=vis.append("svg:g");
@@ -262,7 +265,7 @@ function myGraph(el,w,h) {
 	      .append("svg:path")
   		  .attr("id",function(d){return d.source.id+"---"+d.target.id})
 		  .attr("class",function(d){return "link "+d.type;})
-		  .attr("marker-end", "url(#arrowhead)");;
+		  .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
 	   
 	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 	      link.exit().remove();
