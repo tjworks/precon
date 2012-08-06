@@ -88,7 +88,7 @@ function myGraph(el,w,h) {
     		graph.addNode(data.node)
     }
     this._addLink= function(evt, data){
-    	console.log("Adding connection", data.connection)
+    	console.log("Adding connection", data.connection, data.connection.getNodes())
     	if(data.connection ){
     			var nodes = data.connection.getNodes()
     			if(nodes && nodes.length ==2){    		

@@ -75,7 +75,6 @@ precon.NetworkGraph = function(){
 			if(myCon.getId() == conId ) found = myCon; // already have it
 		})
 		if(found) return found;
-		
 		if(isObject(con)){
 			if(!(con instanceof precon.Connection))
 				con = new precon.Connection(con)
@@ -180,14 +179,17 @@ precon.Network = function(rawdata){
 
 
 precon.Connection = function(rawdata){
+	var nodes =  []
 	var rawdata = rawdata || {}
 	if(!rawdata._id){
 		// create new id
 		rawdata._id = 'conn' + getRandom()
 	}
-	if(! (rawdata.nodes && rawdata.nodes.length>1))
+	if(! (rawdata.nodes && rawdata.nodes.length>1) )
 		throw "Must at least provide to nodes"
-		
+	if( rawdata.nodes[0] instanceof precon.Node){
+		nodes = rawdata.nodes		
+	}
 	this.getId = function(){
 		return rawdata._id
 	}
@@ -198,27 +200,25 @@ precon.Connection = function(rawdata){
 		return rawdata.nodes
 	}
 	this.getNodes = function(callback){
-		if(rawdata.nodes[0] instanceof precon.Node){
-			if(callback) callback(rawdata.nodes)			
-			return rawdata.nodes
+		if(nodes.length>0){
+			if(callback) callback(nodes)			
+			return nodes
 		}		
-		 
+		console.log("con nodes", rawdata.nodes)
 		// nodes is list of node IDs		
 		precon.getObjects(rawdata.nodes, function(objs){
-			var nodes = []
+			nodes = []
 			for(var i=0; objs && i<objs.length;i++){
 				nodes.push( new precon.Node(objs[i]) )
-			}
-			rawdata.nodes = nodes
-			callback && callback(nodes);
-			
+			}			
+			callback && callback(nodes);			
 		});				
 		
-		if(callback)  callback([])
+		//if(callback)  callback([])
 		return []
 	}	
 	this.setNodes = function(nds){
-		rawdata.nodes = nds
+		//rawdata.nodes = nds
 	}
 	/** do not change the rawdata, it's read only */
 	this.getRawdata = function(){
