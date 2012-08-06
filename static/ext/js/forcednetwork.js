@@ -146,9 +146,7 @@ function myGraph(el,w,h) {
     
     this.addLink = function (source, target,type, id) {
     	if (findNode(source)!=null && findNode(target)!=null&&findNode(source)!=findNode(target)) {
-    		var linkobj = {"source":findNode(source),"target":findNode(target), "type":type, "id":id, getId:function(){return this.id}, _id:id, "multiplier":processLinkArray(source,target)}
-        	console.log("the link object is");
-        	console.log(linkobj);
+    		var linkobj = {"source":findNode(source),"target":findNode(target), "type":type, "id":id, getId:function(){return this.id}, _id:id}
         	linkarray.push(linkobj);
     		update();
     	}
@@ -232,15 +230,12 @@ function myGraph(el,w,h) {
     	else return true;
     };
     
-    //preset a link's arc degrees to allow multiple arc drawing
-    var processLinkArray=function(sourceid,targetid) {
-    	var count=0;
-    	linkarray.forEach(function(alink){
-    		if ((alink.source.id==sourceid) && (alink.target.id==targetid))
-    			count++;
-    	});
-    	if (count>1) return (1+Math.random()*1.5);
-    	return 1;
+    //Return true if a directoned link already exists, other return false;
+    var withinLinkArray=function(d) {
+    	for (var m=0; m<linkarray.length;m++) {
+		  	if (linkarray[m].source.id==d.source.id && linkarray[m].target.id==d.target.id) return true;
+		}
+		return false;
     }
     
     var update = function () {
@@ -315,8 +310,10 @@ function myGraph(el,w,h) {
        	  link.attr("d", function(d) {
        	  	       //insert a random disturbance to allow multiple links between two points. 
 				   var dx = d.target.x - d.source.x,
-				       dy = d.target.y - d.source.py,
-				       dr =Math.sqrt(dx * dx + dy * dy)*processLinkArray(d.source.id,d.target.id);
+				       dy = d.target.y - d.source.py;
+				   var dr = withinLinkArray(d)?Math.sqrt(dx * dx + dy * dy)*(1+Math.random()):Math.sqrt(dx * dx + dy * dy);
+				   
+				  
 				  
 			//	if (withinWindow(d)) { 
 		/*
