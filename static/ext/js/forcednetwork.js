@@ -231,7 +231,7 @@ function myGraph(el,w,h) {
     };
     
     //Return true if a directoned link already exists, other return false;
-    var withinLinkArray=function(d) {
+    var processLinkArray=function(d) {
     	var count=0;
     	linkarray.forEach(function(alink){
     		if (alink.source.id==d.source.id && alink.target.id==d.target.id) count++;
