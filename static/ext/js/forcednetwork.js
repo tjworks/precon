@@ -247,7 +247,7 @@ function myGraph(el,w,h) {
 			.data(["decreases", "beinguptaken", "activates", "inhibits", "stimulats", "association", "physical_interaction", "predicted", "activates", "pathway"])
   			.enter()
   			.append("svg:marker")
-		    .attr("id", "arrowhead")
+		    .attr("id", String)
 		    .attr("viewBox", "0 -3 13 13")
 		    .attr("refX", 15)
 		    .attr("refY", -1.5)
