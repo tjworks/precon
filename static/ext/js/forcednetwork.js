@@ -303,7 +303,7 @@ function myGraph(el,w,h) {
        	  	  
 				   var dx = d.target.x - d.source.x,
 				       dy = d.target.y - d.source.py,
-				       dr = Math.sqrt(dx * dx + dy * dy);
+				       dr = Math.sqrt(dx * dx + dy * dy)*(1+Math.random()/10);
 			//	if (withinWindow(d)) { 
 		/*
 					   lastobj.lastdr=dr;

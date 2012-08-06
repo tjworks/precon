@@ -77,7 +77,7 @@ marker#predicted {
   fill: red;
 }
 marker#activates {
-  fill: green;
+  fill: red;
 }
 marker#pathway {
   fill: green;
