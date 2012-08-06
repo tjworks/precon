@@ -144,9 +144,19 @@ function myGraph(el,w,h) {
         update();
     }
     
+     //Return true if a directoned link already exists, other return false;
+    var processLinkArray=function(s,d) {
+    	var count=0;
+    	linkarray.forEach(function(alink){
+    		if (alink.source.id==s && alink.target.id==d) count++;
+    	});
+    	if (count>1) return (1+Math.random()*2);
+    	else return 1;
+    }
+    
     this.addLink = function (source, target,type, id) {
     	if (findNode(source)!=null && findNode(target)!=null&&findNode(source)!=findNode(target)) {
-    		var linkobj = {"source":findNode(source),"target":findNode(target), "type":type, "id":id, getId:function(){return this.id}, _id:id}
+    		var linkobj = {"source":findNode(source),"target":findNode(target), "type":type, "id":id, getId:function(){return this.id}, _id:id,"multiplier":processLinkArray(source,target)}
         	linkarray.push(linkobj);
     		update();
     	}
@@ -230,15 +240,7 @@ function myGraph(el,w,h) {
     	else return true;
     };
     
-    //Return true if a directoned link already exists, other return false;
-    var processLinkArray=function(d) {
-    	var count=0;
-    	linkarray.forEach(function(alink){
-    		if (alink.source.id==d.source.id && alink.target.id==d.target.id) count++;
-    	});
-    	if (count>1) return (1+Math.random()*1.5);
-    	else return 1;
-    }
+   
     
     var update = function () {
 	     //console.log(linkarray);
@@ -313,7 +315,7 @@ function myGraph(el,w,h) {
        	  	       //insert a random disturbance to allow multiple links between two points. 
 				   var dx = d.target.x - d.source.x,
 				       dy = d.target.y - d.source.py,
-				       dr = Math.sqrt(dx * dx + dy * dy)*processLinkArray(d);
+				       dr = Math.sqrt(dx * dx + dy * dy)*d.multiplier;
 				   
 				  
 				  
