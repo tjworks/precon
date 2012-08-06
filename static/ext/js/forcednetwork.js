@@ -179,19 +179,6 @@ function myGraph(el,w,h) {
         .attr("name","forcenet")
         .attr("height", h);
     
-    //Create the Marker for path arrow
-     var defs = vis.append("svg:defs");
-     defs.append("svg:marker")
-	    .attr("id", "arrowhead")
-	    .attr("viewBox", "0 -5 10 10")
-	    .attr("refX", 15)
-	    .attr("refY", -1.5)
-	    .attr("markerWidth", 6)
-	    .attr("markerHeight", 6)
-	    .attr("orient", "auto")
-	    .append("svg:path")
-	    .attr("d", "M0,-5L10,0L0,5");
-        
         /*
         .on("mousemove", function() {
                      console.log("moving...&calling fisheye");
@@ -254,7 +241,19 @@ function myGraph(el,w,h) {
         .attr("name","forcenet")
         .attr("height", h);
         
-	      
+	       //Create the Marker for path arrow
+	     var defs = vis.append("svg:defs");
+	     defs.append("svg:marker")
+		    .attr("id", "arrowhead")
+		    .attr("viewBox", "0 -5 10 10")
+		    .attr("refX", 15)
+		    .attr("refY", -1.5)
+		    .attr("markerWidth", 6)
+		    .attr("markerHeight", 6)
+		    .attr("orient", "auto")
+		    .append("svg:path")
+		    .attr("d", "M0,-5L10,0L0,5");
+	    
 	      // if (typeof linkg =="undefined")
 		  linkg=vis.append("svg:g");
 		  link=linkg.selectAll("path")
