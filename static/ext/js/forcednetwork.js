@@ -172,11 +172,24 @@ function myGraph(el,w,h) {
 	var fisheye = d3.fisheye.circular()
 	    .radius(10)
 	    .distortion(2);
-	    
+	
+	//Create the SVG Canvas Environment    
     var vis = d3.select(el).append("svg:svg")
         .attr("width", w)
         .attr("name","forcenet")
         .attr("height", h);
+    
+    //Create the Marker for path arrow
+      defs.append("svg:marker")
+	    .attr("id", "arrowhead")
+	    .attr("viewBox", "0 -5 10 10")
+	    .attr("refX", 15)
+	    .attr("refY", -1.5)
+	    .attr("markerWidth", 6)
+	    .attr("markerHeight", 6)
+	    .attr("orient", "auto")
+	    .append("svg:path")
+	    .attr("d", "M0,-5L10,0L0,5");
         
         /*
         .on("mousemove", function() {
@@ -230,8 +243,8 @@ function myGraph(el,w,h) {
     };
     
     var update = function () {
-	      //console.log(linkarray);
-	      //console.log(nodearray);
+	     //console.log(linkarray);
+	     //console.log(nodearray);
 	     //console.log("Updating")
 	     var svg = d3.select(el).select("svg")
 	     if(svg) svg.remove()
@@ -245,9 +258,11 @@ function myGraph(el,w,h) {
 		  linkg=vis.append("svg:g");
 		  link=linkg.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
-	      link.enter().append("svg:path")
-	       		   .attr("id",function(d){return d.source.id+"---"+d.target.id})
-	    		   .attr("class",function(d){return "link "+d.type;});
+	      link.enter()
+	      .append("svg:path")
+  		  .attr("id",function(d){return d.source.id+"---"+d.target.id})
+		  .attr("class",function(d){return "link "+d.type;})
+		  .attr("marker-end", "url(#arrowhead)");;
 	   
 	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 	      link.exit().remove();
@@ -313,7 +328,6 @@ function myGraph(el,w,h) {
         force.start();
         
         graph._selectionChanged()
-        //create the context menu
     };
     
     this.redraw = function(){
