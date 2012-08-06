@@ -533,8 +533,8 @@ function renderObject(obj){
 		html="<table><tr><th>Title:</td><td>"+obj.name+"</td></tr>"
 		html+="<tr><th>Authors:</th><td>" + authors +"</td></tr>"
 		
-		var entities = obj.entities || []
-		ab = obj.abstract
+		var entities = obj.entities || [];
+		ab = obj.abstract;
 		entities.forEach(function(en){
 			var re = new RegExp("("+ en.name+")", 'gi')
 			ab = ab.replace(re, '<a href="#" class="entity-name">$1</a>')  
@@ -576,6 +576,7 @@ function initNetwork(networkObjects) {
 		graphModel.addNetwork(n);
 	});	    
 }
+
 function createNetworkGrid(){
 	if(window.networkGrid) return;
 	
@@ -643,6 +644,34 @@ function createNetworkGrid(){
     });
 		 
 }
+
+function openNodeCreate(name) {
+	if (typeof nodeCreateWindow=="undefined")
+		nodeCreateWindow=Ext.create('Ext.window.Window', 
+				{
+				    bodyPadding: 5,
+				    width: 350,
+				    id:'nodeCreateWindow',
+				    autoHeight:true,
+				    url: 'save-form.php',
+				    extentStore:null,
+				    items: [ 
+				    	// defines the field set of street address locator
+					    {
+							xtype : 'fieldset',
+							title : 'Street Address',
+							layout : 'anchor',
+							collapsed : false, // initially collapse the group
+							collapsible : true,
+							Height : 170
+							}
+						]
+				});
+		else
+		   nodeCreateWindow.show();
+}
+
+
 function createGraph() {
 	//console.log("Recreating graph")
     //
