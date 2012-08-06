@@ -235,7 +235,7 @@ function myGraph(el,w,h) {
     //preset a link's arc degrees to allow multiple arc drawing
     var processLinkArray=function(sourceid,targetid) {
     	var count=0;
-    	linkarray.foreach(function(alink){
+    	linkarray.forEach(function(alink){
     		if ((alink.source.id==sourceid) && (alink.target.id==targetid))
     			count++;
     	});
