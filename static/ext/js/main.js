@@ -353,7 +353,7 @@ function showTips(e) {
                   html: htmlcontent
         });
         
-    gtip.showAt([e.clientX+5,e.clientY]);
+    gtip.showAt([e.clientX+10,e.clientY+10]);
 }   
 
 function addSelectStyle(el) {
