@@ -808,26 +808,6 @@ function openCreateWindow() {
                                     ]
                                 }),
                                 listeners: {
-                                	change : {
-                                		fn: function(f,v) {
-                                			console.log("combo changed")
-                                			console.log(f);
-                                			console.log(v);
-                                			if (v=='link') {
-                                				if (typeof Ext.getCmp('entityname2_c') !="undefined" && typeof Ext.getCmp('entityname1_c') !="undefined") {
-	                                				Ext.getCmp('entityname2_c').show();
-	                                				Ext.getCmp('entityname1_c').setFieldLabel("Source Node");
-                                				}
-                                			}
-                                			else {
-                                				if (typeof Ext.getCmp('entityname2_c') !="undefined" && typeof Ext.getCmp('entityname1_c') !="undefined") {
-                                					Ext.getCmp('entityname2_c').hide();
-                                					Ext.getCmp('entityname1_c').setFieldLabel("Entity Name");
-                                				}
-                                			}
-                                			
-                                		}
-                                	}
                                 }
                            	 }
 						],
