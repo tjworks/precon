@@ -834,10 +834,23 @@ function openCreateWindow() {
 											handler : function() {
 													if (Ext.getCmp('entitytype_c').getValue()=="link") {
 														mygraph.addLink(Ext.getCmp('entityname1_c').getValue(),Ext.getCmp('entityname1_c').getValue(),Ext.getCmp('entitylink_c').getValue());
+															// TBD: type, ref etc
+															var node1=null,
+																node2=null;
+															Ext.forEach(nodearray,function(anode){
+																if (anode.getLabel==Ext.getCmp('entityname1_c').getValue()) node1=anode;
+																if (anode.getLabel==Ext.getCmp('entityname2_c').getValue()) node2=anode;
+															});
+															if (node1 & node2) {
+																var con = {nodes: [node1, node2]}
+																graphModel.addConnection(con);
+															}
+															else
+																alert("Node cannot be found");	
 													}
 													
 													if (Ext.getCmp('entitytype_c').getValue()=="gene") {
-														mygraph.addNode(Ext.getCmp('entityname1_c').getValue());
+														graphModel.addNode( {_id:"Entity_"+Ext.getCmp('entityname1_c').getValue()+Math.random()*100, label: Ext.getCmp('entityname1_c').getValue() } );
 													}	
 												}
 										}, {
