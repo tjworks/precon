@@ -837,7 +837,7 @@ function openCreateWindow() {
 															// TBD: type, ref etc
 															var node1=null,
 																node2=null;
-															Ext.forEach(nodearray,function(anode){
+															nodearray.forEach(function(anode){
 																if (anode.getLabel==Ext.getCmp('entityname1_c').getValue()) node1=anode;
 																if (anode.getLabel==Ext.getCmp('entityname2_c').getValue()) node2=anode;
 															});
