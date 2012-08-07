@@ -145,24 +145,26 @@ function createViewPort() {
 			                                items: [
 			                                                {
 			                                                    xtype: 'button', 
-			                                                    text : 'Create Node',
+			                                                    text : 'Create Node/Link',
 			                                                    //iconCls:'x-btn-inner node',
 			                                                    icon:"/ext/resources/images/node.png",
 			                                                    tooltip:'Display available geocoders',
 			                                                    handler : function() {
-			                                                        console.log("test");
+			                                                        openCreateWindow();
 			                                                    }
 			                                               },
-			                                               {
-			                                                    xtype: 'button', 
-			                                                    text : 'Create Link',
-			                                                    //iconCls:'x-btn-inner link',
-			                                                    icon:"/ext/resources/images/link.png",
-			                                                    tooltip:'Display available geocoders',
-			                                                    handler : function() {
-			                                                        createLink()
-			                                                    }
-			                                               },
+			                                           /*
+														   {
+																													   xtype: 'button', 
+																													   text : 'Create Link',
+																													   //iconCls:'x-btn-inner link',
+																													   icon:"/ext/resources/images/link.png",
+																													   tooltip:'Display available geocoders',
+																													   handler : function() {
+																														   createLink()
+																													   }
+																												  },*/
+													   
 			                                               {
 			                                                    xtype: 'button', 
 			                                                    text : 'Remove Node/Link',
@@ -170,7 +172,7 @@ function createViewPort() {
 			                                                    icon:"/ext/resources/images/link_.png",
 			                                                    tooltip:'Display available geocoders',
 			                                                    handler : function() {
-			                                                        console.log("test");
+			                                                        openRemoveWindow();
 			                                                    }
 			                                               },
 			                                               {
@@ -645,32 +647,350 @@ function createNetworkGrid(){
 		 
 }
 
-function openNodeCreate(name) {
+function fakeReturn() {
+	return '{data:[{"label":"test","value":"testvalue"}]}';
+}
+
+function openCreateWindow() {
+	
 	if (typeof nodeCreateWindow=="undefined")
+
 		nodeCreateWindow=Ext.create('Ext.window.Window', 
 				{
 				    bodyPadding: 5,
 				    width: 350,
+				    title: 'Entity Create',
 				    id:'nodeCreateWindow',
 				    autoHeight:true,
-				    url: 'save-form.php',
 				    extentStore:null,
 				    items: [ 
 				    	// defines the field set of street address locator
-					    {
-							xtype : 'fieldset',
-							title : 'Street Address',
-							layout : 'anchor',
-							collapsed : false, // initially collapse the group
-							collapsible : true,
-							Height : 170
+					       {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'local',
+                                value:          'mrs',
+                                triggerAction:  'all',
+                                forceSelection: true,
+                                editable:       false,
+                                id: 			'entitytype_c',
+                                fieldLabel:     'Entity Type',
+                                name:           'Type',
+                                displayField:   'name',
+                                value: 			'Gene',
+                                valueField:     'value',
+                                queryMode: 'local',
+                                store:          Ext.create('Ext.data.Store', {
+                                    fields : ['name', 'value'],
+                                    data   : [
+                                        {name : 'Gene',   value: 'gene'},
+                                        {name : 'Link',  value: 'link'},
+                                        {name : 'Disease', value: 'disease'}
+                                    ]
+                                }),
+                                listeners: {
+                                	change : {
+                                		fn: function(f,v) {
+                                			console.log("combo changed")
+                                			console.log(f);
+                                			console.log(v);
+                                			if (v=='link') {
+                                				if (typeof Ext.getCmp('entityname2_c') !="undefined" && typeof Ext.getCmp('entityname1_c') !="undefined") {
+	                                				Ext.getCmp('entityname2_c').show();
+	                                				Ext.getCmp('entitylink_c').show();
+	                                				Ext.getCmp('entityname1_c').setFieldLabel("Source Node");
+                                				}
+                                			}
+                                			else {
+                                				if (typeof Ext.getCmp('entityname2_c') !="undefined" && typeof Ext.getCmp('entityname1_c') !="undefined") {
+                                					Ext.getCmp('entityname2_c').hide();
+                                					Ext.getCmp('entitylink_c').hide();
+                                					Ext.getCmp('entityname1_c').setFieldLabel("Entity Name");
+                                				}
+                                			}
+                                			
+                                		}
+                                	}
+                                }
+                           	 },
+                           	 {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'remote',
+                                triggerAction:  'all',
+                                editable:       true,
+                                id: 			'entityname1_c',
+                                fieldLabel:     'Entity Name',
+                                name:           'name',
+                                displayField:   'label',
+                                valueField:     'label',
+                                queryParam: 	'query',
+                                hideTrigger:	true,
+                                selectOnFocus: 	true,
+                                store:          
+                                	Ext.create('Ext.data.Store', {
+	                                    fields : ['label', 'value'],
+	                                    idProperty:'label',
+	                                    url: fakeReturn(),
+		    							root: 'data'
+	                                    /*
+										data   : [
+																					{name : 'Gene',   value: 'gene'},
+																					{name : 'Link',  value: 'link'},
+																					{name : 'Disease', value: 'disease'}
+																				]*/
+										
+                                })
+                           	 },
+                           	 {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'remote',
+                                triggerAction:  'all',
+                                editable:       true,
+                                hidden:			true,
+                                id: 			'entityname2_c',
+                                fieldLabel:     'Target Node',
+                                name:           'name',
+                                displayField:   'label',
+                                valueField:     'label',
+                                queryParam: 	'query',
+                                hideTrigger:	true,
+                                selectOnFocus: 	true,
+                                store:          
+                                	Ext.create('Ext.data.Store', {
+	                                    fields : ['label', 'value'],
+	                                    idProperty:'label',
+	                                    url: fakeReturn(),
+		    							root: 'data'
+	                                    /*
+										data   : [
+																					{name : 'Gene',   value: 'gene'},
+																					{name : 'Link',  value: 'link'},
+																					{name : 'Disease', value: 'disease'}
+																				]*/
+										
+                                })
+                           	 },
+                           	  {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'local',
+                                value:          'mrs',
+                                triggerAction:  'all',
+                                forceSelection: true,
+                                hidden:			true,
+                                editable:       false,
+                                id: 			'entitylink_c',
+                                fieldLabel:     'Link Type',
+                                name:           'Type',
+                                displayField:   'name',
+                                value: 			'Gene',
+                                valueField:     'value',
+                                queryMode: 'local',
+                                store:          Ext.create('Ext.data.Store', {
+                                    fields : ['name', 'value'],
+                                    data   : [
+                                         {name : 'beinguptaken',   value: 'beinguptaken'},
+                                         {name : 'activates',  value: 'activates'},
+                                         {name : 'inhibits', value: 'inhibits'},
+                                         {name : 'beinguptaken',   value: 'stimulats'},
+                                         {name : 'activates',  value: 'association'},
+                                         {name : 'inhibits', value: 'physical_interaction'},
+                                          {name : 'beinguptaken',   value: 'predicted'},
+                                          {name : 'activates',  value: 'activates'},
+                                          {name : 'inhibits', value: 'pathway'}
+                                    ]
+                                }),
+                                listeners: {
+                                	change : {
+                                		fn: function(f,v) {
+                                			console.log("combo changed")
+                                			console.log(f);
+                                			console.log(v);
+                                			if (v=='link') {
+                                				if (typeof Ext.getCmp('entityname2_c') !="undefined" && typeof Ext.getCmp('entityname1_c') !="undefined") {
+	                                				Ext.getCmp('entityname2_c').show();
+	                                				Ext.getCmp('entityname1_c').setFieldLabel("Source Node");
+                                				}
+                                			}
+                                			else {
+                                				if (typeof Ext.getCmp('entityname2_c') !="undefined" && typeof Ext.getCmp('entityname1_c') !="undefined") {
+                                					Ext.getCmp('entityname2_c').hide();
+                                					Ext.getCmp('entityname1_c').setFieldLabel("Entity Name");
+                                				}
+                                			}
+                                			
+                                		}
+                                	}
+                                }
+                           	 }
+						],
+						listens: {
+							afterrender: {
+								element:'',
+								fn:function() {
+									 $( "#searchtxt" ).autocomplete({
+									      source: validateKeyword,
+									      minLength:2,
+									      select: function(event, ui) {
+									    	  console.log("selected ", ui)
+									    	  document.location='/graph/'+ ui.item._id	    	  
+									      }	    	
+									    });
+								}
 							}
-						]
-				});
-		else
+						},
+						buttons : 
+						  			 [
+										 {
+											xtype : 'button',
+											text : 'Create',
+											handler : function() {
+													if (Ext.getCmp('entitytype_c').getValue()=="link") {
+														mygraph.addLink(Ext.getCmp('entityname1_c').getValue(),Ext.getCmp('entityname1_c').getValue(),Ext.getCmp('entitylink_c').getValue());
+													}
+													
+													if (Ext.getCmp('entitytype_c').getValue()=="gene") {
+														mygraph.addNode(Ext.getCmp('entityname1_c').getValue());
+													}	
+												}
+										}, {
+											xtype : 'button',
+											text : 'Cancel',
+											handler : function() {
+												nodeCreateWindow.hide();
+											}
+										}
+									 ] 
+				}
+				
+				);
 		   nodeCreateWindow.show();
 }
 
+
+function openRemoveWindow() {
+	
+	if (typeof nodeRemoveWindow=="undefined")
+		nodeRemoveWindow=Ext.create('Ext.window.Window', 
+				{
+				    bodyPadding: 5,
+				    width: 350,
+				    title: 'Entity Remove',
+				    id:'nodeRemoveWindow',
+				    autoHeight:true,
+				    extentStore:null,
+				    items: [ 
+				    	// defines the field set of street address locator
+					       {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'local',
+                                value:          'mrs',
+                                triggerAction:  'all',
+                                forceSelection: true,
+                                editable:       false,
+                                id: 			'entitytype_d',
+                                fieldLabel:     'Entity Type',
+                                name:           'Type',
+                                displayField:   'name',
+                                value: 			'gene',
+                                valueField:     'value',
+                                queryMode: 'local',
+                                store:          Ext.create('Ext.data.Store', {
+                                    fields : ['name', 'value'],
+                                    data   : [
+                                        {name : 'Gene',   value: 'gene'},
+                                        {name : 'Link',  value: 'link'},
+                                        {name : 'Disease', value: 'disease'}
+                                    ]
+                                }),
+                                listeners: {
+                                	change : {
+                                		fn: function(f,v) {
+                                		}
+                                	}
+                                }
+                           	 },
+                           	 {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'remote',
+                                triggerAction:  'all',
+                                editable:       true,
+                                id: 			'entityname1_d',
+                                fieldLabel:     'Entity Name',
+                                name:           'name',
+                                displayField:   'label',
+                                valueField:     'label',
+                                queryParam: 	'query',
+                                hideTrigger:	true,
+                                selectOnFocus: 	true,
+                                store:          
+                                	Ext.create('Ext.data.Store', {
+	                                    fields : ['label', 'value'],
+	                                    idProperty:'label',
+	                                    url: fakeReturn(),
+		    							root: 'data'
+	                                    /*
+										data   : [
+																					{name : 'Gene',   value: 'gene'},
+																					{name : 'Link',  value: 'link'},
+																					{name : 'Disease', value: 'disease'}
+																				]*/
+										
+                                })
+                           	 }
+						],
+						listens: {
+							afterrender: {
+								element:'',
+								fn:function() {
+									 $( "#searchtxt" ).autocomplete({
+									      source: validateKeyword,
+									      minLength:2,
+									      select: function(event, ui) {
+									    	  console.log("selected ", ui)
+									    	  document.location='/graph/'+ ui.item._id	    	  
+									      }	    	
+									    });
+								}
+							}
+						},
+						buttons : 
+						  			 [
+										 {
+											xtype : 'button',
+											text : 'Remove',
+											handler : function() {
+													if (Ext.getCmp('entitytype_d').getValue()=="link") {
+														mygraph.removeLink(Ext.getCmp('entityname1_d').getValue());
+													}
+													
+													if (Ext.getCmp('entitytype_d').getValue()=="gene") {
+														mygraph.removeNode(Ext.getCmp('entityname1_d').getValue());
+													}	
+												}
+										}, {
+											xtype : 'button',
+											text : 'Cancel',
+											handler : function() {
+												nodeRemoveWindow.hide();
+											}
+										}
+									 ] 
+				}
+				
+				);
+		   nodeRemoveWindow.show();
+}
 
 function createGraph() {
 	//console.log("Recreating graph")
