@@ -838,8 +838,8 @@ function openCreateWindow() {
 															var node1=null,
 																node2=null;
 															nodearray.forEach(function(anode){
-																if (anode.getLabel==Ext.getCmp('entityname1_c').getValue()) node1=anode;
-																if (anode.getLabel==Ext.getCmp('entityname2_c').getValue()) node2=anode;
+																if (anode.getLabel().toLowerCase()==Ext.getCmp('entityname1_c').getValue().toLowerCase()) node1=anode;
+																if (anode.getLabel().toLowerCase()==Ext.getCmp('entityname2_c').getValue().toLowerCase()) node2=anode;
 															});
 															if (node1 & node2) {
 																var con = {nodes: [node1, node2]}
