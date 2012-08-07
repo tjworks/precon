@@ -663,6 +663,7 @@ function openCreateWindow() {
 				    id:'nodeCreateWindow',
 				    autoHeight:true,
 				    extentStore:null,
+				    closeAction: 'hide',
 				    items: [ 
 				    	// defines the field set of street address locator
 					       {
@@ -884,6 +885,7 @@ function openRemoveWindow() {
 				    title: 'Entity Remove',
 				    id:'nodeRemoveWindow',
 				    autoHeight:true,
+				    closeAction: 'hide',
 				    extentStore:null,
 				    items: [ 
 				    	// defines the field set of street address locator
