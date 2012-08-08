@@ -832,7 +832,6 @@ function linkCreate() {
 											xtype : 'button',
 											text : 'Create',
 											handler : function() {
-														mygraph.addLink(Ext.getCmp('entityname1_c').getValue(),Ext.getCmp('entityname1_c').getValue(),Ext.getCmp('entitylink_c').getValue());
 															// TBD: type, ref etc
 															var node1=null;
 															var	node2=null;
