@@ -720,7 +720,9 @@ function nodeCreate() {
 											text : 'Create',
 											handler : function() {
 													if (Ext.getCmp('nodename1_c').getValue()!="") {
-														graphModel.addNode( {_id:"Entity_"+Ext.getCmp('nodename1_c').getValue()+Math.random()*100, label: Ext.getCmp('nodename1_c').getValue() } );
+														graphModel.addNode( {_id:precon.randomId("node"), label: Ext.getCmp('nodename1_c').getValue() } );
+														Ext.getCmp('nodename1_c').setValue("");
+														nodeCreateWindow.hide();
 													}	
 												}
 										}, {
