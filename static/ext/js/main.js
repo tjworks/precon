@@ -518,6 +518,8 @@ function showObject(obj){
 	
 }
 
+function 
+
 function renderObject(obj){
 	console.log("Rendering object: ", obj)
 	if(precon.getObjectType(obj._id) =='publication' ){
@@ -729,7 +731,9 @@ function nodeCreate() {
 											text : 'Create',
 											handler : function() {
 													if (Ext.getCmp('nodename1_c').getValue()!="") {
-														graphModel.addNode( {_id:"Entity_"+Ext.getCmp('nodename1_c').getValue()+Math.random()*100, label: Ext.getCmp('nodename1_c').getValue() } );
+														graphModel.addNode( {_id:precon.randomId("node"), label: Ext.getCmp('nodename1_c').getValue() } );
+														Ext.getCmp('nodename1_c').setValue("");
+														nodeCreateWindow.hide();
 													}	
 												}
 										}, {
@@ -880,6 +884,9 @@ function linkCreate() {
 															if (nodes.length>=2) {
 																var con = {nodes: [nodes[0], nodes[1]],type:Ext.getCmp('linktype_c').getValue()}
 																graphModel.addConnection(con);
+																Ext.getCmp('linkname2_c').setValue("");
+																Ext.getCmp('linkname1_c').setValue("");
+																linkCreateWindow.hide();
 															}
 															else
 																alert("please choose at least two nodes to continue!");	

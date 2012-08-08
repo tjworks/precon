@@ -169,7 +169,7 @@ function myGraph(el,w,h) {
     	var a=Math.random()-0.5;
     	a=a/Math.abs(a);
     	if (count>1) return (1+ a*Math.random()*6*count);
-    	else return 1+a*Math.random()*2;
+    	else return 1+a*Math.random()/10;
     }
     
     this.addLink = function (source, target,type, id) {
@@ -298,7 +298,7 @@ function myGraph(el,w,h) {
 	      .append("svg:path")
   		  .attr("id",function(d){return d.source.id+"-"+d.target.id})
 		  .attr("class",function(d){return "link "+d.type;})
-		  .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+		  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
 	   
 	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 	      link.exit().remove();
