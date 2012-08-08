@@ -518,7 +518,6 @@ function showObject(obj){
 	
 }
 
-function 
 
 function renderObject(obj){
 	console.log("Rendering object: ", obj)
