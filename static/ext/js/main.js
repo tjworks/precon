@@ -749,7 +749,7 @@ function linkCreate() {
                                 	Ext.create('Ext.data.Store', {
 	                                    fields : ['label', 'value'],
 	                                    idProperty:'label',
-	                                    url: fakeReturn(),
+	                                    url: '',
 		    							root: 'data'
 	                                    /*
 										data   : [
@@ -780,7 +780,7 @@ function linkCreate() {
                                 	Ext.create('Ext.data.Store', {
 	                                    fields : ['label', 'value'],
 	                                    idProperty:'label',
-	                                    url: fakeReturn(),
+	                                    url: '',
 		    							root: 'data'
 	                                    /*
 										data   : [
