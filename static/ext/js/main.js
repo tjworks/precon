@@ -598,7 +598,7 @@ function createNetworkGrid(){
         columnLines: true,
         columns: [
             {
-                text     : 'Network Name',
+                text     : 'Study',
                 flex     : 1,
                 sortable : false,                 
                 dataIndex: 'name'
@@ -628,7 +628,7 @@ function createNetworkGrid(){
                // renderer: change
             },
             {
-                text     : 'Group', 
+                text     : 'Network', 
                 width    : 75, 
                 flex:1,
                 sortable : true, 
@@ -869,7 +869,7 @@ function linkCreate() {
 															//console.log(node1);
 															//console.log(node2);
 															if (nodes.length>=2) {
-																var con = {nodes: [nodes[0], nodes[1]]}
+																var con = {nodes: [nodes[0], nodes[1]],type:Ext.getCmp('linktype_c').getValue()}
 																graphModel.addConnection(con);
 															}
 															else
