@@ -838,10 +838,10 @@ function linkCreate() {
 															nodearray.forEach(function(anode){
 																if (anode.getLabel().toLowerCase()==Ext.getCmp('linkname1_c').getValue().toLowerCase()) {
 																	console.log(anode.getLabel()+"<===>"+anode.getId());
-																	node1=new precon.Node({"label":anode.getLabel(), "_id":anode.getId()});
+																	node1=new precon.Node({"label":'""'+anode.getLabel()+'"', "_id":'"'+anode.getId()+'"'});
 																}
 																if (anode.getLabel().toLowerCase()==Ext.getCmp('linkname2_c').getValue().toLowerCase()) {
-																	node2=new precon.Node({"label":anode.getLabel(), "_id":anode.getId()});
+																	node2=new precon.Node({"label":'""'+anode.getLabel()+'"', "_id":'"'+anode.getId()+'"'});
 																}
 															});
 															console.log(node1);
