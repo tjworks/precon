@@ -153,17 +153,17 @@ function createViewPort() {
 			                                                        openCreateWindow();
 			                                                    }
 			                                               },
-			                                           /*
+			                                           
 														   {
-																													   xtype: 'button', 
-																													   text : 'Create Link',
-																													   //iconCls:'x-btn-inner link',
-																													   icon:"/ext/resources/images/link.png",
-																													   tooltip:'Display available geocoders',
-																													   handler : function() {
-																														   createLink()
-																													   }
-																												  },*/
+															    xtype: 'button', 
+															    text : 'Create Link',
+															    //iconCls:'x-btn-inner link',
+															    icon:"/ext/resources/images/link.png",
+															    tooltip:'Display available geocoders',
+															    handler : function() {
+																   createLink()
+															    }
+														  },
 													   
 			                                               {
 			                                                    xtype: 'button', 
@@ -649,6 +649,224 @@ function createNetworkGrid(){
 
 function fakeReturn() {
 	return '{data:[{"label":"test","value":"testvalue"}]}';
+}
+
+function nodeCreate() {
+	
+	if (typeof nodeCreateWindow=="undefined")
+
+		nodeCreateWindow=Ext.create('Ext.window.Window', 
+				{
+				    bodyPadding: 5,
+				    width: 350,
+				    title: 'Node Create',
+				    id:'nodeCreateWindow',
+				    autoHeight:true,
+				    extentStore:null,
+				    closeAction: 'hide',
+				    items: [ 
+                           	 {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'remote',
+                                triggerAction:  'all',
+                                editable:       true,
+                                id: 			'nodename1_c',
+                                fieldLabel:     'Node Name',
+                                name:           'name',
+                                displayField:   'label',
+                                valueField:     'label',
+                                queryParam: 	'query',
+                                hideTrigger:	true,
+                                selectOnFocus: 	true,
+                                store:          
+                                	Ext.create('Ext.data.Store', {
+	                                    fields : ['label', 'value'],
+	                                    idProperty:'label',
+	                                    url: fakeReturn(),
+		    							root: 'data'
+	                                    /*
+										data   : [
+																					{name : 'Gene',   value: 'gene'},
+																					{name : 'Link',  value: 'link'},
+																					{name : 'Disease', value: 'disease'}
+																				]*/
+										
+                                })
+                           	 }
+						],
+						buttons : 
+						  			 [
+										 {
+											xtype : 'button',
+											text : 'Create',
+											handler : function() {
+													if (Ext.getCmp('nodename1_c').getValue()!="") {
+														graphModel.addNode( {_id:"Entity_"+Ext.getCmp('nodename1_c').getValue()+Math.random()*100, label: Ext.getCmp('nodename1_c').getValue() } );
+													}	
+												}
+										}, {
+											xtype : 'button',
+											text : 'Cancel',
+											handler : function() {
+												nodeCreateWindow.hide();
+											}
+										}
+									 ] 
+				}
+				
+				);
+		   nodeCreateWindow.show();
+}
+
+function linkCreate() {
+	
+	if (typeof linkCreateWindow=="undefined")
+
+		linkCreateWindow=Ext.create('Ext.window.Window', 
+				{
+				    bodyPadding: 5,
+				    width: 350,
+				    title: 'Link Create',
+				    id:'linkCreateWindow',
+				    autoHeight:true,
+				    extentStore:null,
+				    closeAction: 'hide',
+				    items: [ 
+                           	 {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'remote',
+                                triggerAction:  'all',
+                                editable:       true,
+                                id: 			'linkname1_c',
+                                fieldLabel:     'Source Node',
+                                name:           'name',
+                                displayField:   'label',
+                                valueField:     'label',
+                                queryParam: 	'query',
+                                hideTrigger:	true,
+                                selectOnFocus: 	true,
+                                store:          
+                                	Ext.create('Ext.data.Store', {
+	                                    fields : ['label', 'value'],
+	                                    idProperty:'label',
+	                                    url: fakeReturn(),
+		    							root: 'data'
+	                                    /*
+										data   : [
+																					{name : 'Gene',   value: 'gene'},
+																					{name : 'Link',  value: 'link'},
+																					{name : 'Disease', value: 'disease'}
+																				]*/
+										
+                                })
+                           	 },
+                           	 {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'remote',
+                                triggerAction:  'all',
+                                editable:       true,
+                                hidden:			true,
+                                id: 			'linkname2_c',
+                                fieldLabel:     'Target Node',
+                                name:           'name',
+                                displayField:   'label',
+                                valueField:     'label',
+                                queryParam: 	'query',
+                                hideTrigger:	true,
+                                selectOnFocus: 	true,
+                                store:          
+                                	Ext.create('Ext.data.Store', {
+	                                    fields : ['label', 'value'],
+	                                    idProperty:'label',
+	                                    url: fakeReturn(),
+		    							root: 'data'
+	                                    /*
+										data   : [
+																					{name : 'Gene',   value: 'gene'},
+																					{name : 'Link',  value: 'link'},
+																					{name : 'Disease', value: 'disease'}
+																				]*/
+										
+                                })
+                           	 },
+                           	  {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'local',
+                                value:          'mrs',
+                                triggerAction:  'all',
+                                forceSelection: true,
+                                hidden:			true,
+                                editable:       false,
+                                id: 			'linktype_c',
+                                fieldLabel:     'Link Type',
+                                name:           'Type',
+                                displayField:   'name',
+                                value: 			'Gene',
+                                valueField:     'value',
+                                queryMode: 'local',
+                                store:          Ext.create('Ext.data.Store', {
+                                    fields : ['name', 'value'],
+                                    data   : [
+                                         {name : 'beinguptaken',   value: 'beinguptaken'},
+                                         {name : 'activates',  value: 'activates'},
+                                         {name : 'inhibits', value: 'inhibits'},
+                                         {name : 'beinguptaken',   value: 'stimulats'},
+                                         {name : 'activates',  value: 'association'},
+                                         {name : 'inhibits', value: 'physical_interaction'},
+                                          {name : 'beinguptaken',   value: 'predicted'},
+                                          {name : 'activates',  value: 'activates'},
+                                          {name : 'inhibits', value: 'pathway'}
+                                    ]
+                                }),
+                                listeners: {
+                                }
+                           	 }
+						],
+						buttons : 
+						  			 [
+										 {
+											xtype : 'button',
+											text : 'Create',
+											handler : function() {
+														mygraph.addLink(Ext.getCmp('entityname1_c').getValue(),Ext.getCmp('entityname1_c').getValue(),Ext.getCmp('entitylink_c').getValue());
+															// TBD: type, ref etc
+															var node1=null;
+															var	node2=null;
+															nodearray.forEach(function(anode){
+																if (anode.getLabel().toLowerCase()==Ext.getCmp('linkname1_c').getValue().toLowerCase()) {
+																	node1=new precon.Node({"label":anode.getLabel(), "_id":anode.getId()});
+																}
+																if (anode.getLabel().toLowerCase()==Ext.getCmp('linkname2_c').getValue().toLowerCase()) {
+																	node2=new precon.Node({"label":anode.getLabel(), "_id":anode.getId()});
+																}
+															});
+															if (node1 & node2) {
+																var con = {nodes: [node1, node2]}
+																graphModel.addConnection(con);
+															}
+															else
+																alert("Node cannot be found");	
+												}
+										}, {
+											xtype : 'button',
+											text : 'Cancel',
+											handler : function() {
+												nodeCreateWindow.hide();
+											}
+										}
+									 ] 
+				}
+				
+				);
+		   nodeCreateWindow.show();
 }
 
 function openCreateWindow() {
