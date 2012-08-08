@@ -166,8 +166,10 @@ function myGraph(el,w,h) {
     	linkarray.forEach(function(alink){
     		if (alink.source.id==s && alink.target.id==d) count++;
     	});
-    	if (count>1) return (1+Math.random()*5*count);
-    	else return 1*Math.random()*10;
+    	var a=Math.random()-0.5;
+    	a=a/Math.abs(a);
+    	if (count>1) return (1+ a*Math.random()*6*count);
+    	else return 1+a*Math.random()*2;
     }
     
     this.addLink = function (source, target,type, id) {
