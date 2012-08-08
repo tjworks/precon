@@ -597,20 +597,20 @@ function createNetworkGrid(){
         store: networkStore,
         columnLines: true,
         columns: [
-            {
-                text     : 'Study',
-                flex     : 1,
-                sortable : false,                 
-                dataIndex: 'name'
-            },
-            {
-                text     : 'Include in Graph', 
+        	{
+                text     : 'Show in Graph', 
                 width    : 100, 
                 sortable : true, 
                 renderer : function(val,meta, record) {                				
                 				 return "<input type=checkbox "+ (val?"checked":"")+ " name='networkId' value='"+  record.get("_id") + "'>"
                 },
                 dataIndex: 'include'
+            },
+            {
+                text     : 'Study',
+                flex     : 1,
+                sortable : false,                 
+                dataIndex: 'name'
             },
             {
                 text     : 'Creator', 
