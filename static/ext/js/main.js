@@ -843,6 +843,8 @@ function linkCreate() {
 																	node2=new precon.Node({"label":anode.getLabel(), "_id":anode.getId()});
 																}
 															});
+															console.log(node1);
+															console.log(node2);
 															if (node1 & node2) {
 																var con = {nodes: [node1, node2]}
 																graphModel.addConnection(con);
