@@ -145,12 +145,12 @@ function createViewPort() {
 			                                items: [
 			                                                {
 			                                                    xtype: 'button', 
-			                                                    text : 'Create Node/Link',
+			                                                    text : 'Create Node',
 			                                                    //iconCls:'x-btn-inner node',
 			                                                    icon:"/ext/resources/images/node.png",
 			                                                    tooltip:'Display available geocoders',
 			                                                    handler : function() {
-			                                                        openCreateWindow();
+			                                                        nodeCreate();
 			                                                    }
 			                                               },
 			                                           
@@ -161,7 +161,7 @@ function createViewPort() {
 															    icon:"/ext/resources/images/link.png",
 															    tooltip:'Display available geocoders',
 															    handler : function() {
-																   createLink()
+																   linkCreate()
 															    }
 														  },
 													   
@@ -647,10 +647,6 @@ function createNetworkGrid(){
 		 
 }
 
-function fakeReturn() {
-	return '{data:[{"label":"test","value":"testvalue"}]}';
-}
-
 function nodeCreate() {
 	
 	if (typeof nodeCreateWindow=="undefined")
@@ -859,14 +855,30 @@ function linkCreate() {
 											xtype : 'button',
 											text : 'Cancel',
 											handler : function() {
-												nodeCreateWindow.hide();
+												linkCreateWindow.hide();
 											}
 										}
 									 ] 
 				}
 				
 				);
-		   nodeCreateWindow.show();
+				
+		//initialize the linkCreateWindow with selections
+		var selections = graphModel.getSelections()
+		var nodes = []
+		selections.forEach(function(obj){
+			if(obj instanceof precon.Node) 
+				nodes.push(obj)
+		})
+		if(nodes.length>=2){
+			Ext.getCmp("linkname1_c").setValue(nodes[0].getLabel());
+			Ext.getCmp("linkname2_c").setValue(nodes[1].getLabel());
+		}		
+		else if(nodes.length>=1){
+			Ext.getCmp("linkname1_c").setValue(nodes[0].getLabel());
+		}		
+				
+		   linkCreateWindow.show();
 }
 
 function openCreateWindow() {
