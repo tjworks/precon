@@ -212,6 +212,9 @@ precon.NetworkGraph = function(){
 	this.addNode=function(node, connection, network){
 		var nodeId = getId(node);
 		var found = null
+		if(isObject(node) && !(node instanceof precon.Node) ){
+			node = new precon.Node(node)
+		}
 		var entityId = isObject(node)?node.get("entity"):''
 		var existing = this.findNode(nodeId, entityId)
 		if(existing){
