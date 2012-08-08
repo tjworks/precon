@@ -871,6 +871,9 @@ function linkCreate() {
 															if (nodes.length>=2) {
 																var con = {nodes: [nodes[0], nodes[1]],type:Ext.getCmp('linktype_c').getValue()}
 																graphModel.addConnection(con);
+																Ext.getCmp('linkname2_c').setValue("");
+																Ext.getCmp('linkname1_c').setValue("");
+																linkCreateWindow.hide();
 															}
 															else
 																alert("please choose at least two nodes to continue!");	
