@@ -123,6 +123,7 @@ precon.searchNetworks = function(query, callback){
 					network.connections = nets[network._id].connections
 					network.isComplete = false
 					precon.encache(network)
+					networks[n] = new precon.Network(network)
 				}
 				callback && callback(networks)
 			})

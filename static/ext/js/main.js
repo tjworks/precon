@@ -569,12 +569,21 @@ function initNetwork(networkObjects) {
 		return
 	}
 	
-	networkObjects.forEach(function(netObj){
-		var n = new precon.Network(netObj)
-		graphModel.addNetwork(n);
-	});	    
-	networkStore.loadData( graphModel.getNetworkList() )		
+	graphModel.addNetwork( networkObjects[0] );
+	networkStore.loadData( toExtArray(networkObjects ));
+	
 }
+
+function toExtArray(networks){
+	var array = []		
+	networks.forEach(function(net, indx){
+		var a = [net.getId(), net.getRawdata().name, false, net.getRawdata().owner, net.getRawdata().source, net.getRawdata().group  ];
+		if(indx == 0) a[2] = true // 1st one is shown, others are not
+		array.push(a)
+	});
+	return array
+}
+
 
 function createNetworkGrid(){
 	if(window.networkGrid) return;

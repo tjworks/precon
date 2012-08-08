@@ -95,7 +95,7 @@ precon.NetworkGraph = function(){
 		var ret = _.find(nodes, function(n){ return getId(n) == nodeId }) ; // first search by exact id match		
 		ret = ret ||  _.find(nodes, function(n){  return n.isMerged(nodeId)		}); // then look for noderefs (see wiki doc)
 		if(entityId)
-			ret = ret ||   _.find(nodes, function(n){  return n.entity == entityId }); // then look for noderefs (see wiki doc)
+			ret = ret ||   _.find(nodes, function(n){  return n.get('entity') == entityId }); // then look for noderefs (see wiki doc)
 		return ret
 	};
 	this.findConnection = function(conId){
@@ -199,12 +199,30 @@ precon.NetworkGraph = function(){
 		return con
 	}
 	
+	var _deleteNode=function(existing){
+		for(var i=0;i<nodes.length;i++){
+			var node = nodes[i]
+			if(getId(node) == getId(existing)){
+				nodes.splice(i, 1)
+				return true;
+			};
+		};
+		return false;
+	}
 	var _mergeNode = function(node1, node2){
+		node1.merge(getId(node2))
+		return node1
+		/**
 		var newnode = copy(node1)
 		newnode.merge(getId(node2));
-		newnode.set("id", precon.client.randomId("node"))
+		newnode.set("id", precon.randomId("node"))
+		newnode.id = newnode.get('id')
+		// remove the old node
+		_deleteNode(node1)
 		return newnode
-	}
+		*/
+	};
+	 
 	/**
 	 * Add a node to the graph. Can be a precon.Node object or nodeId
 	 * @node: the precon.Node object or nodeId. If using nodeId the node object must already exists in the graph
@@ -222,13 +240,14 @@ precon.NetworkGraph = function(){
 		if(existing){
 			// case 1: same node exists
 			if(getId(existing) == nodeId || existing.isMerged(nodeId)){
-				existing.addRef(connection, "connection"); 
-				return existing;
+				
 			}
 			else{
 				// case 2: node with same entity ref exists				
-				return _mergeNode(existing, node);
+				existing= _mergeNode(existing, node);				 
 			}
+			existing.addRef(connection, "connection"); 
+			return existing;			
 		}
 		
 		// case 3: not exists at all		
@@ -270,14 +289,10 @@ precon.NetworkGraph = function(){
 			return;
 		} 
 		
-		for(var i=0;i<nodes.length;i++){
-			var node = nodes[i]
-			if(getId(node) == getId(existing)){
-				nodes.splice(i, 1)
-				graphModel.trigger('remove.node', {
-					node: node
-				})
-			};
+		if( _deleteNode(existing) ){			
+			graphModel.trigger('remove.node', {
+				node: existing
+			})
 		};
 	};
 	/**
@@ -306,15 +321,6 @@ precon.NetworkGraph = function(){
 	
 	this.getNodes = function(){ return nodes }
 	this.getConnections= function(){ return connections }
-	//this result is consumed by Ext store
-	this.getNetworkList = function(){
-		var array = []		
-		networks.forEach(function(net){
-			var a = [net.getId(), net.getRawdata().name, true, net.getRawdata().owner, net.getRawdata().source, net.getRawdata().group  ];
-			array.push(a)
-		});
-		return array
-	}
 	
 	
 	
@@ -367,7 +373,7 @@ precon.BasePrototype = {
 	},
 	toString:function(){
 		var id = this.get("id") || ""
-		if(id) return id.substring(0,4).toUpperCase()+"-"+ id.substring(id.length -5);
+		if(id) return id.substring(0,4).toUpperCase()+"-"+ id.substring(id.length - 6);
 		return Object.prototype.toString.call(this)
 	}
 }

@@ -75,7 +75,7 @@ function doSearch(){
 			lists = "<UL>"
 	         for(var n in networks){
 	             network = networks[n]
-	             lists += '<li><input type=checkbox><a href="/graph/' + network._id  +'">'+  precon.util.truncate(network.name, 20)+'</a></li>'
+	             lists += '<li><input type=checkbox><a href="/graph/' + network.get('id')  +'">'+  precon.util.truncate(network.get('name'), 20)+'</a></li>'
 	         }
 	         lists+="</UL>"
 	         $("#foundnetworks").html(lists)	
@@ -90,3 +90,5 @@ function showObj(obj_id){
 		$("#section_east_1").html("Object: <pre>"+ precon.util.formatObject(obj)+"</pre>")
 	})	
 }
+
+
