@@ -176,7 +176,9 @@ precon.NetworkGraph = function(){
 			existing.addRef(network, "network")
 			return existing;
 		}		
-		if(isObject(con)){			
+		if(isObject(con)){
+			if(!(con instanceof precon.Connection) )
+				con = new precon.Connection(con)
 			con.getNodes(function(nodes){
 				con.addRef(con.get('network'), "network");
 				connections.push(con);
