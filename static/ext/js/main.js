@@ -1,5 +1,3 @@
-
-
 Ext.Loader.setConfig({
             enabled: true,
             disableCaching: true,
@@ -785,4 +783,5 @@ $(document).ready(function() {
         });
     }
     
+
   }

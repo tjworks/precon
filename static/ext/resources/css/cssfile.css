@@ -49,7 +49,37 @@ path.link {
   stroke-width: 2px;
 }
 
-marker#licensing {
+marker#decreases {
+  fill: blue;
+}
+marker#beinguptaken {
+  fill: red;
+}
+marker#activates {
+  fill: red;
+}
+marker#inhibits {
+  fill: green;
+}
+marker#stimulats {
+  fill: red;
+}
+marker#association {
+  fill: red;
+}
+marker#association {
+  fill: red;
+}
+marker#physical_interaction {
+  fill: green;
+}
+marker#predicted {
+  fill: red;
+}
+marker#activates {
+  fill: red;
+}
+marker#pathway {
   fill: green;
 }
 
