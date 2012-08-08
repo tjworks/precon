@@ -833,25 +833,26 @@ function linkCreate() {
 											text : 'Create',
 											handler : function() {
 															// TBD: type, ref etc
-															var node1=null;
-															var	node2=null;
+															var nodes=[];
 															nodearray.forEach(function(anode){
 																if (anode.getLabel().toLowerCase()==Ext.getCmp('linkname1_c').getValue().toLowerCase()) {
+																	nodes.push(anode);
 																	console.log(anode.getLabel()+"<===>"+anode.getId());
-																	node1=new precon.Node({"label":'""'+anode.getLabel()+'"', "_id":'"'+anode.getId()+'"'});
+																	//node1=new precon.Node({"label":'""'+anode.getLabel()+'"', "_id":'"'+anode.getId()+'"'});
 																}
 																if (anode.getLabel().toLowerCase()==Ext.getCmp('linkname2_c').getValue().toLowerCase()) {
-																	node2=new precon.Node({"label":'""'+anode.getLabel()+'"', "_id":'"'+anode.getId()+'"'});
+																	nodes.push(anode);
+																	//node2=new precon.Node({"label":'""'+anode.getLabel()+'"', "_id":'"'+anode.getId()+'"'});
 																}
 															});
-															console.log(node1);
-															console.log(node2);
-															if (node1 & node2) {
-																var con = {nodes: [node1, node2]}
+															//console.log(node1);
+															//console.log(node2);
+															if (nodes.length>=2) {
+																var con = {nodes: [nodes[0], nodes[1]]}
 																graphModel.addConnection(con);
 															}
 															else
-																alert("Node cannot be found");	
+																alert("please choose at least two nodes to continue!");	
 												}
 										}, {
 											xtype : 'button',
