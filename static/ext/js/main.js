@@ -680,7 +680,7 @@ function nodeCreate() {
                                 	Ext.create('Ext.data.Store', {
 	                                    fields : ['label', 'value'],
 	                                    idProperty:'label',
-	                                    url: fakeReturn(),
+	                                    url: '',
 		    							root: 'data'
 	                                    /*
 										data   : [
@@ -767,7 +767,7 @@ function linkCreate() {
                                 mode:           'remote',
                                 triggerAction:  'all',
                                 editable:       true,
-                                hidden:			true,
+                                hidden:			false,
                                 id: 			'linkname2_c',
                                 fieldLabel:     'Target Node',
                                 name:           'name',
@@ -799,7 +799,7 @@ function linkCreate() {
                                 value:          'mrs',
                                 triggerAction:  'all',
                                 forceSelection: true,
-                                hidden:			true,
+                                hidden:			false,
                                 editable:       false,
                                 id: 			'linktype_c',
                                 fieldLabel:     'Link Type',
