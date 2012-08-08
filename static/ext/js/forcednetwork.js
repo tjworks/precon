@@ -29,7 +29,11 @@ function myGraph(el,w,h) {
 		this.model = graphModel		
 		this.model.bind('add.connection', this._addLink)
 		this.model.bind('add.node', this._addNode)
-		this.model.bind("selectionchanged", this._selectionChanged)
+		this.model.bind("selectionchanged", this._selectionChanged);
+		
+		this.model.bind('remove.connection',this._removeLink);
+		this.model.bind('remove.node', this._removeNode);
+		
 	}
 	this.getModel =function(){
 		return this.model
@@ -87,6 +91,18 @@ function myGraph(el,w,h) {
     	//console.log("Adding node", data.node)
     	if(data.node)
     		graph.addNode(data.node)
+    }
+    this._removeNode=function(evt, data){
+    	console.log("_removeNode ", data)
+    	if(!data.node) return
+    	nodearray.splice(findNodeIndex(data.node.getId()),1);
+        update();
+    }
+    this._removeLink = function(evt, data){
+    	console.log("_remove ", data)
+    	if(!data.connection) return
+    	linkarray.splice(findLinkIndex(data.connection.getId()),1);
+    	update();
     }
     this._addLink= function(evt, data){
     	console.log("Adding connection", data.connection, data.connection.getNodes())
@@ -170,6 +186,9 @@ function myGraph(el,w,h) {
     var findNodeIndex = function(id) {
         for (var i in nodearray) {if (nodearray[i]["id"] === id) return i};
     }
+    var findLinkIndex = function(id) {
+        for (var i in linkarray) {if (linkarray[i]["id"] === id) return i};
+    }
 
     // set up the D3 visualisation in the specified element
  
@@ -177,7 +196,7 @@ function myGraph(el,w,h) {
    // var w = $(el).innerWidth(),
    //     h = $(el).innerHeight(),
     
-     var  r=6;
+     var  r=8;
         
 	var fisheye = d3.fisheye.circular()
 	    .radius(10)

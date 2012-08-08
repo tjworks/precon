@@ -12,7 +12,13 @@ precon.getObjectType = function(objid){
 	if(!model) throw "Unrecognized ID format: "+ objid
 	return model
 }
-
+/**
+ * Create a random id
+ * @type: one of: network, connection, node, entity, etc
+ */
+precon.randomId = function(type){
+	return type.substring(0,4)+  (new Date().getTime()) +'' +  Math.round( Math.random( ) * 10000 ) +".new"
+}
 /**
  * Search by keywords, such as pubmed id, gene symbol/name, network name or people's name
  * 
@@ -116,7 +122,7 @@ precon.searchNetworks = function(query, callback){
 					network._connections = nets[network._id]._connections
 					network.connections = nets[network._id].connections
 					network.isComplete = false
-					
+					precon.encache(network)
 				}
 				callback && callback(networks)
 			})
