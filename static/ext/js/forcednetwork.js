@@ -325,7 +325,7 @@ function myGraph(el,w,h) {
             var node = visg.selectAll("g.node")
             .data(nodearray, function(d) { return d.id;});
 		
-       		var nodeEnter = node.enter();
+   			var nodeEnter = node.enter();
 	        var nodeEnterg=nodeEnter.append("g")
 	            //.attr("render-order","1")
 	            .attr("class", "node")
@@ -355,7 +355,7 @@ function myGraph(el,w,h) {
        	  	       //insert a random disturbance to allow multiple links between two points. 
 				   var dx = d.target.x - d.source.x,
 				       dy = d.target.y - d.source.py,
-				       dr = Math.sqrt(dx * dx + dy * dy)*d.multiplier;
+				       dr = Math.sqrt(dx * dx + dy * dy)*Math.abs(d.multiplier);
 				   
 				  
 				  
@@ -389,14 +389,14 @@ function myGraph(el,w,h) {
  			.enter()
  			.append("svg:marker")
 	    .attr("id", String)
-	    .attr("viewBox", "0 -3 18 18")
+	    .attr("viewBox", "0 -3 13 13")
 	    .attr("refX", 15)
 	    .attr("refY", -1.5)
 	    .attr("markerWidth", 6)
 	    .attr("markerHeight", 6)
 	    .attr("orient", "auto")
 	    .append("path")
-	    .attr("d", "M0,-3L18,0L0,3");
+	    .attr("d", "M0,-3L13,0L0,3");
 	    
         // Restart the force layout.
         force.start();
