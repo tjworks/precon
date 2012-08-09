@@ -336,12 +336,12 @@ function myGraph(el,w,h) {
         node.exit().remove();
         
         
-         link=vis.selectAll("svg:path")
+         link=vis.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
 	      
 	      var linkenter=link.enter();
 	      
-	      linkenter.append("svg:path")		  
+	      linkenter.append("path")		  
   		  .attr("id",function(d){return d.id})
   		  .attr("network", function(d){ return d.get('network') })
 		  .attr("class",function(d){return "link "+d.type;})
