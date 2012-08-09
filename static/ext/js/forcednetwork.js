@@ -320,20 +320,6 @@ function myGraph(el,w,h) {
             })
             .call(force.drag);
 		  
-		  link=vis.selectAll("g.path")
-	    	   .data(linkarray, function(d){return d.id});
-	      link.enter()
-	      .append("svg:path")
-  		  .attr("id",function(d){return d.id})
-  		  .attr("network", function(d){ return d.get('network') })
-		  .attr("class",function(d){return "link "+d.type;})
-		  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
-	   
-	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
-	      link.exit().remove();
-
-        
-        
         nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 
         nodeEnter.append("circle")
@@ -348,6 +334,22 @@ function myGraph(el,w,h) {
             .text(function(d) {return d.getLabel()});
 
         node.exit().remove();
+        
+        
+         link=vis.selectAll("g.path")
+	    	   .data(linkarray, function(d){return d.id});
+	      
+	      var linkenter=link.enter().append("g");
+	      
+	      linkenter.append("path")		  
+  		  .attr("id",function(d){return d.id})
+  		  .attr("network", function(d){ return d.get('network') })
+		  .attr("class",function(d){return "link "+d.type;})
+		  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
+	   
+	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+	      
+	      link.exit().remove();
         
         var lastobj={"lastdr":0,
         			"lastsx":0,
