@@ -174,12 +174,6 @@ function createViewPort() {
 			                                                    }
 			                                               },
 			                                               {
-														        text: 'Hide Legend',
-														        enableToggle: true,
-														        toggleHandler: toggleLegend,
-														        pressed: true
-														    },
-			                                               {
 			                                                    xtype: 'button', 
 			                                                    text : 'Help',
 			                                                    //iconCls:'x-btn-inner help',
@@ -195,6 +189,14 @@ function createViewPort() {
 			                                xtype: 'toolbar',
 			                                dock: 'bottom',
 			                                items: [
+		                                               {
+													        text: 'Hide Legend',
+													        enableToggle: true,
+													        icon:"/ext/resources/images/legend.png",
+													        id:'legendToggleBtn',
+													        toggleHandler: toggleLegend,
+													        pressed: true
+													    },
 			                                            {xtype:"tbspacer", width:200, id:"tbarspace"},
 			                                            {xtype:"label", width:100},
 			                                            {xtype:"textfield", width:400, fieldLabel:"Names to filter", labelAlign:"right",allowBlank:true},
@@ -677,21 +679,27 @@ function toggleLegend(item,pressed) {
 		legendWindow=Ext.create('Ext.window.Window', 
 				{
 				    bodyPadding: 5,
-				    width: 55,
-				    height:100,
+				    width: 155,
+				    height:205,
+				    left:5,
+				    top:200,
+				    animCollapse:true,
+				    animateTarget:'legendToggleBtn',
+				    collapseDirection:'bottom',
+				    collapsible:true,
 				    title: 'legend',
+				    hidden:false,
 				    id:'legendWindow',
 				    autoHeight:true,
-				    extentStore:null,
 				    closeAction: 'hide',
-				    html: '<img src="../static/ext/resources/images/legend.png" width="50" height="100" alt="this is legend image"/>'
+				    html: '<img src="/ext/resources/images/legend.png" width="150" height="200" alt="this is legend image"/>'
 				});
 		if (pressed) {
 			legendWindow.show();
 			item.setText("Hide Legend");
 		}
 		else {
-			legendWindow().hide();
+			legendWindow.hide();
 			item.setText("Show Legend");
 		} 
 }
