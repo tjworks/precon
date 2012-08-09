@@ -264,13 +264,12 @@ function myGraph(el,w,h) {
     	else return true;
     };
     
-   
-    
-    var update = function () {
-	     //console.log(linkarray);
-	     //console.log(nodearray);
-	     //console.log("Updating")
-	     var svg = d3.select(el).select("svg")
+   /*
+    * initialize the SVG drawing environment
+    * 
+    */
+    var init=function () {
+    	 var svg = d3.select(el).select("svg")
 	     if(svg) svg.remove()
 	     var vis = d3.select(el).append("svg:svg")
         .attr("width", w)
@@ -292,10 +291,25 @@ function myGraph(el,w,h) {
 		    .attr("orient", "auto")
 		    .append("svg:path")
 		    .attr("d", "M0,-3L13,0L0,3");
+    }
+    
+    /*
+     * update the SVG canvas to reflect the data changes
+     */
+    var update = function () {
+	     //console.log(linkarray);
+	     //console.log(nodearray);
+	     //console.log("Updating")
 	    
 	      // if (typeof linkg =="undefined")
-		  linkg=vis.append("svg:g");
-		  link=linkg.selectAll("path")
+		  
+		  //linkg=vis.append("svg:g");
+		  
+		  //Check if SVG has been initialized
+		  var svg = d3.select(el).select("svg")
+	      if(!svg) init();
+		  
+		  link=d3.select("g").selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
 	      link.enter()
 	      .append("svg:path")
@@ -331,6 +345,7 @@ function myGraph(el,w,h) {
             .text(function(d) {return d.getLabel()});
 
         node.exit().remove();
+        
         var lastobj={"lastdr":0,
         			"lastsx":0,
         			"lastsy":0,
