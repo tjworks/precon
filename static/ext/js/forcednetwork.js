@@ -290,7 +290,7 @@ function myGraph(el,w,h) {
 		    .attr("markerWidth", 6)
 		    .attr("markerHeight", 6)
 		    .attr("orient", "auto")
-		    .append("svg:path")
+		    .append("path")
 		    .attr("d", "M0,-3L13,0L0,3");
     }
     
