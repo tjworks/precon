@@ -313,14 +313,14 @@ function myGraph(el,w,h) {
 		  var node = vis.selectAll("g.node")
             .data(nodearray, function(d) { return d.id;});
 
-        var nodeEnter = node.enter().append("g")
+         var nodeEnter = node.enter().append("g")
             .attr("class", "node")
             .attr("network", function(d){
             	return d.networkrefs+""
             })
             .call(force.drag);
 		  
-		  link=d3.select("g").selectAll("path")
+		  link=d3.select("g.path")
 	    	   .data(linkarray, function(d){return d.id});
 	      link.enter()
 	      .append("svg:path")
