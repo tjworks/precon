@@ -389,14 +389,14 @@ function myGraph(el,w,h) {
  			.enter()
  			.append("svg:marker")
 	    .attr("id", String)
-	    .attr("viewBox", "0 -3 13 13")
+	    .attr("viewBox", "0 -3 18 18")
 	    .attr("refX", 15)
 	    .attr("refY", -1.5)
 	    .attr("markerWidth", 6)
 	    .attr("markerHeight", 6)
 	    .attr("orient", "auto")
 	    .append("path")
-	    .attr("d", "M0,-3L13,0L0,3");
+	    .attr("d", "M0,-3L18,0L0,3");
 	    
         // Restart the force layout.
         force.start();
