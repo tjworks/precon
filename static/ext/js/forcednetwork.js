@@ -295,6 +295,7 @@ function myGraph(el,w,h) {
             .data(nodearray, function(d) { return d.id;});
 
          var nodeEnter = node.enter().append("g")
+            .attr("render-order","1")
             .attr("class", "node")
             .attr("network", function(d){
             	return d.networkrefs+""
@@ -321,7 +322,8 @@ function myGraph(el,w,h) {
 	      
 	     var linkenter=link.enter();
 	      
-	      linkenter.append("path")		  
+	      linkenter.append("path")
+	      .attr("render-order","-1")		  
   		  .attr("id",function(d){return d.id})
   		  .attr("network", function(d){ return d.get('network') })
 		  .attr("class",function(d){return "link "+d.type;})
