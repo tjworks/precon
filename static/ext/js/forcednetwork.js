@@ -336,7 +336,7 @@ function myGraph(el,w,h) {
         node.exit().remove();
         
         
-         link=vis.append("g").selectAll("svg:path")
+         link=vis.selectAll("g")
 	    	   .data(linkarray, function(d){return d.id});
 	      
 	      var linkenter=link.enter();
