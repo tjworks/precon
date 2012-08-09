@@ -1,6 +1,7 @@
 from django.core.management.base import NoArgsCommand
 from optparse import make_option
 import os,sys,time,traceback
+from mongojs import mongo as mgo
 
 modules = "myutil.management.commands.myshell, inout.mif, inout"
 
