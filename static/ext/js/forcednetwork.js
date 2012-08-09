@@ -271,7 +271,7 @@ function myGraph(el,w,h) {
     var init=function () {
     	 var svg = d3.select(el).select("svg")
 	     if(svg) svg.remove()
-	     var vis = d3.select(el).append("svg:svg")
+	     vis = d3.select(el).append("svg:svg")
         .attr("width", w)
         .attr("name","forcenet")
         .attr("height", h);
@@ -336,12 +336,12 @@ function myGraph(el,w,h) {
         node.exit().remove();
         
         
-         link=vis.selectAll("g.path")
+         link=vis.append("g").selectAll("svg:path")
 	    	   .data(linkarray, function(d){return d.id});
 	      
-	      var linkenter=link.enter().append("g");
+	      var linkenter=link.enter();
 	      
-	      linkenter.append("path")		  
+	      linkenter.append("svg:path")		  
   		  .attr("id",function(d){return d.id})
   		  .attr("network", function(d){ return d.get('network') })
 		  .attr("class",function(d){return "link "+d.type;})
