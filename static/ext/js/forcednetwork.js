@@ -320,7 +320,7 @@ function myGraph(el,w,h) {
             })
             .call(force.drag);
 		  
-		  link=d3.select("g.path")
+		  link=vis.selectAll("g.path")
 	    	   .data(linkarray, function(d){return d.id});
 	      link.enter()
 	      .append("svg:path")
