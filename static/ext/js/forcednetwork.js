@@ -293,12 +293,12 @@ function myGraph(el,w,h) {
 	     //if(typeof vis=="undefined") initSVG();
 	  
 	     
-		 link=vis.selectAll("g.path")
+		 link=vis.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
 	      
 	     var linkenter=link.enter();
 	      
-	      linkenter.append("path")
+	      linkenter.apprend("g").append("path")
 	      .attr("render-order","-1")		  
   		  .attr("id",function(d){return d.id})
   		  .attr("network", function(d){ return d.get('network') })
