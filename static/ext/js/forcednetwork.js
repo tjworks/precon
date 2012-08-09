@@ -345,6 +345,8 @@ function myGraph(el,w,h) {
 		            .text(function(d) {return d.getLabel()});
 		            
 		        nodeEnterg.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+        	 	
+        	 	node.exit().remove();
         	},200); 
         
         
