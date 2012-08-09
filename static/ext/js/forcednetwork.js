@@ -325,7 +325,7 @@ function myGraph(el,w,h) {
 		
            var nodeEnter = node.enter();
            setTimeout(function() { 
-		           nodeEnter.append("g")
+		        var nodeEnterg=nodeEnter.append("g")
 		            //.attr("render-order","1")
 		            .attr("class", "node")
 		            .attr("network", function(d){
@@ -333,18 +333,18 @@ function myGraph(el,w,h) {
 		            })
 		            .call(force.drag);
 		          
-		        nodeEnter.append("circle")
+		        nodeEnterg.append("circle")
 		            .attr("class", "circle")
 		            .attr("name",function(d){return d.id})           
 		            .attr("r",r);
 		            
-		        nodeEnter.append("text")
+		        nodeEnterg.append("text")
 		            .attr("class", "nodetext")
 		            .attr("dx", 12)
 		            .attr("dy", ".35em")
 		            .text(function(d) {return d.getLabel()});
 		            
-		        nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+		        nodeEnterg.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
         	},200); 
         
         
