@@ -336,10 +336,13 @@ function myGraph(el,w,h) {
         node.exit().remove();
         
         
-         link=vis.selectAll("g")
+         link=vis.selectAll("g.path")
 	    	   .data(linkarray, function(d){return d.id});
 	      
 	      var linkenter=link.enter();
+	      
+	      linkenter.append("g")
+	      .attr("class","path");
 	      
 	      linkenter.append("svg:path")		  
   		  .attr("id",function(d){return d.id})
