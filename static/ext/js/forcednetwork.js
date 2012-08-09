@@ -295,13 +295,12 @@ function myGraph(el,w,h) {
 	     //if(typeof vis=="undefined") initSVG();
 	  
 	     
-		link=visg.selectAll("g.path")
+		link=visg.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
 	      
 	    var linkenter=link.enter();
 	      
 	    linkenter.append("g")
-	    	  .attr("class","path")
 		      .attr("render-order","-1")
 		      .append("path")
 	  		  .attr("id",function(d){return d.id})
