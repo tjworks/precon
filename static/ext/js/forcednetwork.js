@@ -309,7 +309,17 @@ function myGraph(el,w,h) {
 		  var svg = d3.select(el).select("svg")
 	      if(!svg) init();
 		  
-		  link=d3.select("g").selectAll("path")
+		   var node = vis.selectAll("g.node")
+            .data(nodearray, function(d) { return d.id;});
+
+	        var nodeEnter = node.enter().append("g")
+	            .attr("class", "node")
+	            .attr("network", function(d){
+	            	return d.networkrefs+""
+	            })
+	            .call(force.drag);
+		  
+		  link=d3.select("g.path")
 	    	   .data(linkarray, function(d){return d.id});
 	      link.enter()
 	      .append("svg:path")
@@ -321,15 +331,7 @@ function myGraph(el,w,h) {
 	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 	      link.exit().remove();
 
-        var node = vis.selectAll("g.node")
-            .data(nodearray, function(d) { return d.id;});
-
-        var nodeEnter = node.enter().append("g")
-            .attr("class", "node")
-            .attr("network", function(d){
-            	return d.networkrefs+""
-            })
-            .call(force.drag);
+       
         
         nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 
