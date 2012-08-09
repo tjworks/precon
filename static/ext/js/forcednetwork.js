@@ -303,7 +303,7 @@ function myGraph(el,w,h) {
 		 console.log("updating graph called"); 
 		 
 		  //Check if SVG has been initialized
-	     if(!vis) init();
+	     if(typeof vis=="undefined") init();
 		
 		 link=vis.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
