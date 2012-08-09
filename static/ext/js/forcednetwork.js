@@ -299,7 +299,7 @@ function myGraph(el,w,h) {
 	    	   .data(linkarray, function(d){return d.id});
 	      
 	    var linkenter=link.enter();
-	    setTimeout(function() {   
+	      
 		    linkenter
 		    	  //.append("g")
 			      //.attr("render-order","-1")
@@ -312,7 +312,7 @@ function myGraph(el,w,h) {
 		    link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 		      
 		    link.exit().remove();  
-		},500);
+	
 		
 		 var lastobj={"lastdr":0,
         			"lastsx":0,
@@ -322,15 +322,15 @@ function myGraph(el,w,h) {
         
             var node = visg.selectAll("g.node")
             .data(nodearray, function(d) { return d.id;});
-
-         var nodeEnter = node.enter().append("g")
+		setTimeout(function() { 
+           var nodeEnter = node.enter().append("g")
             //.attr("render-order","1")
             .attr("class", "node")
             .attr("network", function(d){
             	return d.networkrefs+""
             })
             .call(force.drag);
-            
+           	},200); 
         nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
         nodeEnter.append("circle")
             .attr("class", "circle")
