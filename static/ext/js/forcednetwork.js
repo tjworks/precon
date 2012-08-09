@@ -105,7 +105,7 @@ function myGraph(el,w,h) {
     	update();
     }
     this._addLink= function(evt, data){
-    	console.log("Adding connection", data.connection, data.connection.getNodes())
+    	//console.log("Adding connection", data.connection, data.connection.getNodes())
     	if(data.connection ){
     			var nodes = data.connection.getNodes()
     			if(nodes && nodes.length ==2){    		
@@ -300,13 +300,10 @@ function myGraph(el,w,h) {
 	     //console.log(linkarray);
 	     //console.log(nodearray);
 	     //console.log("Updating")
-	    
-	      // if (typeof linkg =="undefined")
-		  
-		  //linkg=vis.append("svg:g");
-		  
+		 console.log("updating graph called"); 
+		 
 		  //Check if SVG has been initialized
-	     if(!d3.select("svg")) init();
+	     if(!vis) init();
 		
 		 link=vis.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
