@@ -176,7 +176,7 @@ function createViewPort() {
 			                                               {
 														        text: 'Hide Legend',
 														        enableToggle: true,
-														        toggleHandler: toggleLegend(button,status),
+														        toggleHandler: toggleLegend,
 														        pressed: true
 														    },
 			                                               {
@@ -672,7 +672,7 @@ function createNetworkGrid(){
  * Toggle the show/hide of legend window. If legend window is not created, it will create it first
  * 
  */
-function toggleLegend(button,status) {
+function toggleLegend(item,pressed) {
 	if (typeof legendWindow=="undefined")
 		legendWindow=Ext.create('Ext.window.Window', 
 				{
@@ -686,13 +686,13 @@ function toggleLegend(button,status) {
 				    closeAction: 'hide',
 				    html: '<img src="../static/ext/resources/images/legend.png" width="50" height="100" alt="this is legend image"/>'
 				});
-		if (status) {
+		if (pressed) {
 			legendWindow.show();
-			button.setText("Hide Legend");
+			item.setText("Hide Legend");
 		}
 		else {
 			legendWindow().hide();
-			button.setText("Show Legend");
+			item.setText("Show Legend");
 		} 
 }
 
