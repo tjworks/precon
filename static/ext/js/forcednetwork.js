@@ -317,10 +317,8 @@ function myGraph(el,w,h) {
 
         node.exit().remove();
 	     
-		 var linkg=vis.append("g")
-		 		.attr("render-order","-1");
-		 var link=linkg.selectAll("path")
-	    	    .data(linkarray, function(d){return d.id});
+		 link=vis.selectAll("path")
+	    	   .data(linkarray, function(d){return d.id});
 	      
 	     var linkenter=link.enter();
 	      
