@@ -320,10 +320,12 @@ function myGraph(el,w,h) {
         			"lastdx":0,
     				"lastdy":0};
         
+            var node = visg.selectAll("g.node").remove();
+            
             var node = visg.selectAll("g.node")
             .data(nodearray, function(d) { return d.id;});
 		
-       var nodeEnter = node.enter();
+       		var nodeEnter = node.enter();
 	        var nodeEnterg=nodeEnter.append("g")
 	            //.attr("render-order","1")
 	            .attr("class", "node")
@@ -347,29 +349,6 @@ function myGraph(el,w,h) {
         	 	
         node.exit().remove();
 	    
-	    node.enter().remove();
-	    
-	    var nodeEnter = node.enter();
-	        var nodeEnterg=nodeEnter.append("g")
-	            //.attr("render-order","1")
-	            .attr("class", "node")
-	            .attr("network", function(d){
-	            	return d.networkrefs+""
-	            })
-	            .call(force.drag);
-	          
-	        nodeEnterg.append("circle")
-	            .attr("class", "circle")
-	            .attr("name",function(d){return d.id})           
-	            .attr("r",r);
-	            
-	        nodeEnterg.append("text")
-	            .attr("class", "nodetext")
-	            .attr("dx", 12)
-	            .attr("dy", ".35em")
-	            .text(function(d) {return d.getLabel()});
-	            
-	        nodeEnterg.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 		
         force.on("tick", function() {
        	  link.attr("d", function(d) {
