@@ -303,12 +303,13 @@ function myGraph(el,w,h) {
             .data(nodearray, function(d) { return d.id;});
 
          var nodeEnter = node.enter().append("g")
-            .attr("render-order","1")
+            //.attr("render-order","1")
             .attr("class", "node")
             .attr("network", function(d){
             	return d.networkrefs+""
             })
             .call(force.drag);
+            
         nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
         nodeEnter.append("circle")
             .attr("class", "circle")
