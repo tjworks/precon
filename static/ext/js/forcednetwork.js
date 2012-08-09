@@ -299,19 +299,20 @@ function myGraph(el,w,h) {
 	    	   .data(linkarray, function(d){return d.id});
 	      
 	    var linkenter=link.enter();
-	      
-	    linkenter
-	    	  //.append("g")
-		      //.attr("render-order","-1")
-		      .append("path")
-	  		  .attr("id",function(d){return d.id})
-	  		  .attr("network", function(d){ return d.get('network') })
-			  .attr("class",function(d){return "link "+d.type;})
-			  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
-	   
-	    link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
-	      
-	    link.exit().remove();  
+	    setTimeout(function() {   
+		    linkenter
+		    	  //.append("g")
+			      //.attr("render-order","-1")
+			      .append("path")
+		  		  .attr("id",function(d){return d.id})
+		  		  .attr("network", function(d){ return d.get('network') })
+				  .attr("class",function(d){return "link "+d.type;})
+				  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
+		   
+		    link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+		      
+		    link.exit().remove();  
+		},100);
 		
 		 var lastobj={"lastdr":0,
         			"lastsx":0,
