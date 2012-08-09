@@ -293,7 +293,35 @@ function myGraph(el,w,h) {
 		  //Check if SVG has been initialized
 	     //if(typeof vis=="undefined") initSVG();
 	  
+        var lastobj={"lastdr":0,
+        			"lastsx":0,
+        			"lastsy":0,
+        			"lastdx":0,
+    				"lastdy":0};
+        
+            var node = visg.selectAll("g.node")
+            .data(nodearray, function(d) { return d.id;});
+
+         var nodeEnter = node.enter().append("g")
+            .attr("render-order","1")
+            .attr("class", "node")
+            .attr("network", function(d){
+            	return d.networkrefs+""
+            })
+            .call(force.drag);
+        nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+        nodeEnter.append("circle")
+            .attr("class", "circle")
+            .attr("name",function(d){return d.id})           
+            .attr("r",r);
+        nodeEnter.append("text")
+            .attr("class", "nodetext")
+            .attr("dx", 12)
+            .attr("dy", ".35em")
+            .text(function(d) {return d.getLabel()});
+        node.exit().remove();
 	     
+		//create links
 		link=visg.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
 	      
@@ -312,40 +340,6 @@ function myGraph(el,w,h) {
 	      
 	    link.exit().remove();  
 		
-		
-        var lastobj={"lastdr":0,
-        			"lastsx":0,
-        			"lastsy":0,
-        			"lastdx":0,
-    				"lastdy":0};
-        
-            var node = visg.selectAll("g.node")
-            .data(nodearray, function(d) { return d.id;});
-
-         var nodeEnter = node.enter().append("g")
-            .attr("render-order","1")
-            .attr("class", "node")
-            .attr("network", function(d){
-            	return d.networkrefs+""
-            })
-            .call(force.drag);
-		  
-        nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
-
-        nodeEnter.append("circle")
-            .attr("class", "circle")
-            .attr("name",function(d){return d.id})           
-            .attr("r",r);
-        
-        nodeEnter.append("text")
-            .attr("class", "nodetext")
-            .attr("dx", 12)
-            .attr("dy", ".35em")
-            .text(function(d) {return d.getLabel()});
-
-        node.exit().remove();
-        
-        
         force.on("tick", function() {
        	  link.attr("d", function(d) {
        	  	       //insert a random disturbance to allow multiple links between two points. 
