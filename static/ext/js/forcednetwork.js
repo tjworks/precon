@@ -293,21 +293,22 @@ function myGraph(el,w,h) {
 	     //if(typeof vis=="undefined") initSVG();
 	  
 	     
-		 link=vis.selectAll("path")
+		link=vis.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
 	      
-	     var linkenter=link.enter();
+	    var linkenter=link.enter();
 	      
-	      linkenter.append("g").append("path")
-	      .attr("render-order","-1")		  
-  		  .attr("id",function(d){return d.id})
-  		  .attr("network", function(d){ return d.get('network') })
-		  .attr("class",function(d){return "link "+d.type;})
-		  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
+	    linkenter.append("g")
+		      .attr("render-order","-1")
+		      .append("path")
+	  		  .attr("id",function(d){return d.id})
+	  		  .attr("network", function(d){ return d.get('network') })
+			  .attr("class",function(d){return "link "+d.type;})
+			  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
 	   
-	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+	    link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 	      
-	      link.exit().remove();  
+	    link.exit().remove();  
 		
 		
         var lastobj={"lastdr":0,
