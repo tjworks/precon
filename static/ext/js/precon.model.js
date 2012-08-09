@@ -246,7 +246,9 @@ precon.NetworkGraph = function(){
 				// case 2: node with same entity ref exists				
 				existing= _mergeNode(existing, node);				 
 			}
-			existing.addRef(connection, "connection"); 
+			existing.addRef(connection, "connection");
+			if(connection)
+				existing.addRef(connection.get('network'), "network"); 
 			return existing;			
 		}
 		
@@ -258,12 +260,16 @@ precon.NetworkGraph = function(){
 				node:node
 			})
 			precon.encache(node); // add to cache so it can looked up later
+			if(connection)
+				node.addRef(connection.get('network'), "network");
 			return node;
 		}
 		// TBD: using ajax queue to ensure no multiple  requests for same object happen same time
 		precon.getObject(nodeId, function(obj){
 			obj = new precon.Node(obj)
-			obj.addRef(connection, "connection"); 
+			obj.addRef(connection, "connection");
+			if(connection)
+				obj.addRef(connection.get('network'), "network");
 			nodes.push(obj)
 			graphModel.trigger('add.node', {
 				node:obj
@@ -366,9 +372,7 @@ precon.BasePrototype = {
 	delRef:function(id, refType){
 		id = getId(id)
 		if(!id) return
-		console.log("Before del "+ this[refType+'refs'].length +" "+ id)
-		this[ refType+"refs" ] = _.without( this[refType+"refs"], id);
-		console.log("After del "+ this[refType+'refs'].length, this[refType+"refs"])
+		this[ refType+"refs" ] = _.without( this[refType+"refs"], id);		
 	},
 	getRefs: function(refType){
 		return this [refType+"refs"];

@@ -670,9 +670,23 @@ function createNetworkGrid(){
         	itemdblclick:function(view, row){
         		console.log("double Clicked network: " + row.data._id)      
         		showObject(row.data)
+        		
         	},
-        	itemmouseenter:function(view, row){},
-        	itemmouseleave:function(view, row){}
+        	itemmouseenter:function(view, row){
+        		var netId = row.data._id        	        		
+        		_.each( $("path[network*="+netId+"]"),  function(em){
+        			$d(em).classed("state-highlight", true)
+        		})
+        		//$("path").filter(":not([network*="+netId+"])").hide()
+        	},
+        	itemmouseleave:function(view, row){
+        		var netId = row.data._id
+        		_.each( $("path[network*="+netId+"]"), function(em){
+        			$d(em).classed("state-highlight", false)
+        		})
+        		//$("g.node").filter(":not([network*="+netId+"])").show()
+        		//$("path").filter(":not([network*="+netId+"])").show()        		
+        	}
         }
     });
 		 

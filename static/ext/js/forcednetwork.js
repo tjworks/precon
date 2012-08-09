@@ -111,14 +111,17 @@ function myGraph(el,w,h) {
     			if(nodes && nodes.length ==2){    		
     				//console.log("Adding link "+ nodes[0]+", "+ nodes[1])
     				var link = data.connection
+    				
     				link.source = findNode(nodes[0].getId())    				
     				link.target= findNode(nodes[1].getId())
     				if(link.source && link.target && link.source!=link.target){
-    					for(var i=0;i<linkarray.length;i++){
-    					//	if(linkarray[i].getId() == link.getId()) return
-    					}    					
-    					//linkarray.push(link)
-    					graph.addLink(nodes[0].getId(), nodes[1].getId(), data.connection.getType(), data.connection.getId())
+    					    					
+        				var linkobj = {"type":link.get('type'), "id":link.get('id'), getId:function(){return this.id}, "multiplier":processLinkArray(link.source,link.target)}
+        				$.extend(link, linkobj);
+    					
+    					linkarray.push(link)
+    					update()
+    					//graph.addLink(nodes[0].getId(), nodes[1].getId(), data.connection.getType(), data.connection.getId())
     				}    					
     				//graph.addLink(nodes[0].getId(), nodes[1].getId(), data.connection.getType())
     			}
@@ -296,7 +299,8 @@ function myGraph(el,w,h) {
 	    	   .data(linkarray, function(d){return d.id});
 	      link.enter()
 	      .append("svg:path")
-  		  .attr("id",function(d){return d.source.id+"-"+d.target.id})
+  		  .attr("id",function(d){return d.id})
+  		  .attr("network", function(d){ return d.get('network') })
 		  .attr("class",function(d){return "link "+d.type;})
 		  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
 	   
@@ -307,17 +311,19 @@ function myGraph(el,w,h) {
             .data(nodearray, function(d) { return d.id;});
 
         var nodeEnter = node.enter().append("g")
-            .attr("class", "node")            
+            .attr("class", "node")
+            .attr("network", function(d){
+            	return d.networkrefs+""
+            })
             .call(force.drag);
         
         nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 
         nodeEnter.append("circle")
             .attr("class", "circle")
-            .attr("name",function(d){return d.id})
-           .attr("r",r);
-           
-	    
+            .attr("name",function(d){return d.id})           
+            .attr("r",r);
+        
         nodeEnter.append("text")
             .attr("class", "nodetext")
             .attr("dx", 12)
@@ -330,6 +336,8 @@ function myGraph(el,w,h) {
         			"lastsy":0,
         			"lastdx":0,
     				"lastdy":0};
+        
+        
         
         force.on("tick", function() {
        	  link.attr("d", function(d) {
@@ -347,7 +355,7 @@ function myGraph(el,w,h) {
 							   lastobj.lastsy=String.valueOf(d.source.y);
 							   lastobj.lastdx=String.valueOf(d.target.x);
 							   lastobj.lastdy=String.valueOf(d.target.y);*/
-		
+				   	   if(!d.source.x) console.log
 					   return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
 			//	}
 			 //   else {
