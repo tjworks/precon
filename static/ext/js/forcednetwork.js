@@ -363,7 +363,7 @@ function myGraph(el,w,h) {
 							   lastobj.lastdx=String.valueOf(d.target.x);
 							   lastobj.lastdy=String.valueOf(d.target.y);*/
 				   	   if(!d.source.x) console.log
-					   return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+					   return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x-6 + "," + d.target.y-6;
 			//	}
 			 //   else {
 			//           return "M" + lastobj.lastsx + "," + lastobj.lastsy + "A" + lastobj.lastdr + "," + lastobj.lastdr + " 0 0,1 " + lastobj.lastdx + "," + lastobj.lastdy;
