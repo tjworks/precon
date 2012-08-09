@@ -291,23 +291,7 @@ function myGraph(el,w,h) {
 		 
 		  //Check if SVG has been initialized
 	     //if(typeof vis=="undefined") initSVG();
-	     
-		 link=vis.selectAll("path")
-	    	   .data(linkarray, function(d){return d.id});
-	      
-	     var linkenter=link.enter();
-	      
-	      linkenter.append("path")		  
-  		  .attr("id",function(d){return d.id})
-  		  .attr("network", function(d){ return d.get('network') })
-		  .attr("class",function(d){return "link "+d.type;})
-		  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
-	   
-	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
-	      
-	      link.exit().remove();  
-		
-		 var node = vis.selectAll("g.node")
+	      var node = vis.selectAll("g.node")
             .data(nodearray, function(d) { return d.id;});
 
          var nodeEnter = node.enter().append("g")
@@ -331,7 +315,23 @@ function myGraph(el,w,h) {
             .text(function(d) {return d.getLabel()});
 
         node.exit().remove();
-        
+	     
+		 link=vis.selectAll("path")
+	    	   .data(linkarray, function(d){return d.id});
+	      
+	     var linkenter=link.enter();
+	      
+	      linkenter.append("path")		  
+  		  .attr("id",function(d){return d.id})
+  		  .attr("network", function(d){ return d.get('network') })
+		  .attr("class",function(d){return "link "+d.type;})
+		  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
+	   
+	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+	      
+	      link.exit().remove();  
+		
+		
         var lastobj={"lastdr":0,
         			"lastsx":0,
         			"lastsy":0,
