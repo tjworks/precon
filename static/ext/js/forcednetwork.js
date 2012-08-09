@@ -295,12 +295,13 @@ function myGraph(el,w,h) {
 	     //if(typeof vis=="undefined") initSVG();
 	  
 	     
-		link=visg.selectAll("path")
+		link=visg.selectAll("g.path")
 	    	   .data(linkarray, function(d){return d.id});
 	      
 	    var linkenter=link.enter();
 	      
 	    linkenter.append("g")
+	    	  .attr("class","path")
 		      .attr("render-order","-1")
 		      .append("path")
 	  		  .attr("id",function(d){return d.id})
@@ -363,9 +364,7 @@ function myGraph(el,w,h) {
 							   lastobj.lastdx=String.valueOf(d.target.x);
 							   lastobj.lastdy=String.valueOf(d.target.y);*/
 				   	   if(!d.source.x) console.log
-					   var nx=d.target.x-6;
-					   var ny=d.target.y-6;
-					   return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + nx + "," + ny;
+					   return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
 			//	}
 			 //   else {
 			//           return "M" + lastobj.lastsx + "," + lastobj.lastsy + "A" + lastobj.lastdr + "," + lastobj.lastdr + " 0 0,1 " + lastobj.lastdx + "," + lastobj.lastdy;
