@@ -291,31 +291,7 @@ function myGraph(el,w,h) {
 		 
 		  //Check if SVG has been initialized
 	     //if(typeof vis=="undefined") initSVG();
-	      var node = vis.selectAll("g.node")
-            .data(nodearray, function(d) { return d.id;});
-
-         var nodeEnter = node.enter().append("g")
-            .attr("render-order","1")
-            .attr("class", "node")
-            .attr("network", function(d){
-            	return d.networkrefs+""
-            })
-            .call(force.drag);
-		  
-        nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
-
-        nodeEnter.append("circle")
-            .attr("class", "circle")
-            .attr("name",function(d){return d.id})           
-            .attr("r",r);
-        
-        nodeEnter.append("text")
-            .attr("class", "nodetext")
-            .attr("dx", 12)
-            .attr("dy", ".35em")
-            .text(function(d) {return d.getLabel()});
-
-        node.exit().remove();
+	  
 	     
 		 link=vis.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
@@ -340,6 +316,31 @@ function myGraph(el,w,h) {
         			"lastdx":0,
     				"lastdy":0};
         
+            var node = vis.selectAll("g.node")
+            .data(nodearray, function(d) { return d.id;});
+
+         var nodeEnter = node.enter().append("g")
+            .attr("render-order","1")
+            .attr("class", "node")
+            .attr("network", function(d){
+            	return d.networkrefs+""
+            })
+            .call(force.drag);
+		  
+        nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+
+        nodeEnter.append("circle")
+            .attr("class", "circle")
+            .attr("name",function(d){return d.id})           
+            .attr("r",r);
+        
+        nodeEnter.append("text")
+            .attr("class", "nodetext")
+            .attr("dx", 12)
+            .attr("dy", ".35em")
+            .text(function(d) {return d.getLabel()});
+
+        node.exit().remove();
         
         
         force.on("tick", function() {
