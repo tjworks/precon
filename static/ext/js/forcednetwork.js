@@ -312,7 +312,7 @@ function myGraph(el,w,h) {
 		    link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
 		      
 		    link.exit().remove();  
-		},100);
+		},500);
 		
 		 var lastobj={"lastdr":0,
         			"lastsx":0,
