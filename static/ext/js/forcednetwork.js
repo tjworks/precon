@@ -293,7 +293,7 @@ function myGraph(el,w,h) {
 	     //if(typeof vis=="undefined") initSVG();
 	  
 	     
-		 link=vis.selectAll("path")
+		 link=vis.selectAll("g.path")
 	    	   .data(linkarray, function(d){return d.id});
 	      
 	     var linkenter=link.enter();
