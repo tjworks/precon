@@ -174,35 +174,11 @@ function createViewPort() {
 			                                                    }
 			                                               },
 			                                               {
-			                                                    text : 'Links',
-			                                                    //iconCls:'x-btn-inner links',
-			                                                    icon:"/ext/resources/images/links.png",
-			                                                    handler : function() {
-			                                                        console.log("test");
-			                                                    },
-			                                                    menu : [
-			                                                            {
-			                                                                text : 'About Our Company',
-			                                                                cls : '',
-			                                                                handler : function() {
-			                                                                    window
-			                                                                            .open(
-			                                                                                    'http://www.co.pierce.wa.us/pc/abtus/ourorg/at/at.htm',
-			                                                                                    'metaData');
-			                                                                }
-			                                                            },
-			                                                            {
-			                                                                text : 'Feedbacks',
-			                                                                cls : '',
-			                                                                handler : function() {
-			                                                                    window
-			                                                                            .open(
-			                                                                                    'http://www.co.pierce.wa.us/pc/abtus/ourorg/aud/',
-			                                                                                    'metaData');
-			                                                                }
-			                                                            }
-			                                                    ]
-			                                               },
+														        text: 'Hide Legend',
+														        enableToggle: true,
+														        toggleHandler: toggleLegend(button,status),
+														        pressed: true
+														    },
 			                                               {
 			                                                    xtype: 'button', 
 			                                                    text : 'Help',
@@ -690,6 +666,34 @@ function createNetworkGrid(){
         }
     });
 		 
+}
+
+/*
+ * Toggle the show/hide of legend window. If legend window is not created, it will create it first
+ * 
+ */
+function toggleLegend(button,status) {
+	if (typeof legendWindow=="undefined")
+		legendWindow=Ext.create('Ext.window.Window', 
+				{
+				    bodyPadding: 5,
+				    width: 55,
+				    height:100,
+				    title: 'legend',
+				    id:'legendWindow',
+				    autoHeight:true,
+				    extentStore:null,
+				    closeAction: 'hide',
+				    html: '<img src="../static/ext/resources/images/legend.png" width="50" height="100" alt="this is legend image"/>'
+				});
+		if (status) {
+			legendWindow.show();
+			button.setText("Hide Legend");
+		}
+		else {
+			legendWindow().hide();
+			button.setText("Show Legend");
+		} 
 }
 
 function nodeCreate() {
