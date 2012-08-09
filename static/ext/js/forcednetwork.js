@@ -292,8 +292,7 @@ function myGraph(el,w,h) {
 	     //if(typeof vis=="undefined") initSVG();
 	     
 		   //Create the Marker for path arrow. Delayed to allow the vis created first
-		 var defs = vis.append("svg:defs");
-     	 defs.selectAll("marker")
+     	 vis.select("defs").selectAll("marker")
 			.data(["decreases", "beinguptaken", "activates", "inhibits", "stimulats", "association", "physical_interaction", "predicted", "activates", "pathway"])
   			.enter()
   			.append("svg:marker")
