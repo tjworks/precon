@@ -268,7 +268,7 @@ function myGraph(el,w,h) {
     * initialize the SVG drawing environment
     * 
     */
-    var init=function () {
+    var initSVG=function () {
     	 console.log("initializing the network graph....");
     	 
 	     vis = d3.select(el).append("svg:svg")
@@ -303,7 +303,7 @@ function myGraph(el,w,h) {
 		 console.log("updating graph called"); 
 		 
 		  //Check if SVG has been initialized
-	     if(typeof vis=="undefined") init();
+	     if(typeof vis=="undefined") initSVG();
 		
 		 link=vis.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
