@@ -277,23 +277,7 @@ function myGraph(el,w,h) {
         .attr("name","forcenet")
         .attr("height", h);
         
-	       //Create the Marker for path arrow. Delayed to allow the vis created first
-	     setTimeout(function() {
-		     var defs = vis.append("svg:defs");
-	     	 defs.selectAll("marker")
-				.data(["decreases", "beinguptaken", "activates", "inhibits", "stimulats", "association", "physical_interaction", "predicted", "activates", "pathway"])
-	  			.enter()
-	  			.append("svg:marker")
-			    .attr("id", String)
-			    .attr("viewBox", "0 -3 13 13")
-			    .attr("refX", 15)
-			    .attr("refY", -1.5)
-			    .attr("markerWidth", 6)
-			    .attr("markerHeight", 6)
-			    .attr("orient", "auto")
-			    .append("path")
-			    .attr("d", "M0,-3L13,0L0,3");
-	    	},500);
+	    
  	}   
     /*
      * update the SVG canvas to reflect the data changes
@@ -306,7 +290,24 @@ function myGraph(el,w,h) {
 		 
 		  //Check if SVG has been initialized
 	     //if(typeof vis=="undefined") initSVG();
-		
+	     
+		   //Create the Marker for path arrow. Delayed to allow the vis created first
+		 vis.selectAll("marker").remove();
+		 var defs = vis.append("svg:defs");
+     	 defs.selectAll("marker")
+			.data(["decreases", "beinguptaken", "activates", "inhibits", "stimulats", "association", "physical_interaction", "predicted", "activates", "pathway"])
+  			.enter()
+  			.append("svg:marker")
+		    .attr("id", String)
+		    .attr("viewBox", "0 -3 13 13")
+		    .attr("refX", 15)
+		    .attr("refY", -1.5)
+		    .attr("markerWidth", 6)
+		    .attr("markerHeight", 6)
+		    .attr("orient", "auto")
+		    .append("path")
+		    .attr("d", "M0,-3L13,0L0,3");
+		 
 		 link=vis.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
 	      
