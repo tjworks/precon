@@ -277,6 +277,7 @@ function myGraph(el,w,h) {
         .attr("name","forcenet")
         .attr("height", h);
         
+        vis.append("svg:defs");
 	    
  	}   
     /*
