@@ -190,12 +190,11 @@ function createViewPort() {
 			                                dock: 'bottom',
 			                                items: [
 		                                               {
-													        text: 'Hide Legend',
+													        text: 'Show Legend',
 													        enableToggle: true,
 													        icon:"/ext/resources/images/legend.png",
 													        id:'legendToggleBtn',
-													        toggleHandler: toggleLegend,
-													        pressed: true
+													        toggleHandler: toggleLegend
 													    },
 			                                            {xtype:"tbspacer", width:200, id:"tbarspace"},
 			                                            {xtype:"label", width:100},
@@ -222,6 +221,7 @@ function createViewPort() {
 			                                        },300);
 			                                        setTimeout(function(){
 			                                            fireEvents();
+			                                            Ext.getCmp("legendToggleBtn").toggle();
 			                                        },600);
 			                                     console.log('western panel rendered');
 			                        //Ext.getCmp('west').getEl().on('contextmenu', function(e) {
@@ -681,15 +681,15 @@ function toggleLegend(item,pressed) {
 				    bodyPadding: 5,
 				    width: 155,
 				    height:205,
-				    x:5,
-				    y:200,
+				    x:2,
+				    y:Ext.getCmp("legendToggleBtn").getEl().getXY()[1]-210,
 				    animCollapse:true,
 				    resizable:false,
 				    animateTarget:'legendToggleBtn',
 				    collapseDirection:'bottom',
-				    collapsible:true,
-				    title: 'legend',
-				    hidden:false,
+				    //collapsible:true,
+				    title: 'Graph Legend',
+				    hidden:true,
 				    id:'legendWindow',
 				    autoHeight:true,
 				    closeAction: 'hide',
