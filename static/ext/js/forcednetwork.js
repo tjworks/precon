@@ -322,26 +322,32 @@ function myGraph(el,w,h) {
         
             var node = visg.selectAll("g.node")
             .data(nodearray, function(d) { return d.id;});
-		setTimeout(function() { 
-           var nodeEnter = node.enter().append("g")
-            //.attr("render-order","1")
-            .attr("class", "node")
-            .attr("network", function(d){
-            	return d.networkrefs+""
-            })
-            .call(force.drag);
-           	},200); 
-        nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
-        nodeEnter.append("circle")
-            .attr("class", "circle")
-            .attr("name",function(d){return d.id})           
-            .attr("r",r);
-        nodeEnter.append("text")
-            .attr("class", "nodetext")
-            .attr("dx", 12)
-            .attr("dy", ".35em")
-            .text(function(d) {return d.getLabel()});
-            
+		
+           var nodeEnter = node.enter();
+           setTimeout(function() { 
+		           nodeEnter.append("g")
+		            //.attr("render-order","1")
+		            .attr("class", "node")
+		            .attr("network", function(d){
+		            	return d.networkrefs+""
+		            })
+		            .call(force.drag);
+		          
+		        nodeEnter.append("circle")
+		            .attr("class", "circle")
+		            .attr("name",function(d){return d.id})           
+		            .attr("r",r);
+		            
+		        nodeEnter.append("text")
+		            .attr("class", "nodetext")
+		            .attr("dx", 12)
+		            .attr("dy", ".35em")
+		            .text(function(d) {return d.getLabel()});
+		            
+		        nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+        	},200); 
+        
+        
         node.exit().remove();
 	     
 		
