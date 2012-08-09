@@ -298,7 +298,7 @@ function myGraph(el,w,h) {
 	      
 	     var linkenter=link.enter();
 	      
-	      linkenter.apprend("g").append("path")
+	      linkenter.append("g").append("path")
 	      .attr("render-order","-1")		  
   		  .attr("id",function(d){return d.id})
   		  .attr("network", function(d){ return d.get('network') })
