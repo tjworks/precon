@@ -278,6 +278,8 @@ function myGraph(el,w,h) {
         .attr("height", h);
         
         vis.append("svg:defs");
+        
+        visg=vis.append("g");
 	    
  	}   
     /*
@@ -293,7 +295,7 @@ function myGraph(el,w,h) {
 	     //if(typeof vis=="undefined") initSVG();
 	  
 	     
-		link=vis.selectAll("path")
+		link=visg.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
 	      
 	    var linkenter=link.enter();
@@ -317,7 +319,7 @@ function myGraph(el,w,h) {
         			"lastdx":0,
     				"lastdy":0};
         
-            var node = vis.selectAll("g.node")
+            var node = visg.selectAll("g.node")
             .data(nodearray, function(d) { return d.id;});
 
          var nodeEnter = node.enter().append("g")
