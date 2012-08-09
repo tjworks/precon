@@ -265,7 +265,6 @@ function myGraph(el,w,h) {
     		return false;}
     	else return true;
     };
-    
    /*
     * initialize the SVG drawing environment
     * 
@@ -300,8 +299,9 @@ function myGraph(el,w,h) {
 	      
 	    var linkenter=link.enter();
 	      
-	    linkenter.append("g")
-		      .attr("render-order","-1")
+	    linkenter
+	    	  //.append("g")
+		      //.attr("render-order","-1")
 		      .append("path")
 	  		  .attr("id",function(d){return d.id})
 	  		  .attr("network", function(d){ return d.get('network') })
