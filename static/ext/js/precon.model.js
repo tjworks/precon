@@ -252,6 +252,7 @@ precon.NetworkGraph = function(){
 		
 		// case 3: not exists at all		
 		if(isObject(node) ){
+			node.addRef(connection, "connection"); 
 			nodes.push(node)
 			graphModel.trigger('add.node', {
 				node:node
@@ -262,6 +263,7 @@ precon.NetworkGraph = function(){
 		// TBD: using ajax queue to ensure no multiple  requests for same object happen same time
 		precon.getObject(nodeId, function(obj){
 			obj = new precon.Node(obj)
+			obj.addRef(connection, "connection"); 
 			nodes.push(obj)
 			graphModel.trigger('add.node', {
 				node:obj
