@@ -208,11 +208,13 @@ function myGraph(el,w,h) {
 	    .distortion(2);
 	
 	//Create the SVG Canvas Environment    
+  /*
     var vis = d3.select(el).append("svg:svg")
-        .attr("width", w)
-        .attr("name","forcenet")
-        .attr("height", h);
-    
+          .attr("width", w)
+          .attr("name","forcenet")
+          .attr("height", h);
+      */
+  
         /*
         .on("mousemove", function() {
                      console.log("moving...&calling fisheye");
@@ -270,7 +272,6 @@ function myGraph(el,w,h) {
     */
     var initSVG=function () {
     	 console.log("initializing the network graph....");
-    	 
 	     vis = d3.select(el).append("svg:svg")
         .attr("width", w)
         .attr("name","forcenet")
