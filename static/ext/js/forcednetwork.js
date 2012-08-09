@@ -269,8 +269,8 @@ function myGraph(el,w,h) {
     * 
     */
     var init=function () {
-    	 var svg = d3.select(el).select("svg")
-	     if(svg) svg.remove()
+    	 console.log("initializing the network graph....");
+    	 
 	     vis = d3.select(el).append("svg:svg")
         .attr("width", w)
         .attr("name","forcenet")
@@ -306,9 +306,7 @@ function myGraph(el,w,h) {
 		  //linkg=vis.append("svg:g");
 		  
 		  //Check if SVG has been initialized
-		  
-		  var svg = d3.select(el).select("svg")
-	      if(!svg) init();
+	     if(!d3.select("svg")) init();
 		
 		 link=vis.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
@@ -349,9 +347,6 @@ function myGraph(el,w,h) {
             .text(function(d) {return d.getLabel()});
 
         node.exit().remove();
-        
-        
-       
         
         var lastobj={"lastdr":0,
         			"lastsx":0,
