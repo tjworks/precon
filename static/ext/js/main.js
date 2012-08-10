@@ -457,6 +457,10 @@ function createLink(){
 	var con = {nodes: [nodes[0], nodes[1]]}
 	graphModel.addConnection(con);	
 }
+/*
+ * Render the double-clicked node/link info into a form on the right side
+ * @param obj the json data of the clicked object
+ */
 function showObject(obj){
 	if('getRawdata' in obj) obj = obj.getRawdata()
 	
@@ -465,6 +469,7 @@ function showObject(obj){
 		var html = renderObject(obj)
 		var title =  obj.name || obj.title || obj.label
 		var title = precon.util.shortTitle(title)
+		//process the node rendering
 		if (precon.getObjectType(obj._id)=="node") {
 			var objPanel = Ext.create('Ext.form.Panel', 
 			 {
@@ -472,10 +477,7 @@ function showObject(obj){
 			    defaults: {
 			        anchor: '100%',
 			        bodyPadding:10
-			        
 			    },
-			
-			    // The fields
 			    defaultType: 'textfield',
 				items:[
 					  		{
@@ -515,6 +517,7 @@ function showObject(obj){
 					title:title,
 					layout:'fit',
 					id:obj._id,
+					closable:true,
 					defaults: {
 			        	anchor: '100%',
 			        	bodyPadding:20
@@ -532,7 +535,97 @@ function showObject(obj){
 				}
 			);
 		}
-		else
+		else if (precon.getObjectType(obj._id)=="connection") {
+			    var formnodes="";
+			    obj.nodes.forEach(function(anode) {formnodes=formnodes+'{"label":"'+anode+'"},'});
+			    formnodes='{"data":['+formnodes+']}';
+			    console.log('mapping this connection');
+			    console.log(formnodes);
+				var objPanel = Ext.create('Ext.form.Panel', 
+				 {
+					layout: 'anchor',
+				    defaults: {
+				        anchor: '100%',
+				        bodyPadding:10
+				    },
+				    defaultType: 'textfield',
+					items:[
+								  {
+									  fieldLabel: 'Id',
+									  name: 'id',
+									  value: obj._id,
+									  disabled: true
+								  },{
+									  fieldLabel: 'Label',
+									  name: 'label',
+									  value:obj.group
+								  },
+								  {
+									  fieldLabel: 'Type',
+									  name: 'type',
+									  value:obj.type
+								  },
+								  {
+									  fieldLabel: 'Network',
+									  name: 'network',
+									  //allowBlank:false,
+									  value:obj.network
+								  },
+								  {
+									  fieldLabel: 'Nodes',
+									  xtype: 'multiselect',
+									  displayField:'label',
+									  valueField:'label',
+									  triggerAction:'all',
+									  name: 'nodes',
+									  model:'local',
+									  store: new Ext.data.SimpleStore({
+										  fields: ['label'],
+										  root: "data",
+										  data:	Ext.JSON.decode(formnodes)
+									  })
+								  }/*
+																  {
+																	  fieldLabel: 'Refs',
+																	  name: 'refs',
+																	  allowBlank:false,
+																	  items: [
+																		  {
+																			  fieldLabel:'Intact',
+																			  value:obj.refs.intact
+																		  },
+																		  {
+																			  fieldLabel:'Pubmed',
+																			  value:obj.refs.pubmed
+																		  }
+																	  ]
+																  }*/
+								
+						]
+				});
+				tab = Ext.getCmp("infopanel").add(
+					{
+						title:title,
+						layout:'fit',
+						id:obj._id,
+						closable:true,
+						defaults: {
+				        	anchor: '100%',
+				        	bodyPadding:20
+				   		},
+						items:[objPanel],
+						fbar: [
+					          {
+					              text: 'Update Node',
+					              handler: function () {
+					              	  alert("peng peng");
+					                  var tabs = this.up('tabpanel');
+					              }
+					          }
+					      ]
+					}
+				);
+		} else
 		{
 			tab = Ext.getCmp("infopanel").add({
 				title:title,
@@ -575,7 +668,8 @@ function renderObject(obj){
 	}	
 	else if(precon.getObjectType(obj._id) =='connection' ){
 		//TBD: temp hack
-		obj.label = obj.source.getLabel() + " - " + obj.target.getLabel() 
+		//obj.label = obj.source.getLabel() + " - " + obj.target.getLabel()
+		obj.label = obj.nodes[0] + " - " + obj.nodes[1] 
 	}
 
     //stop rendering node, switch it panel items	
