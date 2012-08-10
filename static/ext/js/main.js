@@ -466,44 +466,71 @@ function showObject(obj){
 		var title =  obj.name || obj.title || obj.label
 		var title = precon.util.shortTitle(title)
 		if (precon.getObjectType(obj._id)=="node") {
-			tab = Ext.getCmp("infopanel").add({
-				title:title,
-				id:obj._id,
-				autoScroll:true,
-				height:400,
-				closable:true,
+			var objPanel = Ext.create('Ext.form.Panel', 
+			 {
+				layout: 'anchor',
+			    defaults: {
+			        anchor: '100%',
+			        bodyPadding:10
+			        
+			    },
+			
+			    // The fields
+			    defaultType: 'textfield',
 				items:[
 					  		{
 			                    fieldLabel: 'id',
 			                    name: 'id',
-			                    value:  obj._id
+			                    value: obj._id,
+			                    disabled: true
 			                },{
 			                    fieldLabel: 'Group',
 			                    name: 'group',
-			                    value: obj.group
+			                    value:obj.group
 			                },
 			                {
 			                    fieldLabel: 'Label',
 			                    name: 'label',
 			                    allowBlank:false,
-			                    value: obj.label
+			                    value:obj.label
 			                },{
 			                    fieldLabel: 'Entity',
 			                    name: 'entity',
-			                    value: obj.entity
+			                    value:obj.entity
 			                },
 			                {
 			                    fieldLabel: 'Role',
 			                    name: 'role',
 			                    allowBlank:false,
-			                    value: obj.role
+			                    value:obj.role
 			                },{
 			                    fieldLabel: 'update_tm',
 			                    name: 'update_tm',
-			                    value: obj.update_tm
+			                    value:obj.update_tm
 			                }
 					]
-			})
+			});
+			tab = Ext.getCmp("infopanel").add(
+				{
+					title:title,
+					layout:'fit',
+					id:obj._id,
+					defaults: {
+			        	anchor: '100%',
+			        	bodyPadding:20
+			   		},
+					items:[objPanel],
+					fbar: [
+				          {
+				              text: 'Update Node',
+				              handler: function () {
+				              	  alert("peng peng");
+				                  var tabs = this.up('tabpanel');
+				              }
+				          }
+				      ]
+				}
+			);
 		}
 		else
 		{
