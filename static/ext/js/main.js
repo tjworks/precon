@@ -200,12 +200,11 @@ function createViewPort() {
 			                                dock: 'bottom',
 			                                items: [
 		                                               {
-													        text: 'Hide Legend',
+													        text: 'Show Legend',
 													        enableToggle: true,
 													        icon:"/ext/resources/images/legend.png",
 													        id:'legendToggleBtn',
-													        toggleHandler: toggleLegend,
-													        pressed: true
+													        toggleHandler: toggleLegend
 													    },
 			                                            {xtype:"tbspacer", width:200, id:"tbarspace"},
 			                                            {xtype:"label", width:100},
@@ -230,9 +229,9 @@ function createViewPort() {
 			                                            Ext.getCmp("tbarspace").setWidth(Ext.get("west-body").getWidth(true)*0.4);
 			                                            createGraph();
 			                                        },300);
-			                                        /**setTimeout(function(){
-			                                            fireEvents();
-			                                        },600);*/
+			                                        setTimeout(function(){			                                            
+			                                            Ext.getCmp("legendToggleBtn").toggle();
+			                                        },600);
 			                                     console.log('western panel rendered');
 			                        //Ext.getCmp('west').getEl().on('contextmenu', function(e) {
 			                                                    
@@ -466,18 +465,59 @@ function showObject(obj){
 		var html = renderObject(obj)
 		var title =  obj.name || obj.title || obj.label
 		var title = precon.util.shortTitle(title)
-		tab = Ext.getCmp("infopanel").add({
-			title:title,
-			html:html,
-			id:obj._id,
-			autoScroll:true,
-			closable:true
-		})
+		if (precon.getObjectType(obj._id)=="node") {
+			tab = Ext.getCmp("infopanel").add({
+				title:title,
+				id:obj._id,
+				autoScroll:true,
+				height:400,
+				closable:true,
+				items:[
+					  		{
+			                    fieldLabel: 'id',
+			                    name: 'id',
+			                    value:  obj._id
+			                },{
+			                    fieldLabel: 'Group',
+			                    name: 'group',
+			                    value: obj.group
+			                },
+			                {
+			                    fieldLabel: 'Label',
+			                    name: 'label',
+			                    allowBlank:false,
+			                    value: obj.label
+			                },{
+			                    fieldLabel: 'Entity',
+			                    name: 'entity',
+			                    value: obj.entity
+			                },
+			                {
+			                    fieldLabel: 'Role',
+			                    name: 'role',
+			                    allowBlank:false,
+			                    value: obj.role
+			                },{
+			                    fieldLabel: 'update_tm',
+			                    name: 'update_tm',
+			                    value: obj.update_tm
+			                }
+					]
+			})
+		}
+		else
+		{
+			tab = Ext.getCmp("infopanel").add({
+				title:title,
+				html:html,
+				id:obj._id,
+				autoScroll:true,
+				closable:true
+			})
+		}
 	}
 	Ext.getCmp("infopanel").setActiveTab(tab)
-	
 }
-
 
 function renderObject(obj){
 	console.log("Rendering object: ", obj)
@@ -510,8 +550,10 @@ function renderObject(obj){
 		//TBD: temp hack
 		obj.label = obj.source.getLabel() + " - " + obj.target.getLabel() 
 	}
-	
-	return precon.util.formatObject(obj)
+
+    //stop rendering node, switch it panel items	
+	if (precon.getObjectType(obj._id)!="node")
+		return precon.util.formatObject(obj)
 	
 }
 
@@ -672,19 +714,26 @@ function toggleLegend(item,pressed) {
 				    bodyPadding: 5,
 				    width: 155,
 				    height:205,
-				    x:5,
-				    y:200,
+				    x:2,
+				    y:Ext.getCmp("legendToggleBtn").getEl().getXY()[1]-210,
 				    animCollapse:true,
 				    resizable:false,
 				    animateTarget:'legendToggleBtn',
 				    collapseDirection:'bottom',
-				    collapsible:true,
-				    title: 'legend',
-				    hidden:false,
+				    //collapsible:true,
+				    title: 'Graph Legend',
+				    hidden:true,
 				    id:'legendWindow',
 				    autoHeight:true,
 				    closeAction: 'hide',
-				    html: '<img src="/ext/resources/images/legend.png" width="150" height="200" alt="this is legend image"/>'
+				    html: '<img src="/ext/resources/images/legend.png" width="150" height="200" alt="this is legend image"/>',
+				    listeners: {
+				    	close: { 
+				    		fn: function () {
+				    				Ext.getCmp("legendToggleBtn").toggle();
+				    			}
+				    	}
+				    }
 				});
 		if (pressed) {
 			legendWindow.show();

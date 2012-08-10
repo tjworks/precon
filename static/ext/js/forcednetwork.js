@@ -232,7 +232,6 @@ function myGraph(el,w,h) {
     		return false;}
     	else return true;
     };
-    
    /*
     * initialize the SVG drawing environment
     * 
@@ -245,6 +244,8 @@ function myGraph(el,w,h) {
         .attr("height", h);
         
         vis.append("svg:defs");
+        
+        visg=vis.append("g");
 	    
  	}   
     /*
@@ -258,63 +259,70 @@ function myGraph(el,w,h) {
 		 
 		  //Check if SVG has been initialized
 	     //if(typeof vis=="undefined") initSVG();
-	      var node = vis.selectAll("g.node")
-            .data(nodearray, function(d) { return d.id;});
-
-         var nodeEnter = node.enter().append("g")
-            .attr("render-order","1")
-            .attr("class", "node")
-            .attr("network", function(d){
-            	return d.networkrefs+""
-            })
-            .call(force.drag);
-		  
-        nodeEnter.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
-
-        nodeEnter.append("circle")
-            .attr("class", "circle")
-            .attr("name",function(d){return d.id})           
-            .attr("r",r);
-        
-        nodeEnter.append("text")
-            .attr("class", "nodetext")
-            .attr("dx", 12)
-            .attr("dy", ".35em")
-            .text(function(d) {return d.getLabel()});
-
-        node.exit().remove();
-	     
-		 link=vis.selectAll("path")
+	  
+      
+		//create links
+		link=visg.selectAll("path")
 	    	   .data(linkarray, function(d){return d.id});
 	      
-	     var linkenter=link.enter();
+	    var linkenter=link.enter();
 	      
-	      linkenter.append("path")
-	      .attr("render-order","-1")		  
-  		  .attr("id",function(d){return d.id})
-  		  .attr("network", function(d){ return d.get('network') })
-		  .attr("class",function(d){return "link "+d.type;})
-		  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
-	   
-	      link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
-	      
-	      link.exit().remove();  
+		    linkenter
+		    	  //.append("g")
+			      //.attr("render-order","-1")
+			      .append("path")
+		  		  .attr("id",function(d){return d.id})
+		  		  .attr("network", function(d){ return d.get('network') })
+				  .attr("class",function(d){return "link "+d.type;})
+				  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
+		   
+		    link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+		      
+		    link.exit().remove();  
+	
 		
-		
-        var lastobj={"lastdr":0,
+		 var lastobj={"lastdr":0,
         			"lastsx":0,
         			"lastsy":0,
         			"lastdx":0,
     				"lastdy":0};
         
-        
-        
+            var node = visg.selectAll("g.node").remove();
+            
+            var node = visg.selectAll("g.node")
+            .data(nodearray, function(d) { return d.id;});
+		
+   			var nodeEnter = node.enter();
+	        var nodeEnterg=nodeEnter.append("g")
+	            //.attr("render-order","1")
+	            .attr("class", "node")
+	            .attr("network", function(d){
+	            	return d.networkrefs+""
+	            })
+	            .call(force.drag);
+	          
+	        nodeEnterg.append("circle")
+	            .attr("class", "circle")
+	            .attr("name",function(d){return d.id})           
+	            .attr("r",r);
+	            
+	        nodeEnterg.append("text")
+	            .attr("class", "nodetext")
+	            .attr("dx", 12)
+	            .attr("dy", ".35em")
+	            .text(function(d) {return d.getLabel()});
+	            
+	        nodeEnterg.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+        	 	
+        node.exit().remove();
+	    
+		
         force.on("tick", function() {
        	  link.attr("d", function(d) {
        	  	       //insert a random disturbance to allow multiple links between two points. 
 				   var dx = d.target.x - d.source.x,
 				       dy = d.target.y - d.source.py,
-				       dr = Math.sqrt(dx * dx + dy * dy)*d.multiplier;
+				       dr = Math.sqrt(dx * dx + dy * dy)*Math.abs(d.multiplier);
 				   
 				  
 				  
