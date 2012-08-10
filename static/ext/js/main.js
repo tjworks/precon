@@ -484,18 +484,59 @@ function showObject(obj){
 		var html = renderObject(obj)
 		var title =  obj.name || obj.title || obj.label
 		var title = precon.util.shortTitle(title)
-		tab = Ext.getCmp("infopanel").add({
-			title:title,
-			html:html,
-			id:obj._id,
-			autoScroll:true,
-			closable:true
-		})
+		if (precon.getObjectType(obj._id)=="node") {
+			tab = Ext.getCmp("infopanel").add({
+				title:title,
+				id:obj._id,
+				autoScroll:true,
+				height:400,
+				closable:true,
+				items:[
+					  		{
+			                    fieldLabel: 'id',
+			                    name: 'id',
+			                    value:  obj._id
+			                },{
+			                    fieldLabel: 'Group',
+			                    name: 'group',
+			                    value: obj.group
+			                },
+			                {
+			                    fieldLabel: 'Label',
+			                    name: 'label',
+			                    allowBlank:false,
+			                    value: obj.label
+			                },{
+			                    fieldLabel: 'Entity',
+			                    name: 'entity',
+			                    value: obj.entity
+			                },
+			                {
+			                    fieldLabel: 'Role',
+			                    name: 'role',
+			                    allowBlank:false,
+			                    value: obj.role
+			                },{
+			                    fieldLabel: 'update_tm',
+			                    name: 'update_tm',
+			                    value: obj.update_tm
+			                }
+					]
+			})
+		}
+		else
+		{
+			tab = Ext.getCmp("infopanel").add({
+				title:title,
+				html:html,
+				id:obj._id,
+				autoScroll:true,
+				closable:true
+			})
+		}
 	}
 	Ext.getCmp("infopanel").setActiveTab(tab)
-	
 }
-
 
 function renderObject(obj){
 	console.log("Rendering object: ", obj)
@@ -528,8 +569,10 @@ function renderObject(obj){
 		//TBD: temp hack
 		obj.label = obj.source.getLabel() + " - " + obj.target.getLabel() 
 	}
-	
-	return precon.util.formatObject(obj)
+
+    //stop rendering node, switch it panel items	
+	if (precon.getObjectType(obj._id)!="node")
+		return precon.util.formatObject(obj)
 	
 }
 
@@ -693,7 +736,14 @@ function toggleLegend(item,pressed) {
 				    id:'legendWindow',
 				    autoHeight:true,
 				    closeAction: 'hide',
-				    html: '<img src="/ext/resources/images/legend.png" width="150" height="200" alt="this is legend image"/>'
+				    html: '<img src="/ext/resources/images/legend.png" width="150" height="200" alt="this is legend image"/>',
+				    listeners: {
+				    	close: { 
+				    		fn: function () {
+				    				Ext.getCmp("legendToggleBtn").toggle();
+				    			}
+				    	}
+				    }
 				});
 		if (pressed) {
 			legendWindow.show();
