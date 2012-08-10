@@ -124,7 +124,7 @@ Ext.onReady(function(){
           minLength:2,
           select: function(event, ui) {
               console.log("selected ", ui)
-              precon.searchNetworks(ui.item._id, function(networks){ appendNetworks(networks, false)})
+              precon.searchNetworks(ui.item._id, function(networks){ loadNetworks(networks, false)})
           }         
         });
 });
@@ -230,9 +230,9 @@ function createViewPort() {
 			                                            Ext.getCmp("tbarspace").setWidth(Ext.get("west-body").getWidth(true)*0.4);
 			                                            createGraph();
 			                                        },300);
-			                                        setTimeout(function(){
+			                                        /**setTimeout(function(){
 			                                            fireEvents();
-			                                        },600);
+			                                        },600);*/
 			                                     console.log('western panel rendered');
 			                        //Ext.getCmp('west').getEl().on('contextmenu', function(e) {
 			                                                    
@@ -357,32 +357,19 @@ function hideTips() {
         Ext.Function.createThrottled(gtip.hide(),1500);
     }
 
-function fireEvents() {
-	// see the events binding in createGraph()	
-    /**
-    d3.selectAll("g").on("mouseover",function(d){
-               // alert('mouse over lines '+d.id);
-               console.log(d);
-               addSelectStyle(d3.event.currentTarget);
-                showTips(d3.event);
-    });
-           
-    d3.selectAll("g").on("click",function(d){
-    	if(d3.event.detail > 1){
-    		// double clicked
-    		showObject(d)
-    	}    	   
-    });  
-    
-    d3.selectAll("g").on("mouseout",function(d){
-               // alert('mouse over lines '+d.id);
-              //  console.log(d3.event);
-                hideTips();
-    });
-    */       
-    contextMenu = new Ext.menu.Menu({
+function createContextMenu(obj) {	
+    var contextMenu = new Ext.menu.Menu({
                   items: [
-                            
+
+	                          {
+	                              text: 'Center me',
+	                              handler:function() {
+	                            	  console.log("Centered on", obj)
+	                            	  if(obj.get('entity'))
+		                            	  precon.searchNetworks( obj.get('entity'), function(nets){ loadNetworks(nets, true, true) })
+	                              }, 
+	                              iconCls:'update'
+	                          },
                             {
                                 text: 'Update Selected',
                                 handler:function(menuItem,menu) { CreateDiaolog('link'); }, 
@@ -400,25 +387,8 @@ function fireEvents() {
                             }
                   ]
     });
-    
-    d3.selectAll("g").on("contextmenu",function(d){
-              d3.event.preventDefault();
-              contextMenu.showAt([d3.event.clientX,d3.event.clientY]);
-    });
-    
-    d3.selectAll("svg").on("contextmenu",function(d){
-              d3.event.preventDefault();
-    });
-            
-    /*
-    Ext.select("g").on('contextmenu', function(e) {                                                                    
-                e.preventDefault();
-               // alert(e.target.toString())
-                alert(e.clientX+"---"+e.clientY);
-                contextMenu.show();
-                contextMenu.setXY([e.clientX,e.clientY]);
-        });*/
-    
+    return contextMenu
+   
 }  
 
 /**
@@ -559,14 +529,21 @@ function initNetwork(networkObjects) {
 		console.log("Error: no result")
 		return
 	}
-	appendNetworks(networkObjects, true)	
+	loadNetworks(networkObjects, true)	
 }
-function appendNetworks(networkObjects, toGraph){
-	if(!networkObjects) return
+/**
+ * 
+ * @param networkObjects
+ * @param toGraph: whether to draw on graph immediately
+ * @param toReplace: remove existing before adding new one
+ */
+function loadNetworks(networkObjects, toGraph, toReplace){
 	
-	//graphModel.removeAll();
-	//networkStore.removeAll();
-	//networkStore.loadData( toExtArray(networkObjects ));
+	if(!networkObjects) return
+	if(toReplace){
+		graphModel.removeAll();
+		networkStore.removeAll();
+	}
 	networkObjects.forEach(function(network){		
 		if(networkStore.findExact("_id", network.get('_id')) <0  ){ // add only if not already exists
 			if(toGraph) graphModel.addNetwork( network);
@@ -575,15 +552,6 @@ function appendNetworks(networkObjects, toGraph){
 			networkStore.add( obj )
 		}		
 	})	
-}
-function toExtArray(networks){
-	var array = []		
-	networks.forEach(function(net, indx){
-		var a = [net.getId(), net.getRawdata().name, true, net.getRawdata().owner, net.getRawdata().source, net.getRawdata().group  ];
-		//if(indx == 0) a[2] = true // 1st one is shown, others are not
-		array.push(a)
-	});
-	return array
 }
 
 
@@ -1324,12 +1292,12 @@ function createGraph() {
 		});		
 		mygraph.on("dblclick", function(evt, target){
 			console.log("dblclick", evt, target.__data__)
-			showObject(target.__data__)
-			//TBD
-			//precon.searchNetworks( target.__data__.get("entity"), appendNetworks)
+			showObject(target.__data__)						
 		});		
 		mygraph.on("contextmenu",function(evt, target){
             d3.event.preventDefault();
+            console.log("Contexted", target.__data__)
+            contextMenu = createContextMenu(target.__data__)
             contextMenu.showAt([d3.event.clientX,d3.event.clientY]);
 		});
 		mygraph.on("mouseover",function(evt, target){
