@@ -12,10 +12,19 @@ logger = logging.getLogger(__name__)
 
 CLEANUP_PATTERN = re.compile(r'[()\s]')
 class BaseModel(dict):
+    
+    @classmethod
+    def findOne(cls, query):
+        col = mongo.getCollection(cls._col)
+        r = col.find_one(query)
+        if(r): return cls(r)
+        return None
+    
     def __init__(self, data=None):
         if(data):self.update(data)
         else:
-            self.create_tm = time.time()
+            self.create_tm = getTime()
+            self.tm = time.time()
         #self.id = self._id if self._id else None
         if not self._id: self._id= idtool.generate(self._col)
         
@@ -35,22 +44,27 @@ class BaseModel(dict):
         self[attr] = value
 
     def save(self):
+        if self.validate: self.validate()
         if self.beforeSave: self.beforeSave()
         
         col = mongo.getCollection(self._col)
-        logger.debug("Persisting %s: %s" %(self._col, self))
                 
         self._id = self.cleanup_id(self._id)
+        
+        logger.debug("Persisting %s: %s" %(self._col, self._id))
         self.create_tm = self.create_tm or getTime()
         self.update_tm =  getTime()
+        self.tm = self.tm or time.time()
         col.save(self, safe=True)
-        logger.debug("Done")
+        #logger.debug("Done")
         
         if self.afterSave: self.afterSave()
             
     def cleanup_id(self, id):
         return CLEANUP_PATTERN.sub('', id).lower()
-          
+    
+    
+        
     def PK(self):
         """
         Helper method to return a Mongo query based on primary key
@@ -85,7 +99,8 @@ class Network(BioModel):
         logger.debug("Performing network specific saving")
         for con in self._connections:
             con.save()        
-            
+    
+
 class Node(BioModel):
     _col="node"
     def __init__(self, data=None, entity=None):
@@ -98,6 +113,13 @@ class Node(BioModel):
             self._entity = entity 
         self.role = self.role or ''
     
+    def validate(self):
+        
+        if not self.entity:
+            raise Exception("Entity is required")
+        if not self.label:
+            raise Exception("Label is required")
+        
     def afterSave(self):
         logger.debug("Performing Node specific saving")
         if self._entity: self._entity.save()
@@ -153,8 +175,12 @@ class Connection(BioModel):
         self._nodes = self._nodes or []        
 
     def validate(self):
+        if((not self.nodes) or (not self.entities)):
+            raise Exception("Missing nodes/entities")
         if(len( self.nodes) != len(self.entities)):
             raise Exception("Number of nodes and entities in a connection should agree")
+        if(len(self.nodes) < 2 or (not (self.nodes[0] and self.nodes[1] )  )):
+            raise Exception("At least 2 nodes are required")
         if not self.network:
             raise Exception("Missing required field: network")
     def afterSave(self):

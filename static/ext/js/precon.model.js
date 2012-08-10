@@ -23,14 +23,15 @@ precon.NetworkGraph = function(){
 	
 	var _addNetwork = function(netObj){
 		networks.push(netObj);
+		
+		netObj.getConnections(function(cons){
+			cons.forEach(function(con){
+				graphModel.addConnection(con, netObj, false);
+			});
+		});		
 		graphModel.trigger('add.network', {
 			network:netObj
 		})
-		netObj.getConnections(function(cons){
-			cons.forEach(function(con){
-				graphModel.addConnection(con);
-			});
-		});		
 		// TBD: add dangling nodes
 		
 	}
@@ -107,7 +108,11 @@ precon.NetworkGraph = function(){
 	
 	
 	/****** Public graph model manipulation funcitons *************/
-	
+	this.removeAll = function(){
+		networks.forEach(function(network){
+			graphModel.removeNetwork(network)
+		})		
+	}
 	/**
 	 * Add network 
 	 */
@@ -169,7 +174,7 @@ precon.NetworkGraph = function(){
 	 * @network: optional, network object or id this connection belongs to
 	 * 
 	 */
-	this.addConnection=function(con, network){
+	this.addConnection=function(con, network, muted){   // muted: no events
 		var conId = getId(con);
 		var existing = this.findConnection(conId)
 		if(existing){
@@ -184,12 +189,13 @@ precon.NetworkGraph = function(){
 				connections.push(con);
 				var newNodes = []
 				nodes.forEach(function(node){ 					
-					newNodes.push( graphModel.addNode(node, con) ); 
+					newNodes.push( graphModel.addNode(node, con,network, muted) ); 
 				})
-				con.setNodes(newNodes)				
-				graphModel.trigger('add.connection', {
-					connection:con
-				})				
+				con.setNodes(newNodes)		
+				if(!muted)
+					graphModel.trigger('add.connection', {
+						connection:con
+					})				
 			});			
 		}
 		else{
@@ -229,7 +235,7 @@ precon.NetworkGraph = function(){
 	 * @connection: optioanl, if this node is being added as part of the connnection. You should not need to use this as this is used by addConnection function
 	 * returns the precon.Node object
 	 */
-	this.addNode=function(node, connection, network){
+	this.addNode=function(node, connection, network, muted){
 		var nodeId = getId(node);
 		var found = null
 		if(isObject(node) && !(node instanceof precon.Node) ){
@@ -256,9 +262,10 @@ precon.NetworkGraph = function(){
 		if(isObject(node) ){
 			node.addRef(connection, "connection"); 
 			nodes.push(node)
-			graphModel.trigger('add.node', {
-				node:node
-			})
+			if(!muted)
+				graphModel.trigger('add.node', {
+					node:node
+				})
 			precon.encache(node); // add to cache so it can looked up later
 			if(connection)
 				node.addRef(connection.get('network'), "network");
@@ -271,9 +278,10 @@ precon.NetworkGraph = function(){
 			if(connection)
 				obj.addRef(connection.get('network'), "network");
 			nodes.push(obj)
-			graphModel.trigger('add.node', {
-				node:obj
-			})
+			if(!muted)
+				graphModel.trigger('add.node', {
+					node:obj
+				})
 		})	
 		return node;
 	};

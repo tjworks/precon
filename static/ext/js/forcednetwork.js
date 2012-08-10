@@ -34,6 +34,7 @@ function myGraph(el,w,h) {
 		this.model.bind('remove.connection',this._removeLink);
 		this.model.bind('remove.node', this._removeNode);
 		
+		//this.model.bind('add.network', function(){ update()  })
 	}
 	this.getModel =function(){
 		return this.model
@@ -128,40 +129,6 @@ function myGraph(el,w,h) {
     	}    		    	
     }
 
-    this.removeNode = function (id) {
-        var i = 0;
-        var n = findNode(id);
-        while (i < linkarray.length) {
-            if ((linkarray[i]['source'] == n)||(linkarray[i]['target'] == n)) linkarray.splice(i,1);
-            else i++;
-        }
-        nodearray.splice(findNodeIndex(id),1);
-        update();
-    }
-     //sid: the source id; did: the target id; flag: source/target order is ignored if true;
-	 this.removeLink = function (sid,did,flag) {
-        var i = 0;
-        while (i < linkarray.length) {
-        	if (typeof flag!="undefined") {
-        		if (flag) {
-        			if (((linkarray[i]['source'].id == sid) && (linkarray[i]['target'].id == did))||((linkarray[i]['source'].id == did) && (linkarray[i]['target'].id == sid))) 
-        				linkarray.splice(i,1);
-        			else 
-        				i++;
-        			}
-        		else if ((linkarray[i]['source'].id == sid) && (linkarray[i]['target'].id == did)) 
-        				linkarray.splice(i,1);
-        			else 
-        				i++;
-        		}
-        	else
-        		if ((linkarray[i]['source'].id == sid) && (linkarray[i]['target'].id == did)) 
-        			linkarray.splice(i,1);
-            	else 
-            		i++;
-        }
-        update();
-    }
     
      //Return true if a directoned link already exists, other return false;
     var processLinkArray=function(s,d) {
@@ -374,21 +341,6 @@ function myGraph(el,w,h) {
           
         });
 
-        //Create the Marker for path arrow. Delayed to allow the vis created first
-		 vis.select("defs").selectAll("marker").remove();
-		 vis.select("defs").selectAll("marker")
-		.data(["decreases", "beinguptaken", "activates", "inhibits", "stimulats", "association", "physical_interaction", "predicted", "activates", "pathway"])
- 			.enter()
- 			.append("svg:marker")
-	    .attr("id", String)
-	    .attr("viewBox", "0 -3 13 13")
-	    .attr("refX", 15)
-	    .attr("refY", -1.5)
-	    .attr("markerWidth", 6)
-	    .attr("markerHeight", 6)
-	    .attr("orient", "auto")
-	    .append("path")
-	    .attr("d", "M0,-3L13,0L0,3");
 	    
         // Restart the force layout.
         force.start();

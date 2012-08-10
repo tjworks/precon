@@ -117,7 +117,17 @@ Ext.onReady(function(){
 
 });
 
-
+Ext.onReady(function(){
+    console.log("!!! setup auto")
+    $( "#ingraph-search-inputEl" ).autocomplete({
+          source: validateKeyword,
+          minLength:2,
+          select: function(event, ui) {
+              console.log("selected ", ui)
+              precon.searchNetworks(ui.item._id, function(networks){ appendNetworks(networks, false)})
+          }         
+        });
+});
 function createViewPort() {
 			viewport=Ext.create('Ext.Viewport', {
 			                    layout: {
@@ -241,21 +251,23 @@ function createViewPort() {
 			                        title:"",
 			                        //align:'stretch',
 			                        layout:"border",
-			                        tbar:[{
-								                xtype: 'button',
-								                text: 'Search Database By:',
-								                tooltip: 'Find Previous Row',
-								                //iconStyle:'color:#04408C; font-size:11px',
-								                icon:"/ext/resources/images/find.png",
-								                handler: function() {alert('peng !!!!');}
-								            },
+			                        tbar:[
 								            {
+								            	 id:'ingraph-search',
 								                 xtype: 'textfield',
 								                 name: 'searchInterestField',
 								                 hideLabel: true,
-								                 width: 200,
+								                 width: 300,
 								                 listeners: {
 								                 }
+								            },
+								            {
+								                xtype: 'button',
+								                text: 'Find and add related studies to the list',
+								                tooltip: '',
+								                //iconStyle:'color:#04408C; font-size:11px',
+								                icon:"/ext/resources/images/find.png",
+								                handler: function() {alert('peng !!!!');}
 								            }],
 			                        items:[
 			                            { 
@@ -547,17 +559,28 @@ function initNetwork(networkObjects) {
 		console.log("Error: no result")
 		return
 	}
-	
-	graphModel.addNetwork( networkObjects[0] );
-	networkStore.loadData( toExtArray(networkObjects ));
-	
+	appendNetworks(networkObjects, true)	
 }
-
+function appendNetworks(networkObjects, toGraph){
+	if(!networkObjects) return
+	
+	//graphModel.removeAll();
+	//networkStore.removeAll();
+	//networkStore.loadData( toExtArray(networkObjects ));
+	networkObjects.forEach(function(network){		
+		if(networkStore.findExact("_id", network.get('_id')) <0  ){ // add only if not already exists
+			if(toGraph) graphModel.addNetwork( network);
+			obj = network.getRawdata()
+			obj.include = toGraph		
+			networkStore.add( obj )
+		}		
+	})	
+}
 function toExtArray(networks){
 	var array = []		
 	networks.forEach(function(net, indx){
-		var a = [net.getId(), net.getRawdata().name, false, net.getRawdata().owner, net.getRawdata().source, net.getRawdata().group  ];
-		if(indx == 0) a[2] = true // 1st one is shown, others are not
+		var a = [net.getId(), net.getRawdata().name, true, net.getRawdata().owner, net.getRawdata().source, net.getRawdata().group  ];
+		//if(indx == 0) a[2] = true // 1st one is shown, others are not
 		array.push(a)
 	});
 	return array
@@ -1262,11 +1285,11 @@ function openRemoveWindow() {
 											text : 'Remove',
 											handler : function() {
 													if (Ext.getCmp('entitytype_d').getValue()=="link") {
-														mygraph.removeLink(Ext.getCmp('entityname1_d').getValue());
+														graphModel.removeConnection(Ext.getCmp('entityname1_d').getValue());
 													}
 													
 													if (Ext.getCmp('entitytype_d').getValue()=="gene") {
-														mygraph.removeNode(Ext.getCmp('entityname1_d').getValue());
+														graphModel.removeNode(Ext.getCmp('entityname1_d').getValue());
 													}	
 												}
 										}, {
@@ -1302,6 +1325,8 @@ function createGraph() {
 		mygraph.on("dblclick", function(evt, target){
 			console.log("dblclick", evt, target.__data__)
 			showObject(target.__data__)
+			//TBD
+			//precon.searchNetworks( target.__data__.get("entity"), appendNetworks)
 		});		
 		mygraph.on("contextmenu",function(evt, target){
             d3.event.preventDefault();
