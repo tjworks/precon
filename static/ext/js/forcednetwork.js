@@ -138,8 +138,8 @@ function myGraph(el,w,h) {
     	});
     	var a=Math.random()-0.5;
     	a=a/Math.abs(a);
-    	if (count>1) return (1+ a*Math.random()*6*count);
-    	else return 1+a*Math.random()/10;
+    	if (count>1) return (1+ Math.random()*6*count);
+    	else return 1+Math.random()/10;
     }
     
     this.addLink = function (source, target,type, id) {
@@ -322,7 +322,7 @@ function myGraph(el,w,h) {
        	  	       //insert a random disturbance to allow multiple links between two points. 
 				   var dx = d.target.x - d.source.x,
 				       dy = d.target.y - d.source.py,
-				       dr = Math.sqrt(dx * dx + dy * dy)*Math.abs(d.multiplier);
+				       dr = Math.sqrt(dx * dx + dy * dy)*d.multiplier;
 				   
 				  
 				  
