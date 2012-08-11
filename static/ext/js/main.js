@@ -561,11 +561,43 @@ function showObject(obj){
 									  name: 'label',
 									  value:obj.group
 								  },
+								   {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'local',
+                                value:          'mrs',
+                                triggerAction:  'all',
+                                forceSelection: true,
+                                hidden:			false,
+                                editable:       false,
+                                fieldLabel:     'Type',
+                                name:           'Type',
+                                displayField:   'name',
+                                value: 			obj.type,
+                                valueField:     'value',
+                                queryMode: 'local',
+                                store:          Ext.create('Ext.data.Store', {
+                                    fields : ['name', 'value'],
+                                    data   : [
+                                         {name : 'beinguptaken',   value: 'beinguptaken'},
+                                         {name : 'activates',  value: 'activates'},
+                                         {name : 'inhibits', value: 'inhibits'},
+                                         {name : 'beinguptaken',   value: 'stimulats'},
+                                         {name : 'activates',  value: 'association'},
+                                         {name : 'inhibits', value: 'physical_interaction'},
+                                          {name : 'beinguptaken',   value: 'predicted'},
+                                          {name : 'activates',  value: 'activates'},
+                                          {name : 'inhibits', value: 'pathway'}
+                                    ]
+                                })
+                           	 },
+								/*
 								  {
-									  fieldLabel: 'Type',
-									  name: 'type',
-									  value:obj.type
-								  },
+																	  fieldLabel: 'Type',
+																	  name: 'type',
+																	  value:obj.type
+																  },*/
 								  {
 									  fieldLabel: 'Network',
 									  name: 'network',
@@ -583,27 +615,34 @@ function showObject(obj){
 							           ddReorder: true
 								  },
 								  {
-					                    xtype: 'fieldcontainer',
-					                    fieldLabel: 'Refs',
-					                    layout: 'vbox',
-					                    combineErrors: true,
-					                    defaultType: 'textfield',
-					                    defaults: {
-					                        //hideLabel: 'true'
-					                    },
-					                    items: [{
-					                        name: 'Intact',
-					                        fieldLabel: 'Intact',
-					                        flex: 2,
-					                        value:obj.refs.intact
-					                    }, {
-					                        name: 'Pubmed',
-					                        fieldLabel: 'Pubmed',
-					                        flex: 3,
-					                        value:obj.refs.pubmed
-					                    }]
-					                }
-								
+									  fieldLabel: 'Ref Pubmed',
+									  name: 'Pubmed',
+									  value:obj.refs.pubmed
+								  }
+								 /*
+								  {
+																		 xtype: 'fieldcontainer',
+																		 fieldLabel: 'Refs',
+																		 layout: 'vbox',
+																		 combineErrors: true,
+																		 defaultType: 'textfield',
+																		 defaults: {
+																			 //hideLabel: 'true'
+																		 },
+																		 items: [{
+																			 name: 'Intact',
+																			 fieldLabel: 'Intact',
+																			 flex: 2,
+																			 value:obj.refs.intact
+																		 }, {
+																			 name: 'Pubmed',
+																			 fieldLabel: 'Pubmed',
+																			 flex: 3,
+																			 value:obj.refs.pubmed
+																		 }]
+																	 }
+																 */
+								 
 						],
 						fbar: [
 							'->',
@@ -1558,38 +1597,4 @@ $(document).ready(function() {
     });
         */
       
-    
-  function CreateDiaolog(type) {
-    if (type=="a_node") {
-        $.Zebra_Dialog(
-           'Node Name: <input type="text" id="dialog_node_name" width=70 /><br/>Node Type: <select id="dialog_node_type" width=70><option>Gene</option><option>Disease</option><option>Medicine</option><option>Audi</option></select>', {
-            'type':     'question',
-            'title':    'Add Node',
-            'buttons':  [
-                {caption:'OK', callback: function(){
-                		// TBD: add to NetworkGraph model object
-                        mygraph.addNode($("#dialog_node_name").val());
-                    }
-                },
-                {caption:'Cancel', callback: function(){}} 
-                ]
-        });
-    }
-    
-    if (type=="a_link") {
-        $.Zebra_Dialog(
-           'Source Node Name: <input type="text" id="dialog_link_sname" width=70 /><br/>Target Node Name: <input type="text" id="dialog_link_dname" width=70 /><br/>Link Type: <select id="dialog_link_type" width=70><option>Predicted</option><option>Pairpath</option><option>Pathway</option></select>', {
-            'type':     'question',
-            'title':    'Add Link',
-            'buttons':  [
-                {caption:'OK', callback: function(){
-                		// TBD: add to NetworkGraph model object                	
-                        mygraph.addLink($("#dialog_link_sname").val(), $("#dialog_link_dname").val(),$("#dialog_link_type").val());
-                    }
-                },
-                {caption:'Cancel', callback: function(){}} 
-                ]
-        });
-    }
-    
-  }
+   
