@@ -546,7 +546,7 @@ function showObject(obj){
 					layout: 'anchor',
 					buttonAlign:'left',
 				    defaults: {
-				        //anchor: '100%',
+				        anchor: '100%',
 				        bodyPadding:10
 				    },
 				    defaultType: 'textfield',
@@ -559,7 +559,7 @@ function showObject(obj){
 								  },{
 									  fieldLabel: 'Label',
 									  name: 'label',
-									  value:obj.group
+									  value:obj.label
 								  },
 								   {
                                 //the width of this field in the HBox layout is set directly
