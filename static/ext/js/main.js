@@ -15,7 +15,8 @@ Ext.require([
     'Ext.selection.CheckboxModel',
     'Ext.tip.QuickTipManager',
     'Ext.ux.LiveSearchGridPanel',
-    'Ext.ux.OneChartLiveSearchGridPanel'
+    'Ext.ux.OneChartLiveSearchGridPanel',
+    'Ext.ux.form.MultiSelect'
 ]);
 
                 
@@ -536,16 +537,16 @@ function showObject(obj){
 			);
 		}
 		else if (precon.getObjectType(obj._id)=="connection") {
-			    var formnodes="";
-			    obj.nodes.forEach(function(anode) {formnodes=formnodes+'{"label":"'+anode+'"},'});
-			    formnodes='{"data":['+formnodes+']}';
+			    var formnodes=[];
+			    obj.nodes.forEach(function(anode) {formnodes.push([anode,anode])});
 			    console.log('mapping this connection');
 			    console.log(formnodes);
 				var objPanel = Ext.create('Ext.form.Panel', 
 				 {
 					layout: 'anchor',
+					buttonAlign:'left',
 				    defaults: {
-				        anchor: '100%',
+				        //anchor: '100%',
 				        bodyPadding:10
 				    },
 				    defaultType: 'textfield',
@@ -572,36 +573,49 @@ function showObject(obj){
 									  value:obj.network
 								  },
 								  {
-									  fieldLabel: 'Nodes',
-									  xtype: 'multiselect',
-									  displayField:'label',
-									  valueField:'label',
-									  triggerAction:'all',
-									  name: 'nodes',
-									  model:'local',
-									  store: new Ext.data.SimpleStore({
-										  fields: ['label'],
-										  root: "data",
-										  data:	Ext.JSON.decode(formnodes)
-									  })
-								  }/*
-																  {
-																	  fieldLabel: 'Refs',
-																	  name: 'refs',
-																	  allowBlank:false,
-																	  items: [
-																		  {
-																			  fieldLabel:'Intact',
-																			  value:obj.refs.intact
-																		  },
-																		  {
-																			  fieldLabel:'Pubmed',
-																			  value:obj.refs.pubmed
-																		  }
-																	  ]
-																  }*/
+									   anchor: '100%',
+							           xtype: 'multiselect',
+							           msgTarget: 'side',
+							           fieldLabel: 'Nodes',
+							           name: 'Nodes',
+							           allowBlank: false,
+							           store: formnodes,
+							           ddReorder: true
+								  },
+								  {
+					                    xtype: 'fieldcontainer',
+					                    fieldLabel: 'Refs',
+					                    layout: 'vbox',
+					                    combineErrors: true,
+					                    defaultType: 'textfield',
+					                    defaults: {
+					                        //hideLabel: 'true'
+					                    },
+					                    items: [{
+					                        name: 'Intact',
+					                        fieldLabel: 'Intact',
+					                        flex: 2,
+					                        value:obj.refs.intact
+					                    }, {
+					                        name: 'Pubmed',
+					                        fieldLabel: 'Pubmed',
+					                        flex: 3,
+					                        value:obj.refs.pubmed
+					                    }]
+					                }
 								
-						]
+						],
+						fbar: [
+							'->',
+					          {
+					              text: 'Update Node',
+					              handler: function () {
+					              	  alert("peng peng");
+					                  var tabs = this.up('tabpanel');
+					              }
+					          },
+					          '->'
+					      ]
 				});
 				tab = Ext.getCmp("infopanel").add(
 					{
@@ -613,16 +627,8 @@ function showObject(obj){
 				        	anchor: '100%',
 				        	bodyPadding:20
 				   		},
-						items:[objPanel],
-						fbar: [
-					          {
-					              text: 'Update Node',
-					              handler: function () {
-					              	  alert("peng peng");
-					                  var tabs = this.up('tabpanel');
-					              }
-					          }
-					      ]
+						items:[objPanel]
+						
 					}
 				);
 		} else
