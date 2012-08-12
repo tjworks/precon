@@ -15,7 +15,8 @@ Ext.require([
     'Ext.selection.CheckboxModel',
     'Ext.tip.QuickTipManager',
     'Ext.ux.LiveSearchGridPanel',
-    'Ext.ux.OneChartLiveSearchGridPanel'
+    'Ext.ux.OneChartLiveSearchGridPanel',
+    'Ext.ux.form.MultiSelect'
 ]);
 
                 
@@ -457,6 +458,10 @@ function createLink(){
 	var con = {nodes: [nodes[0], nodes[1]]}
 	graphModel.addConnection(con);	
 }
+/*
+ * Render the double-clicked node/link info into a form on the right side
+ * @param obj the json data of the clicked object
+ */
 function showObject(obj){
 	if('getRawdata' in obj) obj = obj.getRawdata()
 	
@@ -465,47 +470,207 @@ function showObject(obj){
 		var html = renderObject(obj)
 		var title =  obj.name || obj.title || obj.label
 		var title = precon.util.shortTitle(title)
+		//process the node rendering
 		if (precon.getObjectType(obj._id)=="node") {
-			tab = Ext.getCmp("infopanel").add({
-				title:title,
-				id:obj._id,
-				autoScroll:true,
-				height:400,
-				closable:true,
+			var objPanel = Ext.create('Ext.form.Panel', 
+			 {
+				layout: 'anchor',
+			    defaults: {
+			        anchor: '100%',
+			        bodyPadding:10
+			    },
+			    defaultType: 'textfield',
 				items:[
 					  		{
 			                    fieldLabel: 'id',
 			                    name: 'id',
-			                    value:  obj._id
+			                    value: obj._id,
+			                    disabled: true
 			                },{
 			                    fieldLabel: 'Group',
 			                    name: 'group',
-			                    value: obj.group
+			                    value:obj.group
 			                },
 			                {
 			                    fieldLabel: 'Label',
 			                    name: 'label',
 			                    allowBlank:false,
-			                    value: obj.label
+			                    value:obj.label
 			                },{
 			                    fieldLabel: 'Entity',
 			                    name: 'entity',
-			                    value: obj.entity
+			                    value:obj.entity
 			                },
 			                {
 			                    fieldLabel: 'Role',
 			                    name: 'role',
 			                    allowBlank:false,
-			                    value: obj.role
+			                    value:obj.role
 			                },{
 			                    fieldLabel: 'update_tm',
 			                    name: 'update_tm',
-			                    value: obj.update_tm
+			                    value:obj.update_tm
 			                }
 					]
-			})
+			});
+			tab = Ext.getCmp("infopanel").add(
+				{
+					title:title,
+					layout:'fit',
+					id:obj._id,
+					closable:true,
+					defaults: {
+			        	anchor: '100%',
+			        	bodyPadding:20
+			   		},
+					items:[objPanel],
+					fbar: [
+				          {
+				              text: 'Update Node',
+				              handler: function () {
+				              	  alert("peng peng");
+				                  var tabs = this.up('tabpanel');
+				              }
+				          }
+				      ]
+				}
+			);
 		}
-		else
+		else if (precon.getObjectType(obj._id)=="connection") {
+			    var formnodes=[];
+			    obj.nodes.forEach(function(anode) {formnodes.push([anode,anode])});
+			    console.log('mapping this connection');
+			    console.log(formnodes);
+				var objPanel = Ext.create('Ext.form.Panel', 
+				 {
+					layout: 'anchor',
+					buttonAlign:'left',
+				    defaults: {
+				        anchor: '100%',
+				        bodyPadding:10
+				    },
+				    defaultType: 'textfield',
+					items:[
+								  {
+									  fieldLabel: 'Id',
+									  name: 'id',
+									  value: obj._id,
+									  disabled: true
+								  },{
+									  fieldLabel: 'Label',
+									  name: 'label',
+									  value:obj.label
+								  },
+								   {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'local',
+                                value:          'mrs',
+                                triggerAction:  'all',
+                                forceSelection: true,
+                                hidden:			false,
+                                editable:       false,
+                                fieldLabel:     'Type',
+                                name:           'Type',
+                                displayField:   'name',
+                                value: 			obj.type,
+                                valueField:     'value',
+                                queryMode: 'local',
+                                store:          Ext.create('Ext.data.Store', {
+                                    fields : ['name', 'value'],
+                                    data   : [
+                                         {name : 'beinguptaken',   value: 'beinguptaken'},
+                                         {name : 'activates',  value: 'activates'},
+                                         {name : 'inhibits', value: 'inhibits'},
+                                         {name : 'beinguptaken',   value: 'stimulats'},
+                                         {name : 'activates',  value: 'association'},
+                                         {name : 'inhibits', value: 'physical_interaction'},
+                                          {name : 'beinguptaken',   value: 'predicted'},
+                                          {name : 'activates',  value: 'activates'},
+                                          {name : 'inhibits', value: 'pathway'}
+                                    ]
+                                })
+                           	 },
+								/*
+								  {
+																	  fieldLabel: 'Type',
+																	  name: 'type',
+																	  value:obj.type
+																  },*/
+								  {
+									  fieldLabel: 'Network',
+									  name: 'network',
+									  //allowBlank:false,
+									  value:obj.network
+								  },
+								  {
+									   anchor: '100%',
+							           xtype: 'multiselect',
+							           msgTarget: 'side',
+							           fieldLabel: 'Nodes',
+							           name: 'Nodes',
+							           allowBlank: false,
+							           store: formnodes,
+							           ddReorder: true
+								  },
+								  {
+									  fieldLabel: 'Ref Pubmed',
+									  name: 'Pubmed',
+									  value:obj.refs.pubmed
+								  }
+								 /*
+								  {
+																		 xtype: 'fieldcontainer',
+																		 fieldLabel: 'Refs',
+																		 layout: 'vbox',
+																		 combineErrors: true,
+																		 defaultType: 'textfield',
+																		 defaults: {
+																			 //hideLabel: 'true'
+																		 },
+																		 items: [{
+																			 name: 'Intact',
+																			 fieldLabel: 'Intact',
+																			 flex: 2,
+																			 value:obj.refs.intact
+																		 }, {
+																			 name: 'Pubmed',
+																			 fieldLabel: 'Pubmed',
+																			 flex: 3,
+																			 value:obj.refs.pubmed
+																		 }]
+																	 }
+																 */
+								 
+						],
+						fbar: [
+							'->',
+					          {
+					              text: 'Update Node',
+					              handler: function () {
+					              	  alert("peng peng");
+					                  var tabs = this.up('tabpanel');
+					              }
+					          },
+					          '->'
+					      ]
+				});
+				tab = Ext.getCmp("infopanel").add(
+					{
+						title:title,
+						layout:'fit',
+						id:obj._id,
+						closable:true,
+						defaults: {
+				        	anchor: '100%',
+				        	bodyPadding:20
+				   		},
+						items:[objPanel]
+						
+					}
+				);
+		} else
 		{
 			tab = Ext.getCmp("infopanel").add({
 				title:title,
@@ -548,7 +713,8 @@ function renderObject(obj){
 	}	
 	else if(precon.getObjectType(obj._id) =='connection' ){
 		//TBD: temp hack
-		obj.label = obj.source.getLabel() + " - " + obj.target.getLabel() 
+		//obj.label = obj.source.getLabel() + " - " + obj.target.getLabel()
+		obj.label = obj.nodes[0] + " - " + obj.nodes[1] 
 	}
 
     //stop rendering node, switch it panel items	
@@ -1431,38 +1597,4 @@ $(document).ready(function() {
     });
         */
       
-    
-  function CreateDiaolog(type) {
-    if (type=="a_node") {
-        $.Zebra_Dialog(
-           'Node Name: <input type="text" id="dialog_node_name" width=70 /><br/>Node Type: <select id="dialog_node_type" width=70><option>Gene</option><option>Disease</option><option>Medicine</option><option>Audi</option></select>', {
-            'type':     'question',
-            'title':    'Add Node',
-            'buttons':  [
-                {caption:'OK', callback: function(){
-                		// TBD: add to NetworkGraph model object
-                        mygraph.addNode($("#dialog_node_name").val());
-                    }
-                },
-                {caption:'Cancel', callback: function(){}} 
-                ]
-        });
-    }
-    
-    if (type=="a_link") {
-        $.Zebra_Dialog(
-           'Source Node Name: <input type="text" id="dialog_link_sname" width=70 /><br/>Target Node Name: <input type="text" id="dialog_link_dname" width=70 /><br/>Link Type: <select id="dialog_link_type" width=70><option>Predicted</option><option>Pairpath</option><option>Pathway</option></select>', {
-            'type':     'question',
-            'title':    'Add Link',
-            'buttons':  [
-                {caption:'OK', callback: function(){
-                		// TBD: add to NetworkGraph model object                	
-                        mygraph.addLink($("#dialog_link_sname").val(), $("#dialog_link_dname").val(),$("#dialog_link_type").val());
-                    }
-                },
-                {caption:'Cancel', callback: function(){}} 
-                ]
-        });
-    }
-    
-  }
+   
