@@ -357,36 +357,40 @@ function hideTips() {
         Ext.Function.createThrottled(gtip.hide(),1500);
     }
 
-function createContextMenu(obj) {	
-    var contextMenu = new Ext.menu.Menu({
-                  items: [
+function createContextMenu(obj) {
+	var items= []
+	if(obj.get("entity")){
+		items.push({
+                    text: 'Center me',
+                    handler:function() {
+                  	  console.log("Centered on", obj)
+                  	  if(obj.get('entity'))
+                      	  precon.searchNetworks( obj.get('entity'), function(nets){ loadNetworks(nets, true, true) })
+                    }, 
+                    iconCls:'update'
+                })
+	};
+	items.push(	               
+              {
+                  text: 'View/Edit',
+                  handler:function(menuItem,menu) {
+                  	showObject(obj)
+                  }, 
+                  iconCls:'update'
+              },
+              {
+                  text: 'Remove Selected',
+                  handler:function(menuItem,menu) { CreateDiaolog('link'); }, 
+                  iconCls:'remove'
+              },
+              {
+                  text: 'Create Node/Link',
+                  handler:function(menuItem,menu) { CreateDiaolog('link'); }, 
+                  iconCls:'create'
+              }
+         );    
 
-	                          {
-	                              text: 'Center me',
-	                              handler:function() {
-	                            	  console.log("Centered on", obj)
-	                            	  if(obj.get('entity'))
-		                            	  precon.searchNetworks( obj.get('entity'), function(nets){ loadNetworks(nets, true, true) })
-	                              }, 
-	                              iconCls:'update'
-	                          },
-                            {
-                                text: 'Update Selected',
-                                handler:function(menuItem,menu) { CreateDiaolog('link'); }, 
-                                iconCls:'update'
-                            },
-                            {
-                                text: 'Remove Selected',
-                                handler:function(menuItem,menu) { CreateDiaolog('link'); }, 
-                                iconCls:'remove'
-                            },
-                            {
-                                text: 'Create Node/Link',
-                                handler:function(menuItem,menu) { CreateDiaolog('link'); }, 
-                                iconCls:'create'
-                            }
-                  ]
-    });
+    var contextMenu = new Ext.menu.Menu({items:items});
     return contextMenu
    
 }  
@@ -701,6 +705,7 @@ function renderObject(obj){
 		
 		var entities = obj.entities || [];
 		ab = obj.abstract;
+		console.log("AB is ", ab, entities)
 		entities.forEach(function(en){
 			var re = new RegExp("("+ en.name+")", 'gi')
 			ab = ab.replace(re, '<a href="#" class="entity-name">$1</a>')  
@@ -1507,7 +1512,9 @@ function createGraph() {
 		});		
 		mygraph.on("dblclick", function(evt, target){
 			console.log("dblclick", evt, target.__data__)
-			showObject(target.__data__)						
+			//showObject(target.__data__)
+			if(target.__data__ && target.__data__.get('entity'))
+		           precon.searchNetworks( target.__data__.get('entity'), function(nets){ loadNetworks(nets, true, true) })
 		});		
 		mygraph.on("contextmenu",function(evt, target){
             d3.event.preventDefault();
