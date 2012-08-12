@@ -89,7 +89,6 @@ function myGraph(el,w,h) {
         update();
     }
     this._addNode = function(evt, data){
-    	//console.log("Adding node", data.node)
     	if(data.node)
     		graph.addNode(data.node)
     }

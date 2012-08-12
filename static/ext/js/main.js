@@ -119,7 +119,7 @@ Ext.onReady(function(){
 });
 
 Ext.onReady(function(){
-    console.log("!!! setup auto")
+    //console.log("!!! setup auto")
     $( "#ingraph-search-inputEl" ).autocomplete({
           source: validateKeyword,
           minLength:2,
@@ -445,9 +445,12 @@ function showMainObject(){
 }
 function addNodeFromAbstract(evt, obj){
 	var label = $(this).text() 
+	var group = $(this).attr("group")
 	var id = precon.randomId("node")	
-	label.replace(/[()\s]/g, '')
-	graphModel.addNode( {_id:id, label: label } )
+	nodeCreate( {label:label, group:group}  )
+	
+	//label.replace(/[()\s]/g, '')
+	//graphModel.addNode( {_id:id, label: label } )
 }
 function createLink(){
 	var selections = graphModel.getSelections("node")
@@ -725,10 +728,15 @@ function renderObject(obj){
 		
 		var entities = obj.entities || [];
 		ab = obj.abstract;
-		console.log("AB is ", ab, entities)
+		// sort by character length of the entity then alphabetically, this is to address one entity name is a substring of the other
+		entities = _.sortBy(entities, function(name){ (name.length + 100) + name  })
+		for(var i=0;i<entities.length;i++){
+			var en = entities[entities.length-1-i]			
+		}
 		entities.forEach(function(en){
-			var re = new RegExp("("+ en.name+")", 'gi')
-			ab = ab.replace(re, '<a href="#" class="entity-name">$1</a>')  
+			var re = new RegExp("\\b" + en.name+"\\b", 'gi')
+			console.log("Replacing " + en.name)
+			ab = ab.replace(re, '<a href="#" class="entity-name" group="' +en.group+'">'+ en.name+'</a>')  
 		});
 		
 		html+="<tr><th>Abstract:</th><td id='publication-abstract'>" + ab +"</td></tr>"		
@@ -936,20 +944,68 @@ function toggleLegend(item,pressed) {
 		} 
 }
 
-function nodeCreate() {
-	
-	if (typeof nodeCreateWindow=="undefined")
+function nodeCreate(nodeData) {
 
+	if (typeof nodeCreateWindow=="undefined"){
 		nodeCreateWindow=Ext.create('Ext.window.Window', 
 				{
 				    bodyPadding: 5,
 				    width: 350,
-				    title: 'Node Create',
+				    title: 'Enter entity name represented by the new node',
 				    id:'nodeCreateWindow',
 				    autoHeight:true,
 				    extentStore:null,
 				    closeAction: 'hide',
+				    listeners:{
+				    	afterrender: {
+					    	element:'',
+					    	fn: function(){
+					    		console.log("After render!")
+					    		$( "#entityname-inputEl" ).autocomplete({
+					    	          source: validateEntity,
+					    	          minLength:2,
+					    	          select: function(event, ui) {
+					    	              console.log("selected entity", ui)
+					    	              $( "#entityname-inputEl" ).attr("entityName", ui.item._id)
+					    	              $( "#entityname-inputEl" ).attr("entityId", ui.item._id)					    	             
+					    	              //precon.searchNetworks(ui.item._id, function(networks){ loadNetworks(networks, false)})
+					    	          }, 
+					    	          search:function(){
+					    	        	  $( "#entityname-inputEl" ).attr("entityName", '')
+					    	              $( "#entityname-inputEl" ).attr("entityId", '')
+					    	          }
+					    	        });
+					    		if(nodeData && nodeData.label)
+					    			$( "#entityname-inputEl" ).attr("value",nodeData.label).keydown()
+					    	}		
+					    }
+				    }			    , 
 				    items: [ 
+                           	 {
+		                        //the width of this field in the HBox layout is set directly
+		                        //the other 2 items are given flex: 1, so will share the rest of the space
+		                        xtype:          'combo',
+		                        mode:           'remote',
+		                        triggerAction:  'all',
+		                        editable:       true,
+		                        id: 			'entityname',
+		                        fieldLabel:     'Entity name',
+		                        name:           'name',
+		                        displayField:   'label',
+		                        valueField:     'label',
+		                        queryParam: 	'query',
+		                        hideTrigger:	true,
+		                        selectOnFocus: 	true,
+		                        store:          
+		                        	Ext.create('Ext.data.Store', {
+		                                fields : ['label', 'value'],
+		                                idProperty:'label',
+		                                url: '',
+		    							root: 'data'		                                
+		                        })
+		                   	 }
+                           	 /**
+                           	 ,
                            	 {
                                 //the width of this field in the HBox layout is set directly
                                 //the other 2 items are given flex: 1, so will share the rest of the space
@@ -958,7 +1014,7 @@ function nodeCreate() {
                                 triggerAction:  'all',
                                 editable:       true,
                                 id: 			'nodename1_c',
-                                fieldLabel:     'Node Name',
+                                fieldLabel:     'Node Label',
                                 name:           'name',
                                 displayField:   'label',
                                 valueField:     'label',
@@ -970,16 +1026,9 @@ function nodeCreate() {
 	                                    fields : ['label', 'value'],
 	                                    idProperty:'label',
 	                                    url: '',
-		    							root: 'data'
-	                                    /*
-										data   : [
-																					{name : 'Gene',   value: 'gene'},
-																					{name : 'Link',  value: 'link'},
-																					{name : 'Disease', value: 'disease'}
-																				]*/
-										
+		    							root: 'data'	                                   
                                 })
-                           	 }
+                           	 }*/
 						],
 						buttons : 
 						  			 [
@@ -987,9 +1036,20 @@ function nodeCreate() {
 											xtype : 'button',
 											text : 'Create',
 											handler : function() {
-													if (Ext.getCmp('nodename1_c').getValue()!="") {														
-														graphModel.addNode( {_id:precon.randomId("node"), label: Ext.getCmp('nodename1_c').getValue() } );
-														Ext.getCmp('nodename1_c').setValue("");
+													var n = {}													
+													n.entity = $( "#entityname-inputEl" ).attr("entityId")
+													n.label =  Ext.getCmp('entityname').getValue() || n.entity
+													n._id =  precon.randomId("node")
+													if (n.label!="") {		
+														//nodeData.label =  Ext.getCmp('nodename1_c').getValue() 														
+														var ret = graphModel.addNode( n);
+														if(ret.get("id") != n._id ){											
+															$d( "[id="+ ret.get("id") +"]" ).classed('state-highlight',true)			
+															alert("The node you wish to add already exists: " + ret.get("label"))
+															$d( "[id="+ ret.get("id") +"]" ).classed('state-highlight',false)
+															return;
+														}
+														Ext.getCmp('entityname').setValue("");
 														nodeCreateWindow.hide();
 													}	
 												}
@@ -1003,8 +1063,11 @@ function nodeCreate() {
 									 ] 
 				}
 				
-				);
-		   nodeCreateWindow.show();
+		);
+	}
+	else if(nodeData.label)
+		$( "#entityname-inputEl" ).attr("value",nodeData.label).keydown()					    	        		  
+	nodeCreateWindow.show();
 }
 
 function linkCreate() {

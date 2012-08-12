@@ -30,12 +30,13 @@ precon.randomId = function(type){
  *       ]
  * 
  */
-precon.quickSearch = function(query, callback){
+precon.quickSearch = function(query, callback, filter){
 	// only entity is supported for now
 	if(!query) throw "Must specify query string"
 	
 	//qstr = escape('{_id:{$regex:/^TOKEN/}}'.replace("TOKEN", query.toLowerCase()))
 	url = "/search.json?term="+ query
+	if(filter) url+="&filter="+filter
 	console.log("searching: " + url)
 	$.ajax({
 		  url: url,

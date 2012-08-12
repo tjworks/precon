@@ -64,6 +64,20 @@ function validateKeyword(req, callback){
 		callback(results)
 	})		  
 }
+/**
+ * Search for entity only
+ * @param req
+ * @param callback
+ */
+function validateEntity(req, callback){
+	term = req.term
+	console.log("validating term")
+	precon.quickSearch(term, function(results){
+		console.log("kw search results by "+term, results)
+		callback(results)
+	}, 'entity')		  
+}
+
 function doSearch(){
 		var val = $("#searchtxt").attr("value")
 		if(!val) return
