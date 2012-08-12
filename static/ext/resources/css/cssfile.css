@@ -138,7 +138,8 @@ path.link.pathway {
 circle {
   fill: #ccc;
   stroke: #333;
-  stroke-width: 1.5px;
+  stroke-width: 1px;
+  fill-opacity:0.5;
 }
 
 text {
@@ -157,8 +158,7 @@ text.shadow {
   	fill:yellow;
   	stroke:#000
 }
-
-path.link.state-selected {      
+path.link.state-selected {   
     stroke:yellow
 }
 
