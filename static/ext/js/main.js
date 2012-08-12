@@ -585,12 +585,12 @@ function showObject(obj){
                                          {name : 'beinguptaken',   value: 'beinguptaken'},
                                          {name : 'activates',  value: 'activates'},
                                          {name : 'inhibits', value: 'inhibits'},
-                                         {name : 'beinguptaken',   value: 'stimulats'},
+                                         {name : 'stimulats',   value: 'stimulats'},
                                          {name : 'activates',  value: 'association'},
-                                         {name : 'inhibits', value: 'physical_interaction'},
-                                          {name : 'beinguptaken',   value: 'predicted'},
+                                         {name : 'physical_interaction', value: 'physical_interaction'},
+                                          {name : 'predicted',   value: 'predicted'},
                                           {name : 'activates',  value: 'activates'},
-                                          {name : 'inhibits', value: 'pathway'}
+                                          {name : 'pathway', value: 'pathway'}
                                     ]
                                 })
                            	 },
