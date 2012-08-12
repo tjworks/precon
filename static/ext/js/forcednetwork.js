@@ -322,7 +322,7 @@ function myGraph(el,w,h) {
         			"lastdx":0,
     				"lastdy":0};
         
-            var node = visg.selectAll("g.node").remove();
+            //var node = visg.selectAll("g.node").remove();
             
             var node = visg.selectAll("g.node")
             .data(nodearray, function(d) { return d.id;});
