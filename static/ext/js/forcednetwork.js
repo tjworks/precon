@@ -41,12 +41,13 @@ function myGraph(el,w,h) {
 	}	
 	// register internal events handler	
 	this.on('mouseover', function(evt, target){
-		var r = $d(target).attr('r')		
-		$d(target).classed('state-highlight', true).attr('r', r*2  )		
+		var r = $d(target).attr('r')
+		$d(target).classed('state-highlight', true)		
 	})
 	this.on('mouseout', function(evt, target){
 		var r = $d(target).attr('r')
-		$d(target).classed('state-highlight', false).attr('r', r/2  )				
+		//$d(target).classed('state-highlight', false).attr('r', r/2  )
+		$d(target).classed('state-highlight', false)				
 	});
 	this.on('click', function(evt, target){
 		if(d3.event.ctrlKey || d3.event.shiftKey)

@@ -161,11 +161,10 @@ text.shadow {
 path.link.state-selected {   
     stroke:yellow
 }
-
 .state-highlight {
     stroke:yellow;  
     fill: #333;
-    stroke-width:4px;
+    stroke-width:8px;
 }
 path.link.state-highlight {
     stroke:yellow;      
