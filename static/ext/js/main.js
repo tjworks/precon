@@ -537,10 +537,12 @@ function showObject(obj){
 			);
 		}
 		else if (precon.getObjectType(obj._id)=="connection") {
+				//var getName=function(id) {precon.getObject(id,function(obj){obj.name})};
 			    var formnodes=[];
-			    obj.nodes.forEach(function(anode) {formnodes.push([anode,anode])});
-			    console.log('mapping this connection');
-			    console.log(formnodes);
+			    obj.nodes.forEach(function(anode) {
+			    	precon.getObject(anode,function(obj){console.log(obj);formnodes.push([obj.label,obj.label])})
+			    	//formnodestemp.push([anode,anode])}
+			    	});
 				var objPanel = Ext.create('Ext.form.Panel', 
 				 {
 					layout: 'anchor',
@@ -601,18 +603,30 @@ function showObject(obj){
 								  {
 									  fieldLabel: 'Network',
 									  name: 'network',
+									  id:'linkupdateform_'+obj.label,
 									  //allowBlank:false,
-									  value:obj.network
+									  value:obj.network,
+									  listeners: {
+									  	afterrender: {
+									  		fn:function(){ var d=Ext.getCmp('linkupdateform_'+obj.label); precon.getObject(d.getValue(),function(obj){d.setValue(obj.name)})}
+									  	}
+									  }
 								  },
 								  {
 									   anchor: '100%',
 							           xtype: 'multiselect',
 							           msgTarget: 'side',
+							           id:'linkupdateform_m'+obj.label,
 							           fieldLabel: 'Nodes',
 							           name: 'Nodes',
 							           allowBlank: false,
 							           store: formnodes,
-							           ddReorder: true
+							           ddReorder: true,
+							           listeners: {
+									  	afterrender: {
+									  		fn:function(){ var d=Ext.getCmp('linkupdateform_m'+obj.label); console.log(d);}
+									  	}
+									  }
 								  },
 								  {
 									  fieldLabel: 'Ref Pubmed',
@@ -654,7 +668,11 @@ function showObject(obj){
 					              }
 					          },
 					          '->'
+					      ],
+					      listeners: [
+					      {}
 					      ]
+					      
 				});
 				tab = Ext.getCmp("infopanel").add(
 					{
