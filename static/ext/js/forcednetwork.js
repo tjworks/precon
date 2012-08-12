@@ -168,7 +168,7 @@ function myGraph(el,w,h) {
    // var w = $(el).innerWidth(),
    //     h = $(el).innerHeight(),
     
-     var  r=8;
+     var  r=12;
         
 	var fisheye = d3.fisheye.circular()
 	    .radius(10)
@@ -232,6 +232,26 @@ function myGraph(el,w,h) {
     		return false;}
     	else return true;
     };
+    
+    /*
+     * get point on the edge of circles
+     * 
+     */
+    var getPointOnCircle=function(x1,y1,r1,x2,y2,r2) {
+		  var dx=x2-x1,                    
+		      dy=y2-y1;
+		  if ( (r1+r2)*(r1+r2) >= dx*dx+dy*dy ) return null;
+		  var a=Math.atan2(dy,dx), 
+		  	  c=Math.cos(a), 
+		  	  s=Math.sin(a);
+		  var result= [{"x":x1+c*r1,"y":y1+s*r1},
+		          {"x":x2-c*r2,"y":y2-s*r2}
+		    //[x1+c*r1,y1+s*r1],
+		    //[x2-c*r2,y2-s*r2]
+		  ];
+		  return result;
+    }
+    
    /*
     * initialize the SVG drawing environment
     * 
@@ -323,7 +343,7 @@ function myGraph(el,w,h) {
 	            
 	        nodeEnterg.append("text")
 	            .attr("class", "nodetext")
-	            .attr("dx", 12)
+	            .attr("dx", -r)
 	            .attr("dy", ".35em")
 	            .text(function(d) {return d.getLabel()});
 	            
@@ -349,7 +369,12 @@ function myGraph(el,w,h) {
 							   lastobj.lastdx=String.valueOf(d.target.x);
 							   lastobj.lastdy=String.valueOf(d.target.y);*/
 				   	   if(!d.source.x) console.log
-					   return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+				   	   var pnts=getPointOnCircle(d.source.x,d.source.y,r,d.target.x,d.target.y,r);
+				   	   var a=pnts[0];
+				   	   var b=pnts[1];
+				   	   
+				   	   return "M" + a.x + "," + a.y + "A" + dr + "," + dr + " 0 0,1 " + b.x + "," + b.y;
+					   //return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
 			//	}
 			 //   else {
 			//           return "M" + lastobj.lastsx + "," + lastobj.lastsy + "A" + lastobj.lastdr + "," + lastobj.lastdr + " 0 0,1 " + lastobj.lastdx + "," + lastobj.lastdy;
