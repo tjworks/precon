@@ -41,36 +41,35 @@ function myGraph(el,w,h) {
 	}	
 	// register internal events handler	
 	this.on('mouseover', function(evt, target){
-		var r = $d(target).attr('r')
-		console.log("Mouseover", $d(target))
+		var r = $d(target).attr('r')		
 		$d(target).classed('state-highlight', true).attr('r', r*2  )		
 	})
 	this.on('mouseout', function(evt, target){
 		var r = $d(target).attr('r')
 		$d(target).classed('state-highlight', false).attr('r', r/2  )				
 	});
-	this.on('click', function(evt, target){		
-		graph.model.toggle(target.__data__)
+	this.on('click', function(evt, target){
+		if(d3.event.ctrlKey || d3.event.shiftKey)
+			graph.model.select(target.__data__, true)
+		else
+			graph.model.toggle(target.__data__, false)
 	});	
 	this._selectionChanged = function(evt, sel){
-		//console.log("selected: ",sel.selected,  sel.target.getId(), $d( "[name="+ sel.target.getId() +"]" ))
 		/**
 		sel.target.forEach(function(target){
 			$d( "[name="+ target.getId() +"]" ).classed('state-selected', sel.selected);
 		})
 		*/
 		if(!graph.model) return
-		var selections = graph.model.getSelections()
-		nodearray.forEach(function(mynode){
-			var selected = false;
-			for(var i=0; i <selections.length; i++){
-				var hisel =  selections[i]
-				if(mynode.getId() == hisel.getId())
-					selected = true;
-			}	
-			$d( "[name="+ mynode.getId() +"]" ).classed('state-selected', selected);
+		
+		nodearray.forEach(function(mynode){		
+			//console.log("node is ", mynode)
+			$d( "[id="+ mynode.getId() +"]" ).classed('state-selected', mynode.selected);			
 		});
 		
+		linkarray.forEach(function(mylink){						
+			$d( "[id="+ mylink.getId() +"]" ).classed('state-selected', mylink.selected);
+		});
 				
 	}
     // Add and remove elements on the graph object
@@ -319,6 +318,7 @@ function myGraph(el,w,h) {
 	        nodeEnterg.append("circle")
 	            .attr("class", "circle")
 	            .attr("name",function(d){return d.id})           
+	            .attr("id",function(d){return d.id})
 	            .attr("r",r);
 	            
 	        nodeEnterg.append("text")

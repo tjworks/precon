@@ -17,7 +17,7 @@ precon.getObjectType = function(objid){
  * @type: one of: network, connection, node, entity, etc
  */
 precon.randomId = function(type){
-	return type.substring(0,4)+  (new Date().getTime()) +'' +  Math.round( Math.random( ) * 10000 ) +".new"
+	return type.substring(0,4)+  (new Date().getTime()) +'' +  Math.round( Math.random( ) * 10000 ) +"-new"
 }
 /**
  * Search by keywords, such as pubmed id, gene symbol/name, network name or people's name

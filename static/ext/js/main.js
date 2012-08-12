@@ -445,13 +445,12 @@ function showMainObject(){
 }
 function addNodeFromAbstract(evt, obj){
 	var label = $(this).text() 
-	id ='enti_' +
-	
+	var id = precon.randomId("node")	
 	label.replace(/[()\s]/g, '')
 	graphModel.addNode( {_id:id, label: label } )
 }
 function createLink(){
-	var selections = graphModel.getSelections()
+	var selections = graphModel.getSelections("node")
 	var nodes = []
 	selections.forEach(function(obj){
 		if(obj instanceof precon.Node) 
@@ -988,7 +987,7 @@ function nodeCreate() {
 											xtype : 'button',
 											text : 'Create',
 											handler : function() {
-													if (Ext.getCmp('nodename1_c').getValue()!="") {
+													if (Ext.getCmp('nodename1_c').getValue()!="") {														
 														graphModel.addNode( {_id:precon.randomId("node"), label: Ext.getCmp('nodename1_c').getValue() } );
 														Ext.getCmp('nodename1_c').setValue("");
 														nodeCreateWindow.hide();
@@ -1139,9 +1138,8 @@ function linkCreate() {
 															});
 															//console.log(node1);
 															//console.log(node2);
-															if (nodes.length>=2) {
-																var con = {nodes: [nodes[0], nodes[1]],type:Ext.getCmp('linktype_c').getValue()}
-																graphModel.addConnection(con);
+															if (nodes.length>=2) {																
+																graphModel.connectNodes(nodes[0], nodes[1], Ext.getCmp('linktype_c').getValue());
 																Ext.getCmp('linkname2_c').setValue("");
 																Ext.getCmp('linkname1_c').setValue("");
 																linkCreateWindow.hide();
@@ -1162,7 +1160,7 @@ function linkCreate() {
 				);
 				
 		//initialize the linkCreateWindow with selections
-		var selections = graphModel.getSelections()
+		var selections = graphModel.getSelections("node")
 		var nodes = []
 		selections.forEach(function(obj){
 			if(obj instanceof precon.Node) 

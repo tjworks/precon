@@ -35,24 +35,19 @@ precon.NetworkGraph = function(){
 		// TBD: add dangling nodes
 		
 	}
-	this._select=function(objects, toSelect){
-		var selected = true;	
+	this._select=function(objects, toSelect, keepExisting){
 		if(! ('length' in objects)) 
 			objects = [objects]
-		//var old = copy(selections)
+		if(!keepExisting){
+			// clear existing selections
+			nodes.forEach(function(n){ n.selected = false })
+			connections.forEach(function(l){ l.selected = false })
+		}
 		objects.forEach(function(object){
-			for(var i=0; i<selections.length;i++){
-				var sel = selections[i]
-				if(getId(sel) == getId(object)){
-					selections.splice(i, 1);					
-					break;
-				}			
-			}
-			if(toSelect) selections.push(object);
+			object.selected = toSelect
 		});
-		
-		jq.trigger("selectionchanged",{selected:toSelect, target:objects, selections:selections} );
-		return selected;
+		jq.trigger("selectionchanged",{selected:toSelect, target:objects} );
+		return toSelect;
 	};		
 	
 	
@@ -60,23 +55,31 @@ precon.NetworkGraph = function(){
 	
 	/****** Public Selection model functions ******/
 	
-	this.multiselect = false;
-	this.setMultiselect = function (multi){ this.multiselect = multi}
-	this.isMultiselect = function (){ return this.multiselect }
-	this.deselect = function(objects){ return this._select(objects, false) }
-	this.select = function(objects){ return this._select(objects, true) }	
-	this.toggle = function(object){ 
+	this.deselect = function(objects){ return this._select(objects, false, true) }
+	this.select = function(objects, keepExisting){ return this._select(objects, true, keepExisting) }	
+	this.toggle = function(object, keepExisting){ return this._select(object, !object.selected, keepExisting) }
+	/**
+		
 		for(var i=0;i<selections.length;i++){
 			var mysel = selections[i]
 			if(getId(mysel) == getId(object))
 				return graphModel._select(object, false);				
 		};
 		return graphModel._select(object, true);
+		*/
+	/**
+	 * Return list of selected nodes or connections
+	 * @filter: node or connection, if not specified, return both
+	 */
+	this.getSelections = function(filter){ 
+		if("connection" == filter || "link" == filter)
+			return _.filter(connections, function(con){ return con.selected });
+		else if("node" == filter)
+			return _.filter(nodes, function(con){ return con.selected });
+		else
+			return _.filter(connections, function(con){ return con.selected }).concat(  _.filter(nodes, function(con){ return con.selected }) )
 	}
 	
-	
-	
-	this.getSelections = function(){ return selections }
 	this.trigger=function(){
 		jq.trigger.apply(jq, arguments)
 		return this;
@@ -168,6 +171,23 @@ precon.NetworkGraph = function(){
 		return this;
 	}
 	
+	/**
+	 * Make a connection between existing nodes
+	 * @type Link type
+	 * @networkId: optional, specify which network this connection belongs to. Default to user's own working network
+	 */
+	this.connectNodes = function(node1, node2, type, networkId){
+		if(! _.isObject(node1)){			
+			node1 = findNode(node1)
+			node2 = findNode(node2)
+		}
+		var con = {nodes:[node1, node2]}
+		if(networkId) con.network = networkId
+		if(type) con.type = type
+		con.id = precon.randomId("connection")
+		var conn  = new precon.Connection(con)
+		this.addConnection(conn, networkId)
+	}
 	/**
 	 * Add a connection to the graph. Can be a precon.Connection object or id
 	 * @con: precon.Connection object or id

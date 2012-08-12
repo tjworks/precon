@@ -158,6 +158,10 @@ text.shadow {
   	stroke:#000
 }
 
+path.link.state-selected {      
+    stroke:yellow
+}
+
 .state-highlight {
     stroke:yellow;  
     fill: #333;
