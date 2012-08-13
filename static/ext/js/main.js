@@ -260,7 +260,6 @@ function createViewPort() {
 			                                     
 			                                     //update the button toolbar space width
 			                                     setTimeout(function(){
-			                                            Ext.getCmp("tbarspace").setWidth(Ext.get("west-body").getWidth(true)*0.4);
 			                                            createGraph();
 			                                        },300);
 			                                        setTimeout(function(){			                                            
