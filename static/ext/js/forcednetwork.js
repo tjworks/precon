@@ -218,7 +218,8 @@ function myGraph(el,w,h) {
     	}    	
     	
     }
-    var force = d3.layout.force()
+    
+    force = d3.layout.force()
         .gravity(.01)
         .distance(200)
         .charge(-100)
@@ -296,6 +297,7 @@ function myGraph(el,w,h) {
   		visg.attr("transform",
 		      "translate(" + d3.event.translate + ")"
 		      + " scale(" + d3.event.scale + ")");
+        force.start();
  	}
     /*
      * update the SVG canvas to reflect the data changes
