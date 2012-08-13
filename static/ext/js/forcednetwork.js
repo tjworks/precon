@@ -301,7 +301,7 @@ function myGraph(el,w,h) {
  	var redraw=function() {
  		console.log(d3.event);
   		console.log("here", d3.event.translate, d3.event.scale);
-  		if (! myGraph.doubleClicked && d3.event.scale>=0.5 && d3.event.scale<=6) {
+  		if (! myGraph.doubleClicked && d3.event.scale>=0.5 ) {
 	  		visg.attr("transform",
 			      "translate(" + d3.event.translate + ")"
 			      + " scale(" + d3.event.scale + ")");
