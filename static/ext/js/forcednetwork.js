@@ -293,6 +293,7 @@ function myGraph(el,w,h) {
  	}   
  	
  	var redraw=function() {
+ 		console.log(d3.event);
   		console.log("here", d3.event.translate, d3.event.scale);
   		visg.attr("transform",
 		      "translate(" + d3.event.translate + ")"

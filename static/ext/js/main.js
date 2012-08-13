@@ -217,16 +217,39 @@ function createViewPort() {
 													        id:'legendToggleBtn',
 													        toggleHandler: toggleLegend
 													    },
-			                                            {xtype:"tbspacer", width:200, id:"tbarspace"},
-			                                            {xtype:"label", width:100},
-			                                            {xtype:"textfield", width:400, fieldLabel:"Names to filter", labelAlign:"right",allowBlank:true},
-			                                            { xtype: 'button', text: '', 
-			                                               //iconCls:"filter",
-			                                               icon:"/ext/resources/images/find.png",
-			                                               handler: function() {
-			                                                      alert("Peng!!!!!!!!!!!!");
-			                                               }
-			                                             }
+													    '->',
+			                                            {xtype:"textfield", width:400, fieldLabel:"Filter Graph by:", labelAlign:"right",allowBlank:true},
+			                                            /*
+														{ xtype: 'button', text: '', 
+																												   //iconCls:"filter",
+																												   icon:"/ext/resources/images/find.png",
+																												   handler: function() {
+																														  alert("Peng!!!!!!!!!!!!");
+																												   }
+																												},*/
+														
+			                                            '->',
+			                                            {
+													        text: 'C Tree',
+													        enableToggle: true,
+													        toggleGroup: 'trees',
+													        icon:"/ext/resources/images/legend.png",
+													        toggleHandler: null
+													    },
+			                                            {
+													        text: 'S Tree',
+													        enableToggle: true,
+													        toggleGroup: 'trees',
+													        icon:"/ext/resources/images/legend.png",
+													        toggleHandler: null
+													    },
+													    {
+													        text: 'H Tree',
+													        enableToggle: true,
+													        toggleGroup: 'trees',
+													        icon:"/ext/resources/images/legend.png",
+													        toggleHandler: null
+													    }
 			                                       ]
 			                            }
 			                         ],
