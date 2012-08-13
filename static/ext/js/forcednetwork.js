@@ -218,7 +218,8 @@ function myGraph(el,w,h) {
     	}    	
     	
     }
-    var force = d3.layout.force()
+    
+    force = d3.layout.force()
         .gravity(.01)
         .distance(200)
         .charge(-100)
@@ -235,6 +236,9 @@ function myGraph(el,w,h) {
     /*
      * get point on the edge of circles
      * 
+     * @params x1,y1,r1, the parameters for source circle1
+     * @params x2,x2,r2, the parameters for source circle2
+     * 
      */
     var getPointOnCircle=function(x1,y1,r1,x2,y2,r2) {
 		  var dx=x2-x1,                    
@@ -245,8 +249,6 @@ function myGraph(el,w,h) {
 		  	  s=Math.sin(a);
 		  var result= [{"x":x1+c*r1,"y":y1+s*r1},
 		          {"x":x2-c*r2,"y":y2-s*r2}
-		    //[x1+c*r1,y1+s*r1],
-		    //[x2-c*r2,y2-s*r2]
 		  ];
 		  return result;
     }
@@ -260,7 +262,8 @@ function myGraph(el,w,h) {
 	     vis = d3.select(el).append("svg:svg")
         .attr("width", w)
         .attr("name","forcenet")
-        .attr("height", h);
+        .attr("height", h)
+        .attr("pointer-events", "all");
         
         vis.append("svg:defs");
         //Create the Marker for path arrow. Delayed to allow the vis created first
@@ -270,18 +273,33 @@ function myGraph(el,w,h) {
  			.enter()
  			.append("svg:marker")
 	    .attr("id", String)
-	    .attr("viewBox", "0 -3 13 13")
+	    .attr("viewBox", "0 -4 13 13")
 	    .attr("refX", 15)
-	    .attr("refY", -1.5)
+	    .attr("refY", 0)
 	    .attr("markerWidth", 6)
 	    .attr("markerHeight", 6)
 	    .attr("orient", "auto")
 	    .append("path")
-	    .attr("d", "M0,-3L13,0L0,3");
-	    
-        visg=vis.append("g");
-	    
+	    .attr("d", "M0,-4L10,0L0,4");
+	   
+        visg=vis.append('svg:g')
+    			.call(d3.behavior.zoom().on("zoom", redraw))
+    			.append("svg:g");
+    			
+		visg.append('svg:rect')
+		    .attr('width', w)
+		    .attr('height', h)
+		    .attr('fill', 'white')
  	}   
+ 	
+ 	var redraw=function() {
+ 		console.log(d3.event);
+  		console.log("here", d3.event.translate, d3.event.scale);
+  		visg.attr("transform",
+		      "translate(" + d3.event.translate + ")"
+		      + " scale(" + d3.event.scale + ")");
+        force.start();
+ 	}
     /*
      * update the SVG canvas to reflect the data changes
      */
@@ -321,7 +339,7 @@ function myGraph(el,w,h) {
         			"lastdx":0,
     				"lastdy":0};
         
-            //var node = visg.selectAll("g.node").remove();
+            var node = visg.selectAll("g.node").remove();
             
             var node = visg.selectAll("g.node")
             .data(nodearray, function(d) { return d.id;});
@@ -370,11 +388,13 @@ function myGraph(el,w,h) {
 							   lastobj.lastdy=String.valueOf(d.target.y);*/
 				   	   if(!d.source.x) console.log
 				   	   var pnts=getPointOnCircle(d.source.x,d.source.y,r,d.target.x,d.target.y,r);
-				   	   var a=pnts[0];
-				   	   var b=pnts[1];
-				   	   
-				   	   return "M" + a.x + "," + a.y + "A" + dr + "," + dr + " 0 0,1 " + b.x + "," + b.y;
-					   //return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+				   	   if (pnts) {
+					   	   var a=pnts[0];
+					   	   var b=pnts[1];
+					   	   return "M" + a.x + "," + a.y + "A" + dr + "," + dr + " 0 0,1 " + b.x + "," + b.y;
+				   	  }
+				   	  else
+					   return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
 			//	}
 			 //   else {
 			//           return "M" + lastobj.lastsx + "," + lastobj.lastsy + "A" + lastobj.lastdr + "," + lastobj.lastdr + " 0 0,1 " + lastobj.lastdx + "," + lastobj.lastdy;
