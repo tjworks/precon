@@ -495,10 +495,11 @@ precon.Connection = function(rawdata){
 		console.log("con nodes", rawdata.nodes)
 		// nodes is list of node IDs		
 		precon.getObjects(rawdata.nodes, function(objs){
-			nodes = []
+			nodes = _.clone(rawdata.nodes)
 			for(var i=0; objs && i<objs.length;i++){
-				
-				nodes.push( new precon.Node(objs[i]) )
+				for(var k=0;k<nodes.length;k++) // doing this to ensure order is same
+					if(getId(nodes[k]) == getId(objs[i]) )
+						nodes[k] =  new precon.Node(objs[i])
 			}			
 			callback && callback(nodes);			
 		});				
