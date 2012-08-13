@@ -12,6 +12,13 @@ precon.getObjectType = function(objid){
 	if(!model) throw "Unrecognized ID format: "+ objid
 	return model
 }
+var getId = function(obj){ 
+	if(_.isObject(obj))
+		return obj.get?obj.get('id') : (obj.id ? obj.id : obj._id )
+	else
+		return obj
+};
+
 /**
  * Create a random id
  * @type: one of: network, connection, node, entity, etc
@@ -352,8 +359,8 @@ precon.util.shortTitle=function(title, max){
 	return title? title.substring(0, max) +"..." : title// TBD: smarter
 }
 precon.event = {
-	ViewportCreated:'ViewPortCreated'
-		
+	ViewportCreated:'ViewPortCreated',
+	UserLogin:'UserLogin'
 }
 /**
 

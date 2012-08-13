@@ -27,7 +27,7 @@ function(cutoff){
            keywords.push(obj.pubmed_id);
            keywords = keywords.concat( chop(obj.name) );
            keywords.push(obj.name)
-           obj.name=obj.pubmed_id+", "+ obj.name                           
+           obj.name=(obj.pubmed_id?obj.pubmed_id+", ": "")+ obj.name                           
            insertKeywords(keywords,obj);
            count++;
     });    
@@ -40,7 +40,7 @@ function(cutoff){
            keywords = keywords.concat( chop(obj.name) )
            keywords.push(obj.name)
            if(obj.name)
-               obj.name=obj.symbol +", "+ obj.name
+               obj.name=(obj.symbol?obj.name+", ":'') + obj.name
            insertKeywords(keywords,obj);
            count++
     });

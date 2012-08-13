@@ -22,15 +22,16 @@ def handler(req):
 		if not 'names' in r: continue
 		for id, name in r['names'].items():
 			if id in tmp: continue;
-			tmp.append(id)
-			name = name[0:80]
+			tmp.append(id)	
+			if(not name): continue	
+			name = ("%s"%name)[0:80]
 			col = ''
 			if id[0:4] in models.prefix_mapping:
 				col = models.prefix_mapping[id[0:4]]
 				label = "%s: %s" %(col, name)
 			if(filter and filter!=col): continue
 			ret.append( {'label':label, 'value':name, '_id':id} )
-		if(len(ret)>20): break  # max 20 results
+		if(len(ret)>50): break  # max 20 results
 				
 	return SmartResponse(ret, req)	
 

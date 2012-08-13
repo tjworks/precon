@@ -1,12 +1,6 @@
 (function(){
 	
-	var getId = function(obj){ 
-		if(isObject(obj))
-			return obj.get?obj.get('id') : (obj.id ? obj.id : obj._id )
-		else
-			return obj
-		};
-	
+		
 precon.NetworkGraph = function(){
 	
 	/****** Internal properties/functions ******/
@@ -575,13 +569,6 @@ precon.Connection.prototype = precon.BasePrototype
 	function isObject(obj){
 		return typeof(obj) == 'object'
 	}
-
-	function getId(obj){
-		if(typeof(obj) == 'string') return obj
-		if(obj.getId) return obj.getId()
-		return obj._id
-	}
-	
 	function getRandom(){
 		return new Date().getTime() +'' +  Math.round( Math.random( ) * 1000 )
 	}

@@ -186,6 +186,16 @@ function createViewPort() {
 			                                               },
 			                                               {
 			                                                    xtype: 'button', 
+			                                                    text : 'Save Graph',
+			                                                    //iconCls:'x-btn-inner remove',
+			                                                    icon:"/ext/resources/images/link_.png",
+			                                                    tooltip:'Display available geocoders',
+			                                                    handler : function() {
+			                                                        saveGraph();
+			                                                    }
+			                                               },
+			                                               {
+			                                                    xtype: 'button', 
 			                                                    text : 'Help',
 			                                                    //iconCls:'x-btn-inner help',
 			                                                    icon:"/ext/resources/images/help.png",
@@ -474,6 +484,7 @@ function createLink(){
 function showObject(obj){
 	if('getRawdata' in obj) obj = obj.getRawdata()
 	
+	
 	var tab =  Ext.getCmp("infopanel").getComponent(obj._id)
 	if(!tab){
 		var html = renderObject(obj)
@@ -549,7 +560,9 @@ function showObject(obj){
 				//var getName=function(id) {precon.getObject(id,function(obj){obj.name})};
 			    var formnodes=[];
 			    obj.nodes.forEach(function(anode) {
-			    	precon.getObject(anode,function(obj){console.log(obj);formnodes.push([obj.label,obj.label])})
+			    	var label = graphModel.findNode(getId(anode)).get("label")
+			    	formnodes.push([label, label])
+			    	//precon.getObject(getId(anode),function(obj){console.log(obj);formnodes.push([obj.label,obj.label])})
 			    	//formnodestemp.push([anode,anode])}
 			    	});
 				var objPanel = Ext.create('Ext.form.Panel', 
@@ -614,12 +627,7 @@ function showObject(obj){
 									  name: 'network',
 									  id:'linkupdateform_'+obj.label,
 									  //allowBlank:false,
-									  value:obj.network,
-									  listeners: {
-									  	afterrender: {
-									  		fn:function(){ var d=Ext.getCmp('linkupdateform_'+obj.label); precon.getObject(d.getValue(),function(obj){d.setValue(obj.name)})}
-									  	}
-									  }
+									  value:obj.network? graphModel.findNetwork(obj.network).get("name"):''							  
 								  },
 								  {
 									   anchor: '100%',
@@ -640,7 +648,7 @@ function showObject(obj){
 								  {
 									  fieldLabel: 'Ref Pubmed',
 									  name: 'Pubmed',
-									  value:obj.refs.pubmed
+									  value:obj.refs?obj.refs.pubmed:''
 								  }
 								 /*
 								  {
@@ -1596,7 +1604,7 @@ function createGraph() {
 			console.log("dblclick", evt, target.__data__)
 			//showObject(target.__data__)
 			if(target.__data__ && target.__data__.get('entity'))
-		           precon.searchNetworks( target.__data__.get('entity'), function(nets){ loadNetworks(nets, true, true) })
+		           precon.searchNetworks( target.__data__.get('entity'), function(nets){ loadNetworks(nets, true, false) })
 		});		
 		mygraph.on("contextmenu",function(evt, target){
             d3.event.preventDefault();
@@ -1622,68 +1630,20 @@ function createGraph() {
 	}	
     
 }
-    /*
-$(document).ready(function() {
-    
-    
-    
-    graph = new myGraph("#mygraph");
-    
-    // You can do this from the console as much as you like...
-    graph.addNode("Cause");
-    graph.addNode("Effect");
-    graph.addLink("Cause", "Effect","predicted");
-    graph.addNode("A");
-    graph.addNode("B");
-    graph.addLink("A", "B","pathway");
-    graph.addNode("Stand Alone");
-    
-    var menu1 = [ 
-            {'Create Node':function(menuItem,menu) { alert("You clicked Option 1!"); } }, 
-            {'Create Link':function(menuItem,menu) { alert("You clicked Option 2!"); } },
-            $.contextMenu.separator, 
-            {'Remove Node':function(menuItem,menu) { alert("You clicked Option 2!"); } }, 
-            {'Remove Link':function(menuItem,menu) { alert("You clicked Option 2!"); } },
-            $.contextMenu.separator, 
-            {'Find Node':function(menuItem,menu) { alert("You clicked Option 2!"); } },
-            {'Find Link':function(menuItem,menu) { alert("You clicked Option 2!"); } },
-            ]; 
-        
-        $(function() { $('#mygraph').contextMenu(menu1,{theme:'vista'}); });
-        */
-    
-    /*
-    var menu3 = [ 
-                {'Add Node':{ 
-                    onclick:function(menuItem,menu) { CreateDiaolog('a_node'); }, 
-                    icon:'resources/images/node.png'
-                    } 
-                }, 
-                {'Add Link':{ 
-                    onclick:function(menuItem,menu) { CreateDiaolog('a_link'); }, 
-                    icon:'resources/images/link.png'
-                    } 
-                }, 
-                $.contextMenu.separator, 
-                {'Rmove Node':{ 
-                    onclick:function(menuItem,menu) { alert("You clicked me!"); }, 
-                    icon:'resources/images/node_.png'
-                    } 
-                }, 
-                {'Remove Link':{ 
-                    onclick:function(menuItem,menu) { if(confirm('Are you sure?')){$(this).remove();} }, 
-                    icon:'resources/images/link_.png'
-                    } 
-                } ,
-                $.contextMenu.separator,  
-                {'Find Node/Link':{ 
-                    onclick:function(menuItem,menu) { if(confirm('Are you sure?')){$(this).remove();} }, 
-                    icon:'resources/images/find.png'
-                    } 
-                } 
-            ];
-        $(function() { $('#mygraph').contextMenu(menu3,{theme:'vista'}); });
-    });
-        */
-      
-   
+ 
+function saveGraph(){
+	 var f = function(){
+		console.log("Continue saveGraph")
+	}
+	
+	if(!window.user || !window.user.email){
+		$(document).on(precon.event.UserLogin, f)
+		$('a.login-window').click()		
+	}
+	else{
+		$(document).off(precon.event.UserLogin, f)
+		console.log("Doing saving")
+	}
+	
+	
+}
