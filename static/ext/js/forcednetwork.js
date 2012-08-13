@@ -273,14 +273,14 @@ function myGraph(el,w,h) {
  			.enter()
  			.append("svg:marker")
 	    .attr("id", String)
-	    .attr("viewBox", "0 -3 13 13")
+	    .attr("viewBox", "0 -4 13 13")
 	    .attr("refX", 15)
-	    .attr("refY", -1.5)
+	    .attr("refY", 0)
 	    .attr("markerWidth", 6)
 	    .attr("markerHeight", 6)
 	    .attr("orient", "auto")
 	    .append("path")
-	    .attr("d", "M0,-3L13,0L0,3");
+	    .attr("d", "M0,-4L10,0L0,4");
 	   
         visg=vis.append('svg:g')
     			.call(d3.behavior.zoom().on("zoom", redraw))
