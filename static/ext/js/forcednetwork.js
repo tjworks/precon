@@ -127,6 +127,11 @@ function myGraph(el,w,h) {
     			}
     	}    		    	
     }
+    
+    /*
+     * This status flat is used to flag if a node/link is double clicked; if not, we can go ahead to zoom in the map 
+     */
+    this.doubleClicked=false
 
     
      //Return true if a directoned link already exists, other return false;
@@ -211,6 +216,7 @@ function myGraph(el,w,h) {
     	
     	if(d3.event.detail >1){
     		console.log("It's a 2" + d3.event.detail)
+    		myGraph.doubleClicked=true
     		observable.trigger('dblclick', d3.event.target, d3.event )
     	}
     	else{
@@ -295,10 +301,16 @@ function myGraph(el,w,h) {
  	var redraw=function() {
  		console.log(d3.event);
   		console.log("here", d3.event.translate, d3.event.scale);
-  		visg.attr("transform",
-		      "translate(" + d3.event.translate + ")"
-		      + " scale(" + d3.event.scale + ")");
-        force.start();
+  		if (! myGraph.doubleClicked && d3.event.scale>=0.5 && d3.event.scale<=6) {
+	  		visg.attr("transform",
+			      "translate(" + d3.event.translate + ")"
+			      + " scale(" + d3.event.scale + ")");
+	        force.start();
+	        myGraph.doubleClicked=false;
+	        console.log("scale is "+d3.event.scale);
+       }
+       else 
+       		myGraph.doubleClicked=false;
  	}
     /*
      * update the SVG canvas to reflect the data changes

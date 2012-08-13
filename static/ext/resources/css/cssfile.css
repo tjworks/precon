@@ -156,19 +156,22 @@ text.shadow {
 
 .state-selected {  	
   	fill:yellow;
-  	stroke:#000
+  	stroke:yellow;
 }
 path.link.state-selected {   
     stroke:yellow
+    stroke-width:2;
+    stroke-color:yellow;
 }
 .state-highlight {
-    stroke:yellow;  
-    fill: #333;
-    stroke-width:8px;
+    stroke:#66cccc;  
+    fill: #66cccc;
+    fill-opacity:0.2;
+    stroke-width:4px;
 }
 path.link.state-highlight {
-    stroke:yellow;      
-    stroke-width:5px;
+    stroke:#66cccc;      
+    stroke-width:4px;
 }
 
 .state-error {   
