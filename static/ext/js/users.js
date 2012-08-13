@@ -77,18 +77,16 @@ function doSignup(){
         data: $("#login-form").serialize(), // serializes the form's elements.
         success: function(data)
         {
+        	console.log("Signup complete: ", data)
             if(data.indexOf("error")>=0)      	   
             	 $("#login-error").text( $(data).find("li").text() )      
             else {
          	    //console.log("User is ", data)
          	    $('#mask , .login-popup').fadeOut(300 , function() { 
          	    	$('#mask').remove();
-         	    });
-         	  
-         	    matcher = data.match(/'\/accounts\/(.*?)\//)
-         	    if(matcher){
-         	    	 $(document).trigger(precon.event.UserLogin, $("#email").attr("value"))	  
-         	    }
+         	    });         	   
+         	    doSignin()
+         	    $(document).trigger(precon.event.UserLogin, uname)	           	    
             }	            	   
         }
       });	
@@ -109,7 +107,7 @@ function doSignin(){
          	    });
          	    matcher = data.match(/'\/accounts\/(.*?)\//)
          	    if(matcher){
-         	    	 $(document).trigger(precon.event.UserLogin, $("#email").attr("value"))	    	            	    	
+         	    	 $(document).trigger(precon.event.UserLogin, $("#username").attr("value"))	    	            	    	
          	    }
             }	            	   
         }
@@ -117,6 +115,7 @@ function doSignin(){
 }
 
 function updateUserLogin(evt, username){
+	console.log("User logged in: "+ username)
 	$("#userid").text("Hi, "+ username)
  	$("#signin-link").css("display", "none")	
  	
