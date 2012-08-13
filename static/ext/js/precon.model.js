@@ -2,10 +2,10 @@
 	
 		
 precon.NetworkGraph = function(){
-	
+	this._class = 'networkgraph'
 	/****** Internal properties/functions ******/
-	
-	var jq = $(this)
+	this.init()	
+	var jq = $(this)	
 	var networks = []
 	var connections = []
 	var nodes = []
@@ -177,8 +177,7 @@ precon.NetworkGraph = function(){
 		}
 		var con = {nodes:[node1, node2]}
 		if(networkId) con.network = networkId
-		if(type) con.type = type
-		con.id = precon.randomId("connection")
+		if(type) con.type = type		
 		var conn  = new precon.Connection(con)
 		this.addConnection(conn, networkId)
 	}
@@ -200,11 +199,17 @@ precon.NetworkGraph = function(){
 				con = new precon.Connection(con)
 			con.getNodes(function(nodes){
 				con.addRef(con.get('network'), "network");
-				connections.push(con);
 				var newNodes = []
-				nodes.forEach(function(node){ 					
-					newNodes.push( graphModel.addNode(node, con,network, muted) ); 
+				nodes.forEach(function(node){ 		
+					var n = graphModel.addNode(node, con,network, muted)
+					if (_.isObject(n)) newNodes.push( n  ); 
 				})
+				if(newNodes.length<2){
+					console.log("Too few nodes("+newNodes.length+") for connection ", con, newNodes)
+					return;
+				}
+				console.log("New nodes", newNodes)
+				connections.push(con);
 				con.setNodes(newNodes)		
 				if(!muted)
 					graphModel.trigger('add.connection', {
@@ -250,11 +255,12 @@ precon.NetworkGraph = function(){
 	 * returns the precon.Node object
 	 */
 	this.addNode=function(node, connection, network, muted){
-		var nodeId = getId(node);
+		
 		var found = null
 		if(isObject(node) && !(node instanceof precon.Node) ){
 			node = new precon.Node(node)
 		}
+		var nodeId = getId(node);
 		var entityId = isObject(node)?node.get("entity"):''
 		var existing = this.findNode(nodeId, entityId)
 		if(existing){
@@ -351,14 +357,90 @@ precon.NetworkGraph = function(){
 	
 	this.getNodes = function(){ return nodes }
 	this.getConnections= function(){ return connections }
+	this.getNetworks = function(){return networks}
 	
+	this.setGraphNetwork=function(network){
+		// set the main network (used for saving later)
+		//_.extend( this.rawdata, network.getRawdata())
+		this.graphNetwork = network
+	}
+	this.getGraphNetwork = function(){ 
+		return this.graphNetwork
+	}
+	/**
+	 * Validate the graph in preparation for saving
+	 */
+	this.validate = function(){		
+		var errors = []
+		var json = this.toJson()
+		if(json._connections.length ==0 && json._nodes.length == 0){
+			console.log("No modified connections/nodes, just save connections")
+		}
+		console.log("json obj:", json)
+		// checking for dangling nodes
+		nodes.forEach(function(node){
+			if(node.getRefs('connection').length == 0 )
+				errors.push("Cannot save unconnected nodes")
+		})
+		
+		if(!json.owner)  errors.push("Network owner must be set")
+		if(!json.name)  errors.push("Network name is missing")
+		return errors
+	};
 	
+	/**
+	 * Save graph to server
+	 */
+	this.save = function(callback){
+		// name
+		var json = this.toJson()		
+		console.log("Going to save: ", json)		
+		json = JSON.stringify(json)
+		$.post("/graph/save.json", {'data':json},callback, 'json');		
+	};
 	
+	this.toJson = function(){
+		var obj = null
+		if(this.graphNetwork)
+			obj = this.graphNetwork.getRawdata()
+		else
+			obj = this.getRawdata(); // attributes
+		
+		// connections
+		obj._connections  = []
+		obj.connections = []
+		connections.forEach(function(con){			
+			obj.connections.push( con.get("id"))
+			// add new or modified connections  (For now we don't allow modify other's connection)
+			if( (window.user && user.user_id == con.get('owner') ) || con.isNew() ){
+				// self's connection
+				obj._connections.push(con.toJson())
+			}			
+		});
+						
+		obj.nodes = []
+		obj._nodes = []
+		nodes.forEach(function(node){
+			if( (window.user && user.user_id == node.get('owner') ) || node.isNew()) {
+				
+				if(node.getRefs('connection').length != 0 ){
+					node.set('owner', window.user.user_id)
+					obj.nodes.push(node.get('id'))
+					obj._nodes.push(node.toJson())
+				}				
+			}
+		}); // end nodes.forEach
+		
+		return obj
+	}
 	return this
 }
 
 /** define common methods for the precon model objects */
 precon.BasePrototype = {
+	isNew:function(){
+		return this.get("newflag") && this.get("newflag")>0 
+	},
 	get: function(name){
 		this.rawdata = this.rawdata || {}
 		if(name == 'id' || name=='_id')
@@ -376,9 +458,14 @@ precon.BasePrototype = {
 	rawdata:{},
 	init: function(rawdata){
 		this.rawdata = rawdata || {}
+		this.rawdata.newflag = this.rawdata._id ? 0: 1
+		this.rawdata._id = this.rawdata._id || precon.randomId(this._class)
 	},
 	getRawdata: function(){
 		return this.rawdata
+	},
+	setRawdata: function(rawdata){
+		this.rawdata = rawdata
 	},
 	// used by nodes, keep track how many duplicated nodes
 	noderefs: [],
@@ -412,6 +499,7 @@ precon.BasePrototype = {
  * @required fields: TBD
  */
 precon.Network = function(rawdata){
+	this._class = 'network'	
 	this.init(rawdata);
 	var rawdata = this.rawdata
 	
@@ -440,21 +528,18 @@ precon.Network = function(rawdata){
 	this.getNodes = function(){
 		// TBD
 	}	
-	/** do not change the rawdata, it's read only */
-	this.getRawdata = function(){
-		return rawdata
-	}
 	return this
 }
 
 precon.Connection = function(rawdata){
+	this._class = 'connection'
 	this.init(rawdata);
 	var rawdata = this.rawdata
 	
 	var nodes =  []
 	if(!rawdata._id){
 		// create new id
-		rawdata._id = 'conn' + getRandom()
+		rawdata._id = precon.randomId("connection")
 	}
 	if(! (rawdata.nodes && rawdata.nodes.length>1) )
 		throw "Must at least provide to nodes"
@@ -505,19 +590,27 @@ precon.Connection = function(rawdata){
 		//rawdata.nodes = nds
 		nodes = nds
 	}
-	/** do not change the rawdata, it's read only */
-	this.getRawdata = function(){
-		return rawdata
-	}
+	this.toJson = function(){
+		// only record ids
+		var obj = this.getRawdata()		
+		//nodes & entities
+		obj.nodes = []		
+		obj.entities = []
+		nodes.forEach(function(node){
+			obj.nodes.push(getId(node))
+			obj.entities.push((node.get('entity') || ''))
+		})
+		return obj
+	}	
 	return this
 }
 
-precon.Node = function(rawdata){	 
+precon.Node = function(rawdata){
+	this._class = 'node'
 	this.init(rawdata);
 	rawdata = this.rawdata
 	if(!rawdata._id || !rawdata.label)
-		throw "Missing _id or label"
-	
+		throw "Missing _id or label"	
 	
 	/**
 	 * Check if the nodeId specified has already been merged to current one
@@ -528,8 +621,7 @@ precon.Node = function(rawdata){
 	this.merge = function(nodeId){		
 		this.noderefs = _.union(this.noderefs, [nodeId])
 	};
-	
-	
+		
 	this.getId = function(){
 		return this.get("_id")
 	}
@@ -543,10 +635,26 @@ precon.Node = function(rawdata){
 	this.getEntity = function(){	
 		return rawdata.entity // this is entity ID
 	}	 
-	
+	this.toJson = function(){
+		// only record ids
+		var obj = this.getRawdata()
+		// additional graph attributes
+		/**
+		index - the zero-based index of the node within the nodes array.
+		x - the x-coordinate of the current node position.
+		y - the y-coordinate of the current node position.
+		px - the x-coordinate of the previous node position.
+		py - the y-coordinate of the previous node position.
+		fixed - a boolean indicating whether node position is locked.
+		weight - the node weight; the number of associated links.
+		*/
+		var attrs = 'x,y,px,py,fixed,weight,index'.split(',')
+		//for(var i in attrs): obj[i] = this[i]
+		return obj
+	}	
 	return this
 }
-
+precon.NetworkGraph.prototype = precon.BasePrototype
 precon.Network.prototype = precon.BasePrototype
 precon.Node.prototype = precon.BasePrototype
 precon.Connection.prototype = precon.BasePrototype
@@ -569,11 +677,6 @@ precon.Connection.prototype = precon.BasePrototype
 	function isObject(obj){
 		return typeof(obj) == 'object'
 	}
-	function getRandom(){
-		return new Date().getTime() +'' +  Math.round( Math.random( ) * 1000 )
-	}
-	
-	
 		
 })();
 

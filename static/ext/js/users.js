@@ -122,4 +122,5 @@ function updateUserLogin(evt, username){
  	
  	window.user = window.user || {}
 	window.user.email = username
+	window.user.user_id = username
 }

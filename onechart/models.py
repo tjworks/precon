@@ -21,7 +21,12 @@ class BaseModel(dict):
         return None
     
     def __init__(self, data=None):
-        if(data):self.update(data)
+        if(data):
+            if(isinstance(data, dict)):
+                for d in data: self.__setattr__(d, data[d])
+            else:
+                raise Exception("Invalid initialization data: %s" %data)
+            #self.update(data)
         else:
             self.create_tm = getTime()
             self.tm = time.time()
@@ -55,7 +60,9 @@ class BaseModel(dict):
         self.create_tm = self.create_tm or getTime()
         self.update_tm =  getTime()
         self.tm = self.tm or time.time()
+        
         col.save(self, safe=True)
+        
         #logger.debug("Done")
         
         if self.afterSave: self.afterSave()
@@ -79,6 +86,12 @@ class BioModel(BaseModel):
 class Network(BioModel):
     """
     Primary id: ntwk_DB_DBID  e.g.e, ntwk_intact_1039473
+    
+    When data is passed in from client, it may contains:
+        _connections: list of connections need to be saved
+        _nodes: list of nodes (may) need to be saved
+        
+    
     """
     _col = 'network'
     def __init__(self, data=None):
@@ -92,14 +105,39 @@ class Network(BioModel):
         # Non persistent field
         self._connections = self._connections or []
     
-    def beforeSave(self):
-        self.con_count = len(self._connections)
+        self.init()
+    def init(self):
         
+        # convert json to model object
+        if(self._connections):
+            logger.debug("convert connection objects %d" %len(self._connections))  
+            for i in range( len( self._connections)):
+                con =self._connections[i]                
+                if(isinstance(con, Connection)): continue
+                con = Connection(con)
+                con.network = con.network or self._id
+                self._connections[i] = con                
+            
+        if(self._nodes):
+            logger.debug("convert node objects %d" %len(self._nodes))  
+            for i in range( len( self._nodes)):
+                node =self._nodes[i]                
+                if(isinstance(node, Node)): continue
+                node = Node(node)
+                node.network = node.network or self._id
+                self._nodes[i] = node
+        
+    def beforeSave(self):
+        #self.con_count = len(self._connections)
+        pass
+
+
     def afterSave(self):
         logger.debug("Performing network specific saving")
         for con in self._connections:
-            con.save()        
-    
+            con.save()
+        for node in self._nodes:
+            node.save()        
 
 class Node(BioModel):
     _col="node"
@@ -119,6 +157,8 @@ class Node(BioModel):
             raise Exception("Entity is required")
         if not self.label:
             raise Exception("Label is required")
+        if not self.network:
+            raise Exception("Node must belong at least one network")
         
     def afterSave(self):
         logger.debug("Performing Node specific saving")
@@ -167,6 +207,8 @@ class Connection(BioModel):
         """
         self.nodes = self.nodes or []
         self.type  = self.type or ''
+        
+        self.visibility = self.visibility or 'private'
                 
         """
         entity objects

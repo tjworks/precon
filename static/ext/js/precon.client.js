@@ -24,7 +24,7 @@ var getId = function(obj){
  * @type: one of: network, connection, node, entity, etc
  */
 precon.randomId = function(type){
-	return type.substring(0,4)+  (new Date().getTime()) +'' +  Math.round( Math.random( ) * 10000 ) +"-new"
+	return type.substring(0,4)+  (new Date().getTime()) +'' +  Math.round( Math.random( ) * 10000 )
 }
 /**
  * Search by keywords, such as pubmed id, gene symbol/name, network name or people's name
@@ -102,10 +102,10 @@ precon.searchNetworks = function(query, callback){
 	
 	url = precon.conf.api_base + "/connection?query="+ qstr
 	
-	precon._ajax(url,  function(results){
+	precon.loadConnections(qstr, function(results){
 		// results is a list of connections
 		if(!results || !results.length) callback(results)
-		console.log("############  got " + results.length+" records ###########")
+		
 		var nets = {}
 		var ids = []
 		for(var r in results){
@@ -121,24 +121,62 @@ precon.searchNetworks = function(query, callback){
 			net._id = con.network
 		}
 		//for(var n in nets)  precon.preload(nets[n])
-		
-		// now get network properties
-		if(ids && ids.length)
-			precon.getObjects(ids, function(networks){			
+		if(ids.length == 0  && query.network){
+			ids.push(query.network)
+			nets[query.network] = {}
+		}
+			
+		if(ids.length>0){
+			precon.getObjects(ids, function(networks){
+				var network=null
 				for(var n in networks){ 
-					var network = networks[n]
-					network._connections = nets[network._id]._connections
-					network.connections = nets[network._id].connections
+					network = networks[n]
+					network._connections = nets[network._id]._connections || []
+					network.connections = network.connections || []
+					network.connections = network.connections.concat( nets[network._id].connections || [] )					
 					network.isComplete = false
 					precon.encache(network)
 					networks[n] = new precon.Network(network)
 				}
-				callback && callback(networks)
+				
+				if(ids.length == 1 ){
+					// this is special case for networks created later which has embedded connection ids, however in the future all network search should start from network
+					var unloadedConnections = network.connections
+					network._connections.forEach(function(conObj){
+						 var cid = getId(conObj)
+						 if(_.indexOf(unloadedConnections, cid)>=0)
+							 unloadedConnections = _.without(unloadedConnections, cid)
+					})
+					if(unloadedConnections.length>0){
+						var cons = unloadedConnections.join('","')
+						cons = '"'+  cons+ '"'					
+						qstr = '{"_id":{"$in":[TOKEN]}}'.replace("TOKEN", cons)
+						//console.log("Qstr", qstr)
+						var qstr = escape(qstr )
+						precon.loadConnections(qstr, function(results){
+							networks[0].getRawdata()._connections= networks[0].getRawdata()._connections.concat(results)						
+							if(callback){ 
+								callback(networks)								
+							}
+						});
+					} // end unloaded
+					else
+						callback && callback(networks)
+				}				
+				else
+					callback && callback(networks)
 			})
-		
+		}				
 	});
 }
-
+precon.loadConnections = function(qstr, callback){
+	console.log("loadConnections:" ,unescape(qstr))
+	url = precon.conf.api_base + "/connection?query="+ qstr
+	precon._ajax(url,  function(results){		 
+		console.log("###### loadConnections got " + results.length+" records ###########")
+		callback && callback(results)
+	});
+}
 precon.preload = function(network){
 	console.debug("preloading "+ network._id)
     // preload the nodes
@@ -155,11 +193,19 @@ precon.preload = function(network){
  * @param network_id 
  * @return list of connection objects 
  
-
-precon.getNetworkConnections=function(network_id, callback){
+*/
+precon.loadNetwork=function(network_id, callback){
 	if(!network_id) throw "network_id must be specified"
 	qstr = escape('{"network":"'+ network_id+'"}')
 	url = precon.conf.api_base + "/connection?query="+ qstr
+	
+	precon.getObject(network_id, function(network){			
+		// now get connections	
+		qstr = escape('{"network":"TOKEN"}'.replace("TOKEN",query.network))
+			precon.encache(network)
+		
+		callback && callback(networks)
+	})
 	
 	precon._ajax(url,  function(results){
 		// now we have a list of connections, next we get all the nodes & entities
@@ -184,7 +230,7 @@ precon.getNetworkConnections=function(network_id, callback){
 		callback && callback(results)		 
 	});
 }
-*/
+
 /**
  * Get the details of any precon object
  * 

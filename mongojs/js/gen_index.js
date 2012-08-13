@@ -1,6 +1,10 @@
 
 function(cutoff){
-	cutoff = cutoff || '2012-08-01 00:00:00'
+	format = function(digit){ return digit>9? digit: '0'+digit }
+	if(!cutoff){		
+		    var d = new Date()		    
+		    cutoff = d.getFullYear() + '-' + format(d.getMonth()+1) +'-'+ format(d.getDate())+" 00:00:00" 
+	}	
 	var query = {create_tm:{$gt:cutoff}}
     chop = function(seq){
         if(!seq) return seq

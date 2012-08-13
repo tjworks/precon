@@ -104,5 +104,3 @@ function showObj(obj_id){
 		$("#section_east_1").html("Object: <pre>"+ precon.util.formatObject(obj)+"</pre>")
 	})	
 }
-
-

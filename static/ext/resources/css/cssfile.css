@@ -170,3 +170,7 @@ path.link.state-highlight {
     stroke:yellow;      
     stroke-width:5px;
 }
+
+.state-error {   
+    color:red    
+}

@@ -35,7 +35,8 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
 {% if user.username %}
 window.user = {
 		email: "{{ user.email }}",
-		username:"{{ user.username }}"		
+		username:"{{ user.username }}",
+		user_id:"{{ user.username }}"
 }
 {% endif %}
 </script>

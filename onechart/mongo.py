@@ -62,10 +62,8 @@ def getCollection(colName):
         return col
     
 def db():        
-        __dbase =  getConnection()[settings.MONGODB_NAME]
-        if(not  __dbase   ): raise Exception("Cannot access database")
-        return __dbase
-
+    return getConnection()[settings.MONGODB_NAME]
+        
 class ValidationError(Exception):
     pass
 
