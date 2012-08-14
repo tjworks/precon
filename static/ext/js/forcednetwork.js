@@ -340,7 +340,7 @@ function myGraph(el,w,h) {
 			      .append("path")
 		  		  .attr("id",function(d){return d.id})
 		  		  .attr("network", function(d){ return d.get('network') })
-				  .attr("class",function(d){return "link "+d.type;})
+				  .attr("class",function(d){return "link "+d.type.replace(" ","").replace("/","_");})
 				  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
 		   
 		    link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)

@@ -126,6 +126,13 @@ marker#pathway {
   stroke:red;
   stroke-dasharray: 0,2 1;
 }
+.phosphorylates_activates {
+  stroke-width: 2px;
+  fill:none;
+  stroke:green;
+  stroke-dasharray: 0,2 1;
+	
+}
 
 .activates {
 	  stroke-width: 2px;
