@@ -13,26 +13,47 @@ Ext.define('Precon.view.NetworkGrid' ,{
 		},
 		
     initComponent: function() {
-      
-       /*
-        this.store = {
-                         fields: ['name', 'email'],
-                         data  : [
-                             {name: 'Ed',    email: 'ed@sencha.com'},
-                             {name: 'Tommy', email: 'tommy@sencha.com'}
-                         ]
-                     };*/
-       
-      
-            /*
               this.columns = [
-                              {header: 'Name',  dataIndex: 'name',  flex: 1},
-                              {header: 'Email', dataIndex: 'email', flex: 1}
-                          ];*/
-            
-      
+                              {
+					                text     : 'Show in Graph', 
+					                width    : 100, 
+					                sortable : true, 
+					                renderer : function(val,meta, record) {                				
+					                				 return "<input type=checkbox "+ (val?"checked":"")+ " name='networkId' value='"+  record.get("_id") + "'>"
+					                },
+					                dataIndex: 'include'
+					            },
+					            {
+					                text     : 'Study',
+					                flex     : 1,
+					                sortable : false,                 
+					                dataIndex: 'name'
+					            },
+					            {
+					                text     : 'Creator', 
+					                width    : 70, 
+					                sortable : true, 
+					                dataIndex: 'creator'
+					               // renderer: change
+					            },
+					            {
+					                text     : 'Source', 
+					                width    : 75, 
+					                flex:1,
+					                sortable : true, 
+					                dataIndex: 'source'
+					               // renderer: change
+					            },
+					            {
+					                text     : 'Network', 
+					                width    : 75, 
+					                flex:1,
+					                sortable : true, 
+					                dataIndex: 'group'
+					               // renderer: change
+					            }
+                          ];
      
               this.callParent(arguments);
-      
     }
 });
