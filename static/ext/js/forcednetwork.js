@@ -132,7 +132,11 @@ function myGraph(el,w,h) {
      * This status flat is used to flag if a node/link is double clicked; if not, we can go ahead to zoom in the map 
      */
     this.doubleClicked=false
-
+    
+    /*
+     * scale defines the scale of the graph
+     */
+    this.scale=1
     
      //Return true if a directoned link already exists, other return false;
     var processLinkArray=function(s,d) {
@@ -300,7 +304,8 @@ function myGraph(el,w,h) {
  	
  	var redraw=function() {
   		console.log("here is the scale: "+d3.event.scale);
-  		if (! myGraph.doubleClicked && d3.event.scale>=0.5 ) {
+  		if (! myGraph.doubleClicked && d3.event.scale>=0.5 && d3.event.scale<=6 ) {
+  			myGraph.scale=myGraph.scale
 	  		visg.attr("transform",
 			      "translate(" + d3.event.translate + ")"
 			      + " scale(" + d3.event.scale + ")");

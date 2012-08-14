@@ -45,9 +45,9 @@
 	
 path.link {
   fill: none;
-  stroke: red;
-  stroke-width: 2px;
+
 }
+
 
 marker#decreases {
   fill: blue;
@@ -83,54 +83,58 @@ marker#pathway {
   fill: green;
 }
 
-path.link.decreases{
+.decreases{
   stroke: blue;
+    stroke-width: 2px;
 }
 
-path.link.beinguptaken 
+.beinguptaken 
  {
   fill:none;
   stroke:red;
+    stroke-width: 2px;
   stroke-dasharray: 0,2 1;
 }
 
-path.link.activates{
-  stroke-dasharray: 4,5 2;
-  stroke:red
-}
-
-path.link.inhibits
+.inhibits
 {
+	  stroke-width: 2px;
   stroke: green;
 }
 
-path.link.stimulats 
+.stimulats 
  {
+ 	  stroke-width: 2px;
   fill:none;
   stroke:red;
 }
 
-path.link.association{
+.association{
+	  stroke-width: 2px;
   stroke-dasharray: 4,5 2;
   stroke:red
 }
 
-path.link.physical_interaction {
+.physical_interaction {
+	  stroke-width: 2px;
   stroke: green;
 }
 
-path.link.predicted {
+.predicted {
+	  stroke-width: 2px;
   fill:none;
   stroke:red;
   stroke-dasharray: 0,2 1;
 }
 
-path.link.activates {
+.activates {
+	  stroke-width: 2px;
   stroke-dasharray: 4,5 2;
   stroke:red
 }
 
-path.link.pathway {
+.pathway {
+	  stroke-width: 2px;
   stroke-dasharray: 1,2 3;
   stroke:green;
 }
