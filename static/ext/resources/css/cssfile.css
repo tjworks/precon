@@ -104,15 +104,15 @@ marker#pathway {
 
 .stimulats 
  {
- 	  stroke-width: 2px;
+  stroke-width: 2px;
   fill:none;
   stroke:red;
 }
 
 .association{
-	  stroke-width: 2px;
-  stroke-dasharray: 4,5 2;
-  stroke:red
+  stroke-width: 2px;
+  stroke-dasharray: 5,1 5,1;
+  stroke:#365786
 }
 
 .physical_interaction {
