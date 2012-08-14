@@ -321,8 +321,7 @@ function myGraph(el,w,h) {
     var update = function () {
 	     //console.log(linkarray);
 	     //console.log(nodearray);
-	     //console.log("Updating")
-		 console.log("updating graph called"); 
+		// console.log("updating graph called"); 
 		 
 		  //Check if SVG has been initialized
 	     //if(typeof vis=="undefined") initSVG();

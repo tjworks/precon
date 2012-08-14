@@ -742,7 +742,7 @@ function showObject(obj){
 }
 
 function renderObject(obj){
-	console.log("Rendering object: ", obj)
+	//console.log("Rendering object: ", obj)
 	if(precon.getObjectType(obj._id) =='publication' ){
 		var authors = ''
 		if(obj.authors){

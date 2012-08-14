@@ -197,7 +197,7 @@ precon.NetworkGraph = function(){
 		if(isObject(con)){
 			if(!(con instanceof precon.Connection) )
 				con = new precon.Connection(con)
-			con.getNodes(function(nodes){
+			    con.getNodes(function(nodes){
 				con.addRef(con.get('network'), "network");
 				var newNodes = []
 				nodes.forEach(function(node){ 		
@@ -208,7 +208,7 @@ precon.NetworkGraph = function(){
 					console.log("Too few nodes("+newNodes.length+") for connection ", con, newNodes)
 					return;
 				}
-				console.log("New nodes", newNodes)
+				//console.log("New nodes", newNodes)
 				connections.push(con);
 				con.setNodes(newNodes)		
 				if(!muted)
@@ -571,7 +571,7 @@ precon.Connection = function(rawdata){
 			if(callback) callback(nodes)			
 			return nodes
 		}		
-		console.log("con nodes", rawdata.nodes)
+		//console.log("con nodes", rawdata.nodes)
 		// nodes is list of node IDs		
 		precon.getObjects(rawdata.nodes, function(objs){
 			nodes = _.clone(rawdata.nodes)

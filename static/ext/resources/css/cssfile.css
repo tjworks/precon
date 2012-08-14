@@ -43,10 +43,7 @@
 	
 /** following were moved from original d3ext.html */	
 	
-path.link {
-  fill: none;
 
-}
 
 
 marker#decreases {
@@ -184,7 +181,14 @@ path.link.state-highlight {
     stroke:#66cccc;      
     stroke-width:4px;
 }
-
+/*
+ * Defines the default style for unnamed path
+ */
+path.link {
+  fill: none;
+  stroke: grey;
+  
+}
 .state-error {   
     color:red    
 }
