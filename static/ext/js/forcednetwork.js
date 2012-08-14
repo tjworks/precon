@@ -299,15 +299,13 @@ function myGraph(el,w,h) {
  	}   
  	
  	var redraw=function() {
- 		console.log(d3.event);
-  		console.log("here", d3.event.translate, d3.event.scale);
+  		console.log("here is the scale: "+d3.event.scale);
   		if (! myGraph.doubleClicked && d3.event.scale>=0.5 ) {
 	  		visg.attr("transform",
 			      "translate(" + d3.event.translate + ")"
 			      + " scale(" + d3.event.scale + ")");
 	        force.start();
 	        myGraph.doubleClicked=false;
-	        console.log("scale is "+d3.event.scale);
        }
        else 
        		myGraph.doubleClicked=false;
