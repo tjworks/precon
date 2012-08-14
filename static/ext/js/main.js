@@ -947,7 +947,7 @@ function toggleLegend(item,pressed) {
 				    width: 189,
 				    height:250,
 				    x:2,
-				    y:Ext.getCmp("legendToggleBtn").getEl().getXY()[1]-210,
+				    y:Ext.getCmp("legendToggleBtn").getEl().getXY()[1]-260,
 				    animCollapse:true,
 				    resizable:false,
 				    animateTarget:'legendToggleBtn',
