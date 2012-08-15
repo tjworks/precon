@@ -319,13 +319,12 @@ function myGraph(el,w,h) {
      * update the SVG canvas to reflect the data changes
      */
     var update = function () {
-	    console.log(linkarray);
-	    console.log(nodearray);
-		 console.log("updating graph called"); 
+	    //console.log(linkarray);
+	    //console.log(nodearray);
+		console.log("updating graph called"); 
 		 
 		  //Check if SVG has been initialized
 	     //if(typeof vis=="undefined") initSVG();
-	  
       
 		//create links
 		link=visg.selectAll("path")

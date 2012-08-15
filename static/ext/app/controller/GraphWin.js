@@ -19,15 +19,30 @@ Ext.define('Precon.controller.GraphWin', {
    			'#west': {
    				afterrender:this.afterGraphWinRendered
    			},
-   			'networkgrid': {
-   				itemdblclick:this.networkGridDblClicked
-   			}    ,
-   			'networkgrid': {
-   				afterrender:this.initApp
-   			}      	
-        }
-        );
+			  '#ingraph-search': {
+				  afterrender:this.autoCompleteSearch
+			},
+			  'networkgrid': {
+				  afterrender:this.initApp,
+				  click: this.networkGridClicked,
+				  itemdblclick:this.networkGridDblClicked,
+				  scope: this
+		  }
+        });
    },  
+   
+   autoCompleteSearch: function() {
+   	    console.log("!!! setup auto")
+	    $( "#ingraph-search-inputEl" ).autocomplete({
+	          source: validateKeyword,
+	          minLength:2,
+	          select: function(event, ui) {
+	              console.log("selected ", ui)
+	              precon.searchNetworks(ui.item._id, function(networks){ loadNetworks(networks, false)})
+	          }         
+	        });
+   },
+   
    /**
 	 * Call precon.client.quickSearch to get a list of networks
 	 * 
@@ -181,11 +196,21 @@ Ext.define('Precon.controller.GraphWin', {
 		})	
 	},
 	
-   networkGridDblClicked: function(){
+   networkGridDblClicked: function(view, row){
 		//put code here to deal with table double clicked
-		console.log("hey, table row double clicked");   	
+	    console.log("double Clicked network: " + row.data._id)      
+	    _graphController.showObject(row.data)	
    },
    
+   networkGridClicked:function(view, item){        	
+	   console.log(item, item.name, item.value, item.checked)
+	   if(item.name == 'networkId' ){
+		   if(item.checked)
+			   graphModel.addNetwork( item.value )
+		    else
+			   graphModel.removeNetwork( item.value )
+		}
+	},
    onGraphWinResize: function() {
    		//put here all codes related with graph window resize related
    },
