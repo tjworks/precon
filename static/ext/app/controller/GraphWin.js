@@ -173,10 +173,10 @@ Ext.define('Precon.controller.GraphWin', {
 				if(toGraph) _graphModel.addNetwork( network);
 				obj = network.getRawdata()
 				obj.include = toGraph		
-				//networkStore.add( obj )
+				networkStore.add( obj )
 				console.log('load obj into network table ');
 				console.log(obj);
-				//this.getNetworksStore().loadData(obj);
+				//_graphController.getNetworksStore().loadData(obj);
 			}		
 		})	
 	},
