@@ -5,8 +5,12 @@ Ext.define('Precon.controller.GraphWin', {
     views: [
     	'NetworkGrid'
     ],
+    graphModel:null,
     init: function() {
         console.log('initializing graphwindow component');
+        //initialized the graphModel
+		this.graphModel=new precon.NetworkGraph();
+		
         this.control({
    			'#west': {
    				resize: this.onGraphWinResize
@@ -16,11 +20,108 @@ Ext.define('Precon.controller.GraphWin', {
    			},
    			'networkgrid': {
    				itemdblclick:this.networkGridDblClicked
-   			}       	
+   			}    ,
+   			'networkgrid': {
+   				afterrender:this.initApp
+   			}      	
         }
         );
    },
-   
+   /**
+	 * Call precon.client.quickSearch to get a list of networks
+	 * 
+	 * No returns. This function will initialize/update the network table.
+	 * 
+	 */
+	initApp: function() {
+		console.log('initializing app');
+		// events binding 
+		$(document).bind(precon.event.ViewportCreated, this.showMainObject)
+		
+		
+		objid = this.getObjectIdFromUrl()	
+		if (objid){
+			Ext.Function.bind(this.initNetwork(),this);
+			precon.searchNetworks(objid, this.initNetwork);			
+		}
+		this.showMainObject()
+	},
+	
+	// get the object id from the URL, if it's available
+	getObjectIdFromUrl: function(){
+		var matcher = location.href.match(/graph\/([^\/]*?)[#\?]?$/)
+		if(matcher) return matcher[1]
+		return ''
+	},
+	
+	/**
+	 * Call precon.client.quickSearch to get a list of networks
+	 * 
+	 * No returns. This function will initialize/update the network table.
+	 * 
+	 */
+	initNetwork:function (networkObjects) {
+	// sample static data for the store
+	   console.log('here is the returns from JT. ');
+	   console.log(networkObjects);
+		if(!networkObjects || networkObjects.length == 0){
+			console.log("Error: no result")
+			return
+		}
+		var getObjectIdFromUrl=function() {
+				var matcher = location.href.match(/graph\/([^\/]*?)[#\?]?$/)
+				if(matcher) return matcher[1]
+				return ''
+		};
+		if(networkObjects.length == 1 && getObjectIdFromUrl()== networkObjects[0].get('id')){
+			this.graphModel.setGraphNetwork(networkObjects[0])
+		}
+		Ext.Function.bind(this.loadNetworks(networkObjects, true),this);
+	}, 
+	showMainObject:function (){	
+		objid = this.getObjectIdFromUrl()
+		if(!objid) return
+		precon.getObject(objid, function(obj){
+			/*
+			var html = renderObject(obj)
+						var title =  obj.name || obj.title || obj.label
+						Ext.getCmp("west").setTitle( precon.getObjectType(objid) + ": "+  title)
+						title = precon.util.shortTitle(title)
+						var tab = Ext.getCmp("infopanel").add({
+							title:'Summary',
+							html:html,
+							autoScroll:true,
+							closable:true
+						})
+						Ext.getCmp("infopanel").setActiveTab(tab)	
+						
+						$("#publication-abstract").find(".entity-name").click( addNodeFromAbstract)*/
+			
+		});	
+	},
+	
+   /**
+	 * 
+	 * @param networkObjects
+	 * @param toGraph: whether to draw on graph immediately
+	 * @param toReplace: remove existing before adding new one
+	 */
+   loadNetworks: function(networkObjects, toGraph, toReplace){
+		if(!networkObjects) return
+		if(toReplace){
+			graphModel.removeAll();
+			networkStore.removeAll();
+		}
+		networkObjects.forEach(function(network){		
+			if(networkStore.findExact("_id", network.get('_id')) <0  ){ // add only if not already exists
+				if(toGraph) graphModel.addNetwork( network);
+				obj = network.getRawdata()
+				obj.include = toGraph		
+				networkStore.add( obj )
+			}		
+		})	
+	},
+	
    networkGridDblClicked: function(){
 		//put code here to deal with table double clicked
 		console.log("hey, table row double clicked");   	
