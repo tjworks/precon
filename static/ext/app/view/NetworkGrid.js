@@ -10,7 +10,7 @@ Ext.define('Precon.view.NetworkGrid' ,{
 	constructor: function(config) {
 			//this.initConfig(config);
 			return this.callParent(arguments);
-		},
+	}, 
 		
     initComponent: function() {
               this.columns = [

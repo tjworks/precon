@@ -826,7 +826,7 @@ function loadNetworks(networkObjects, toGraph, toReplace){
 			networkStore.add( obj )
 		}		
 	})	
-}
+} 
 
 
 function createNetworkGrid(){
