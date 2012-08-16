@@ -88,14 +88,14 @@ path.link {
 
 
 .decreases{
-  stroke: blue;
+  stroke: blue !important;
     stroke-width: 2px;
 }
 
 .beinguptaken 
  {
   fill:none;
-  stroke:red;
+  stroke:red !important;
     stroke-width: 2px;
   stroke-dasharray: 0,2 1;
 }
@@ -103,37 +103,37 @@ path.link {
 .inhibits
 {
 	  stroke-width: 2px;
-  stroke: green;
+  stroke: green !important;
 }
 
 .stimulats 
  {
   stroke-width: 2px;
   fill:none;
-  stroke:red;
+  stroke:red !important;
 }
 
 .association{
   stroke-width: 2px;
   stroke-dasharray: 5,1 5,1;
-  stroke:#365786
+  stroke:#365786 !important;
 }
 
 .physical_interaction {
 	  stroke-width: 2px;
-  stroke: green;
+  stroke: green !important;
 }
 
 .predicted {
 	  stroke-width: 2px;
   fill:none;
-  stroke:red;
+  stroke:red !important;
   stroke-dasharray: 0,2 1;
 }
 .phosphorylates_activates {
   stroke-width: 2px;
   fill:none;
-  stroke:green;
+  stroke:green !important;
   stroke-dasharray: 0,2 1;
 	
 }
@@ -141,13 +141,13 @@ path.link {
 .activates {
 	  stroke-width: 2px;
   stroke-dasharray: 4,5 2;
-  stroke:red
+  stroke:red !important;
 }
 
 .pathway {
 	  stroke-width: 2px;
   stroke-dasharray: 1,2 3;
-  stroke:green;
+  stroke:green !important;
 }
 
 
