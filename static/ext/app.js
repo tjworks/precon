@@ -9,7 +9,7 @@ Ext.application({
     //the location of the code folder
     appFolder: 'app',
     
-    //defines the controllers
+    //defines the controllers 
     controllers: [
     	'GraphWin'
     ],
