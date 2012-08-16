@@ -45,9 +45,9 @@
 	
 path.link {
   fill: none;
-  stroke: red;
-  stroke-width: 2px;
+
 }
+
 
 marker#decreases {
   fill: blue;
@@ -83,54 +83,65 @@ marker#pathway {
   fill: green;
 }
 
-path.link.decreases{
+.decreases{
   stroke: blue;
+    stroke-width: 2px;
 }
 
-path.link.beinguptaken 
+.beinguptaken 
  {
   fill:none;
   stroke:red;
+    stroke-width: 2px;
   stroke-dasharray: 0,2 1;
 }
 
-path.link.activates{
-  stroke-dasharray: 4,5 2;
-  stroke:red
-}
-
-path.link.inhibits
+.inhibits
 {
+	  stroke-width: 2px;
   stroke: green;
 }
 
-path.link.stimulats 
+.stimulats 
  {
+  stroke-width: 2px;
   fill:none;
   stroke:red;
 }
 
-path.link.association{
-  stroke-dasharray: 4,5 2;
-  stroke:red
+.association{
+  stroke-width: 2px;
+  stroke-dasharray: 5,1 5,1;
+  stroke:#365786
 }
 
-path.link.physical_interaction {
+.physical_interaction {
+	  stroke-width: 2px;
   stroke: green;
 }
 
-path.link.predicted {
+.predicted {
+	  stroke-width: 2px;
   fill:none;
   stroke:red;
   stroke-dasharray: 0,2 1;
 }
+.phosphorylates_activates {
+  stroke-width: 2px;
+  fill:none;
+  stroke:green;
+  stroke-dasharray: 0,2 1;
+	
+}
 
-path.link.activates {
+.activates {
+	  stroke-width: 2px;
   stroke-dasharray: 4,5 2;
   stroke:red
 }
 
-path.link.pathway {
+.pathway {
+	  stroke-width: 2px;
   stroke-dasharray: 1,2 3;
   stroke:green;
 }
@@ -156,19 +167,22 @@ text.shadow {
 
 .state-selected {  	
   	fill:yellow;
-  	stroke:#000
+  	stroke:yellow;
 }
 path.link.state-selected {   
     stroke:yellow
+    stroke-width:2;
+    stroke-color:yellow;
 }
 .state-highlight {
-    stroke:yellow;  
-    fill: #333;
-    stroke-width:8px;
+    stroke:#66cccc;  
+    fill: #66cccc;
+    fill-opacity:0.2;
+    stroke-width:4px;
 }
 path.link.state-highlight {
-    stroke:yellow;      
-    stroke-width:5px;
+    stroke:#66cccc;      
+    stroke-width:4px;
 }
 
 .state-error {   
