@@ -80,6 +80,13 @@ marker#pathway {
   fill: green;
 }
 
+/**default style for path**/
+path.link {
+  fill: none;
+  stroke:grey;
+}
+
+
 .decreases{
   stroke: blue;
     stroke-width: 2px;
@@ -143,11 +150,6 @@ marker#pathway {
   stroke:green;
 }
 
-/**default style for path**/
-path.link {
-  fill: none;
-  stroke:grey;
-}
 
 circle {
   fill: #ccc;
