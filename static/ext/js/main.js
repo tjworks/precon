@@ -833,6 +833,7 @@ function createNetworkGrid(){
 	if(window.networkGrid) return;
 	
 	networkStore = Ext.create('Ext.data.ArrayStore', {
+		groupField: 'group',
         fields: [
             {name: '_id'}
             ,{name: 'name'}           
@@ -846,23 +847,30 @@ function createNetworkGrid(){
         data: []       
     });
     
+	var groupingFeature = Ext.create('Ext.grid.feature.Grouping', {
+	    groupHeaderTpl: '<input type="checkbox" name="filterByGroup" group="{name}" checked> Group: {name} ({rows.length})', //print the number of items in the group
+	    startCollapsed: false // start all groups collapsed
+	  
+	});
+	
     networkGrid=Ext.create('Ext.ux.OneChartLiveSearchGridPanel', {
         store: networkStore,
+        features: [groupingFeature],
         columnLines: true,
         columns: [
         	{
-                text     : 'Show in Graph', 
-                width    : 100, 
-                sortable : true, 
+                text     : '<input type=checkbox name="filterAll" checked> All', 
+                width    : 60, 
+                sortable : false, 
                 renderer : function(val,meta, record) {                				
-                				 return "<input type=checkbox "+ (val?"checked":"")+ " name='networkId' value='"+  record.get("_id") + "'>"
+                				 return "<input class='filterByNetwork' belongtogroup='" + record.get("group") +"' type=checkbox "+ (val?"checked":"")+ " name='filterByNetwork' value='"+  record.get("_id") + "'>"
                 },
                 dataIndex: 'include'
             },
             {
-                text     : 'Study',
+                text     : 'Network',
                 flex     : 1,
-                sortable : false,                 
+                sortable : true,                 
                 dataIndex: 'name'
             },
             {
@@ -879,14 +887,6 @@ function createNetworkGrid(){
                 sortable : true, 
                 dataIndex: 'source'
                // renderer: change
-            },
-            {
-                text     : 'Network', 
-                width    : 75, 
-                flex:1,
-                sortable : true, 
-                dataIndex: 'group'
-               // renderer: change
             }
         ],
         height: 'auto',
@@ -900,14 +900,11 @@ function createNetworkGrid(){
         listeners: {
         	click:{
         		element:'el',
-        		fn:function(view, item){        	
-        			console.log(item, item.name, item.value, item.checked)
-        			if(item.name == 'networkId' ){
-        				if(item.checked)
-        					graphModel.addNetwork( item.value )
-        				else
-        					graphModel.removeNetwork( item.value )
-        			}
+        		fn:function(evt, item){        	
+        			console.log("Clicked!", arguments)
+        			if(item.type == 'checkbox'){
+        				filterNetwork(item,groupingFeature)
+        			}        			
         		}
         	},        	
         	itemdblclick:function(view, row){
@@ -935,6 +932,55 @@ function createNetworkGrid(){
 		 
 }
 
+
+function filterNetwork(item, groupingFeature){	
+	
+	if(item.name == 'filterByNetwork' ){
+		if(item.checked)
+			graphModel.addNetwork( item.value )
+		else
+			graphModel.removeNetwork( item.value )
+		
+		// check the group checkbox accordingly
+		var grp = item.getAttribute("belongtogroup") || ""
+		if(item.checked || $("input[belongtogroup=" + grp+"]:checked").length>0)
+			$("input[group=" + grp+"]")[0].checked = true
+		else
+			$("input[group=" + grp+"]")[0].checked = false			
+	}
+	if(item.name == 'filterByGroup'){
+		var grp = item.getAttribute("group") || ""
+		// keep the group expanded if clicked on the group checkbox
+		var rows = groupingFeature.view.getEl().query('.x-grid-group-body');
+        Ext.each(rows, function(row) {        	
+        	if( $(row).find("input[belongtogroup="+ grp+"]").length>0)
+        		groupingFeature.expand(Ext.get(row));
+        });
+		
+		// find all the networks in this group
+		$("input[belongtogroup="+ grp+"]").each(function(indx, networkItemCheckbox){
+			if( (  item.checked && !networkItemCheckbox.checked) || networkItemCheckbox.checked) {
+				// select network if not already selected
+				$(networkItemCheckbox).click()
+			}		
+		});		
+	}
+	if(item.name == 'filterAll'){
+		$("input[group]").each(function(indx, groupCheckbox){
+			if( (  item.checked && !groupCheckbox.checked) || groupCheckbox.checked) 
+				$(groupCheckbox).click()
+		})		
+	}
+	
+	// toggle select all checkbox
+	if( $("input[name=filterByNetwork]:checked").length>0 ){
+		$("input[name=filterAll]")[0].checked = true
+	}
+	else{
+		$("input[name=filterAll]")[0].checked = false
+	}
+	
+}
 /*
  * Toggle the show/hide of legend window. If legend window is not created, it will create it first
  * 

@@ -188,3 +188,11 @@ path.link.state-highlight {
 .state-error {   
     color:red    
 }
+
+
+
+
+/**  HTML forms **/
+input.filterByNetwork {
+	margin-left:30px
+}
