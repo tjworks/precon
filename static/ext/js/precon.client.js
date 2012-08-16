@@ -24,7 +24,10 @@ var getId = function(obj){
  * @type: one of: network, connection, node, entity, etc
  */
 precon.randomId = function(type){
-	return type.substring(0,4)+  (new Date().getTime()) +'' +  Math.round( Math.random( ) * 10000 )
+	var prefix = type.substring(0,4).toLowerCase();
+	if(!precon.conf.prefix_mapping[prefix])
+		throw "Unsupported type: "+type
+	return prefix+  (new Date().getTime()) +'' +  Math.round( Math.random( ) * 10000 )
 }
 /**
  * Search by keywords, such as pubmed id, gene symbol/name, network name or people's name

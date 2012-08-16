@@ -260,6 +260,23 @@ class Association(BaseModel):
         self.group = self.group or ''
         if self.name: self._id = 'asso_%s' %self.name
 
+class Tagging(BaseModel):
+    _col = 'tagging'
+    _index =['name', 'owner']
+    def __init__(self, data=None):
+        BaseModel.__init__(self, data)
+        
+        self.name = self.name or ''
+        self.owner =self.owner or ''
+        self.type = self.type   # type: network, links, nodes, pubs anything
+        self.builtin = self.builtin or 0
+        self.ids = self.ids or [] 
+        
+    def validate(self):
+        if not self.name:            
+            raise Exception("Missing required field: name")
+        
+        
 class Experiment(BioModel):
     pass
 
@@ -285,3 +302,4 @@ class PreconProfile(UserenaLanguageBaseProfile ):
     favourite_snack = models.CharField( 'favourite snack' ,
                                        max_length=5)
 prefix_mapping =  {'netw':'network' , 'ntwk':'network', 'enti':'entity', 'node':'node', 'conn': 'connection', 'publ':'publication'}
+
