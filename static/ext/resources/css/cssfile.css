@@ -43,10 +43,7 @@
 	
 /** following were moved from original d3ext.html */	
 	
-path.link {
-  fill: none;
 
-}
 
 
 marker#decreases {
@@ -144,6 +141,12 @@ marker#pathway {
 	  stroke-width: 2px;
   stroke-dasharray: 1,2 3;
   stroke:green;
+}
+
+/**default style for path**/
+path.link {
+  fill: none;
+  stroke:grey;
 }
 
 circle {
