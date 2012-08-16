@@ -19,7 +19,7 @@ Ext.define('Precon.view.NetworkGrid' ,{
 					                width    : 100, 
 					                sortable : true, 
 					                renderer : function(val,meta, record) {                				
-					                				 return "<input type=checkbox "+ (val?"checked":"")+ " name='networkId' value='"+  record.get("_id") + "'>"
+					                				 return "<input type=checkbox "+ (val?"checked":"")+ " id='networkId' value='"+  record.get("_id") + "'>"
 					                },
 					                dataIndex: 'include'
 					            },

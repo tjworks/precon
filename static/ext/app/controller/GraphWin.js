@@ -27,10 +27,6 @@ Ext.define('Precon.controller.GraphWin', {
 				  itemclick: this.networkGridClicked,
 				  itemdblclick:this.networkGridDblClicked,
 				  scope: this
-		  },
-		  'networkgrid->checkbox': {
-				  itemclick: this.networkGridClicked,
-				  scope: this
 		  }
         });
    },  
