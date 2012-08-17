@@ -50,6 +50,9 @@ function myGraph(el,w,h) {
 		$d(target).classed('state-highlight', false)				
 	});
 	this.on('click', function(evt, target){
+		
+		if(! target.__data__ || (target.__data__._class!='connection' && target.__data__._class!='node' )) return
+		console.log("clicked", target)
 		if(d3.event.ctrlKey || d3.event.shiftKey)
 			graph.model.select(target.__data__, true)
 		else
@@ -100,7 +103,7 @@ function myGraph(el,w,h) {
     }
     this._removeLink = function(evt, data){
     	console.log("_remove ", data)
-    	if(!data.connection) return
+    	if(!data.connection) return    	
     	linkarray.splice(findLinkIndex(data.connection.getId()),1);
     	update();
     }
@@ -300,6 +303,8 @@ function myGraph(el,w,h) {
 		    .attr('width', w)
 		    .attr('height', h)
 		    .attr('fill', 'white')
+		vis.on("click", eventsProxy ).on("contextmenu", eventsProxy)
+		
  	}   
  	
  	var redraw=function() {
@@ -343,7 +348,7 @@ function myGraph(el,w,h) {
 				  .attr("class",function(d){return "link "+d.type.replace(" ","").replace("/","_");})
 				  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
 		   
-		    link.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+		    link.on("mouseover", eventsProxy ).on("mouseout", eventsProxy )
 		      
 		    link.exit().remove();  
 	
@@ -380,7 +385,7 @@ function myGraph(el,w,h) {
 	            .attr("dy", ".35em")
 	            .text(function(d) {return d.getLabel()});
 	            
-	        nodeEnterg.on("click", eventsProxy ).on("mouseover", eventsProxy ).on("mouseout", eventsProxy ).on("contextmenu", eventsProxy)
+	        nodeEnterg.on("mouseover", eventsProxy ).on("mouseout", eventsProxy )
         	 	
         node.exit().remove();
 	    

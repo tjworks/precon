@@ -104,3 +104,15 @@ function showObj(obj_id){
 		$("#section_east_1").html("Object: <pre>"+ precon.util.formatObject(obj)+"</pre>")
 	})	
 }
+
+
+function Timer(){
+	this.start = new Date()
+	this.elapsed = function(name){		
+		var e = (new Date().getTime() - this.start.getTime() ) /1000
+		this.start = new Date()
+		console.log("ELAPSED ["+ name+"]: "+ e)
+		return e
+	}
+	return this
+}

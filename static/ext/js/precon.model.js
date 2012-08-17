@@ -48,7 +48,10 @@ precon.NetworkGraph = function(){
 	
 	
 	/****** Public Selection model functions ******/
-	
+	this.clearSelection = function(){ 
+		selections= [];
+		jq.trigger("selectionchanged",{selected:false, target:[]} );
+	}
 	this.deselect = function(objects){ return this._select(objects, false, true) }
 	this.select = function(objects, keepExisting){ return this._select(objects, true, keepExisting) }	
 	this.toggle = function(object, keepExisting){ return this._select(object, !object.selected, keepExisting) }
@@ -309,10 +312,10 @@ precon.NetworkGraph = function(){
 	/**
 	 * Remove a node from the graph
 	 * @param node: node id or node object, must already exists in the graph
-	 * 
+	 * @param force: if set to true will remove node unconditionally (as opposed to check existing ref)
 	 * @events: remove.node event will be triggered. 
 	 */
-	this.removeNode = function(node, connection){
+	this.removeNode = function(node, connection, force){
 		console.log("Removing nodes: "+ node)
 		var nodeId = getId(node);
 		var existing = this.findNode(nodeId);
@@ -320,7 +323,7 @@ precon.NetworkGraph = function(){
 		if(connection){
 			existing.delRef(connection,"connection");			
 		}
-		if(existing.getRefs("connection").length > 0){
+		if(existing.getRefs("connection").length > 0 && !force){
 			console.log("More refs remain for node ", node)
 			return;
 		} 
@@ -490,6 +493,9 @@ precon.BasePrototype = {
 		var id = this.get("id") || ""
 		if(id) return id.substring(0,4).toUpperCase()+"-"+ id.substring(id.length - 6);
 		return Object.prototype.toString.call(this)
+	},
+	getClass:function(){
+		return this._class
 	}
 }
 

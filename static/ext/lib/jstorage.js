@@ -737,36 +737,41 @@
     }
   };
 
+
   $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
     if( options.cacheJStorage === undefined || ! options.cacheJStorage )
       return;
-    
-    var cacheKey;
+
+    var cacheKey = "jqueryajax";
 
     if ( options.cacheKey )
-      cacheKey = options.cacheKey;
+      cacheKey += options.cacheKey;
     else
-       cacheKey = options.url + options.type + options.data;
+       cacheKey += options.url + options.type + options.data;
     
+    cacheKey = escape(cacheKey).replace(/[%\/\-\.]/g, '')
+
     if ( options.isCacheValid &&  ! options.isCacheValid() )
       $.jStorage.deleteKey( cacheKey );
     
     if ( $.jStorage.get( cacheKey ) ) {
       // Do not send a direct copy of Data
-      var dataCached = $.extend(true, {}, $.jStorage.get( cacheKey ));
-
+    	var data = JSON.parse( $.jStorage.get( cacheKey ) )
+    	//console.log("Cache hit", data)
+    
       if ( options.success )
-        options.success( dataCached );
+        options.success( data );
 
       // Abort is broken on JQ 1.5
       jqXHR.abort();
     }
     else {
+      //console.error("Cache miss")
       var successhandler = options.success,
         cacheTTL = options.cacheTTL || 0;
       
       options.success = function( data ) {
-        $.jStorage.set( cacheKey, data );
+        $.jStorage.set( cacheKey, JSON.stringify(data) );
 
         if ( $.jStorage.setTTL ) {
           $.jStorage.setTTL( cacheKey, cacheTTL * 1000 );
@@ -774,11 +779,8 @@
         else
           log('Your jStorage version doesn\'t support TTL on key, please update jStorage ( http://www.jstorage.info/ )');
 
-        // Send a deep clone of data
-        var dataCached = $.extend(true, {}, data );
-        
         if ( successhandler )
-          successhandler( dataCached );
+          successhandler( data );
 
         // Don't execute this success callback again
         options.success = successhandler;

@@ -176,7 +176,7 @@ function createViewPort() {
 													   
 			                                               {
 			                                                    xtype: 'button', 
-			                                                    text : 'Remove Node/Link',
+			                                                    text : 'Remove',
 			                                                    //iconCls:'x-btn-inner remove',
 			                                                    icon:"/ext/resources/images/link_.png",
 			                                                    tooltip:'Display available geocoders',
@@ -392,7 +392,7 @@ function hideTips() {
 function createContextMenu(obj) {
 	var items= []
 	var label = 'Link'
-	if( obj.get("entity")){	
+	if(obj && obj.get("entity")){	
 		items.push({
                     text: 'Center me',
                     handler:function() {
@@ -405,24 +405,34 @@ function createContextMenu(obj) {
 		label = 'Node '
 	};
 		
-	items.push(	               
+	if(obj){
+		items.push(	               
+	              {
+	                  text: 'View/Edit '+ label,
+	                  handler:function(menuItem,menu) {
+	                  	showObject(obj)
+	                  }, 
+	                  iconCls:'update'
+	              },
+	              {
+	                  text: 'Remove '+ label+": " + (obj.get('label') || ''),
+	                  handler:function(menuItem,menu) { openRemoveWindow(obj) }, 
+	                  iconCls:'remove'
+	              })
+	}
+	items.push(	                             
+              
               {
-                  text: 'View/Edit '+ label,
-                  handler:function(menuItem,menu) {
-                  	showObject(obj)
-                  }, 
-                  iconCls:'update'
+                  text: 'Create Node',
+                  handler:function(menuItem,menu) { nodeCreate() }, 
+                  iconCls:'create'
               },
               {
-                  text: 'Remove Selected',
-                  handler:function(menuItem,menu) { CreateDiaolog('link'); }, 
-                  iconCls:'remove'
-              },
-              {
-                  text: 'Create Node/Link',
-                  handler:function(menuItem,menu) { CreateDiaolog('link'); }, 
+                  text: 'Clear Cached Data',
+                  handler:function(menuItem,menu) { $.jStorage.flush(); alert("Done!"); window.contextMenu && window.contextMenu.hide()}, 
                   iconCls:'create'
               }
+              
          );    
 
     var contextMenu = new Ext.menu.Menu({items:items});
@@ -839,7 +849,7 @@ function createNetworkGrid(){
             ,{name: 'name'}           
            //{name: 'ctime'},
            ,{name:'include'}
-           ,{name: 'creator'}           
+           ,{name: 'owner'}           
            ,{name: 'source'}
            ,{name: 'group'}           
            //,{name: 'description'}           
@@ -877,7 +887,7 @@ function createNetworkGrid(){
                 text     : 'Creator', 
                 width    : 70, 
                 sortable : true, 
-                dataIndex: 'creator'
+                dataIndex: 'owner'
                // renderer: change
             },
             {
@@ -1143,7 +1153,7 @@ function nodeCreate(nodeData) {
 				
 		);
 	}
-	else if(nodeData.label)
+	else if(nodeData && nodeData.label)
 		$( "#entityname-inputEl" ).attr("value",nodeData.label).keydown()					    	        		  
 	nodeCreateWindow.show();
 }
@@ -1535,123 +1545,24 @@ function openCreateWindow() {
 }
 
 
-function openRemoveWindow() {
+function openRemoveWindow(selected) {
+	var sel = []
+	if(selected) sel = [selected]
+	else sel = graphModel.getSelections() 	
+	if(sel.length == 0){
+		alert("Please select node or link you wish to remove first")
+		return
+	}
+	sel.forEach(function(item){
+		if(item._class == 'connection')
+			graphModel.removeConnection(item)		
+	})	
+	sel.forEach(function(item){
+		if(item._class == 'node')
+			graphModel.removeNode(item, null, true)		
+	})
+	graphModel.clearSelection()
 	
-	if (typeof nodeRemoveWindow=="undefined")
-		nodeRemoveWindow=Ext.create('Ext.window.Window', 
-				{
-				    bodyPadding: 5,
-				    width: 350,
-				    title: 'Entity Remove',
-				    id:'nodeRemoveWindow',
-				    autoHeight:true,
-				    closeAction: 'hide',
-				    extentStore:null,
-				    items: [ 
-				    	// defines the field set of street address locator
-					       {
-                                //the width of this field in the HBox layout is set directly
-                                //the other 2 items are given flex: 1, so will share the rest of the space
-                                xtype:          'combo',
-                                mode:           'local',
-                                value:          'mrs',
-                                triggerAction:  'all',
-                                forceSelection: true,
-                                editable:       false,
-                                id: 			'entitytype_d',
-                                fieldLabel:     'Entity Type',
-                                name:           'Type',
-                                displayField:   'name',
-                                value: 			'gene',
-                                valueField:     'value',
-                                queryMode: 'local',
-                                store:          Ext.create('Ext.data.Store', {
-                                    fields : ['name', 'value'],
-                                    data   : [
-                                        {name : 'Gene',   value: 'gene'},
-                                        {name : 'Link',  value: 'link'},
-                                        {name : 'Disease', value: 'disease'}
-                                    ]
-                                }),
-                                listeners: {
-                                	change : {
-                                		fn: function(f,v) {
-                                		}
-                                	}
-                                }
-                           	 },
-                           	 {
-                                //the width of this field in the HBox layout is set directly
-                                //the other 2 items are given flex: 1, so will share the rest of the space
-                                xtype:          'combo',
-                                mode:           'remote',
-                                triggerAction:  'all',
-                                editable:       true,
-                                id: 			'entityname1_d',
-                                fieldLabel:     'Entity Name',
-                                name:           'name',
-                                displayField:   'label',
-                                valueField:     'label',
-                                queryParam: 	'query',
-                                hideTrigger:	true,
-                                selectOnFocus: 	true,
-                                store:          
-                                	Ext.create('Ext.data.Store', {
-	                                    fields : ['label', 'value'],
-	                                    idProperty:'label',
-	                                    url: fakeReturn(),
-		    							root: 'data'
-	                                    /*
-										data   : [
-																					{name : 'Gene',   value: 'gene'},
-																					{name : 'Link',  value: 'link'},
-																					{name : 'Disease', value: 'disease'}
-																				]*/
-										
-                                })
-                           	 }
-						],
-						listens: {
-							afterrender: {
-								element:'',
-								fn:function() {
-									 $( "#searchtxt" ).autocomplete({
-									      source: validateKeyword,
-									      minLength:2,
-									      select: function(event, ui) {
-									    	  console.log("selected ", ui)
-									    	  document.location='/graph/'+ ui.item._id	    	  
-									      }	    	
-									    });
-								}
-							}
-						},
-						buttons : 
-						  			 [
-										 {
-											xtype : 'button',
-											text : 'Remove',
-											handler : function() {
-													if (Ext.getCmp('entitytype_d').getValue()=="link") {
-														graphModel.removeConnection(Ext.getCmp('entityname1_d').getValue());
-													}
-													
-													if (Ext.getCmp('entitytype_d').getValue()=="gene") {
-														graphModel.removeNode(Ext.getCmp('entityname1_d').getValue());
-													}	
-												}
-										}, {
-											xtype : 'button',
-											text : 'Cancel',
-											handler : function() {
-												nodeRemoveWindow.hide();
-											}
-										}
-									 ] 
-				}
-				
-				);
-		   nodeRemoveWindow.show();
 }
 
 function createGraph() {
@@ -1669,6 +1580,7 @@ function createGraph() {
 		
 		mygraph.on("click", function(evt, target){
 			//console.log("dblclick", evt, target.__data__)			
+			if(window.contextMenu) contextMenu.hide()
 		});		
 		mygraph.on("dblclick", function(evt, target){
 			console.log("dblclick", evt, target.__data__)
