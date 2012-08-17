@@ -14,12 +14,14 @@ layout: 'anchor',
 								  {
 									  fieldLabel: 'Id',
 									  name: 'id',
-									  value: obj._id,
+									  //value: obj._id,
+									  value: '',
 									  disabled: true
 								  },{
 									  fieldLabel: 'Label',
 									  name: 'label',
-									  value:obj.label
+									  //value:obj.label
+									  value:''
 								  },
 								   {
                                 //the width of this field in the HBox layout is set directly
@@ -34,7 +36,8 @@ layout: 'anchor',
                                 fieldLabel:     'Type',
                                 name:           'Type',
                                 displayField:   'name',
-                                value: 			obj.type,
+                                //value: 			obj.type,
+                                value: 			'',
                                 valueField:     'value',
                                 queryMode: 'local',
                                 store:          Ext.create('Ext.data.Store', {
@@ -55,30 +58,34 @@ layout: 'anchor',
 								  {
 									  fieldLabel: 'Network',
 									  name: 'network',
-									  id:'linkupdateform_'+obj.label,
-									  //allowBlank:false,
-									  value:obj.network? graphModel.findNetwork(obj.network).get("name"):''							  
+									  //id:'linkupdateform_'+obj.label,
+									  id:'linkupdateform_',
+									  //value:obj.network? graphModel.findNetwork(obj.network).get("name"):''							  
+									  value:''							  
 								  },
 								  {
 									   anchor: '100%',
 							           xtype: 'multiselect',
 							           msgTarget: 'side',
-							           id:'linkupdateform_m'+obj.label,
+							           //id:'linkupdateform_m'+obj.label,
+							           id:'linkupdateform_m',
 							           fieldLabel: 'Nodes',
 							           name: 'Nodes',
 							           allowBlank: false,
-							           store: formnodes,
+							           //store: formnodes,
+							           store: null,
 							           ddReorder: true,
 							           listeners: {
 									  	afterrender: {
-									  		fn:function(){ var d=Ext.getCmp('linkupdateform_m'+obj.label); console.log(d);}
+									  		//fn:function(){ var d=Ext.getCmp('linkupdateform_m'+obj.label); console.log(d);}
 									  	}
 									  }
 								  },
 								  {
 									  fieldLabel: 'Ref Pubmed',
 									  name: 'Pubmed',
-									  value:obj.refs?obj.refs.pubmed:''
+									  //value:obj.refs?obj.refs.pubmed:''
+									  value:''
 								  }
 						],
 						fbar: [

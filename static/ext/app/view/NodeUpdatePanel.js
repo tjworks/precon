@@ -13,32 +13,38 @@ Ext.define('Precon.view.NodeUpdatePanel' ,{
 				  		{
 		                    fieldLabel: 'id',
 		                    name: 'id',
-		                    value: obj._id,
+		                    //value: obj._id,
+		                    value:'',
 		                    disabled: true
 		                },{
 		                    fieldLabel: 'Group',
 		                    name: 'group',
-		                    value:obj.group
+		                    //value:obj.group
+		                    value:''
 		                },
 		                {
 		                    fieldLabel: 'Label',
 		                    name: 'label',
 		                    allowBlank:false,
-		                    value:obj.label
+		                    //value:obj.label
+		                    value:''
 		                },{
 		                    fieldLabel: 'Entity',
 		                    name: 'entity',
-		                    value:obj.entity
+		                    //value:obj.entity
+		                    value:''
 		                },
 		                {
 		                    fieldLabel: 'Role',
 		                    name: 'role',
 		                    allowBlank:false,
-		                    value:obj.role
+		                    //value:obj.role
+		                    value:''
 		                },{
 		                    fieldLabel: 'update_tm',
 		                    name: 'update_tm',
-		                    value:obj.update_tm
+		                    //value:obj.update_tm
+		                    value:''
 		                }
 				]
 	},

@@ -293,7 +293,7 @@ function myGraph(el,w,h) {
 	    .attr("d", "M0,-4L10,0L0,4");
 	   
         visg=vis.append('svg:g')
-    			.call(d3.behavior.zoom().on("zoom", redraw))
+    			//.call(d3.behavior.zoom().on("zoom", redraw))
     			.append("svg:g");
     			
 		visg.append('svg:rect')

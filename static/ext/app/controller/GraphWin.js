@@ -3,7 +3,11 @@ Ext.define('Precon.controller.GraphWin', {
     stores:['Networks'],
     models:['Network'],
     views: [
-    	'NetworkGrid'
+    	'NetworkGrid',
+    	'NodeUpdatePanel',
+    	'LinkUpdatePanel',
+    	'NodeCreatePanel'
+    	
     ],
     //the global variable for referencing networkGraph
     _graphModel:null,
@@ -23,16 +27,26 @@ Ext.define('Precon.controller.GraphWin', {
 				  afterrender:this.autoCompleteSearch
 			},
 			  'networkgrid': {
-				  afterrender:this.initApp,
+				  //afterrender:this.initApp,
 				  //itemclick: this.networkGridClicked,
 				  itemdblclick:this.networkGridDblClicked,
 				  select: this.networkGridSelect,
 				  deselect: this.networkGridDeselect,
 				  scope: this
+		  },
+		  'networkgrid > gridview': {
+				   refresh: this.initApp,		  	   
+		  },
+		  '#nodeCreateBtn': {
+		  	click: this.onNodeCreateBtn
 		  }
         });
    },  
-   
+   onNodeCreateBtn: function() {
+   		if (typeof nodecreatepanel=='undefined')
+   			nodecreatepanel=Ext.widget('nodecreatepanel',{renderTo:Ext.getBody()});
+   			nodecreatepanel.show();
+   },
    autoCompleteSearch: function() {
    	    console.log("!!! setup auto")
 	    $( "#ingraph-search-inputEl" ).autocomplete({
@@ -53,6 +67,9 @@ Ext.define('Precon.controller.GraphWin', {
 	 */
 	initApp: function() {
 		console.log('initializing app');
+		//select all networks in the network table NOTE: this might need to be changed
+		setTimeout(function(){Ext.ComponentQuery.query('networkgrid')[0].getSelectionModel().selectAll()},200);
+		
 		// events binding 
 		$(document).bind(precon.event.ViewportCreated, this.showMainObject)
 		
@@ -64,7 +81,13 @@ Ext.define('Precon.controller.GraphWin', {
 		}
 		this.showMainObject()
 	},
-	
+ 	
+ 	//
+ 	onNetworkGridRefresh: function() {
+ 		alert('ha ha loaded');
+ 		console.log('network is refreshing...');	
+ 	},
+ 	
 	// get the object id from the URL, if it's available
 	getObjectIdFromUrl: function(){
 		var matcher = location.href.match(/graph\/([^\/]*?)[#\?]?$/)
@@ -191,9 +214,8 @@ Ext.define('Precon.controller.GraphWin', {
 				obj = network.getRawdata()
 				obj.include = toGraph		
 				networkStore.add( obj )
-				console.log('load obj into network table ');
-				console.log(obj);
-				//_graphController.getNetworksStore().loadData(obj);
+				//console.log('load obj into network table ');
+				//console.log(obj);
 			}		
 		})	
 	},
@@ -244,7 +266,7 @@ Ext.define('Precon.controller.GraphWin', {
 				console.log("dblclick", evt, target.__data__)
 				//showObject(target.__data__)
 				if(target.__data__ && target.__data__.get('entity'))
-			           precon.searchNetworks( target.__data__.get('entity'), function(nets){ loadNetworks(nets, true, false) })
+			           precon.searchNetworks( target.__data__.get('entity'), function(nets){ _graphController.loadNetworks(nets, true, false) })
 			});		
 			mygraph.on("contextmenu",function(evt, target){
 	            d3.event.preventDefault();

@@ -49,11 +49,12 @@ Ext.application({
                                                 {
                                                     xtype: 'button', 
                                                     text : 'Create Node',
+                                                    id:'nodeCreateBtn',
                                                     //iconCls:'x-btn-inner node',
                                                     icon:"/ext/resources/images/node.png",
                                                     tooltip:'Display available geocoders',
                                                     handler : function() {
-                                                        nodeCreate();
+                                                       // nodeCreate();
                                                     }
                                                },
                                            

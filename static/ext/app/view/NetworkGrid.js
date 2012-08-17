@@ -3,12 +3,7 @@ Ext.define('Precon.view.NetworkGrid' ,{
     requires: [
         'Ext.selection.CheckboxModel'
     ],
-    selModel: Ext.create('Ext.selection.CheckboxModel',
-    {
-        listeners: {
-          //  selectionchange: 
-            //    _graphController.networkGridClicked(sm,selections)
-    }}),
+    selModel: Ext.create('Ext.selection.CheckboxModel'),
     
     alias : 'widget.networkgrid',
 
