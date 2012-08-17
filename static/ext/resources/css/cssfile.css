@@ -43,10 +43,7 @@
 	
 /** following were moved from original d3ext.html */	
 	
-path.link {
-  fill: none;
 
-}
 
 
 marker#decreases {
@@ -83,15 +80,22 @@ marker#pathway {
   fill: green;
 }
 
+/**default style for path**/
+path.link {
+  fill: none;
+  stroke:grey;
+}
+
+
 .decreases{
-  stroke: blue;
+  stroke: blue !important;
     stroke-width: 2px;
 }
 
 .beinguptaken 
  {
   fill:none;
-  stroke:red;
+  stroke:red !important;
     stroke-width: 2px;
   stroke-dasharray: 0,2 1;
 }
@@ -99,37 +103,37 @@ marker#pathway {
 .inhibits
 {
 	  stroke-width: 2px;
-  stroke: green;
+  stroke: green !important;
 }
 
 .stimulats 
  {
   stroke-width: 2px;
   fill:none;
-  stroke:red;
+  stroke:red !important;
 }
 
 .association{
   stroke-width: 2px;
   stroke-dasharray: 5,1 5,1;
-  stroke:#365786
+  stroke:#365786 !important;
 }
 
 .physical_interaction {
 	  stroke-width: 2px;
-  stroke: green;
+  stroke: green !important;
 }
 
 .predicted {
 	  stroke-width: 2px;
   fill:none;
-  stroke:red;
+  stroke:red !important;
   stroke-dasharray: 0,2 1;
 }
 .phosphorylates_activates {
   stroke-width: 2px;
   fill:none;
-  stroke:green;
+  stroke:green !important;
   stroke-dasharray: 0,2 1;
 	
 }
@@ -137,14 +141,15 @@ marker#pathway {
 .activates {
 	  stroke-width: 2px;
   stroke-dasharray: 4,5 2;
-  stroke:red
+  stroke:red !important;
 }
 
 .pathway {
 	  stroke-width: 2px;
   stroke-dasharray: 1,2 3;
-  stroke:green;
+  stroke:green !important;
 }
+
 
 circle {
   fill: #ccc;
