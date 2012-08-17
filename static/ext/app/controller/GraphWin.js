@@ -39,9 +39,52 @@ Ext.define('Precon.controller.GraphWin', {
 		  },
 		  '#nodeCreateBtn': {
 		  	click: this.onNodeCreateBtn
+		  },
+		  '#recSelectBtn' : {
+		  	toggle: this.onRecSelect
 		  }
         });
    },  
+   onRecSelect: function(btn,pressed) {
+   	console.log('rectangle selction is '+pressed);
+   	    if (pressed) {
+   	    	
+   			Ext.core.DomHelper.applyStyles(Ext.DomQuery.select('svg')[0],{cursor:'crosshair'});
+   			//visg.on('mousedown',_graphController.recSelect('down')).on('mouseup',_graphController.recSelect('up')).on('mousemove',_graphController.recSelect('move'));
+   		}
+   		else {
+   			Ext.core.DomHelper.applyStyles(Ext.DomQuery.select('svg')[0],{cursor:'default'});
+   			visg.on('mousedown',null).on('mouseup',null).on('mousemove',null);
+   		}
+   },
+   recSelect: function (flag) {
+    	if (flag=='down') {
+    		console.log('rectangle selction is on');
+    		visg.on('mousemove',_graphController.recSelect('move'));
+    		console.log(d3.event);
+    		if (d3.selectAll('#selectRect')[0].length==0 && d3.event)
+	    		selectRectangle=visg.append('svg:rect')
+	    							.attr('x',d3.event.clientX)
+	    							.attr('y',d3.event.clientY)
+	    							.attr('width',200)
+	    							.attr('height',200)
+	    							.attr('fill','red')
+	    							.attr('id','selectRect');
+    	}
+    		
+    	if (flag=='move') {
+    		/*
+			 d3.selectAll('#selectRect')[0]
+							 .attr('width',20)
+							 .attr('height',20);*/
+			
+    	}
+    	
+    	if (flag=='up') {
+			visg.on('mousemove',null);
+    	}
+   },
+   
    onNodeCreateBtn: function() {
    		if (typeof nodecreatepanel=='undefined')
    			nodecreatepanel=Ext.widget('nodecreatepanel',{renderTo:Ext.getBody()});

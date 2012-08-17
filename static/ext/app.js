@@ -65,7 +65,7 @@ Ext.application({
 												    icon:"/ext/resources/images/link.png",
 												    tooltip:'Display available geocoders',
 												    handler : function() {
-													   linkCreate()
+													  // linkCreate()
 												    }
 											  },
 										   
@@ -77,6 +77,17 @@ Ext.application({
                                                     tooltip:'Display available geocoders',
                                                     handler : function() {
                                                         openRemoveWindow();
+                                                    }
+                                               },
+                                               {
+                                                    xtype: 'button', 
+                                                    text : 'Rec Select',
+                                                    id:'recSelectBtn',
+                                                    enableToggle: true,
+                                                    icon:"/ext/resources/images/rec_select.png",
+                                                    tooltip:'drraw a rectangle to select entities',
+                                                    handler : function() {
+                                                        //openRemoveWindow();
                                                     }
                                                },
                                                {

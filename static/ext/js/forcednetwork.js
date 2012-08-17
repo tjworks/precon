@@ -296,16 +296,48 @@ function myGraph(el,w,h) {
 	    .attr("d", "M0,-4L10,0L0,4");
 	   
         visg=vis.append('svg:g')
-    			.call(d3.behavior.zoom().on("zoom", redraw))
+    			//.call(d3.behavior.zoom().on("zoom", redraw))
     			.append("svg:g");
     			
 		visg.append('svg:rect')
 		    .attr('width', w)
 		    .attr('height', h)
 		    .attr('fill', 'white')
+		
+		    
 		vis.on("click", eventsProxy ).on("contextmenu", eventsProxy)
 		
- 	}   
+		visg.on('mousedown',recSelect('down')).on('mouseup',recSelect('up')).on('mousemove',recSelect('move'));
+		
+ 	} 
+ 	  
+   var recSelect=function (flag) {
+    	if (flag=='down') {
+    		console.log('rectangle selction is on');
+    		visg.on('mousemove',_graphController.recSelect('move'));
+    		console.log(d3.event);
+    		if (d3.selectAll('#selectRect')[0].length==0 && d3.event)
+	    		selectRectangle=visg.append('svg:rect')
+	    							.attr('x',d3.event.clientX)
+	    							.attr('y',d3.event.clientY)
+	    							.attr('width',200)
+	    							.attr('height',200)
+	    							.attr('fill','red')
+	    							.attr('id','selectRect');
+    	}
+    		
+    	if (flag=='move') {
+    		/*
+			 d3.selectAll('#selectRect')[0]
+							 .attr('width',20)
+							 .attr('height',20);*/
+			
+    	}
+    	
+    	if (flag=='up') {
+			visg.on('mousemove',null);
+    	}
+   };
  	
  	var redraw=function() {
   		console.log("here is the scale: "+d3.event.scale);
