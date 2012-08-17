@@ -1,5 +1,15 @@
 Ext.define('Precon.view.NetworkGrid' ,{
     extend: 'Ext.grid.Panel',
+    requires: [
+        'Ext.selection.CheckboxModel'
+    ],
+    selModel: Ext.create('Ext.selection.CheckboxModel',
+    {
+        listeners: {
+          //  selectionchange: 
+            //    _graphController.networkGridClicked(sm,selections)
+    }}),
+    
     alias : 'widget.networkgrid',
 
     title : 'All Users',
@@ -14,15 +24,19 @@ Ext.define('Precon.view.NetworkGrid' ,{
 		
     initComponent: function() {
               this.columns = [
+                            /*
                               {
-					                text     : 'Show in Graph', 
-					                width    : 100, 
-					                sortable : true, 
-					                renderer : function(val,meta, record) {                				
-					                				 return "<input type=checkbox "+ (val?"checked":"")+ " id='networkId' value='"+  record.get("_id") + "'>"
-					                },
-					                dataIndex: 'include'
-					            },
+                                                                text     : 'Show in Graph', 
+                                                                width    : 100, 
+                                                                sortable : true, 
+                                                                renderer : function(val,meta, record) {                	
+                                                                                // console.log('the input box is ');
+                                                                                 //console.log(val+" "+meta+" "+record);			
+                                                                                 return "<input type=checkbox "+ (val?"checked":"")+ " id='networkId' value='"+  record.get("_id") + "'>"
+                                                                },
+                                                                dataIndex: 'include'
+                                                            },*/
+                            
 					            {
 					                text     : 'Study',
 					                flex     : 1,

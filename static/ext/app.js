@@ -1,7 +1,16 @@
 /*
  * Here defines the main interface for the Graph part of the code.
  */
-Ext.Loader.setConfig({enabled:true});
+Ext.Loader.setConfig({
+	enabled:true,
+	 paths   : {
+            'Ex.ux' : 'extjs/ux'
+        } 
+	});
+Ext.require([
+    'Ext.selection.CheckboxModel'
+]);
+
 Ext.application({
 	enabled:true,
 	//the name space for the app

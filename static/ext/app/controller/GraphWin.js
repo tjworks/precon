@@ -24,8 +24,10 @@ Ext.define('Precon.controller.GraphWin', {
 			},
 			  'networkgrid': {
 				  afterrender:this.initApp,
-				  itemclick: this.networkGridClicked,
+				  //itemclick: this.networkGridClicked,
 				  itemdblclick:this.networkGridDblClicked,
+				  select: this.networkGridSelect,
+				  deselect: this.networkGridDeselect,
 				  scope: this
 		  }
         });
@@ -202,14 +204,13 @@ Ext.define('Precon.controller.GraphWin', {
 	    _graphController.showObject(row.data)	
    },
    
-   networkGridClicked:function(view, item){        	
-	   console.log(item, item.name, item.value, item.checked)
-	   if(item.name == 'networkId' ){
-		   if(item.checked)
-			   graphModel.addNetwork( item.value )
-		    else
-			   graphModel.removeNetwork( item.value )
-		}
+   networkGridSelect:function(model,record,row,index){  
+	   console.log(record.get("_id"));
+	   _graphModel.addNetwork(record.get("_id"));
+	},
+	networkGridDeselect:function(model,record,row,index){  
+       console.log('deslecting');
+	   _graphModel.removeNetwork(record.get("_id"));
 	},
    onGraphWinResize: function() {
    		//put here all codes related with graph window resize related
