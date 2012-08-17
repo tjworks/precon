@@ -394,7 +394,7 @@ function createContextMenu(obj) {
 	var label = 'Link'
 	if(obj && obj.get("entity")){	
 		items.push({
-                    text: 'Center me',
+                    text: 'Expand',
                     handler:function() {
                   	  console.log("Centered on", obj)
                   	  if(obj.get('entity'))
@@ -636,14 +636,14 @@ function showObject(obj){
                                 store:          Ext.create('Ext.data.Store', {
                                     fields : ['name', 'value'],
                                     data   : [
+                                         {name : 'regulates',  value: 'regulates'},
                                          {name : 'beinguptaken',   value: 'beinguptaken'},
                                          {name : 'activates',  value: 'activates'},
                                          {name : 'inhibits', value: 'inhibits'},
                                          {name : 'stimulats',   value: 'stimulats'},
-                                         {name : 'activates',  value: 'association'},
+                                         {name : 'association',  value: 'association'},
                                          {name : 'physical_interaction', value: 'physical_interaction'},
-                                          {name : 'predicted',   value: 'predicted'},
-                                          {name : 'activates',  value: 'activates'},
+                                          {name : 'predicted',   value: 'predicted'},                                          
                                           {name : 'pathway', value: 'pathway'}
                                     ]
                                 })
@@ -659,7 +659,7 @@ function showObject(obj){
 									  name: 'network',
 									  id:'linkupdateform_'+obj.label,
 									  //allowBlank:false,
-									  value:obj.network? graphModel.findNetwork(obj.network).get("name"):''							  
+									  value:obj.network && graphModel.findNetwork(obj.network) ? graphModel.findNetwork(obj.network).get("name"):''							  
 								  },
 								  {
 									   anchor: '100%',
@@ -1253,15 +1253,15 @@ function linkCreate() {
                                 store:          Ext.create('Ext.data.Store', {
                                     fields : ['name', 'value'],
                                     data   : [
+                                         {name : 'regulates',  value: 'regulates'},
                                          {name : 'beinguptaken',   value: 'beinguptaken'},
                                          {name : 'activates',  value: 'activates'},
                                          {name : 'inhibits', value: 'inhibits'},
                                          {name : 'beinguptaken',   value: 'stimulats'},
-                                         {name : 'activates',  value: 'association'},
-                                         {name : 'inhibits', value: 'physical_interaction'},
-                                          {name : 'beinguptaken',   value: 'predicted'},
-                                          {name : 'activates',  value: 'activates'},
-                                          {name : 'inhibits', value: 'pathway'}
+                                         {name : 'association',  value: 'association'},
+                                         {name : 'phsical_interaction', value: 'physical_interaction'},
+                                          {name : 'predicted',   value: 'predicted'},
+                                          {name : 'pathway', value: 'pathway'}
                                     ]
                                 }),
                                 listeners: {
