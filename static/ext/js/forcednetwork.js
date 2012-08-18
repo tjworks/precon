@@ -33,7 +33,7 @@ function myGraph(el,w,h) {
 		
 		this.model.bind('remove.connection',this._removeLink);
 		this.model.bind('remove.node', this._removeNode);
-		
+				
 		//this.model.bind('add.network', function(){ update()  })
 	}
 	this.getModel =function(){
@@ -52,7 +52,7 @@ function myGraph(el,w,h) {
 	this.on('click', function(evt, target){
 		
 		if(! target.__data__ || (target.__data__._class!='connection' && target.__data__._class!='node' )) return
-		console.log("clicked", target)
+		//console.log("clicked", target)
 		if(d3.event.ctrlKey || d3.event.shiftKey)
 			graph.model.select(target.__data__, true)
 		else
@@ -96,19 +96,19 @@ function myGraph(el,w,h) {
     		graph.addNode(data.node)
     }
     this._removeNode=function(evt, data){
-    	console.log("_removeNode ", data)
+    	//console.log("_removeNode ", data)
     	if(!data.node) return
     	nodearray.splice(findNodeIndex(data.node.getId()),1);
         update();
     }
     this._removeLink = function(evt, data){
-    	console.log("_remove ", data)
-    	if(!data.connection) return    	
+    	//console.log("_remove ", data)
+    	if(!data.connection) return
     	linkarray.splice(findLinkIndex(data.connection.getId()),1);
     	update();
     }
     this._addLink= function(evt, data){
-    	//console.log("Adding connection", data.connection, data.connection.getNodes())
+    	//console.log("Adding connection", data.connection)
     	if(data.connection ){
     			var nodes = data.connection.getNodes()
     			if(nodes && nodes.length ==2){    		
@@ -221,8 +221,7 @@ function myGraph(el,w,h) {
     */
     var eventsProxy= function(obj){
     	
-    	if(d3.event.detail >1){
-    		console.log("It's a 2" + d3.event.detail)
+    	if(d3.event.detail >1){    		
     		myGraph.doubleClicked=true
     		observable.trigger('dblclick', d3.event.target, d3.event )
     	}
@@ -303,12 +302,13 @@ function myGraph(el,w,h) {
 		    .attr('width', w)
 		    .attr('height', h)
 		    .attr('fill', 'white')
-		vis.on("click", eventsProxy ).on("contextmenu", eventsProxy)
+		vis.on("click", eventsProxy ).on("contextmenu", eventsProxy);
+		//vis.on("mousedown", makeSelection).on("mouseup", makeSelection).on("mousemove", makeSelection)
 		
  	}   
  	
  	var redraw=function() {
-  		console.log("here is the scale: "+d3.event.scale);
+  		//console.log("here is the scale: "+d3.event.scale);
   		if (! myGraph.doubleClicked && d3.event.scale>=0.5 && d3.event.scale<=6 ) {
   			myGraph.scale=myGraph.scale
 	  		visg.attr("transform",
@@ -323,12 +323,13 @@ function myGraph(el,w,h) {
     /*
      * update the SVG canvas to reflect the data changes
      */
-    var update = function () {
+    var _update = function(){
+    	clearTimeout(window.graphUpdateTrigger)
+    	window.graphUpdateTrigger = null
 	     //console.log(linkarray);
 	     //console.log(nodearray);
 	     //console.log("Updating")
-		 console.log("updating graph called"); 
-		 
+		 timer = Timer("Updating Graph")
 		  //Check if SVG has been initialized
 	     //if(typeof vis=="undefined") initSVG();
 	  
@@ -433,13 +434,20 @@ function myGraph(el,w,h) {
         force.start();
         
         graph._selectionChanged()
+        
+        timer.elapsed("Graph size: " + nodearray.length +" nodes, "+ linkarray.length+" links")        
+    };
+    var update = function () {
+    	if(!window.graphUpdateTrigger)
+    		graphUpdateTrigger = setTimeout(_update, 50);    	
     };
     
+    // delete this?
     this.redraw = function(){
     	update()
     }
+    
     // Make it all go
     initSVG();
     update();
 }
-

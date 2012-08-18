@@ -18,16 +18,24 @@ precon.NetworkGraph = function(){
 	var _addNetwork = function(netObj){
 		networks.push(netObj);
 		
-		netObj.getConnections(function(cons){
-			cons.forEach(function(con){
+		// load all nodes first
+		var ids = []
+		var conns = null
+		netObj.getConnections(function(cons){		
+			conns= cons
+			conns.forEach(function(con){
+				ids = ids.concat ( con.getNodeIds() )			
+			})
+		});
+		precon.getObjects(ids, function(){				 	
+			conns.forEach(function(con){
 				graphModel.addConnection(con, netObj, false);
-			});
-		});		
-		graphModel.trigger('add.network', {
-			network:netObj
-		})
-		// TBD: add dangling nodes
-		
+			});			 
+			graphModel.trigger('add.network', {
+				network:netObj
+			})
+		})		
+		// TBD: add dangling nodes		
 	}
 	this._select=function(objects, toSelect, keepExisting){
 		if(! ('length' in objects)) 
@@ -119,7 +127,7 @@ precon.NetworkGraph = function(){
 	this.addNetwork=function(netObj){
 		var netId = getId(netObj)
 		// TBD: check duplicates
-		console.log("  adding network "+ netObj)
+		console.log("adding network "+ netObj)
 		var existing = this.findNetwork(netId);
 		if(existing) return;
 
@@ -138,13 +146,16 @@ precon.NetworkGraph = function(){
 	 * Remove network 
 	 */
 	this.removeNetwork=function(netObj){
-		console.log("  removing network0 "+ netObj)
+		console.log("removing network0 "+ netObj)
 		var netId = getId(netObj)
-		for(var i=0;i<connections.length;i++){
-			if( connections[i].get("network")  == netId){
-				this.removeConnection(connections[i])
-				i--				
-			}
+		var netObj= this.findNetwork(netId)
+		var connectionIds = netObj.getConnectionIds()
+		for(var k=0;k<connectionIds.length;k++){
+			var referenceCount= 0 
+			for(var i=0;i<networks.length;i++)
+				if( _.indexOf( networks[i].getConnectionIds(), connectionIds[k] ) >=0) referenceCount++
+			if(referenceCount <=1) // okay to remove
+				this.removeConnection(connectionIds[k])			 
 		}
 		/**
 		for(var i=0;i<nodes.length;i++){
@@ -211,7 +222,7 @@ precon.NetworkGraph = function(){
 					console.log("Too few nodes("+newNodes.length+") for connection ", con, newNodes)
 					return;
 				}
-				console.log("New nodes", newNodes)
+				//console.log("New nodes", newNodes)
 				connections.push(con);
 				con.setNodes(newNodes)		
 				if(!muted)
@@ -316,7 +327,7 @@ precon.NetworkGraph = function(){
 	 * @events: remove.node event will be triggered. 
 	 */
 	this.removeNode = function(node, connection, force){
-		console.log("Removing nodes: "+ node)
+		//console.log("Removing nodes: "+ node)
 		var nodeId = getId(node);
 		var existing = this.findNode(nodeId);
 		if(!existing) return
@@ -341,7 +352,7 @@ precon.NetworkGraph = function(){
 	 * @events: remove.connection event will be triggered. 
 	 */
 	this.removeConnection = function(con){
-		console.log("Removing connections")
+		//console.log("Removing connections")
 		var conId = getId(con);
 		for(var i=0;i<connections.length;i++){
 			var con = connections[i];
@@ -399,7 +410,9 @@ precon.NetworkGraph = function(){
 		var json = this.toJson()		
 		console.log("Going to save: ", json)		
 		json = JSON.stringify(json)
-		$.post("/graph/save.json", {'data':json},callback, 'json');		
+		$.post("/graph/save.json", {'data':json},callback, 'json');
+		// flush cache
+		precon.flushCache()
 	};
 	
 	this.toJson = function(){
@@ -529,6 +542,19 @@ precon.Network = function(rawdata){
 		})
 		callback(res)
 	}
+	this.getConnectionIds = function(){
+		if(this.connections)
+			return this.connections
+		if (! rawdata._connections){			
+			return []
+		}
+		var connections= []
+		rawdata._connections.forEach(function(con){
+			connections.push( con._id )
+		})
+		this.connections = connections
+		return this.connections
+	}
 	
 	// return a copy of the nodes list
 	this.getNodes = function(){
@@ -577,7 +603,7 @@ precon.Connection = function(rawdata){
 			if(callback) callback(nodes)			
 			return nodes
 		}		
-		console.log("con nodes", rawdata.nodes)
+		//console.log("con nodes", rawdata.nodes)
 		// nodes is list of node IDs		
 		precon.getObjects(rawdata.nodes, function(objs){
 			nodes = _.clone(rawdata.nodes)

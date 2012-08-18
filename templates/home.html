@@ -25,6 +25,7 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/ext/lib/underscore-1.3.3.js"></script>
+<script type="text/javascript" src="/ext/lib/jstorage.js"></script>
 <!--  precon scripts -->
 <script type="text/javascript" src="/ext/js/precon.client.js"></script>
 <script type="text/javascript" src="/ext/js/precon.model.js"></script>
@@ -39,6 +40,9 @@ window.user = {
 		user_id:"{{ user.email }}"
 }
 {% endif %}
+
+//console.log= function(){}
+//console.debug= function(){}
 </script>
 {% block js_include %} {% endblock %}
 

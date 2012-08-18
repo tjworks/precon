@@ -106,12 +106,14 @@ function showObj(obj_id){
 }
 
 
-function Timer(){
+function Timer(name){
+	this.name = name || ''
+	//if(this.name) console.debug("STARTING ["+ this.name+"]")
 	this.start = new Date()
-	this.elapsed = function(name){		
+	this.elapsed = function(msg){		
 		var e = (new Date().getTime() - this.start.getTime() ) /1000
 		this.start = new Date()
-		console.log("ELAPSED ["+ name+"]: "+ e)
+		console.debug("ELAPSED  ["+ this.name+"]: "+ e +"s "+(msg||'') )
 		return e
 	}
 	return this

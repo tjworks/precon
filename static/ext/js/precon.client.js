@@ -1,6 +1,7 @@
 precon =  {}
 if (typeof (console) == 'undefined') console = {log:function(){}}
 precon.conf = {
+	max_objects_per_request:500,
 	api_base: 'http://one-chart.com:3000/oc',
 	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication',peop:'people'}
 }
@@ -47,11 +48,14 @@ precon.quickSearch = function(query, callback, filter){
 	//qstr = escape('{_id:{$regex:/^TOKEN/}}'.replace("TOKEN", query.toLowerCase()))
 	url = "/search.json?term="+ query
 	if(filter) url+="&filter="+filter
-	console.log("searching: " + url)
+	var timer = new Timer("ajax "+ url)
 	$.ajax({
 		  url: url,
 		  dataType: 'json',	
+		  cacheJStorage: true,
+		  cacheTTL: 60,
 		  success: function(results){
+			  timer.elapsed()
 			  callback(results)
 		  } 
 		});	
@@ -59,13 +63,21 @@ precon.quickSearch = function(query, callback, filter){
  
 precon._ajax = function(url, callback){
 	//console.log("Performing ajax query: "+ unescape(url))
+	var timer = new Timer("ajax " + url)
+	if($.jStorage.get(url)){
+		timer.elapsed()
+		callback(JSON.parse( $.jStorage.get(url)) )
+		return
+	}	
 	$.ajax({
 		  url: url,
-		  dataType: 'jsonp',	
+		  dataType: 'jsonp',
 		  success: function(results){
+			  timer.elapsed()
+			  $.jStorage.set(url, JSON.stringify(results))
 			  callback(results)
 		  } 
-		});
+		});	
 }
 /**
  * Get a list of networks matching specified query
@@ -102,9 +114,12 @@ precon.searchNetworks = function(query, callback){
 		console.log("Invalid query:", query)
 		throw "Not a valid query specification: "+ query
 	}
+	query.limit = query.limit || precon.conf.max_objects_per_request;  // maximum 
 	
-	url = precon.conf.api_base + "/connection?query="+ qstr
+	qstr+="&limit="+ query.limit
 	
+	if(query.skip) qstr+="&skip="+query.skip
+		
 	precon.loadConnections(qstr, function(results){
 		// results is a list of connections
 		if(!results || !results.length) callback(results)
@@ -181,7 +196,7 @@ precon.loadConnections = function(qstr, callback){
 	});
 }
 precon.preload = function(network){
-	console.debug("preloading "+ network._id)
+	console.log("preloading "+ network._id)
     // preload the nodes
 	var ids = []
     for(var c in network._connections){
@@ -351,6 +366,10 @@ precon.getPubmedReferences = function(obj_id, callback){
 precon.annotate= function(obj, annotator_id, comments){
 	
 	
+}
+precon.flushCache = function(){
+	$.jStorage && $.jStorage.flush()
+	console.log("Flushed jstorage cache")
 }
 
 
