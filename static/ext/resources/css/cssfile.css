@@ -46,39 +46,14 @@
 
 
 
-marker#decreases {
-  fill: blue;
-}
-marker#beinguptaken {
-  fill: red;
-}
-marker#activates {
-  fill: red;
-}
-marker#inhibits {
-  fill: green;
-}
-marker#stimulats {
-  fill: red;
-}
-marker#association {
-  fill: red;
-}
-marker#association {
-  fill: red;
-}
-marker#physical_interaction {
-  fill: green;
-}
-marker#predicted {
-  fill: red;
-}
-marker#activates {
-  fill: red;
-}
-marker#pathway {
-  fill: green;
-}
+
+
+
+
+
+
+
+
 
 /**default style for path**/
 path.link {
@@ -87,43 +62,59 @@ path.link {
 }
 
 
+marker#decreases {
+  fill: blue;
+}
 .decreases{
   stroke: blue !important;
     stroke-width: 2px;
 }
 
+marker#beinguptaken {
+  fill: lightsalmon;
+}
 .beinguptaken 
  {
   fill:none;
-  stroke:red !important;
+  stroke:lightsalmon !important;
     stroke-width: 2px;
   stroke-dasharray: 0,2 1;
 }
-
+marker#inhibits {
+  fill: lightgreen;
+}
 .inhibits
 {
-	  stroke-width: 2px;
-  stroke: green !important;
+	stroke-width: 2px;
+    stroke: lightgreen !important;
 }
-
+marker#stimulats {
+  fill: mediumpurple;
+}
 .stimulats 
  {
   stroke-width: 2px;
   fill:none;
-  stroke:red !important;
+  stroke:mediumpurple !important;
 }
-
+marker#association {
+  fill: gold;
+}
 .association{
   stroke-width: 2px;
   stroke-dasharray: 5,1 5,1;
-  stroke:#365786 !important;
+  stroke:gold !important;
 }
-
+marker#physical_interaction {
+  fill: olive;
+}
 .physical_interaction {
 	  stroke-width: 2px;
-  stroke: green !important;
+  stroke: olive !important;
 }
-
+marker#predicted {
+  fill: red;
+}
 .predicted {
 	  stroke-width: 2px;
   fill:none;
@@ -137,17 +128,29 @@ path.link {
   stroke-dasharray: 0,2 1;
 	
 }
-
+marker#activates {
+  fill: dodgerblue;
+}
 .activates {
 	  stroke-width: 2px;
   stroke-dasharray: 4,5 2;
-  stroke:red !important;
+  stroke:dodgerblue !important;
 }
-
+marker#regulates {
+  fill: brown;
+}
+.regulates {
+      stroke-width: 2px;
+  stroke-dasharray: 4,5 2;
+  stroke:brown !important;
+}
+marker#pathway {
+  fill: lightpink;
+}
 .pathway {
 	  stroke-width: 2px;
   stroke-dasharray: 1,2 3;
-  stroke:green !important;
+  stroke:lightpink !important;
 }
 
 
