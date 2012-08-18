@@ -309,7 +309,7 @@ function myGraph(el,w,h) {
    var recSelect=function (flag) {
     	if (flag=='down') {
     		console.log('rectangle selction is on');
-    		visg.on('mousemove',_graphController.recSelect('move'));
+    		//visg.on('mousemove',_graphController.recSelect('move'));
     		console.log(d3.event);
     		if (d3.selectAll('#selectRect')[0].length==0 && d3.event)
 	    		selectRectangle=visg.append('svg:rect')
