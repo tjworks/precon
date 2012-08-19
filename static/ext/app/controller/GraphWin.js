@@ -51,37 +51,55 @@ Ext.define('Precon.controller.GraphWin', {
    	    	
    			Ext.core.DomHelper.applyStyles(Ext.DomQuery.select('svg')[0],{cursor:'crosshair'});
    			//visg.on('mousedown',_graphController.recSelect('down')).on('mouseup',_graphController.recSelect('up')).on('mousemove',_graphController.recSelect('move'));
+   			visg.on('mousedown',function(){_graphController.recSelect('down')}).on('mouseup',function(){_graphController.recSelect('up')}).on('mousemove',function(){_graphController.recSelect('move')});
+
    		}
    		else {
    			Ext.core.DomHelper.applyStyles(Ext.DomQuery.select('svg')[0],{cursor:'default'});
    			visg.on('mousedown',null).on('mouseup',null).on('mousemove',null);
+   			d3.select('#selectRect').remove();
    		}
    },
    recSelect: function (flag) {
     	if (flag=='down') {
+    		visg.on('mouseup',function(){_graphController.recSelect('up')}).on('mousemove',function(){_graphController.recSelect('move')});
     		console.log('rectangle selction is on');
-    		visg.on('mousemove',_graphController.recSelect('move'));
     		console.log(d3.event);
     		if (d3.selectAll('#selectRect')[0].length==0 && d3.event)
+    			_graphController.rectSelectX0=d3.event.layerX;
+    			_graphController.rectSelectY0=d3.event.layerY;
 	    		selectRectangle=visg.append('svg:rect')
-	    							.attr('x',d3.event.clientX)
-	    							.attr('y',d3.event.clientY)
-	    							.attr('width',200)
-	    							.attr('height',200)
-	    							.attr('fill','red')
+	    							.attr('x',d3.event.layerX)
+	    							.attr('y',d3.event.layerY)
+	    							.attr('width',2)
+	    							.attr('height',2)
+	    							.attr('fill','none')
+	    							.attr('stroke','red')
+	    							.attr('stroke-width',2)
+	    							.attr('stroke-dasharray','2 2 2 2')
 	    							.attr('id','selectRect');
     	}
     		
     	if (flag=='move') {
-    		/*
-			 d3.selectAll('#selectRect')[0]
-							 .attr('width',20)
-							 .attr('height',20);*/
-			
+    		console.log('mouse moving');
+    		if (d3.event) {
+				 d3.select('#selectRect')
+								 .attr('width',d3.event.layerX-_graphController.rectSelectX0)
+								 .attr('height',d3.event.layerY-_graphController.rectSelectY0);
+					//			.attr('width',200)
+					//			.attr('height',200);
+			}
     	}
     	
     	if (flag=='up') {
 			visg.on('mousemove',null);
+			d3.select('#selectRect').remove();
+			Ext.ComponentQuery.query('#recSelectBtn')[0].toggle();
+			setTimeout(function() {
+							Ext.ComponentQuery.query('#recSelectBtn')[0].toggle();
+							_graphController.rectSelectX0=null;
+				    		_graphController.rectSelectY0=null;
+				   },100);
     	}
    },
    
