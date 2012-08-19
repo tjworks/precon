@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     # Examples:
     #url(r'^$', 'onechart.views.home', name='home'),
     url(r'^assets/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'static'}),
-    url(r'^(?P<path>.*.(css|js|png|gif|swf|jpg|html))$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.(css|js|png|gif|swf|jpg|html|htm))$', 'django.views.static.serve', {'document_root': 'static'}),
     
     # url(r'^onechart/', include('onechart.foo.urls')),
 

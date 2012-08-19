@@ -187,6 +187,7 @@ path.link.state-selected {
     fill: #66cccc;
     fill-opacity:0.2;
     stroke-width:4px;
+    background-color:#ffff9c
 }
 path.link.state-highlight {
     stroke:#66cccc;      

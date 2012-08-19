@@ -22,90 +22,83 @@ Ext.require([
                 
 Ext.onReady(function(){
     
-     
-	// sample static data for the store
-    var literatureData = [
-         ['Adler, A. I., E. J. Shaw, et al','2009', 'Newer agents for blood glucose control in type 2 diabetes: summary of NICE guidance',' BMJ 338: b1668','Abstract for one: The consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
-         ['Dowling, R. J., M. Zakikhani, et al.','2007', 'Metformin inhibits mammalian target of rapamycin-dependent translation initiation in breast cancer cells','Cancer research 67(22): 10804-10812','Abstract for 2: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
-         ['Libby, G., L. A. Donnelly, et al.','2009', 'New users of metformin are at low risk of incident cancer: a cohort study among people with type 2 diabetes.','Diabetes care 32(9): 1620-1625','Abstract for 3: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
-         ['Miller, R. A. and M. J. Birnbaum','2010', 'An energetic tale of AMPK-independent effects of metformin','The Journal of clinical investigation 120(7): 2267-2270','Abstract for 4: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
-         ['Nathan, D. M., J. B. Buse, et al.','2009', 'Medical management of hyperglycemia in type 2 diabetes: a consensus algorithm for the initiation and adjustment of therapy: a consensus statement of the American Diabetes Association and the European Association for the Study of Diabetes.','Diabetes care 32(1): 193-203'],
-         ['Shu, Y., S. A. Sheardown, et al.','2007', 'Effect of genetic variation in the organic cation transporter 1 (OCT1) on metformin action.','The Journal of clinical investigation 117(5): 1422-1431','Abstract for 5: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
-         ['Viollet, B., B. Guigas, et al.','2009', 'AMP-activated protein kinase in the regulation of hepatic energy metabolism: from physiology to therapeutic perspectives','Acta physiologica 196(1): 81-98','Abstract for 6: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
-          ['Adler, A. I., E. J. Shaw, et al','2009', 'Newer agents for blood glucose control in type 2 diabetes: summary of NICE guidance',' BMJ 338: b1668','Abstract for one: The consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
-         ['Dowling, R. J., M. Zakikhani, et al.','2007', 'Metformin inhibits mammalian target of rapamycin-dependent translation initiation in breast cancer cells','Cancer research 67(22): 10804-10812','Abstract for 2: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
-         ['Libby, G., L. A. Donnelly, et al.','2009', 'New users of metformin are at low risk of incident cancer: a cohort study among people with type 2 diabetes.','Diabetes care 32(9): 1620-1625','Abstract for 3: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
-         ['Miller, R. A. and M. J. Birnbaum','2010', 'An energetic tale of AMPK-independent effects of metformin','The Journal of clinical investigation 120(7): 2267-2270','Abstract for 4: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
-         ['Nathan, D. M., J. B. Buse, et al.','2009', 'Medical management of hyperglycemia in type 2 diabetes: a consensus algorithm for the initiation and adjustment of therapy: a consensus statement of the American Diabetes Association and the European Association for the Study of Diabetes.','Diabetes care 32(1): 193-203'],
-         ['Shu, Y., S. A. Sheardown, et al.','2007', 'Effect of genetic variation in the organic cation transporter 1 (OCT1) on metformin action.','The Journal of clinical investigation 117(5): 1422-1431','Abstract for 5: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.'],
-         ['Viollet, B., B. Guigas, et al.','2009', 'AMP-activated protein kinase in the regulation of hepatic energy metabolism: from physiology to therapeutic perspectives','Acta physiologica 196(1): 81-98','Abstract for 6: he consensus algorithm for the medical management of type 2 diabetes was published in August 2006 with the expectation that it would be updated, based on the availability of new interventions and new evidence to establish their clinical role. The authors continue to endorse the principles used to develop the algorithm and its major features. We are sensitive to the risks of changing the algorithm cavalierly or too frequently, without compelling new information. An update to the consensus algorithm published in January 2008 specifically addressed safety issues surrounding the thiazolidinediones. In this revision, we focus on the new classes of medications that now have more clinical data and experience.']
-  
-    ];
-    
     // create the data store
     var literatureStore = Ext.create('Ext.data.ArrayStore', {
-        fields: [
-           {name: 'author'},
-           {name: 'year'},
-           {name: 'title'},
-           {name: 'reference'},
+        fields: [         
+           {name:'_id'},
+           {name: 'name'},
+           {name: 'authors'},
            {name:'abstract'}
         ],
-        data: literatureData
+        data: []
     });
     
     // create the Grid, see Ext.
     literatureGrid=Ext.create('Ext.ux.LiveSearchGridPanel', {
         store: literatureStore,
         columnLines: true,
-        columns: [
+        columns: [                      
             {
-                text     : 'author',
-               // flex     : 1,
-                sortable : false, 
-                width: 85,
-                dataIndex: 'author'
-            },
-            {
-                text     : 'year', 
-                width    : 45, 
-                sortable : true, 
-                //renderer : 'usMoney', 
-               // renderer: renderYear,
-                dataIndex: 'year'
-            },
-            {
-                text     : 'title', 
+                text     : 'Title', 
                 width    : 75, 
                 flex:1,
                 sortable : true, 
-                dataIndex: 'title'
+                dataIndex: 'name',
+                renderer: function(val, meta, record){
+                	return '<a href="http://www.ncbi.nlm.nih.gov/pubmed?term='+ record.get('_id').substring(4)+'" target="pubmed">' + val+"</a>"
+                }
                // renderer: change
             },
             {
-                text     : 'reference', 
-                width    : 75, 
-                sortable : true, 
-                dataIndex: 'reference'
-                //renderer: pctChange
-             }
+                text     : 'Author',
+               // flex     : 1,
+                sortable : false, 
+                width: 85,
+                dataIndex: 'authors'
+            }
         ],
-        height: 450,
+        height: 'auto',
         width: 'auto',
         title: '',
        // renderTo: Ext.getBody(),
         viewConfig: {
             stripeRows: true
         },
+        listeners: {
+        	itemclick:{        		
+        		fn:function(evt, rec){        	
+        			console.log("Clicked literature!", arguments)
+        			
+        			        			
+        		}
+        	},        	      
+        	itemmouseenter:function(view, row){
+        		mygraph.highlight( row.data._id, true)
+        	},
+        	itemmouseleave:function(view, row){
+        		mygraph.highlight( row.data._id, false)
+        	}
+        },        	
         plugins: [ {
         	ptype:'rowexpander',
         	rowBodyTpl:[
-        	 '<b>Author</b>: {author}<br><b>',
-        	 'Year:</b> {year}<br>',
-        	 '<b>Reference:</b> {reference}</br>',
+        	 '<b>Authors</b>: {authors}<br>',
         	 '<b>Abstract:</b><br>{abstract}'
         	]	
-        }]
+        }],
+        highlight:function(pubids, on){
+        	for(var i=0;i<this.getStore().count();i++)
+        		this.getView().removeRowCls(index, 'state-highlight')
+        	for(var i=0;i<pubids.length;i++){        		
+        		pubid = pubids[i]
+        		if(pubid.indexOf("publ")<0) pubid = 'publ'+ pubid
+        		var index = this.getStore().find('_id', pubid)
+        		if(index>=0 && on)
+        			this.getView().addRowCls(index, 'state-highlight')
+        		if(index>=0 && !on)
+        			this.getView().removeRowCls(index, 'state-highlight')
+        	}
+        }
     });
     
     nodesJson = []
@@ -311,7 +304,14 @@ function createViewPort() {
 			                                height: 200,
 			                                autoScroll:true,
 			                                collapsible:true,
-			                                items:[networkGrid] //networkGrid
+			                                items:[networkGrid,
+			                                       {
+				                                			id:'ref_tab',
+				                                            title:'References',
+				                                            autoScroll:true,
+				                                            items:[literatureGrid]
+				                                    }			                                       
+			                                       ] //networkGrid
 			                                //html:'here lists the networks'
 			                            },
 			                            {
@@ -323,13 +323,7 @@ function createViewPort() {
 			                            	id:'infopanel',
 			                            	activeTab:0,
 			                            	split:true,
-			                            	items: [			                                	 
-			                                	 /**{
-			                                            title:'Entity Literature',
-			                                            autoScroll:true,
-			                                            items:[literatureGrid]
-			                                    }*/
-			                            	]
+			                            	items: []
 			                            }
 			                            
 			                            /**,
@@ -813,7 +807,9 @@ function initNetwork(networkObjects) {
 	if(networkObjects.length == 1 && getObjectIdFromUrl() == networkObjects[0].get('id')){
 		graphModel.setGraphNetwork(networkObjects[0])
 	}
-	loadNetworks(networkObjects, true)	
+	loadNetworks(networkObjects, true)
+	
+	graphModel.on('selectionchanged', selectionChanged)
 }
 /**
  * 
@@ -834,8 +830,9 @@ function loadNetworks(networkObjects, toGraph, toReplace){
 			obj = network.getRawdata()
 			obj.include = toGraph		
 			networkStore.add( obj )
-		}		
+		}
 	})	
+	setTimeout(updateReference, 500)
 }
 
 
@@ -923,19 +920,12 @@ function createNetworkGrid(){
         		
         	},
         	itemmouseenter:function(view, row){
-        		var netId = row.data._id        	        		
-        		_.each( $("path[network*="+netId+"]"),  function(em){
-        			$d(em).classed("state-highlight", true)
-        		})
-        		//$("path").filter(":not([network*="+netId+"])").hide()
+        		var netId = row.data._id 
+        		mygraph.highlight(netId, true)        		
         	},
         	itemmouseleave:function(view, row){
         		var netId = row.data._id
-        		_.each( $("path[network*="+netId+"]"), function(em){
-        			$d(em).classed("state-highlight", false)
-        		})
-        		//$("g.node").filter(":not([network*="+netId+"])").show()
-        		//$("path").filter(":not([network*="+netId+"])").show()        		
+        		mygraph.highlight(netId, false)
         	}
         }
     });
@@ -944,7 +934,7 @@ function createNetworkGrid(){
 
 
 function filterNetwork(item, groupingFeature){	
-	
+	// tt
 	if(item.name == 'filterByNetwork' ){
 		if(item.checked)
 			graphModel.addNetwork( item.value )
@@ -1595,9 +1585,14 @@ function createGraph() {
             contextMenu.showAt([d3.event.clientX,d3.event.clientY]);
 		});
 		mygraph.on("mouseover",function(evt, target){
-            // alert('mouse over lines '+d.id);            
-            
-            //showTips(d3.event);
+			//console.log("mouseover", target.__data__)
+			if(target.__data__.getClass() == 'connection')
+				highlightConnectionRef(target.__data__, true)				
+		});
+		mygraph.on("mouseout",function(evt, target){
+			//console.log("mouseover", target.__data__)
+			if(target.__data__.getClass() == 'connection')
+				highlightConnectionRef(target.__data__, false)				
 		});
 		
 		graphModel = new precon.NetworkGraph()
@@ -1730,4 +1725,62 @@ function saveGraph(){
 		Ext.getCmp("graphname").setValue(gNetwork.get("name"))
 	
 	saveGraphWindow.show()	
+}
+
+function updateReference(){
+	
+	//var sel = graphModel.getSelections('connection')
+	var all_refs = {}
+	graphModel.getConnections().forEach(function(con){
+		// combine all the references
+		var ref = con.get('refs');
+		for(var i in ref){
+			all_refs[i] = all_refs[i] || []
+			all_refs[i] = _.union (all_refs[i], ref[i])
+		}
+	});
+	// for now we only deal with pubmed
+	p = all_refs['pubmed']	
+	console.log("Updating refs", p)
+	if(p.length== 0) return
+	
+	pids = [] 
+	// add 'publ' prefix for pubmed refs
+	p.forEach(function(pid){
+		pid = pid.trim()
+		pids.push(  ( pid.indexOf('publ') ==0 ? pid:'publ' + pid) )
+	})
+	precon.getObjects(pids, function(results){
+		results.forEach(function(pub){
+			if(literatureGrid.getStore().findExact("_id", pub._id) <0  ) // add only if not already exists
+				pub.authors = pub.authors && pub.authors.length>0? pub.authors:[]
+			 	var a = ''
+			 	pub.authors.forEach(function(v){
+			 		var name = v.first || ''
+			 		if(name) name=name.substring(0,1)
+			 		name+=" " + v.last   				 		
+			 		a+= (a?', ':'') + name
+			 	})
+				pub.authors = a
+				literatureGrid.getStore().add(pub)
+		})			
+	})
+	
+}
+function selectionChanged(){
+	// highlight references
+	var selCons = graphModel.getSelections('connection')
+	var pubids = []
+	selCons.forEach(function(con){
+		var refs = con.get('refs')
+		var ids = refs.pubmed? refs.pubmed: []
+		pubids = _.union(pubids, ids)
+	})
+	literatureGrid.highlight(pubids, true)
+}
+
+function highlightConnectionRef(con, on){
+	var refs = con.get('refs')
+	var ids = refs.pubmed? refs.pubmed: []
+	literatureGrid.highlight(ids, on)
 }

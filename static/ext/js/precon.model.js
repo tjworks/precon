@@ -521,7 +521,7 @@ precon.Network = function(rawdata){
 	this._class = 'network'	
 	this.init(rawdata);
 	var rawdata = this.rawdata
-	
+	var mycons = []
 	this.getId = function(){
 		return rawdata._id
 	}
@@ -531,16 +531,20 @@ precon.Network = function(rawdata){
 	
 	// return a copy of the connections list
 	this.getConnections = function(callback){
+		if(mycons.length>0){
+			callback(mycons)
+			return
+		}
 		// right now we always populates _connections
 		if (! rawdata._connections){
 			callback([])
 			return;
 		} 		
-		var res = []
+		mycons = []
 		rawdata._connections.forEach(function(con){
-			res.push( new precon.Connection(con) )
+			mycons.push( new precon.Connection(con) )
 		})
-		callback(res)
+		callback(mycons)
 	}
 	this.getConnectionIds = function(){
 		if(this.connections)
@@ -681,7 +685,8 @@ precon.Node = function(rawdata){
 		weight - the node weight; the number of associated links.
 		*/
 		var attrs = 'x,y,px,py,fixed,weight,index'.split(',')
-		//for(var i in attrs): obj[i] = this[i]
+		for(var i in attrs)
+			if(this.hasOwnProperty(i)) obj[i] = this[i]
 		return obj
 	}	
 	return this

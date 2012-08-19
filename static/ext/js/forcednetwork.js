@@ -53,11 +53,32 @@ function myGraph(el,w,h) {
 		
 		if(! target.__data__ || (target.__data__._class!='connection' && target.__data__._class!='node' )) return
 		//console.log("clicked", target)
-		if(d3.event.ctrlKey || d3.event.shiftKey)
+		if(d3.event.ctrlKey || d3.event.shiftKey){
+			console.log("Ctrl clicked", target.__data__)
+			stuff = target.__data__
 			graph.model.select(target.__data__, true)
+		}
 		else
 			graph.model.toggle(target.__data__, false)
 	});	
+	
+	this.highlight = function(objId, on){
+		var selector = ''
+		if(objId.indexOf('netw') == 0 )
+			selector = '[network*='+ objId +']'
+		else if(objId.indexOf('publ') == 0)
+			selector = '[refs*='+ objId.substring(4) +']'
+		else return
+				
+		_.each( $('path'+ selector),  function(em){
+			$d(em).classed("state-highlight", on)
+		})
+		_.each( $('circle'+ selector),  function(em){
+			$d(em).classed("state-highlight", on)
+		})
+		//$("path").fi
+	}
+	
 	this._selectionChanged = function(evt, sel){
 		/**
 		sel.target.forEach(function(target){
@@ -76,24 +97,15 @@ function myGraph(el,w,h) {
 		});
 				
 	}
-    // Add and remove elements on the graph object
-    this.addNode = function (node, attrs) {
-    	var id = null;
-    	if(typeof(node ) == 'string'){
-    		id = node
-    		node={}
-    	}
-    	else{
-    		id = node.getId()    		    	
-    	}   
+    this._addNode = function(evt, data){
+    	if(!data.node) return
+    	var node = data.node
+    	//	graph.addNode(data.node)
+    	var id = node.get('id')
     	node.id = id
     	if(findNode(id)) return;    	
         nodearray.push(node);
         update();
-    }
-    this._addNode = function(evt, data){
-    	if(data.node)
-    		graph.addNode(data.node)
     }
     this._removeNode=function(evt, data){
     	//console.log("_removeNode ", data)
@@ -153,14 +165,6 @@ function myGraph(el,w,h) {
     	else return 1+Math.random()/10;
     }
     
-    this.addLink = function (source, target,type, id) {
-    	if (findNode(source)!=null && findNode(target)!=null&&findNode(source)!=findNode(target)) {
-    		var linkobj = {"source":findNode(source),"target":findNode(target), "type":type, "id":id, getId:function(){return this.id}, _id:id,"multiplier":processLinkArray(source,target)}
-        	linkarray.push(linkobj);
-    		update();
-    	}
-    }
-     
     var findNode = function(id) {
         for (var i in nodearray) {if (nodearray[i]["id"] === id) return nodearray[i]};
         return null;
@@ -347,6 +351,20 @@ function myGraph(el,w,h) {
        else 
        		myGraph.doubleClicked=false;
  	}
+ 	
+ 	var _combineRefs = function(refs){
+ 		  if(!refs) return ''
+ 		  if(typeof(refs) == 'string') return refs
+		  var str = ''
+		  for(var i in refs){						  
+			  if(typeof(refs[i]) == 'string')
+				  str+=refs[i]					  	
+			  else if(refs[i].length>0) 
+				  str+= refs[i].join(",")
+			  str+=","
+		  }
+		  return str
+ 	}
     /*
      * update the SVG canvas to reflect the data changes
      */
@@ -372,9 +390,11 @@ function myGraph(el,w,h) {
 			      //.attr("render-order","-1")
 			      .append("path")
 		  		  .attr("id",function(d){return d.id})
-		  		  .attr("network", function(d){ return d.get('network') })
+		  		  .attr("network", function(d){ return d.get('network') })		  		  
 				  .attr("class",function(d){return "link "+d.type.replace(" ","").replace("/","_");})
-				  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; });
+				  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; })
+				  .attr("refs", function(d){ return _combineRefs(d.get('refs'))});
+		    
 		   
 		    link.on("mouseover", eventsProxy ).on("mouseout", eventsProxy )
 		      
@@ -405,6 +425,9 @@ function myGraph(el,w,h) {
 	            .attr("class", "circle")
 	            .attr("name",function(d){return d.id})           
 	            .attr("id",function(d){return d.id})
+	            .attr("network", function(d){
+	            	return d.networkrefs+""
+	            })
 	            .attr("r",r);
 	            
 	        nodeEnterg.append("text")
