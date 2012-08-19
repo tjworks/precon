@@ -113,7 +113,7 @@ function Timer(name){
 	this.elapsed = function(msg){		
 		var e = (new Date().getTime() - this.start.getTime() ) /1000
 		this.start = new Date()
-		console.debug("ELAPSED  ["+ this.name+"]: "+ e +"s "+(msg||'') )
+		console.log("ELAPSED  ["+ this.name+"]: "+ e +"s "+(msg||'') )
 		return e
 	}
 	return this

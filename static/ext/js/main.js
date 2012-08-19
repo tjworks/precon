@@ -120,8 +120,10 @@ Ext.onReady(function(){
               console.log("selected ", ui)
               precon.searchNetworks(ui.item._id, function(networks){ loadNetworks(networks, false)})
           }         
-        });
+        });       
 });
+
+
 function createViewPort() {
 			viewport=Ext.create('Ext.Viewport', {
 			                    layout: {
@@ -265,13 +267,14 @@ function createViewPort() {
 			                             },
 			                             resize: {
 			                                 element:'',
-			                                 fn:function() {
-			                                     createGraph();
+			                                 fn:function() {			                                	 
+			                                	 createGraph();			                                     
 			                                 }
 			                             }
 			                         }
 			                      },{
 			                        region: 'center',
+			                        id:'east',
 			                        //border: false,
 			                        title:"",
 			                        //align:'stretch',
@@ -443,7 +446,6 @@ function createContextMenu(obj) {
 function initApp() {
 	// events binding 
 	$(document).bind(precon.event.ViewportCreated, showMainObject)
-	
 	
 	objid = getObjectIdFromUrl()	
 	if (objid){
@@ -1561,8 +1563,7 @@ function createGraph() {
     //graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
 	console.log("Creating graph")    
 	//Ext.select("svg").remove();
-	//graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
-	
+	//graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));	
 	if(!window.mygraph){
 		console.log("Creating graph")    
 		mygraph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
@@ -1603,8 +1604,9 @@ function createGraph() {
 		console.log("Redraw graph")    
 		// redraw
 		//Ext.select("svg").remove();
-		mygraph.redraw(Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true))
-	}	
+		mygraph.resize(Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true))
+	}
+	toggleFullscreenMode()
     
 }
  
@@ -1783,4 +1785,32 @@ function highlightConnectionRef(con, on){
 	var refs = con.get('refs')
 	var ids = refs.pubmed? refs.pubmed: []
 	literatureGrid.highlight(ids, on)
+}
+
+function toggleFullscreenMode(){
+	if(screen.height === window.outerHeight){
+		console.log("Switch to fullscreen mode")
+		// full screen mode
+		if(window.viewport){
+			viewport.getLayout().padding = '0 0 0 0'
+			viewport.doLayout()			
+			Ext.getCmp("west").setWidth(Ext.getBody().getSize().width )
+		}
+		
+		$("#myheader").hide()
+		window.fullscreen = true
+	}
+	else{
+		if(window.fullscreen){
+			window.fullscreen = false
+			console.log("quit fullscreen mode")
+			if(window.viewport){
+				viewport.getLayout().padding = '52 0 0 0'
+				viewport.doLayout()
+				Ext.getCmp("west").setWidth(Ext.getBody().getSize().width *0.6)
+			}
+			
+			$("#myheader").show()
+		}		
+	}
 }

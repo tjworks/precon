@@ -493,7 +493,14 @@ function myGraph(el,w,h) {
     };
     
     // delete this?
-    this.redraw = function(){
+    this.resize = function(width, height){
+    	w= width
+    	h=height
+    	if(vis){
+    		vis.remove()
+    		visg.remove()
+    		initSVG()
+    	}
     	update()
     }
     
