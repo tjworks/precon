@@ -56,7 +56,7 @@
 
 
 /**default style for path**/
-path.link {
+path{
   fill: none;
   stroke:grey;
 }
@@ -66,7 +66,7 @@ marker#decreases {
   fill: blue;
 }
 .decreases{
-  stroke: blue !important;
+  stroke: blue ;
     stroke-width: 2px;
 }
 
@@ -76,9 +76,9 @@ marker#beinguptaken {
 .beinguptaken 
  {
   fill:none;
-  stroke:lightsalmon !important;
-    stroke-width: 2px;
-  stroke-dasharray: 0,2 1;
+  stroke:lightsalmon;
+  stroke-width: 2px;
+  /**stroke-dasharray: 0,2 1; */
 }
 marker#inhibits {
   fill: lightgreen;
@@ -86,7 +86,7 @@ marker#inhibits {
 .inhibits
 {
 	stroke-width: 2px;
-    stroke: lightgreen !important;
+    stroke: lightgreen;
 }
 marker#stimulats {
   fill: mediumpurple;
@@ -95,37 +95,37 @@ marker#stimulats {
  {
   stroke-width: 2px;
   fill:none;
-  stroke:mediumpurple !important;
+  stroke:mediumpurple;
 }
 marker#association {
   fill: gold;
 }
 .association{
   stroke-width: 2px;
-  stroke-dasharray: 5,1 5,1;
-  stroke:gold !important;
+  /** stroke-dasharray: 5,1 5,1; */
+  stroke:gold;
 }
 marker#physical_interaction {
   fill: olive;
 }
 .physical_interaction {
-	  stroke-width: 2px;
-  stroke: olive !important;
+	stroke-width: 2px;
+    stroke: olive ;
 }
 marker#predicted {
   fill: red;
 }
 .predicted {
-	  stroke-width: 2px;
+  stroke-width: 2px;
   fill:none;
-  stroke:red !important;
+  stroke:red;
   stroke-dasharray: 0,2 1;
 }
 .phosphorylates_activates {
   stroke-width: 2px;
   fill:none;
-  stroke:green !important;
-  stroke-dasharray: 0,2 1;
+  stroke:green;
+  /** stroke-dasharray: 0,2 1; */
 	
 }
 marker#activates {
@@ -133,26 +133,25 @@ marker#activates {
 }
 .activates {
 	  stroke-width: 2px;
-  stroke-dasharray: 4,5 2;
-  stroke:dodgerblue !important;
+  /**stroke-dasharray: 4,5 2; */
+  stroke:dodgerblue;
 }
 marker#regulates {
   fill: brown;
 }
 .regulates {
       stroke-width: 2px;
-  stroke-dasharray: 4,5 2;
-  stroke:brown !important;
+  /** stroke-dasharray: 4,5 2; */
+  stroke:brown;
 }
 marker#pathway {
   fill: lightpink;
 }
-.pathway {
-	  stroke-width: 2px;
-  stroke-dasharray: 1,2 3;
-  stroke:lightpink !important;
+.pathway { 
+  stroke-width: 2px;
+  /** stroke-dasharray: 1,2 3; */
+  stroke:lightpink;
 }
-
 
 circle {
   fill: #ccc;
@@ -177,19 +176,21 @@ text.shadow {
   	fill:yellow;
   	stroke:yellow;
 }
-path.link.state-selected {   
+.state-selected {   
     stroke:yellow
     stroke-width:2;
     stroke-color:yellow;
 }
 .state-highlight {
+    background-color:#ffff9c
+}
+circle.state-highlight {
     stroke:#66cccc;  
     fill: #66cccc;
     fill-opacity:0.2;
-    stroke-width:4px;
-    background-color:#ffff9c
+    stroke-width:4px;    
 }
-path.link.state-highlight {
+path.state-highlight {
     stroke:#66cccc;      
     stroke-width:4px;
 }
