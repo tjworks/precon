@@ -1,5 +1,6 @@
 Ext.define('Precon.store.Networks', {
     extend: 'Ext.data.Store',
+    groupField: 'group',
     model: 'Precon.model.Network'
     
     /*

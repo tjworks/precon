@@ -1,5 +1,5 @@
 Ext.define('Precon.controller.GraphWin', {
-    extend: 'Ext.app.Controller',
+    extend: 'Precon.controller.BaseController',
     stores:['Networks'],
     models:['Network'],
     views: [
@@ -9,13 +9,10 @@ Ext.define('Precon.controller.GraphWin', {
     	'NodeCreatePanel',
     	'ReferenceGrid'
     	
-    ],
-    //the global variable for referencing networkGraph
-    _graphModel:null,
+    ],    
     init: function() {
         console.log('initializing graphwindow component');
         //initialized the graphModel
-		_graphModel=new precon.NetworkGraph();
 		_graphController=this;
         this.control({
    			'#west': {
@@ -27,17 +24,7 @@ Ext.define('Precon.controller.GraphWin', {
 			  '#ingraph-search': {
 				  afterrender:this.autoCompleteSearch
 			},
-			  'networkgrid': {
-				  //afterrender:this.initApp,
-				  //itemclick: this.networkGridClicked,
-				  itemdblclick:this.networkGridDblClicked,
-				  select: this.networkGridSelect,
-				  deselect: this.networkGridDeselect,
-				  scope: this
-		  },
-		  'networkgrid > gridview': {
-				   refresh: this.initApp,		  	   
-		  },
+			  		  
 		  '#nodeCreateBtn': {
 		  	click: this.onNodeCreateBtn
 		  },
@@ -145,11 +132,7 @@ Ext.define('Precon.controller.GraphWin', {
 		$(document).bind(precon.event.ViewportCreated, this.showMainObject)
 		
 		
-		objid = this.getObjectIdFromUrl()	
-		if (objid){
-			//Ext.Function.bind(this.initNetwork,this);
-			precon.searchNetworks(objid, this.initNetwork);			
-		}
+		
 		this.showMainObject()
 	},
  	
@@ -186,7 +169,7 @@ Ext.define('Precon.controller.GraphWin', {
 				return ''
 		};
 		if(networkObjects.length == 1 && getObjectIdFromUrl()== networkObjects[0].get('id')){
-			_graphModel.setGraphNetwork(networkObjects[0])
+			this.getGraphModel().setGraphNetwork(networkObjects[0])
 		}
 		_graphController.loadNetworks(networkObjects, true);
 	}, 
@@ -264,65 +247,24 @@ Ext.define('Precon.controller.GraphWin', {
 			return precon.util.formatObject(obj)
 		
 	},
-   /**
-	 * 
-	 * @param networkObjects
-	 * @param toGraph: whether to draw on graph immediately
-	 * @param toReplace: remove existing before adding new one
-	 */
-   loadNetworks: function(networkObjects, toGraph, toReplace){
-		if(!networkObjects) return
-		if(toReplace){
-			_graphModel.removeAll();
-			networkStore.removeAll();
-		}
-		var networkStore=_graphController.getNetworksStore()
-		console.log(networkObjects);
-		console.log('is the networkobjects');
-		networkObjects.forEach(function(network){		
-			if(networkStore.findExact("_id", network.get('_id')) <0  ){ // add only if not already exists
-				if(toGraph) _graphModel.addNetwork( network);
-				obj = network.getRawdata()
-				obj.include = toGraph		
-				networkStore.add( obj )
-				//console.log('load obj into network table ');
-				//console.log(obj);
-			}		
-		})	
-	},
-	
-   networkGridDblClicked: function(view, row){
-		//put code here to deal with table double clicked
-	    console.log("double Clicked network: " + row.data._id)      
-	    _graphController.showObject(row.data)	
-   },
-   
-   networkGridSelect:function(model,record,row,index){  
-	   console.log(record.get("_id"));
-	   _graphModel.addNetwork(record.get("_id"));
-	},
-	networkGridDeselect:function(model,record,row,index){  
-       console.log('deslecting');
-	   _graphModel.removeNetwork(record.get("_id"));
-	},
+
+  
    onGraphWinResize: function() {
    		//put here all codes related with graph window resize related
    },
    
    afterGraphWinRendered: function() {
    		//put here all codes related after render event of graph window
-   		console.log("graph window is available now");
-   		
+   		console.log("graph window is available now");   		
    		//start to draw the graph
-   		//setTimeout(function() {_graphController.createGraph()},300);
-   		
-   		
+   		//setTimeout(function() {_graphController.createGraph()},300);   		
    		//Toggle the legend button
    		Ext.getCmp("legendToggleBtn").toggle();
    },
    onLaunch: function(){
-	   console.log("Onlaunch")
-	   _graphController.createGraph()
+	   console.log("GraphWin.Onlaunch")
+	   this.createGraph()
+	   this.showMainObject()
 	   
    },
    createGraph: function() {
@@ -350,11 +292,9 @@ Ext.define('Precon.controller.GraphWin', {
 	            console.log("Contexted", target.__data__)
 	            contextMenu = createContextMenu(target.__data__)
 	            contextMenu.showAt([d3.event.clientX,d3.event.clientY]);
-			});
-			
+			});			
 			//_graphModel = new precon.NetworkGraph()
-			mygraph.setModel(_graphModel)
-			
+			mygraph.setModel(this.getGraphModel())			
 		}
 		else{
 			console.log("Redraw graph")    

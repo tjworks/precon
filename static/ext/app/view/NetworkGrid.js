@@ -1,13 +1,19 @@
+var groupingFeature = Ext.create('Ext.grid.feature.Grouping', {
+	    groupHeaderTpl: '<input type="checkbox" name="filterByGroup" group="{name}" checked> Group: {name} ({rows.length})', //print the number of items in the group
+	    startCollapsed: false // start all groups collapsed	  
+	});
+
+
 Ext.define('Precon.view.NetworkGrid' ,{
     extend: 'Ext.grid.Panel',
     requires: [
-        'Ext.selection.CheckboxModel'
+        //'Ext.selection.CheckboxModel'
     ],
-    selModel: Ext.create('Ext.selection.CheckboxModel'),
-    
+    //selModel: Ext.create('Ext.selection.CheckboxModel'),
+    features: [groupingFeature],
     alias : 'widget.networkgrid',
 
-    title : 'All Users',
+    title : 'Networks',
 	
 	//define the data
 	store: 'Networks',
@@ -19,50 +25,50 @@ Ext.define('Precon.view.NetworkGrid' ,{
 		
     initComponent: function() {
               this.columns = [
-                            /*
-                              {
-                                                                text     : 'Show in Graph', 
-                                                                width    : 100, 
-                                                                sortable : true, 
-                                                                renderer : function(val,meta, record) {                	
-                                                                                // console.log('the input box is ');
-                                                                                 //console.log(val+" "+meta+" "+record);			
-                                                                                 return "<input type=checkbox "+ (val?"checked":"")+ " id='networkId' value='"+  record.get("_id") + "'>"
-                                                                },
-                                                                dataIndex: 'include'
-                                                            },*/
-                            
-					            {
-					                text     : 'Study',
-					                flex     : 1,
-					                sortable : false,                 
-					                dataIndex: 'name'
-					            },
-					            {
-					                text     : 'Creator', 
-					                width    : 70, 
-					                sortable : true, 
-					                dataIndex: 'creator'
-					               // renderer: change
-					            },
-					            {
-					                text     : 'Source', 
-					                width    : 75, 
-					                flex:1,
-					                sortable : true, 
-					                dataIndex: 'source'
-					               // renderer: change
-					            },
-					            {
-					                text     : 'Network', 
-					                width    : 75, 
-					                flex:1,
-					                sortable : true, 
-					                dataIndex: 'group'
-					               // renderer: change
-					            }
+								{
+								    text     : '<input type=checkbox name="filterAll" checked> All', 
+								    width    : 60, 
+								    sortable : false, 
+								    renderer : function(val,meta, record) {                				
+								    				 return "<input class='filterByNetwork' belongtogroup='" + record.get("group") +"' type=checkbox "+ (val?"checked":"")+ " name='filterByNetwork' value='"+  record.get("_id") + "'>"
+								    },
+								    dataIndex: 'include'
+								},
+								{
+								    text     : 'Network',
+								    flex     : 1,
+								    sortable : true,                 
+								    dataIndex: 'name'
+								},
+								{
+								    text     : 'Creator', 
+								    width    : 70, 
+								    sortable : true, 
+								    dataIndex: 'owner'
+								   // renderer: change
+								},
+								{
+								    text     : 'Source', 
+								    width    : 75, 
+								    flex:1,
+								    sortable : true, 
+								    dataIndex: 'source'
+								   // renderer: change
+								}
                           ];
      
               this.callParent(arguments);
+    },
+    listeners:{
+    	//  couldn't figure out why it doesn't work if move this chunk of listener code to the controller
+    	click: {
+			 element:'el',	
+			 fn:function(evt, item){        	     				 
+    			console.log("Clicked!", arguments)
+    			if(item.type == 'checkbox'){
+    				filterNetwork(item, groupingFeature)  
+    			}        			     	
+			 }
+		 }       	
     }
 });
