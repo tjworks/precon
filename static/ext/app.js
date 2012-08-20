@@ -4,7 +4,7 @@
 Ext.Loader.setConfig({
 	enabled:true,
 	 paths   : {
-            'Ex.ux' : 'extjs/ux'
+            'Ext.ux' : '/ext/extjs/ux'      
         } 
 	});
 Ext.require([
@@ -16,12 +16,12 @@ Ext.application({
 	//the name space for the app
     name: 'Precon',
     //the location of the code folder
-    appFolder: 'app',
+    appFolder: '/ext/app',
     
     //defines the controllers 
     controllers: [
-    	'GraphWin'
-    ],
+    	'GraphWin','Reference'
+    ],    
 	//start the view port components
     launch: function() {
     	Ext.create('Ext.Viewport', {
@@ -211,7 +211,11 @@ Ext.application({
                                 //items:[networkgrid] //networkGrid
                                 items: [{
                                 	xtype:'networkgrid'
-                                }]
+                                },
+                                {
+                        			xtype:'referencegrid'
+                                }	
+                                ]
                                 //html:'here lists the networks'
                             },
                             {

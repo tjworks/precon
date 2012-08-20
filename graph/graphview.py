@@ -18,13 +18,11 @@ def handler(req, precon_id=None):
     if(req.method == 'POST'):
         return persist(req)
             
-    if req.REQUEST.get('old'):
-        template = loader.get_template('graph.html')
-    else:
-        template = loader.get_template('ext.html')
+    template = loader.get_template('ext.html')
     #ctx = gf_template.get_context(req, {})
-    ctx = RequestContext(req, {})
     
+    ctx = RequestContext(req, {})
+    ctx.mvc = True if req.META['HTTP_HOST'].find('mvc')>=0 else False
     
     return HttpResponse(template.render(ctx))
 

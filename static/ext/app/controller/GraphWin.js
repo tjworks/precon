@@ -6,7 +6,8 @@ Ext.define('Precon.controller.GraphWin', {
     	'NetworkGrid',
     	'NodeUpdatePanel',
     	'LinkUpdatePanel',
-    	'NodeCreatePanel'
+    	'NodeCreatePanel',
+    	'ReferenceGrid'
     	
     ],
     //the global variable for referencing networkGraph
@@ -304,10 +305,16 @@ Ext.define('Precon.controller.GraphWin', {
    		console.log("graph window is available now");
    		
    		//start to draw the graph
-   		setTimeout(function() {_graphController.createGraph()},300);
+   		//setTimeout(function() {_graphController.createGraph()},300);
+   		
    		
    		//Toggle the legend button
    		Ext.getCmp("legendToggleBtn").toggle();
+   },
+   onLaunch: function(){
+	   console.log("Onlaunch")
+	   _graphController.createGraph()
+	   
    },
    createGraph: function() {
 	   	//console.log("Recreating graph")
@@ -318,7 +325,7 @@ Ext.define('Precon.controller.GraphWin', {
 		//graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
 		
 		if(!window.mygraph){
-			console.log("Creating graph")    
+			console.log("Creating graph ", Ext.get("west-body").getWidth(true), Ext.get("west-body").getHeight(true))    
 			mygraph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
 			mygraph.on("click", function(evt, target){
 				//console.log("dblclick", evt, target.__data__)			
@@ -335,13 +342,8 @@ Ext.define('Precon.controller.GraphWin', {
 	            contextMenu = createContextMenu(target.__data__)
 	            contextMenu.showAt([d3.event.clientX,d3.event.clientY]);
 			});
-			mygraph.on("mouseover",function(evt, target){
-	            // alert('mouse over lines '+d.id);            
-	            
-	            //showTips(d3.event);
-			});
 			
-			_graphModel = new precon.NetworkGraph()
+			//_graphModel = new precon.NetworkGraph()
 			mygraph.setModel(_graphModel)
 			
 		}
