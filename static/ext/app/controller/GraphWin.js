@@ -83,17 +83,26 @@ Ext.define('Precon.controller.GraphWin', {
     	if (flag=='move') {
     		console.log('mouse moving');
     		if (d3.event) {
-				 d3.select('#selectRect')
-								 .attr('width',d3.event.layerX-_graphController.rectSelectX0)
-								 .attr('height',d3.event.layerY-_graphController.rectSelectY0);
-					//			.attr('width',200)
-					//			.attr('height',200);
+    			if (d3.event.layerX-_graphController.rectSelectX0<0)
+	    			d3.select('#selectRect')
+	    							 .attr('x',d3.event.layerX)
+	    							 .attr('y',d3.event.layerY)
+									 .attr('width',Math.abs(d3.event.layerX-_graphController.rectSelectX0))
+									 .attr('height',Math.abs(d3.event.layerY-_graphController.rectSelectY0));
+				 else
+					 d3.select('#selectRect')
+					 				 .attr('x',_graphController.rectSelectX0)
+	    							 .attr('y',_graphController.rectSelectY0)
+									 .attr('width',Math.abs(d3.event.layerX-_graphController.rectSelectX0))
+									 .attr('height',Math.abs(d3.event.layerY-_graphController.rectSelectY0));
+						//			.attr('width',200)
+						//			.attr('height',200);
 			}
     	}
     	
     	if (flag=='up') {
 			visg.on('mousemove',null);
-			d3.select('#selectRect').remove();
+			d3.selectAll('#selectRect').remove();
 			Ext.ComponentQuery.query('#recSelectBtn')[0].toggle();
 			setTimeout(function() {
 							Ext.ComponentQuery.query('#recSelectBtn')[0].toggle();
