@@ -7,7 +7,8 @@ Ext.define('Precon.controller.GraphWin', {
     	'NodeUpdatePanel',
     	'LinkUpdatePanel',
     	'NodeCreatePanel',
-    	'ReferenceGrid'
+    	'ReferenceGrid',
+    	'SaveGraphWindow'
     	
     ],    
     init: function() {
@@ -27,6 +28,9 @@ Ext.define('Precon.controller.GraphWin', {
 		  },
 		  '#recSelectBtn' : {
 		  	toggle: this.onRecSelect
+		  },
+		  '#saveGraphBtn': {
+			click: this.saveGraph
 		  }
         });
    },  
@@ -264,7 +268,7 @@ Ext.define('Precon.controller.GraphWin', {
 		console.log("Creating graph")    
 		//Ext.select("svg").remove();
 		//graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
-		
+		var self = this
 		if(!window.mygraph){
 			console.log("Creating graph ", Ext.get("west-body").getWidth(true), Ext.get("west-body").getHeight(true))    
 			mygraph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
@@ -275,12 +279,15 @@ Ext.define('Precon.controller.GraphWin', {
 				console.log("dblclick", evt, target.__data__)
 				//showObject(target.__data__)
 				if(target.__data__ && target.__data__.get('entity'))
-			           precon.searchNetworks( target.__data__.get('entity'), function(nets){ _graphController.loadNetworks(nets, true, false) })
+			           precon.searchNetworks( target.__data__.get('entity'), function(nets){ 
+			        	   var netController = self.getController('NetworkGridController')
+			        	   netController.loadNetworks(nets, true, false) 
+			        	   })
 			});		
 			mygraph.on("contextmenu",function(evt, target){
 	            d3.event.preventDefault();
 	            console.log("Contexted", target.__data__)
-	            contextMenu = createContextMenu(target.__data__)
+	            contextMenu = self.createContextMenu(target.__data__)
 	            contextMenu.showAt([d3.event.clientX,d3.event.clientY]);
 			});			
 			//_graphModel = new precon.NetworkGraph()
@@ -317,6 +324,89 @@ Ext.define('Precon.controller.GraphWin', {
 				$("#myheader").show()
 			}		
 		}
+	}, // end toggleFullscreen
+
+	createContextMenu:function(obj) {
+		var self = this
+		var items= []
+		var label = 'Link'
+		if(obj && obj.get("entity")){	
+			items.push({
+	                    text: 'Expand',
+	                    handler:function() {
+	                  	  console.log("Centered on", obj)
+	                  	  if(obj.get('entity'))
+	                      	  precon.searchNetworks( obj.get('entity'), function(nets){ self.loadNetworks(nets, true, true) })
+	                    }, 
+	                    iconCls:'update'
+	                });
+			label = 'Node '
+		};
+			
+		if(obj){
+			items.push(	               
+		              {
+		                  text: 'View/Edit '+ label,
+		                  handler:function(menuItem,menu) {
+		                  	self.showObject(obj)
+		                  }, 
+		                  iconCls:'update'
+		              },
+		              {
+		                  text: 'Remove '+ label+": " + (obj.get('label') || ''),
+		                  handler:function(menuItem,menu) { openRemoveWindow(obj) }, 
+		                  iconCls:'remove'
+		              })
+		}
+		items.push(	                             
+	              
+	              {
+	                  text: 'Create Node',
+	                  handler:function(menuItem,menu) { nodeCreate() }, 
+	                  iconCls:'create'
+	              },
+	              {
+	                  text: 'Clear Cached Data',
+	                  handler:function(menuItem,menu) { $.jStorage.flush(); alert("Done!"); window.contextMenu && window.contextMenu.hide()}, 
+	                  iconCls:'create'
+	              }
+	              
+	         );    
+
+	    contextMenu = new Ext.menu.Menu({items:items});
+	    return contextMenu
+	   
+	}, // end createContext
+	saveGraph: function(){
+		var self = this
+		var f = function(){
+			console.log("Continue saveGraph")
+			self.saveGraph()
+		}
+		 	
+		if(!window.user || !window.user.user_id){
+			$(document).one(precon.event.UserLogin, f)
+			$('a.login-window').click()
+			return;
+		}
+		
+		console.log("Doing saving")
+		var graphModel = this.getGraphModel()
+		
+		var gNetwork = graphModel.getGraphNetwork() 
+		if(!gNetwork || gNetwork.get('owner') != window.user.user_id ){
+			gNetwork = gNetwork? _.clone(gNetwork): new precon.Network()
+			gNetwork.set('id', precon.randomId('network'))
+			gNetwork.set('name','' )
+			gNetwork.set('owner', window.user.user_id)
+			graphModel.setGraphNetwork(gNetwork)
+		}
+		
+		window.saveGraphWindow = window.saveGraphWindow || this.getView('SaveGraphWindow').create()
+		
+		//if(! Ext.getCmp("graphname").getValue()) Ext.getCmp("graphname").setValue(gNetwork.get("name"))
+		
+		saveGraphWindow.show()	
 	}
    
 });

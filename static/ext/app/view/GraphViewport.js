@@ -68,12 +68,13 @@ Ext.define('Precon.view.GraphViewport' ,{
                                },
                                {
                                     xtype: 'button', 
+                                    id:'saveGraphBtn',
                                     text : 'Save Graph',
                                     //iconCls:'x-btn-inner remove',
                                     icon:"/ext/resources/images/link_.png",
                                     tooltip:'Display available geocoders',
                                     handler : function() {
-                                        saveGraph();
+                                        //saveGraph();
                                     }
                                },
                                {
