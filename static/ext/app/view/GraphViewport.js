@@ -1,5 +1,6 @@
 Ext.define('Precon.view.GraphViewport' ,{
     extend: 'Ext.Viewport', 
+    id:'viewport',
     layout: {
         type: 'border'
         ,padding: '52 0 0 0'
@@ -129,7 +130,7 @@ Ext.define('Precon.view.GraphViewport' ,{
              afterrender: {
                  element:'',
                  fn: function() {
-                     
+                     /**
                      //update the button toolbar space width
                      setTimeout(function(){
                           //  createGraph();
@@ -138,6 +139,7 @@ Ext.define('Precon.view.GraphViewport' ,{
                             Ext.getCmp("legendToggleBtn").toggle();
                         },600);
                      console.log('western panel rendered');
+                     */
         //Ext.getCmp('west').getEl().on('contextmenu', function(e) {
                                     
                      }
@@ -145,7 +147,7 @@ Ext.define('Precon.view.GraphViewport' ,{
              resize: {
                  element:'',
                  fn:function() {
-                    // createGraph();
+                    // createGraph();                	 
                  }
              }
          }

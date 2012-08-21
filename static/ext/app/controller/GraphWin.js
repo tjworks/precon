@@ -16,15 +16,12 @@ Ext.define('Precon.controller.GraphWin', {
 		_graphController=this;
         this.control({
    			'#west': {
+   				element:'',
    				resize: this.onGraphWinResize
    			} ,
    			'#west': {
    				afterrender:this.afterGraphWinRendered
-   			},
-			  '#ingraph-search': {
-				  afterrender:this.autoCompleteSearch
-			},
-			  		  
+   			},			  
 		  '#nodeCreateBtn': {
 		  	click: this.onNodeCreateBtn
 		  },
@@ -105,17 +102,7 @@ Ext.define('Precon.controller.GraphWin', {
    			nodecreatepanel=Ext.widget('nodecreatepanel',{renderTo:Ext.getBody()});
    			nodecreatepanel.show();
    },
-   autoCompleteSearch: function() {
-   	    console.log("!!! setup auto")
-	    $( "#ingraph-search-inputEl" ).autocomplete({
-	          source: validateKeyword,
-	          minLength:2,
-	          select: function(event, ui) {
-	              console.log("selected ", ui)
-	              precon.searchNetworks(ui.item._id, function(networks){ loadNetworks(networks, false)})
-	          }         
-	        });
-   },
+  
    
    /**
 	 * Call precon.client.quickSearch to get a list of networks
@@ -250,7 +237,9 @@ Ext.define('Precon.controller.GraphWin', {
 
   
    onGraphWinResize: function() {
+	   console.log("resized")
    		//put here all codes related with graph window resize related
+	   this.createGraph()
    },
    
    afterGraphWinRendered: function() {
@@ -263,6 +252,7 @@ Ext.define('Precon.controller.GraphWin', {
    },
    onLaunch: function(){
 	   console.log("GraphWin.Onlaunch")
+	   Ext.getCmp('west').on('resize', this.onGraphWinResize, this)
 	   this.createGraph()
 	   this.showMainObject()
 	   
@@ -300,8 +290,33 @@ Ext.define('Precon.controller.GraphWin', {
 			console.log("Redraw graph")    
 			// redraw
 			//Ext.select("svg").remove();
-			mygraph.redraw(Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true))
-		}	
-   }
+			mygraph.resize(Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true))
+		}
+		this.toggleFullscreenMode()
+   },
+   toggleFullscreenMode:function(){	   
+	    var viewport = Ext.getCmp('viewport')
+	    if(!viewport) return
+		if(screen.height === window.outerHeight){
+			console.log("Switch to fullscreen mode")
+			// full screen mode			
+			viewport.getLayout().padding = '0 0 0 0'
+			viewport.doLayout()			
+			Ext.getCmp("west").setWidth(Ext.getBody().getSize().width )		
+			
+			$("#myheader").hide()
+			viewport.fullscreen = true
+		}
+		else{
+			if(viewport.fullscreen){
+				viewport.fullscreen = false
+				console.log("quit fullscreen mode")			
+				viewport.getLayout().padding = '52 0 0 0'
+				viewport.doLayout()
+				Ext.getCmp("west").setWidth(Ext.getBody().getSize().width *0.6)
+				$("#myheader").show()
+			}		
+		}
+	}
    
 });

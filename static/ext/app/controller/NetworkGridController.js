@@ -13,6 +13,10 @@ Ext.define('Precon.controller.NetworkGridController', {
      		console.log("NetworkGridController.init"); 
      		
      		this.control({
+     			'#ingraph-search': {
+  				  afterrender:this.autoCompleteSearch,
+  				  scope:this
+     			},
      			'networkgrid': {
      				  //afterrender:this.initApp,
      				  //itemclick: this.networkGridClicked,
@@ -83,7 +87,19 @@ Ext.define('Precon.controller.NetworkGridController', {
 				//console.log(obj);
 			}		
 		})	
-	}
+	},
+	autoCompleteSearch: function() {
+   	    console.log("!!! setup auto")
+   	    var self = this;
+	    $( "#ingraph-search-inputEl" ).autocomplete({
+	          source: validateKeyword,
+	          minLength:2,
+	          select: function(event, ui) {
+	              console.log("selected ", ui)
+	              precon.searchNetworks(ui.item._id, function(networks){ self.loadNetworks(networks, false)})
+	          }         
+	        });
+   }
 	
 }); // end Controller
 
