@@ -37,6 +37,7 @@ Ext.define('Precon.view.GraphViewport' ,{
 							   {
 								    xtype: 'button', 
 								    text : 'Create Link',
+								    id:'linkCreateBtn',
 								    //iconCls:'x-btn-inner link',
 								    icon:"/ext/resources/images/link.png",
 								    tooltip:'Display available geocoders',
@@ -126,32 +127,7 @@ Ext.define('Precon.view.GraphViewport' ,{
                              }
                        ]
             }
-         ],
-         listeners: {
-             afterrender: {
-                 element:'',
-                 fn: function() {
-                     /**
-                     //update the button toolbar space width
-                     setTimeout(function(){
-                          //  createGraph();
-                        },300);
-                        setTimeout(function(){			                                            
-                            Ext.getCmp("legendToggleBtn").toggle();
-                        },600);
-                     console.log('western panel rendered');
-                     */
-        //Ext.getCmp('west').getEl().on('contextmenu', function(e) {
-                                    
-                     }
-             },
-             resize: {
-                 element:'',
-                 fn:function() {
-                    // createGraph();                	 
-                 }
-             }
-         }
+         ]        
       },{
         region: 'center',
         //border: false,

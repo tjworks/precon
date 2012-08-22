@@ -30,7 +30,7 @@ Ext.define('Precon.controller.Reference', {
     },      
 	onLaunch: function(){
 		console.log("ReferenceController.onlaunch")	
-		setTimeout(this.updateReference, 500);
+		var self= this
 		
 		mygraph.on("mouseover",function(evt, target){
 			//console.log("mouseover", target.__data__)
@@ -42,6 +42,10 @@ Ext.define('Precon.controller.Reference', {
 			if(target.__data__.getClass() == 'connection')
 				highlightConnectionRef(target.__data__, false)				
 		});
+		
+		this.getGraphModel().on('add.network', this.updateReference)
+		
+		
 		
 	},
 	updateReference:function(){

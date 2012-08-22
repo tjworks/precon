@@ -1,3 +1,4 @@
+
 Ext.define('Precon.controller.GraphWin', {
     extend: 'Precon.controller.BaseController',
     stores:['Networks'],
@@ -15,16 +16,17 @@ Ext.define('Precon.controller.GraphWin', {
         console.log('initializing graphwindow component');
         //initialized the graphModel
 		_graphController=this;
-        this.control({
+		_graphModel = this.getGraphModel();
+        this.control({   			
    			'#west': {
-   				element:'',
+   				afterrender:this.afterGraphWinRendered,
    				resize: this.onGraphWinResize
-   			} ,
-   			'#west': {
-   				afterrender:this.afterGraphWinRendered
    			},			  
 		  '#nodeCreateBtn': {
 		  	click: this.onNodeCreateBtn
+		  },
+		  '#linkCreateBtn':{
+			click: this.onLinkCreateBtn  
 		  },
 		  '#recSelectBtn' : {
 		  	toggle: this.onRecSelect
@@ -106,7 +108,9 @@ Ext.define('Precon.controller.GraphWin', {
    			nodecreatepanel=Ext.widget('nodecreatepanel',{renderTo:Ext.getBody()});
    			nodecreatepanel.show();
    },
-  
+   onLinkCreateBtn: function(){
+	   
+   },
    
    /**
 	 * Call precon.client.quickSearch to get a list of networks
@@ -167,9 +171,9 @@ Ext.define('Precon.controller.GraphWin', {
 	showMainObject:function (){	
 		objid = this.getObjectIdFromUrl()
 		if(!objid) return
-		
+		var self = this
 		precon.getObject(objid, Ext.Function.bind(function(obj){
-			var html = this.renderObject(obj)
+			var html = self.renderObject(obj)
 			var title =  obj.name || obj.title || obj.label
 			Ext.getCmp("west").setTitle( precon.getObjectType(objid) + ": "+  title)
 			title = precon.util.shortTitle(title)
@@ -255,8 +259,7 @@ Ext.define('Precon.controller.GraphWin', {
    		Ext.getCmp("legendToggleBtn").toggle();
    },
    onLaunch: function(){
-	   console.log("GraphWin.Onlaunch")
-	   Ext.getCmp('west').on('resize', this.onGraphWinResize, this)
+	   console.log("GraphWin.Onlaunch")	   
 	   this.createGraph()
 	   this.showMainObject()
 	   
@@ -327,19 +330,21 @@ Ext.define('Precon.controller.GraphWin', {
 	}, // end toggleFullscreen
 
 	createContextMenu:function(obj) {
+		contxted = obj
 		var self = this
 		var items= []
 		var label = 'Link'
-		if(obj && obj.get("entity")){	
-			items.push({
-	                    text: 'Expand',
-	                    handler:function() {
-	                  	  console.log("Centered on", obj)
-	                  	  if(obj.get('entity'))
-	                      	  precon.searchNetworks( obj.get('entity'), function(nets){ self.loadNetworks(nets, true, true) })
-	                    }, 
-	                    iconCls:'update'
-	                });
+		if(obj.getClass && obj.getClass() == 'node'){	
+			if(obj.get("entity"))
+				items.push({
+		                    text: 'Expand',
+		                    handler:function() {
+		                  	  console.log("Centered on", obj)
+		                  	  if(obj.get('entity'))
+		                      	  precon.searchNetworks( obj.get('entity'), function(nets){ self.loadNetworks(nets, true, true) })
+		                    }, 
+		                    iconCls:'update'
+		                });
 			label = 'Node '
 		};
 			
@@ -354,7 +359,7 @@ Ext.define('Precon.controller.GraphWin', {
 		              },
 		              {
 		                  text: 'Remove '+ label+": " + (obj.get('label') || ''),
-		                  handler:function(menuItem,menu) { openRemoveWindow(obj) }, 
+		                  handler:function(menuItem,menu) {  self.openRemoveWindow(obj) }, 
 		                  iconCls:'remove'
 		              })
 		}
@@ -377,6 +382,26 @@ Ext.define('Precon.controller.GraphWin', {
 	    return contextMenu
 	   
 	}, // end createContext
+	openRemoveWindow: function(selected){
+		var sel = []
+		var graphModel = this.getGraphModel()
+		if(selected) sel = [selected]		
+		else sel = graphModel.getSelections() 	
+		if(sel.length == 0){
+			alert("Please select node or link you wish to remove first")
+			return
+		}
+		sel.forEach(function(item){
+			if(item._class == 'connection')
+				graphModel.removeConnection(item)		
+		})	
+		sel.forEach(function(item){
+			if(item._class == 'node')
+				graphModel.removeNode(item, null, true)		
+		})
+		graphModel.clearSelection()
+
+	},
 	saveGraph: function(){
 		var self = this
 		var f = function(){
@@ -407,6 +432,6 @@ Ext.define('Precon.controller.GraphWin', {
 		//if(! Ext.getCmp("graphname").getValue()) Ext.getCmp("graphname").setValue(gNetwork.get("name"))
 		
 		saveGraphWindow.show()	
-	}
-   
+	} // end saveGraph
+	
 });
