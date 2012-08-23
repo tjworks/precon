@@ -9,9 +9,11 @@ Ext.define('Precon.controller.GraphWin', {
     	'LinkUpdatePanel',
     	'NodeCreatePanel',
     	'ReferenceGrid',
-    	'SaveGraphWindow'
-    	
+    	'SaveGraphWindow',
+    	'LinkCreateWindow',
+    	'GraphLegendWindow'
     ],    
+    requires:['Ext.ux.form.MultiSelect'],
     init: function() {
         console.log('initializing graphwindow component');
         //initialized the graphModel
@@ -33,6 +35,14 @@ Ext.define('Precon.controller.GraphWin', {
 		  },
 		  '#saveGraphBtn': {
 			click: this.saveGraph
+		  },
+		  '#removeNodeBtn':{
+			  click: function(){
+				  this.openRemoveWindow()
+			  }
+		  },
+		  '#legendToggleBtn':{
+			  toggle: this.toggleLegend
 		  }
         });
    },  
@@ -109,7 +119,24 @@ Ext.define('Precon.controller.GraphWin', {
    			nodecreatepanel.show();
    },
    onLinkCreateBtn: function(){
-	   
+		//initialize the linkCreateWindow with selections
+		var selections = this.getGraphModel().getSelections("node")
+		var nodes = []
+		selections.forEach(function(obj){
+			if(obj instanceof precon.Node) 
+				nodes.push(obj)
+		})
+		if(nodes.length<2){
+			alert("Please select two nodes first")
+			return;
+		}
+		window.linkCreateWindow = window.linkCreateWindow || this.getView('LinkCreateWindow').create()
+		
+		if(nodes.length>=2){
+			Ext.getCmp("linkname1_c").setValue(nodes[0].getLabel());
+			Ext.getCmp("linkname2_c").setValue(nodes[1].getLabel());
+		} 						
+		linkCreateWindow.show();	
    },
    
    /**
@@ -142,32 +169,7 @@ Ext.define('Precon.controller.GraphWin', {
 		var matcher = location.href.match(/graph\/([^\/]*?)[#\?]?$/)
 		if(matcher) return matcher[1]
 		return ''
-	},
-	
-	/**
-	 * Call precon.client.quickSearch to get a list of networks
-	 * 
-	 * No returns. This function will initialize/update the network table.
-	 * 
-	 */
-	initNetwork:function (networkObjects) {
-	// sample static data for the store
-	   console.log('here is the returns from JT. ');
-	   console.log(networkObjects);
-		if(!networkObjects || networkObjects.length == 0){
-			console.log("Error: no result")
-			return
-		}
-		var getObjectIdFromUrl=function() {
-				var matcher = location.href.match(/graph\/([^\/]*?)[#\?]?$/)
-				if(matcher) return matcher[1]
-				return ''
-		};
-		if(networkObjects.length == 1 && getObjectIdFromUrl()== networkObjects[0].get('id')){
-			this.getGraphModel().setGraphNetwork(networkObjects[0])
-		}
-		_graphController.loadNetworks(networkObjects, true);
-	}, 
+	},	
 	showMainObject:function (){	
 		objid = this.getObjectIdFromUrl()
 		if(!objid) return
@@ -256,7 +258,7 @@ Ext.define('Precon.controller.GraphWin', {
    		//start to draw the graph
    		//setTimeout(function() {_graphController.createGraph()},300);   		
    		//Toggle the legend button
-   		Ext.getCmp("legendToggleBtn").toggle();
+   		//Ext.getCmp("legendToggleBtn").toggle();
    },
    onLaunch: function(){
 	   console.log("GraphWin.Onlaunch")	   
@@ -383,6 +385,7 @@ Ext.define('Precon.controller.GraphWin', {
 	   
 	}, // end createContext
 	openRemoveWindow: function(selected){
+		console.log("remove node", selected)
 		var sel = []
 		var graphModel = this.getGraphModel()
 		if(selected) sel = [selected]		
@@ -433,5 +436,94 @@ Ext.define('Precon.controller.GraphWin', {
 		
 		saveGraphWindow.show()	
 	} // end saveGraph
-	
+	,
+	showObject: function(ob){
+		var self = this
+		if('getRawdata' in ob) obj = ob.getRawdata()
+		
+		
+		var tab =  Ext.getCmp("infopanel").getComponent(obj._id)
+		if(!tab){
+			var html = self.renderObject(obj)
+			var title =  obj.name || obj.title || obj.label
+			var title = precon.util.shortTitle(title)
+			//process the node rendering
+			if (ob.getClass && ob.getClass()=="node") {
+				
+				tab = Ext.getCmp("infopanel").add(
+					{
+						title:title,
+						layout:'fit',
+						id:obj._id,
+						closable:true,
+						defaults: {
+				        	anchor: '100%',
+				        	bodyPadding:20
+				   		},
+						items:[{xtype:'nodeupdatepanel'}],
+						fbar: [
+					          {
+					              text: 'Update Node',
+					              handler: function () {
+					              	  alert("peng peng");
+					                  var tabs = this.up('tabpanel');
+					              }
+					          }
+					      ]
+					}
+				);
+			}
+			else if (ob.getClass && ob.getClass()=="connection") {
+					//var getName=function(id) {precon.getObject(id,function(obj){obj.name})};
+				    var formnodes=[];
+				    obj.nodes.forEach(function(anode) {
+				    	var label = self.getGraphModel().findNode(getId(anode)).get("label")
+				    	formnodes.push([label, label])
+				    	//precon.getObject(getId(anode),function(obj){console.log(obj);formnodes.push([obj.label,obj.label])})
+				    	//formnodestemp.push([anode,anode])}
+				    	});
+					
+					tab = Ext.getCmp("infopanel").add(
+						{
+							title:title,
+							layout:'fit',
+							id:obj._id,
+							closable:true,
+							defaults: {
+					        	anchor: '100%',
+					        	bodyPadding:20
+					   		},
+					   		items:[{xtype:'linkupdatepanel'}]						
+						}
+					);
+			} else
+			{
+				tab = Ext.getCmp("infopanel").add({
+					title:title,
+					html:html,
+					id:obj._id,
+					autoScroll:true,
+					closable:true
+				})
+			}
+		}
+		Ext.getCmp("infopanel").setActiveTab(tab)
+	},
+	/*
+	 * Toggle the show/hide of legend window. If legend window is not created, it will create it first
+	 * 
+	 */
+	toggleLegend:function(item,pressed) {
+		if (!window.legendWindow)
+			legendWindow= this.getView('GraphLegendWindow').create({ x:2,
+																	 y:Ext.getCmp("legendToggleBtn").getEl().getXY()[1]-260,}		)
+		if (pressed) {
+			legendWindow.show();
+			item.setText("Hide Legend");
+		}
+		else {
+			legendWindow.hide();
+			item.setText("Show Legend");
+		} 
+	}  // end of toggleLegend
 });

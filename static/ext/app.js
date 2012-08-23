@@ -23,8 +23,7 @@ Ext.application({
     	'GraphWin','Reference','NetworkGridController'
     ],    
     stores:['MyNetworks', 'Networks'],
-    requires:['Precon.view.GraphViewport'],
-    
+    views:[ 'GraphViewport'],    
 	init: function(){
 		console.log("Ext Application init")
 		// create model instance

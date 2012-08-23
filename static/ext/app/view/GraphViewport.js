@@ -28,7 +28,6 @@ Ext.define('Precon.view.GraphViewport' ,{
                                     id:'nodeCreateBtn',
                                     //iconCls:'x-btn-inner node',
                                     icon:"/ext/resources/images/node.png",
-                                    tooltip:'Display available geocoders',
                                     handler : function() {
                                        // nodeCreate();
                                     }
@@ -40,7 +39,6 @@ Ext.define('Precon.view.GraphViewport' ,{
 								    id:'linkCreateBtn',
 								    //iconCls:'x-btn-inner link',
 								    icon:"/ext/resources/images/link.png",
-								    tooltip:'Display available geocoders',
 								    handler : function() {
 									  // linkCreate()
 								    }
@@ -49,20 +47,19 @@ Ext.define('Precon.view.GraphViewport' ,{
                                {
                                     xtype: 'button', 
                                     text : 'Remove Node/Link',
+                                    id:'removeNodeBtn',
                                     //iconCls:'x-btn-inner remove',
                                     icon:"/ext/resources/images/link_.png",
-                                    tooltip:'Display available geocoders',
                                     handler : function() {
-                                        openRemoveWindow();
+                                        //openRemoveWindow();
                                     }
                                },
                                {
                                     xtype: 'button', 
                                     text : 'Rec Select',
                                     id:'recSelectBtn',
-                                    enableToggle: true,
+                                    //enableToggle: true,
                                     icon:"/ext/resources/images/rec_select.png",
-                                    tooltip:'drraw a rectangle to select entities',
                                     handler : function() {
                                         //openRemoveWindow();
                                     }
@@ -73,7 +70,6 @@ Ext.define('Precon.view.GraphViewport' ,{
                                     text : 'Save Graph',
                                     //iconCls:'x-btn-inner remove',
                                     icon:"/ext/resources/images/link_.png",
-                                    tooltip:'Display available geocoders',
                                     handler : function() {
                                         //saveGraph();
                                     }
@@ -83,7 +79,6 @@ Ext.define('Precon.view.GraphViewport' ,{
                                     text : 'Help',
                                     //iconCls:'x-btn-inner help',
                                     icon:"/ext/resources/images/help.png",
-                                    tooltip:'Display available geocoders',
                                     handler : function() {
                                         console.log("test");
                                     }
