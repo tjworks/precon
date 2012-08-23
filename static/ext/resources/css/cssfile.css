@@ -186,13 +186,13 @@ path.state-selected {
     background-color:#ffff9c
 }
 circle.state-highlight {
-    stroke:#66cccc;  
-    fill: #66cccc;
+    stroke:#ffff9c;  
+    fill: #ffff9c;
     fill-opacity:0.2;
     stroke-width:4px;    
 }
 path.state-highlight {
-    stroke:#66cccc;      
+    stroke:#ffff9c;      
     stroke-width:4px;
 }
 

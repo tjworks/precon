@@ -11,7 +11,8 @@ Ext.define('Precon.controller.GraphWin', {
     	'ReferenceGrid',
     	'SaveGraphWindow',
     	'LinkCreateWindow',
-    	'GraphLegendWindow'
+    	'GraphLegendWindow',
+    	'ObjectView'
     ],    
     requires:['Ext.ux.form.MultiSelect'],
     init: function() {
@@ -160,30 +161,10 @@ Ext.define('Precon.controller.GraphWin', {
 		} 						
 		linkCreateWindow.show();	
    },
-   
-   /**
-	 * Call precon.client.quickSearch to get a list of networks
-	 * 
-	 * No returns. This function will initialize/update the network table.
-	 * 
-	 */
-	initApp: function() {
-		console.log('initializing app');
-		//select all networks in the network table NOTE: this might need to be changed
-		setTimeout(function(){Ext.ComponentQuery.query('networkgrid')[0].getSelectionModel().selectAll()},200);
-		
-		// events binding 
-		$(document).bind(precon.event.ViewportCreated, this.showMainObject)
-		
-		
-		
-		this.showMainObject()
-	},
- 	
+      
  	//
  	onNetworkGridRefresh: function() {
- 		alert('ha ha loaded');
- 		console.log('network is refreshing...');	
+ 		
  	},
  	
 	// get the object id from the URL, if it's available
@@ -192,8 +173,8 @@ Ext.define('Precon.controller.GraphWin', {
 		if(matcher) return matcher[1]
 		return ''
 	},	
-	showMainObject:function (){	
-		objid = this.getObjectIdFromUrl()
+	showMainObject:function (objid){	
+		objid = objid || this.getObjectIdFromUrl()
 		if(!objid) return
 		var self = this
 		precon.getObject(objid, function(obj){
@@ -203,7 +184,7 @@ Ext.define('Precon.controller.GraphWin', {
 			title = precon.util.shortTitle(title)
 			var tab = Ext.getCmp("infopanel").add({
 				title:'Summary',
-				html:html,
+				items:[html],
 				autoScroll:true,
 				closable:true
 			})
@@ -224,50 +205,11 @@ Ext.define('Precon.controller.GraphWin', {
 	},
 	
 	renderObject:function(obj){
-		//console.log("Rendering object: ", obj)
-		if(precon.getObjectType(obj._id) =='publication' ){
-			var authors = ''
-			if(obj.authors){
-				obj.authors.forEach(function(author){
-					if(authors) authors+=", ";
-					authors += (author.first?author.first.substring(0,1):'') +" "+ author.last
-				});			
-			}
-			
-			
-			html="<table><tr><th>Title:</td><td>"+obj.name+"</td></tr>"
-			html+="<tr><th>Authors:</th><td>" + authors +"</td></tr>"
-			
-			var entities = obj.entities || [];
-			ab = obj.abstract;
-			// sort by character length of the entity then alphabetically, this is to address one entity name is a substring of the other
-			entities = _.sortBy(entities, function(name){ (name.length + 100) + name  })
-			for(var i=0;i<entities.length;i++){
-				var en = entities[entities.length-1-i]			
-			}
-			entities.forEach(function(en){
-				var re = new RegExp("\\b" + en.name+"\\b", 'gi')
-				console.log("Replacing " + en.name)
-				ab = ab.replace(re, '<a href="#" class="entity-name" group="' +en.group+'">'+ en.name+'</a>')  
-			});
-			
-			html+="<tr><th>Abstract:</th><td id='publication-abstract'>" + ab +"</td></tr>"		
-			
-			html+="</table>"
-			return html
-		}	
-		else if(precon.getObjectType(obj._id) =='connection' ){
-			//TBD: temp hack
-			//obj.label = obj.source.getLabel() + " - " + obj.target.getLabel()
-			obj.label = obj.nodes[0] + " - " + obj.nodes[1] 
-		}
-	
-	    //stop rendering node, switch it panel items	
-		if (precon.getObjectType(obj._id)!="node")
-			return precon.util.formatObject(obj)
-		
+		var objType = precon.getObjectType( getId(obj) )
+		var v = this.getView(objType.substring(0,1).toUpperCase()+ objType.substring(1) +'View').create({object:obj})
+		console.log("View is ", v)
+		return v;		
 	},
-
   
    onGraphWinResize: function() {
 	   console.log("resized")
@@ -466,8 +408,7 @@ Ext.define('Precon.controller.GraphWin', {
 		
 		
 		var tab =  Ext.getCmp("infopanel").getComponent(obj._id)
-		if(!tab){
-			var html = self.renderObject(obj)
+		if(!tab){			
 			var title =  obj.name || obj.title || obj.label
 			var title = precon.util.shortTitle(title)
 			//process the node rendering
@@ -523,7 +464,7 @@ Ext.define('Precon.controller.GraphWin', {
 			{
 				tab = Ext.getCmp("infopanel").add({
 					title:title,
-					html:html,
+					items: [self.renderObject(obj)],
 					id:obj._id,
 					autoScroll:true,
 					closable:true

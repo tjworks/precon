@@ -7,6 +7,7 @@ Ext.define('Precon.model.Network', {
            ,{name:'include'}
            ,{name: 'creator'}           
            ,{name: 'source'}
-           ,{name: 'group'}           
+           ,{name: 'group'} 
+           ,{name: 'update_tm'}
     ]
 });

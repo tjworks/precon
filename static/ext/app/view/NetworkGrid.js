@@ -13,7 +13,7 @@ Ext.define('Precon.view.NetworkGrid' ,{
     features: [groupingFeature],
     alias : 'widget.networkgrid',
 
-    title : 'Networks',
+    title : 'Networks in Graph',
 	
 	//define the data
 	store: 'Networks',

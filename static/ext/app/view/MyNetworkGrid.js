@@ -33,11 +33,11 @@ Ext.define('Precon.view.MyNetworkGrid' ,{
 								    dataIndex: 'name'
 								},							
 								{
-								    text     : 'Source', 
+								    text     : 'Last Changed', 
 								    width    : 75, 
 								    flex:1,
 								    sortable : true, 
-								    dataIndex: 'source'
+								    dataIndex: 'update_tm'
 								   // renderer: change
 								}
                           ];

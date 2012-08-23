@@ -49,7 +49,7 @@ Ext.define('Precon.controller.Reference', {
 		
 	},
 	updateReference:function(){
-		console.log("Updating references")
+		console.log("Updating references!")
 		var literatureGrid = Ext.getCmp("refgrid")
 		//var sel = graphModel.getSelections('connection')
 		var all_refs = {}
@@ -74,7 +74,8 @@ Ext.define('Precon.controller.Reference', {
 		})
 		precon.getObjects(pids, function(results){
 			results.forEach(function(pub){
-				if(literatureGrid.getStore().findExact("_id", pub._id) <0  ) // add only if not already exists
+				if(literatureGrid.getStore().findExact("_id", pub._id) <0  ){ // add only if not already exists
+					console.log("Add ref ", pub._id, pub)
 					pub.authors = pub.authors && pub.authors.length>0? pub.authors:[]
 				 	var a = ''
 				 	if(_.isArray(pub.authors)){					 	
@@ -85,10 +86,13 @@ Ext.define('Precon.controller.Reference', {
 					 		a+= (a?', ':'') + name
 						 	})
 						 pub.authors = a
+						 
+						 pub.processed_abstract = precon.util.processAbstract(pub)
 				 	}
 					literatureGrid.getStore().add(pub)
-				})			
-			})
+				} // end if
+			});
+	    }); // end getObjects
 			
 	} // end function
 

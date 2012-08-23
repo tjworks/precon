@@ -3,7 +3,9 @@
            {name:'_id'},
            {name: 'name'},
            {name: 'authors'},
-           {name:'abstract'}
+           {name:'abstract'},
+           {name:'entities'},
+           {name:'processed_abstract'}
         ],
         data: []
     });
@@ -63,7 +65,7 @@
     	ptype:'rowexpander',
     	rowBodyTpl:[
     	 '<b>Authors</b>: {authors}<br>',
-    	 '<b>Abstract:</b><br>{abstract}'
+    	 '<b>Abstract:</b><br>{processed_abstract}'
     	]	
     }],
     highlight:function(pubids, on){
