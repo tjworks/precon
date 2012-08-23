@@ -299,7 +299,7 @@ function myGraph(el,w,h) {
 	    .attr("d", "M0,-4L10,0L0,4");
 	   
         visg=vis.append('svg:g')
-    			//.call(d3.behavior.zoom().on("zoom", redraw))
+    			.call(d3.behavior.zoom().on("zoom", redraw))
     			.append("svg:g");
     			
 		visg.append('svg:rect')
@@ -307,7 +307,7 @@ function myGraph(el,w,h) {
 		    .attr('height', h)
 		    .attr('fill', 'white')
 		vis.on("click", eventsProxy ).on("contextmenu", eventsProxy);
-		visg.on('mousedown',recSelect('down')).on('mouseup',recSelect('up')).on('mousemove',recSelect('move'));		
+		//visg.on('mousedown',recSelect('down')).on('mouseup',recSelect('up')).on('mousemove',recSelect('move'));		
  	} 
  	  
    var recSelect=function (flag) {
