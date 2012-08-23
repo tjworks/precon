@@ -1,6 +1,5 @@
-Ext.define('Precon.store.Networks', {
+Ext.define('Precon.store.MyNetworks', {
     extend: 'Ext.data.Store',
-    groupField: 'group',
     model: 'Precon.model.Network'
     
     /*
@@ -9,4 +8,4 @@ Ext.define('Precon.store.Networks', {
             {name: 'Tommy', email: 'tommy@sencha.com'}
         ]*/
     
-});
+}); 

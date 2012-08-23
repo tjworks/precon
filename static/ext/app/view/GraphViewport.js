@@ -168,7 +168,11 @@ Ext.define('Precon.view.GraphViewport' ,{
                 },
                 {
         			xtype:'referencegrid'
-                }	
+                },
+                {
+                	xtype:'mynetworkgrid'
+                }
+                
                 ]
                 //html:'here lists the networks'
             },

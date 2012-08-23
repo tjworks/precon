@@ -22,6 +22,7 @@ Ext.application({
     controllers: [
     	'GraphWin','Reference','NetworkGridController'
     ],    
+    stores:['MyNetworks', 'Networks'],
     requires:['Precon.view.GraphViewport'],
     
 	init: function(){
@@ -36,6 +37,11 @@ Ext.application({
     	console.log("Ext Application launch")
     	// create view
     	Ext.create('Precon.view.GraphViewport' )    	
+    },
+    getUser:function(){
+    	if(window.user && window.user.user_id)
+    		return window.user
+    	return null
     }
 });
 

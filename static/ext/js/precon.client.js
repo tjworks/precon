@@ -254,8 +254,26 @@ precon.getNetwork=function(network_id, callback){
 			callback && callback(network)
 		});		
 	})
-}
+};
 
+/**
+ * Retrieve a list of user's networks.
+ * 
+ * For performance, connection data are not retrieved
+ */
+precon.getNetworksByUser=function(user_id, callback){
+	if(!user_id) throw ("user_id is not specified")
+	console.log("Loading networks for "+ user_id)
+	var qstr = escape('{"owner":"TOKEN"}'.replace("TOKEN",user_id))
+	var url = precon.conf.api_base + "/network?query="+ qstr
+	precon._ajax(url,  function(networks){
+		var ret = [];
+		networks.forEach(function(net){
+			ret.push(new precon.Network(net))
+		});
+		callback && callback(ret);
+	});
+};
 /**
  * Get the details of any precon object
  * 
