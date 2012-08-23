@@ -92,6 +92,7 @@ Ext.define('Precon.view.NodeCreatePanel' ,{
 										}
 									 ] 
 	},
+	
 	constructor: function(config) {
 			//this.initConfig(config);
 			return this.callParent(arguments);

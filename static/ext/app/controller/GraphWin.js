@@ -25,7 +25,7 @@ Ext.define('Precon.controller.GraphWin', {
    				resize: this.onGraphWinResize
    			},			  
 		  '#nodeCreateBtn': {
-		  	click: this.onNodeCreateBtn
+		  	click: this.nodeCreate
 		  },
 		  '#linkCreateBtn':{
 			click: this.onLinkCreateBtn  
@@ -43,6 +43,9 @@ Ext.define('Precon.controller.GraphWin', {
 		  },
 		  '#legendToggleBtn':{
 			  toggle: this.toggleLegend
+		  },
+		  'nodecreatepanel':{
+			  
 		  }
         });
    },  
@@ -113,10 +116,29 @@ Ext.define('Precon.controller.GraphWin', {
     	}
    },
    
-   onNodeCreateBtn: function() {
-   		if (typeof nodecreatepanel=='undefined')
+   nodeCreate: function(nodeData) {
+   		if (typeof nodecreatepanel=='undefined'){
    			nodecreatepanel=Ext.widget('nodecreatepanel',{renderTo:Ext.getBody()});
-   			nodecreatepanel.show();
+   			$( "#entityname-inputEl" ).autocomplete({
+  	          source: validateEntity,
+  	          minLength:2,
+  	          select: function(event, ui) {
+  	              console.log("selected entity", ui)
+  	              $( "#entityname-inputEl" ).attr("entityName", ui.item._id)
+  	              $( "#entityname-inputEl" ).attr("entityId", ui.item._id)					    	             
+  	              //precon.searchNetworks(ui.item._id, function(networks){ loadNetworks(networks, false)})
+  	          }, 
+  	          search:function(){
+  	        	  $( "#entityname-inputEl" ).attr("entityName", '')
+  	              $( "#entityname-inputEl" ).attr("entityId", '')
+  	          }
+  	        });
+   		}
+   			
+		if(nodeData && nodeData.label)
+			$( "#entityname-inputEl" ).attr("value",nodeData.label).keydown()
+	    
+   		nodecreatepanel.show();
    },
    onLinkCreateBtn: function(){
 		//initialize the linkCreateWindow with selections
@@ -174,7 +196,7 @@ Ext.define('Precon.controller.GraphWin', {
 		objid = this.getObjectIdFromUrl()
 		if(!objid) return
 		var self = this
-		precon.getObject(objid, Ext.Function.bind(function(obj){
+		precon.getObject(objid, function(obj){
 			var html = self.renderObject(obj)
 			var title =  obj.name || obj.title || obj.label
 			Ext.getCmp("west").setTitle( precon.getObjectType(objid) + ": "+  title)
@@ -187,14 +209,15 @@ Ext.define('Precon.controller.GraphWin', {
 			})
 			Ext.getCmp("infopanel").setActiveTab(tab)	
 			
-			$("#publication-abstract").find(".entity-name").click(this.addNodeFromAbstract)
-		},this)); 
+			$("#publication-abstract").find(".entity-name").click(function(){ self.addNodeFromAbstract(this)})
+			
+		}); 
 	},
 	
-    addNodeFromAbstract:function(evt, obj){
-		var label = $(this).text() 
-		var group = $(this).attr("group")	
-		nodeCreate( {label:label, group:group}  )
+    addNodeFromAbstract:function(em){
+		var label = $(em).text() 
+		var group = $(em).attr("group")	
+		this.nodeCreate( {label:label, group:group}  )
 		
 		//label.replace(/[()\s]/g, '')
 		//graphModel.addNode( {_id:id, label: label } )
