@@ -63,8 +63,8 @@ Ext.define('Precon.controller.Reference', {
 		});
 		// for now we only deal with pubmed
 		p = all_refs['pubmed']	
-		console.log("Updating refs", p)
-		if(p.length== 0) return
+		
+		if(!p || p.length== 0) return
 		
 		pids = [] 
 		// add 'publ' prefix for pubmed refs
@@ -77,14 +77,16 @@ Ext.define('Precon.controller.Reference', {
 				if(literatureGrid.getStore().findExact("_id", pub._id) <0  ) // add only if not already exists
 					pub.authors = pub.authors && pub.authors.length>0? pub.authors:[]
 				 	var a = ''
-				 	pub.authors.forEach(function(v){
-				 		var name = v.first || ''
-				 		if(name) name=name.substring(0,1)
-				 		name+=" " + v.last   				 		
-				 		a+= (a?', ':'') + name
-					 	})
-						pub.authors = a
-						literatureGrid.getStore().add(pub)
+				 	if(_.isArray(pub.authors)){					 	
+				 		pub.authors.forEach(function(v){
+					 		var name = v.first || ''
+					 		if(name) name=name.substring(0,1)
+					 		name+=" " + v.last   				 		
+					 		a+= (a?', ':'') + name
+						 	})
+						 pub.authors = a
+				 	}
+					literatureGrid.getStore().add(pub)
 				})			
 			})
 			

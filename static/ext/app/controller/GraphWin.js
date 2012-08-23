@@ -334,7 +334,7 @@ Ext.define('Precon.controller.GraphWin', {
 		var self = this
 		var items= []
 		var label = 'Link'
-		if(obj.getClass && obj.getClass() == 'node'){	
+		if(obj && obj.getClass && obj.getClass() == 'node'){	
 			if(obj.get("entity"))
 				items.push({
 		                    text: 'Expand',

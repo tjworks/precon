@@ -553,6 +553,7 @@
          * @returns the key value, default value or <null>
          */
         get: function(key, def){
+        	if(window.precon && ! precon.conf.local_cache) return null;
             _checkKey(key);
             if(key in _storage){
                 if(_storage[key] && typeof _storage[key] == "object" &&

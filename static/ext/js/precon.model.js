@@ -16,17 +16,17 @@ precon.NetworkGraph = function(){
 	
 	
 	var _addNetwork = function(netObj){
-		networks.push(netObj);
-		
+		var existing = graphModel.findNetwork(netObj.get('_id'));
+		if(!existing) networks.push(netObj);
+		nnet = netObj
 		// load all nodes first
 		var ids = []
-		var conns = null
-		netObj.getConnections(function(cons){		
-			conns= cons
-			conns.forEach(function(con){
-				ids = ids.concat ( con.getNodeIds() )			
-			})
-		});
+		var conns = netObj.getConnections()
+		conns.forEach(function(con){
+			ccon = con
+			ids = ids.concat ( con.getNodeIds() )			
+		})
+		
 		precon.getObjects(ids, function(){				 	
 			conns.forEach(function(con){
 				graphModel.addConnection(con, netObj, false);
@@ -129,12 +129,12 @@ precon.NetworkGraph = function(){
 		// TBD: check duplicates
 		console.log("adding network "+ netObj)
 		var existing = this.findNetwork(netId);
-		if(existing) return;
+		//if(existing) return;
 
 		if(!isObject(netObj)){
 			// load it
-			precon.getObject(netId, function(net){				
-				_addNetwork(new precon.Network(net));
+			precon.getNetwork(netId, function(net){				
+				_addNetwork(net);
 			})
 		}
 		else		
@@ -146,16 +146,24 @@ precon.NetworkGraph = function(){
 	 * Remove network 
 	 */
 	this.removeNetwork=function(netObj){
-		console.log("removing network0 "+ netObj)
+		
 		var netId = getId(netObj)
 		var netObj= this.findNetwork(netId)
+		
+		console.log("removing network", netObj, netObj.get('name') )
 		var connectionIds = netObj.getConnectionIds()
 		for(var k=0;k<connectionIds.length;k++){
 			var referenceCount= 0 
 			for(var i=0;i<networks.length;i++)
 				if( _.indexOf( networks[i].getConnectionIds(), connectionIds[k] ) >=0) referenceCount++
-			if(referenceCount <=1) // okay to remove
-				this.removeConnection(connectionIds[k])			 
+			if(referenceCount <=1){ // okay to remove
+				this.removeConnection(connectionIds[k])
+				//console.log(connectionIds[k] +" removed")
+			}
+			else {				
+				//console.log(connectionIds[k] +" ref count is "+ referenceCount)
+			}
+				
 		}
 		/**
 		for(var i=0;i<nodes.length;i++){
@@ -335,7 +343,7 @@ precon.NetworkGraph = function(){
 			existing.delRef(connection,"connection");			
 		}
 		if(existing.getRefs("connection").length > 0 && !force){
-			console.log("More refs remain for node ", node)
+			//console.log("More refs remain for node ", node)
 			return;
 		} 
 		
@@ -352,7 +360,7 @@ precon.NetworkGraph = function(){
 	 * @events: remove.connection event will be triggered. 
 	 */
 	this.removeConnection = function(con){
-		//console.log("Removing connections")
+		//console.log("Removing connection ", con)
 		var conId = getId(con);
 		for(var i=0;i<connections.length;i++){
 			var con = connections[i];
@@ -521,7 +529,6 @@ precon.Network = function(rawdata){
 	this._class = 'network'	
 	this.init(rawdata);
 	var rawdata = this.rawdata
-	var mycons = []
 	this.getId = function(){
 		return rawdata._id
 	}
@@ -529,8 +536,14 @@ precon.Network = function(rawdata){
 		return rawdata.title
 	}
 	
-	// return a copy of the connections list
+	// return a copy of the connections list that currently loaded
 	this.getConnections = function(callback){
+		var cons = []
+		rawdata._connections.forEach(function(con){ cons.push(con)})
+		
+		if(callback) callback( cons )
+		else return cons
+		/**
 		if(mycons.length>0){
 			callback(mycons)
 			return
@@ -545,19 +558,18 @@ precon.Network = function(rawdata){
 			mycons.push( new precon.Connection(con) )
 		})
 		callback(mycons)
+		*/
 	}
 	this.getConnectionIds = function(){
-		if(this.connections)
-			return this.connections
+		
 		if (! rawdata._connections){			
 			return []
 		}
 		var connections= []
 		rawdata._connections.forEach(function(con){
-			connections.push( con._id )
+			connections.push( con.get('_id' ))
 		})
-		this.connections = connections
-		return this.connections
+		return connections
 	}
 	
 	// return a copy of the nodes list

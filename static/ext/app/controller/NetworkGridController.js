@@ -77,9 +77,9 @@ Ext.define('Precon.controller.NetworkGridController', {
 		console.log(networkObjects);
 		console.log('is the networkobjects');
 		var self = this;
-		networkObjects.forEach(function(network){		
-			if(networkStore.findExact("_id", network.get('_id')) <0  ){ // add only if not already exists
-				if(toGraph) self.getGraphModel().addNetwork( network);
+		networkObjects.forEach(function(network){
+			if(toGraph) self.getGraphModel().addNetwork( network);
+			if(networkStore.findExact("_id", network.get('_id')) <0  ){ // add only if not already exists				
 				obj = network.getRawdata()
 				obj.include = toGraph		
 				networkStore.add( obj )
@@ -89,7 +89,6 @@ Ext.define('Precon.controller.NetworkGridController', {
 		})	
 	},
 	autoCompleteSearch: function() {
-   	    console.log("!!! setup auto")
    	    var self = this;
 	    $( "#ingraph-search-inputEl" ).autocomplete({
 	          source: validateKeyword,

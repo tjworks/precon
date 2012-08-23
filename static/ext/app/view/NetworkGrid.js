@@ -64,7 +64,7 @@ Ext.define('Precon.view.NetworkGrid' ,{
     	click: {
 			 element:'el',	
 			 fn:function(evt, item){        	     				 
-    			console.log("Clicked!", arguments)
+    			//console.log("Clicked!", arguments)
     			if(item.type == 'checkbox'){
     				filterNetwork(item, groupingFeature)  
     			}        			     	
