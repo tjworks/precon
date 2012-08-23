@@ -98,12 +98,12 @@ marker#stimulats {
   stroke:mediumpurple;
 }
 marker#association {
-  fill: gold;
+  fill: grey;
 }
 .association{
   stroke-width: 2px;
   /** stroke-dasharray: 5,1 5,1; */
-  stroke:gold;
+  stroke:grey;
 }
 marker#physical_interaction {
   fill: olive;
@@ -176,10 +176,11 @@ text.shadow {
   	fill:yellow;
   	stroke:yellow;
 }
-.state-selected {   
+path.state-selected {   
     stroke:yellow
     stroke-width:2;
     stroke-color:yellow;
+    fill:none
 }
 .state-highlight {
     background-color:#ffff9c
