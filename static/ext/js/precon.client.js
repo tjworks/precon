@@ -451,6 +451,26 @@ precon.util.shortTitle=function(title, max){
 	max = max || 20
 	return title? title.substring(0, max) +"..." : title// TBD: smarter
 }
+
+
+/**
+ * add hyper link to the mined entities
+ */
+precon.util.processAbstract = function(publication){
+	var entities = publication.entities || [];
+	ab = publication.abstract;
+	// sort by character length of the entity then alphabetically, this is to address one entity name is a substring of the other
+	entities = _.sortBy(entities, function(name){ (name.length + 100) + name  })
+	for(var i=0;i<entities.length;i++){
+		var en = entities[entities.length-1-i]			
+	}
+	entities.forEach(function(en){
+		var re = new RegExp("\\b" + en.name+"\\b", 'gi')
+		console.log("Replacing " + en.name)
+		ab = ab.replace(re, '<a href="#" class="mined-entity" group="' +en.group+'" onclick="$(document).trigger(\'mined-entity-clicked\', this) ">'+ en.name+'</a>')  
+	});
+	return ab
+}
 precon.event = {
 	ViewportCreated:'ViewPortCreated',
 	UserLogin:'UserLogin'

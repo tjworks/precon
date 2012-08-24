@@ -6,7 +6,7 @@ Ext.define('Precon.view.NodeCreatePanel' ,{
 			bodyPadding: 5,
 		    width: 350,
 		    title: 'Enter entity name represented by the new node',
-		    id:'nodeCreateWindow',
+		    id:'nodecreatewin',
 		    autoHeight:true,
 		    extentStore:null,
 		    closeAction: 'hide',
@@ -78,16 +78,16 @@ Ext.define('Precon.view.NodeCreatePanel' ,{
 															return;
 														}
 														Ext.getCmp('entityname').setValue("");
-														this.up('window').hide()
-														//nodeCreateWindow.hide();
+														//this.up('window').hide()
+														nodeCreateWindow.hide();
 													}	
 												}
 										}, {
 											xtype : 'button',
 											text : 'Cancel',
-											handler : function() {
-												//nodeCreateWindow.hide();
-												this.up('window').hide();
+											handler : function() {												
+												//this.up('window').hide();
+												nodeCreateWindow.hide();
 											}
 										}
 									 ] 

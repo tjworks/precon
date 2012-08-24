@@ -44,9 +44,6 @@ Ext.define('Precon.controller.GraphWin', {
 		  },
 		  '#legendToggleBtn':{
 			  toggle: this.toggleLegend
-		  },
-		  'nodecreatepanel':{
-			  
 		  }
         });
    },  
@@ -118,8 +115,9 @@ Ext.define('Precon.controller.GraphWin', {
    },
    
    nodeCreate: function(nodeData) {
-   		if (typeof nodecreatepanel=='undefined'){
-   			nodecreatepanel=Ext.widget('nodecreatepanel',{renderTo:Ext.getBody()});
+   		if (typeof nodeCreateWindow=='undefined'){   			
+   			window.nodeCreateWindow =  this.getView('NodeCreatePanel').create()
+   			nodeCreateWindow.show();
    			$( "#entityname-inputEl" ).autocomplete({
   	          source: validateEntity,
   	          minLength:2,
@@ -135,11 +133,9 @@ Ext.define('Precon.controller.GraphWin', {
   	          }
   	        });
    		}
-   			
+   		nodeCreateWindow.show();	
 		if(nodeData && nodeData.label)
-			$( "#entityname-inputEl" ).attr("value",nodeData.label).keydown()
-	    
-   		nodecreatepanel.show();
+			$( "#entityname-inputEl" ).attr("value",nodeData.label).keydown()	    
    },
    onLinkCreateBtn: function(){
 		//initialize the linkCreateWindow with selections
@@ -188,11 +184,8 @@ Ext.define('Precon.controller.GraphWin', {
 				autoScroll:true,
 				closable:true
 			})
-			Ext.getCmp("infopanel").setActiveTab(tab)	
-			
-			$("#publication-abstract").find(".entity-name").click(function(){ self.addNodeFromAbstract(this)})
-			
-		}); 
+			Ext.getCmp("infopanel").setActiveTab(tab)						
+		});				
 	},
 	
     addNodeFromAbstract:function(em){
@@ -230,6 +223,11 @@ Ext.define('Precon.controller.GraphWin', {
 	   this.createGraph()
 	   this.showMainObject()
 	   
+	   var self = this
+	   $(document).on("mined-entity-clicked", function(evt, em){
+		   console.log("mined click", arguments)
+		   self.addNodeFromAbstract(em)
+	   })
    },
    createGraph: function() {
 	   	//console.log("Recreating graph")

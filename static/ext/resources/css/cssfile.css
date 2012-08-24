@@ -200,10 +200,19 @@ path.state-highlight {
     color:red    
 }
 
-
-
-
 /**  HTML forms **/
 input.filterByNetwork {
 	margin-left:30px
+}
+#infopanel th {
+  color:#5f6b87;
+  font-weight:bold;
+  padding:5px;
+}
+#infopanel td {
+  padding:5px;
+}
+
+.mined-entity {
+    padding: 0px 2px;        
 }

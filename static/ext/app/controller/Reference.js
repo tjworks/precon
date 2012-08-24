@@ -14,9 +14,10 @@ Ext.define('Precon.controller.Reference', {
      		console.log("ReferenceController.init"); 
      		this.control({
      				"#refgrid": {
+     					
      					itemclick:{        		
      		        		fn:function(evt, rec){        	
-     		        			//console.log("Clicked literature!", arguments)
+     		        			console.log("Clicked literature!", arguments)
      		        		}
      		        	},        	      
      		        	itemmouseenter:function(view, row){
@@ -43,13 +44,14 @@ Ext.define('Precon.controller.Reference', {
 				highlightConnectionRef(target.__data__, false)				
 		});
 		
-		this.getGraphModel().on('add.network', this.updateReference)
-		
-		
+		this.getGraphModel().on('add.network', function(){
+			self.updateReference()
+		})
 		
 	},
 	updateReference:function(){
 		console.log("Updating references!")
+		var self = this
 		var literatureGrid = Ext.getCmp("refgrid")
 		//var sel = graphModel.getSelections('connection')
 		var all_refs = {}
@@ -91,7 +93,7 @@ Ext.define('Precon.controller.Reference', {
 				 	}
 					literatureGrid.getStore().add(pub)
 				} // end if
-			});
+			}); // end forEach						
 	    }); // end getObjects
 			
 	} // end function
