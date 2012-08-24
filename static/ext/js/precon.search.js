@@ -24,7 +24,7 @@ $(document).ready( function() {
     // list my networks
    
     precon.searchNetworks({owner:'precon'}, function(networks){
-    	console.log("Got precon's networks", networks)
+    	log.debug("Got precon's networks", networks)
     	
 		    lists = "<UL>"
             for(var n in networks){
@@ -43,12 +43,12 @@ $(document).ready( function() {
 */
 /******* End of Demonstration code  *****************/
 $(document).ready( function() {
-	 console.log("ready search");
+	 log.info("jquery - DOMContentReady")
 	 $( "#searchtxt" ).autocomplete({
 	      source: validateKeyword,
 	      minLength:2,
 	      select: function(event, ui) {
-	    	  console.log("selected ", ui)
+	    	  log.debug("selected ", ui)
 	    	  document.location='/graph/'+ ui.item._id	    	  
 	      }	    	
 	    });
@@ -58,9 +58,9 @@ $(document).ready( function() {
 
 function validateKeyword(req, callback){
 	term = req.term
-	console.log("validating term")
+	log.debug("validating term")
 	precon.quickSearch(term, function(results){
-		console.log("kw search results by "+term, results)
+		log.debug("kw search results by "+term, results)
 		callback(results)
 	})		  
 }
@@ -71,9 +71,9 @@ function validateKeyword(req, callback){
  */
 function validateEntity(req, callback){
 	term = req.term
-	console.log("validating term")
+	log.debug("validating term")
 	precon.quickSearch(term, function(results){
-		console.log("kw search results by "+term, results)
+		log.debug("kw search results by "+term, results)
 		callback(results)
 	}, 'entity')		  
 }
@@ -85,7 +85,7 @@ function doSearch(){
 		query = parseSearchToken(val)
 		if(!query) return
 		precon.searchNetworks(query, function(networks){
-			console.log(" search results", networks)
+			log.debug(" search results", networks)
 			lists = "<UL>"
 	         for(var n in networks){
 	             network = networks[n]
@@ -113,7 +113,7 @@ function Timer(name){
 	this.elapsed = function(msg){		
 		var e = (new Date().getTime() - this.start.getTime() ) /1000
 		this.start = new Date()
-		console.log("ELAPSED  ["+ this.name+"]: "+ e +"s "+(msg||'') )
+		log.debug("ELAPSED  ["+ this.name+"]: "+ e +"s "+(msg||'') )
 		return e
 	}
 	return this

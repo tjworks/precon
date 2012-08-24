@@ -126,7 +126,7 @@ Ext.define('Precon.view.ReferenceGrid' ,{
         listeners: {
         	itemclick:{        		
         		fn:function(evt, rec){        	
-        			console.log("Clicked literature!", arguments)
+        			log.debug("Clicked literature!", arguments)
         		}
         	},        	      
         	itemmouseenter:function(view, row){

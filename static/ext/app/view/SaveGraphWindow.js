@@ -63,7 +63,7 @@ Ext.define('Precon.view.SaveGraphWindow', {
 									}
 									Ext.getCmp("saveNetworkBtn").setDisabled(true)
 									graphModel.save(function(data, textStatus, jqXHR){
-										console.log("post result", data, textStatus)
+										log.debug("post result", data, textStatus)
 										Ext.getCmp("saveNetworkBtn").setDisabled(false)
 										if(data.indexOf("netw") ==0){
 											alert("Successfully saved network graph, page will reload with the new network.")

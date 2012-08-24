@@ -10,7 +10,7 @@ Ext.define('Precon.controller.NetworkGridController', {
     extend: 'Precon.controller.BaseController',
     requires:['Precon.view.NetworkGrid', 'Precon.view.MyNetworkGrid'],
     init: function() {
-     		console.log("NetworkGridController.init"); 
+     		log.debug("NetworkGridController.init"); 
      		
      		this.control({
      			'#ingraph-search': {
@@ -25,7 +25,7 @@ Ext.define('Precon.controller.NetworkGridController', {
      				  //deselect: this.networkGridDeselect,
      				
      	        	itemdblclick:function(view, row){
-     	        		console.log("double Clicked network! " + row.data._id)      
+     	        		log.debug("double Clicked network! " + row.data._id)      
      	        		//showObject(row.data)     	        		
      	        	},
      	        	itemmouseenter:function(view, row){
@@ -40,13 +40,13 @@ Ext.define('Precon.controller.NetworkGridController', {
      			},
      			'mynetworkgrid':{
      				itemclick:function(view, row, el, rowIndex, evt){
-     					console.log("clicked mynetwork", arguments)
+     					log.debug("clicked mynetwork", arguments)
      					if(evt && evt.target && evt.target.name == 'filterByNetwork'){
      						this.toggleMyNetwork(row.data, evt.target)
      					}     					
      				},
      				itemdblclick:function(view, row){
-     	        		console.log("double Clicked my network! ", row.data)      
+     	        		log.debug("double Clicked my network! ", row.data)      
      	        		//showObject(row.data)     	        		
      	        	}
      			}
@@ -64,21 +64,23 @@ Ext.define('Precon.controller.NetworkGridController', {
     	})
     },
     onLaunch:function(){
+    	log.info("NetworkGridController.Onlaunch")
     	objid = this.getObjectIdFromUrl()	    	
     	if (objid){
     		
     		var self = this
     		precon.searchNetworks(objid, function (networkObjects) {
-    			   console.log('here is the returns from TJ. ');
-    			   console.log(networkObjects);
+    			   log.debug('here is the returns from TJ. ');
+    			   log.debug(networkObjects);
     				if(!networkObjects || networkObjects.length == 0){
-    					console.log("Error: no result")
+    					log.debug("Error: no result")
     					return
     				}    			
     				if(networkObjects.length == 1 && objid== networkObjects[0].get('id')){
     					self.getGraphModel().setGraphNetwork(networkObjects[0])
     				}
-    				self.loadNetworks(networkObjects, true);
+    				log.info("Loading intial networks") 
+    				self.loadNetworks(networkObjects, true);    				
     				self.loadMyNetworks();
     			});			
     	}
@@ -86,7 +88,7 @@ Ext.define('Precon.controller.NetworkGridController', {
     },
    
     loadMyNetworks: function(){
-    	console.log("loadMyNetworks")
+    	log.info("Loading my networks")
     	if(!app.getUser()) return;  // not logged in
     	var networkStore= app.getStore('MyNetworks')
     	precon.getNetworksByUser(app.getUser().user_id, function(networkObjects){
@@ -95,8 +97,8 @@ Ext.define('Precon.controller.NetworkGridController', {
     				obj = network.getRawdata()
     				obj.include = false		
     				networkStore.add( obj )
-    				//console.log('load obj into network table ');
-    				//console.log(obj);
+    				//log.debug('load obj into network table ');
+    				//log.debug(obj);
     			}		
     		});
     	})
@@ -116,8 +118,8 @@ Ext.define('Precon.controller.NetworkGridController', {
 			networkStore.removeAll();
 		}		
 		var networkStore= app.getStore('Networks')
-		console.log(networkObjects);
-		console.log('is the networkobjects');
+		log.debug(networkObjects);
+		log.debug('is the networkobjects');
 		var self = this;
 		networkObjects.forEach(function(network){
 			if(toGraph) self.getGraphModel().addNetwork( network);
@@ -125,8 +127,8 @@ Ext.define('Precon.controller.NetworkGridController', {
 				obj = network.getRawdata()
 				obj.include = toGraph		
 				networkStore.add( obj )
-				//console.log('load obj into network table ');
-				//console.log(obj);
+				//log.debug('load obj into network table ');
+				//log.debug(obj);
 			}		
 		})	
 	},
@@ -136,7 +138,7 @@ Ext.define('Precon.controller.NetworkGridController', {
 	          source: validateKeyword,
 	          minLength:2,
 	          select: function(event, ui) {
-	              console.log("selected ", ui)
+	              log.debug("selected ", ui)
 	              precon.searchNetworks(ui.item._id, function(networks){ self.loadNetworks(networks, false)})
 	          }         
 	        });
@@ -161,7 +163,7 @@ function filterNetwork(item, groupingFeature){
 		else
 			$("input[group=" + grp+"]")[0].checked = false		
 			
-		console.log("filter!", item.value)
+		log.debug("filter!", item.value)
 		// same network checkbox may appear multiple times, i.e., on mynetworksgrid
 		$("input[value="+ item.value+"]").attr("checked", item.checked)
 	}

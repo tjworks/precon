@@ -79,7 +79,7 @@ Ext.define('Precon.view.LinkUpdatePanel' ,{
     							           ddReorder: true,
     							           listeners: {
     									  	afterrender: {
-    									  		//fn:function(){ var d=Ext.getCmp('linkupdateform_m'+obj.label); console.log(d);}
+    									  		//fn:function(){ var d=Ext.getCmp('linkupdateform_m'+obj.label); log.debug(d);}
     									  	}
     									  }
     								  },*/

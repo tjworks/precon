@@ -52,9 +52,9 @@ function myGraph(el,w,h) {
 	this.on('click', function(evt, target){
 		
 		if(! target.__data__ || (target.__data__._class!='connection' && target.__data__._class!='node' )) return
-		//console.log("clicked", target)
+		//log.debug("clicked", target)
 		if(d3.event.ctrlKey || d3.event.shiftKey){
-			console.log("Ctrl clicked", target.__data__)
+			log.debug("Ctrl clicked", target.__data__)
 			stuff = target.__data__
 			graph.model.select(target.__data__, true)
 		}
@@ -88,7 +88,7 @@ function myGraph(el,w,h) {
 		if(!graph.model) return
 		
 		nodearray.forEach(function(mynode){		
-			//console.log("node is ", mynode)
+			//log.debug("node is ", mynode)
 			$d( "[id="+ mynode.getId() +"]" ).classed('state-selected', mynode.selected);			
 		});
 		
@@ -108,23 +108,23 @@ function myGraph(el,w,h) {
         update();
     }
     this._removeNode=function(evt, data){
-    	//console.log("_removeNode ", data)
+    	//log.debug("_removeNode ", data)
     	if(!data.node) return
     	nodearray.splice(findNodeIndex(data.node.getId()),1);
         update();
     }
     this._removeLink = function(evt, data){
-    	//console.log("_remove ", data)
+    	//log.debug("_remove ", data)
     	if(!data.connection) return
     	linkarray.splice(findLinkIndex(data.connection.getId()),1);
     	update();
     }
     this._addLink= function(evt, data){
-    	//console.log("Adding connection", data.connection)
+    	//log.debug("Adding connection", data.connection)
     	if(data.connection ){
     			var nodes = data.connection.getNodes()
     			if(nodes && nodes.length ==2){    		
-    				//console.log("Adding link "+ nodes[0]+", "+ nodes[1])
+    				//log.debug("Adding link "+ nodes[0]+", "+ nodes[1])
     				var link = data.connection
     				
     				link.source = findNode(nodes[0].getId())    				
@@ -199,14 +199,14 @@ function myGraph(el,w,h) {
   
         /*
         .on("mousemove", function() {
-                     console.log("moving...&calling fisheye");
+                     log.debug("moving...&calling fisheye");
                       fisheye.focus(d3.mouse(this));
                                                    vis.selectAll("circle").each(function(d) { d.fisheye = fisheye(d); })
                           .attr("cx", function(d) { return d.fisheye.x; })
                           .attr("cy", function(d) { return d.fisheye.y; })
                           .attr("r", function(d) { return d.fisheye.z * 4.5; });
                                                vis.selectAll("path").attr("d", function(d) { 
-                              //console.log(d.target.fisheye);
+                              //log.debug(d.target.fisheye);
                             var dx = d.target.fisheye.x - d.source.fisheye.x,
                             dy = d.target.fisheye.y - d.source.fisheye.py,
                             dr = Math.sqrt(dx * dx + dy * dy);
@@ -274,7 +274,7 @@ function myGraph(el,w,h) {
     * 
     */
     var initSVG=function () {
-    	 console.log("initializing the network graph....");
+    	 log.debug("initializing the network graph....");
 	     vis = d3.select(el).append("svg:svg")
         .attr("width", w)
         .attr("name","forcenet")
@@ -312,9 +312,9 @@ function myGraph(el,w,h) {
  	  
    var recSelect=function (flag) {
     	if (flag=='down') {
-    		console.log('rectangle selction is on');
+    		log.debug('rectangle selction is on');
     		//visg.on('mousemove',_graphController.recSelect('move'));
-    		console.log(d3.event);
+    		log.debug(d3.event);
     		if (d3.selectAll('#selectRect')[0].length==0 && d3.event)
 	    		selectRectangle=visg.append('svg:rect')
 	    							.attr('x',d3.event.clientX)
@@ -339,7 +339,7 @@ function myGraph(el,w,h) {
    };
  	
  	var redraw=function() {
-  		//console.log("here is the scale: "+d3.event.scale);
+  		//log.debug("here is the scale: "+d3.event.scale);
   		if (! myGraph.doubleClicked && d3.event.scale>=0.5 && d3.event.scale<=6 ) {
   			myGraph.scale=myGraph.scale
 	  		visg.attr("transform",
@@ -371,9 +371,9 @@ function myGraph(el,w,h) {
     var _update = function(){
     	clearTimeout(window.graphUpdateTrigger)
     	window.graphUpdateTrigger = null
-	     //console.log(linkarray);
-	     //console.log(nodearray);
-	     //console.log("Updating")
+	     //log.debug(linkarray);
+	     //log.debug(nodearray);
+	     //log.debug("Updating")
 		 timer = Timer("Updating Graph")
 		  //Check if SVG has been initialized
 	     //if(typeof vis=="undefined") initSVG();
@@ -457,7 +457,7 @@ function myGraph(el,w,h) {
 							   lastobj.lastsy=String.valueOf(d.source.y);
 							   lastobj.lastdx=String.valueOf(d.target.x);
 							   lastobj.lastdy=String.valueOf(d.target.y);*/
-				   	   if(!d.source.x) console.log
+				   	   if(!d.source.x) log.debug
 				   	   var pnts=getPointOnCircle(d.source.x,d.source.y,r,d.target.x,d.target.y,r);
 				   	   if (pnts) {
 					   	   var a=pnts[0];

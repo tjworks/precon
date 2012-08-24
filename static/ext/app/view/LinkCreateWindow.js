@@ -116,7 +116,7 @@ Ext.define('Precon.view.LinkCreateWindow' ,
 											nodearray.forEach(function(anode){
 												if (anode.getLabel().toLowerCase()==Ext.getCmp('linkname1_c').getValue().toLowerCase()) {
 													nodes.push(anode);
-													console.log(anode.getLabel()+"<===>"+anode.getId());
+													log.debug(anode.getLabel()+"<===>"+anode.getId());
 													//node1=new precon.Node({"label":'""'+anode.getLabel()+'"', "_id":'"'+anode.getId()+'"'});
 												}
 												if (anode.getLabel().toLowerCase()==Ext.getCmp('linkname2_c').getValue().toLowerCase()) {
@@ -124,8 +124,8 @@ Ext.define('Precon.view.LinkCreateWindow' ,
 													//node2=new precon.Node({"label":'""'+anode.getLabel()+'"', "_id":'"'+anode.getId()+'"'});
 												}
 											});
-											//console.log(node1);
-											//console.log(node2);
+											//log.debug(node1);
+											//log.debug(node2);
 											if (nodes.length>=2) {																
 												app.graphModel.connectNodes(nodes[0], nodes[1], Ext.getCmp('linktype_c').getValue());
 												Ext.getCmp('linkname2_c').setValue("");

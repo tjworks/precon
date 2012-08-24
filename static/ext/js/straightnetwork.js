@@ -76,14 +76,14 @@ function myGraph(el,w,h) {
         
         /*
         .on("mousemove", function() {
-                     console.log("moving...&calling fisheye");
+                     log.debug("moving...&calling fisheye");
                       fisheye.focus(d3.mouse(this));
                                                    vis.selectAll("circle").each(function(d) { d.fisheye = fisheye(d); })
                           .attr("cx", function(d) { return d.fisheye.x; })
                           .attr("cy", function(d) { return d.fisheye.y; })
                           .attr("r", function(d) { return d.fisheye.z * 4.5; });
                                                vis.selectAll("path").attr("d", function(d) { 
-                              //console.log(d.target.fisheye);
+                              //log.debug(d.target.fisheye);
                             var dx = d.target.fisheye.x - d.source.fisheye.x,
                             dy = d.target.fisheye.y - d.source.fisheye.py,
                             dr = Math.sqrt(dx * dx + dy * dy);
@@ -115,8 +115,8 @@ function myGraph(el,w,h) {
     };
     
     var update = function () {
-	      //console.log(linkarray);
-	      //console.log(nodearray);
+	      //log.debug(linkarray);
+	      //log.debug(nodearray);
 	      
 	     // if (typeof linkg =="undefined")
 		      linkg=vis.append("svg:g");

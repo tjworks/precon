@@ -8,9 +8,11 @@ Ext.Loader.setConfig({
         } 
 	});
 Ext.require([
-    'Ext.selection.CheckboxModel'
+    //'Ext.selection.CheckboxModel'
 ]);
-
+Ext.onReady(function(){
+	log.info("Ext ready");
+});
 Ext.application({
 	enabled:true,
 	//the name space for the app
@@ -25,7 +27,7 @@ Ext.application({
     stores:['MyNetworks', 'Networks'],
     views:[ 'GraphViewport'],    
 	init: function(){
-		console.log("Ext Application init")
+		log.info("Ext Application init")
 		// create model instance
     	this.graphModel = new precon.NetworkGraph()    	
 		// define a global reference to the appication
@@ -33,7 +35,7 @@ Ext.application({
 	},
 	//start the view port components
     launch: function() {    	
-    	console.log("Ext Application launch")
+    	log.info("Ext Application launch")
     	// create view
     	Ext.create('Precon.view.GraphViewport' )    	
     },

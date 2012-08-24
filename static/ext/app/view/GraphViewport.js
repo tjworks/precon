@@ -80,7 +80,7 @@ Ext.define('Precon.view.GraphViewport' ,{
                                     //iconCls:'x-btn-inner help',
                                     icon:"/ext/resources/images/help.png",
                                     handler : function() {
-                                        console.log("test");
+                                        log.debug("test");
                                     }
                                 }
                         ]

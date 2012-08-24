@@ -16,7 +16,7 @@ Ext.define('Precon.controller.GraphWin', {
     ],    
     requires:['Ext.ux.form.MultiSelect'],
     init: function() {
-        console.log('initializing graphwindow component');
+        log.debug('initializing graphwindow component');
         //initialized the graphModel
 		_graphController=this;
 		_graphModel = this.getGraphModel();
@@ -48,7 +48,7 @@ Ext.define('Precon.controller.GraphWin', {
         });
    },  
    onRecSelect: function(btn,pressed) {
-   	console.log('rectangle selction is '+pressed);
+   	log.debug('rectangle selction is '+pressed);
    	    if (pressed) {
    	    	
    			Ext.core.DomHelper.applyStyles(Ext.DomQuery.select('svg')[0],{cursor:'crosshair'});
@@ -65,8 +65,8 @@ Ext.define('Precon.controller.GraphWin', {
    recSelect: function (flag) {
     	if (flag=='down') {
     		visg.on('mouseup',function(){_graphController.recSelect('up')}).on('mousemove',function(){_graphController.recSelect('move')});
-    		console.log('rectangle selction is on');
-    		console.log(d3.event);
+    		log.debug('rectangle selction is on');
+    		log.debug(d3.event);
     		if (d3.selectAll('#selectRect')[0].length==0 && d3.event)
     			_graphController.rectSelectX0=d3.event.layerX;
     			_graphController.rectSelectY0=d3.event.layerY;
@@ -83,7 +83,7 @@ Ext.define('Precon.controller.GraphWin', {
     	}
     		
     	if (flag=='move') {
-    		console.log('mouse moving');
+    		log.debug('mouse moving');
     		if (d3.event) {
     			if (d3.event.layerX-_graphController.rectSelectX0<0)
 	    			d3.select('#selectRect')
@@ -122,7 +122,7 @@ Ext.define('Precon.controller.GraphWin', {
   	          source: validateEntity,
   	          minLength:2,
   	          select: function(event, ui) {
-  	              console.log("selected entity", ui)
+  	              log.debug("selected entity", ui)
   	              $( "#entityname-inputEl" ).attr("entityName", ui.item._id)
   	              $( "#entityname-inputEl" ).attr("entityId", ui.item._id)					    	             
   	              //precon.searchNetworks(ui.item._id, function(networks){ loadNetworks(networks, false)})
@@ -200,51 +200,51 @@ Ext.define('Precon.controller.GraphWin', {
 	renderObject:function(obj){
 		var objType = precon.getObjectType( getId(obj) )
 		var v = this.getView(objType.substring(0,1).toUpperCase()+ objType.substring(1) +'View').create({object:obj})
-		console.log("View is ", v)
+		log.debug("View is ", v)
 		return v;		
 	},
   
    onGraphWinResize: function() {
-	   console.log("resized")
+	   log.debug("resized")
    		//put here all codes related with graph window resize related
 	   this.createGraph()
    },
    
    afterGraphWinRendered: function() {
    		//put here all codes related after render event of graph window
-   		console.log("graph window is available now");   		
+   		log.debug("graph window is available now");   		
    		//start to draw the graph
    		//setTimeout(function() {_graphController.createGraph()},300);   		
    		//Toggle the legend button
    		//Ext.getCmp("legendToggleBtn").toggle();
    },
    onLaunch: function(){
-	   console.log("GraphWin.Onlaunch")	   
+	   log.info("GraphWin.Onlaunch")	   
 	   this.createGraph()
 	   this.showMainObject()
 	   
 	   var self = this
 	   $(document).on("mined-entity-clicked", function(evt, em){
-		   console.log("mined click", arguments)
+		   log.debug("mined click", arguments)
 		   self.addNodeFromAbstract(em)
 	   })
    },
    createGraph: function() {
-	   	//console.log("Recreating graph")
+	   	//log.debug("Recreating graph")
 	    //
 	    //graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
-		console.log("Creating graph")    
+		log.debug("Creating graph")    
 		//Ext.select("svg").remove();
 		//graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
 		var self = this
 		if(!window.mygraph){
-			console.log("Creating graph ", Ext.get("west-body").getWidth(true), Ext.get("west-body").getHeight(true))    
+			log.debug("Creating graph ", Ext.get("west-body").getWidth(true), Ext.get("west-body").getHeight(true))    
 			mygraph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
 			mygraph.on("click", function(evt, target){
-				//console.log("dblclick", evt, target.__data__)			
+				//log.debug("dblclick", evt, target.__data__)			
 			});		
 			mygraph.on("dblclick", function(evt, target){
-				console.log("dblclick", evt, target.__data__)
+				log.debug("dblclick", evt, target.__data__)
 				//showObject(target.__data__)
 				if(target.__data__ && target.__data__.get('entity'))
 			           precon.searchNetworks( target.__data__.get('entity'), function(nets){ 
@@ -254,7 +254,7 @@ Ext.define('Precon.controller.GraphWin', {
 			});		
 			mygraph.on("contextmenu",function(evt, target){
 	            d3.event.preventDefault();
-	            console.log("Contexted", target.__data__)
+	            log.debug("Contexted", target.__data__)
 	            contextMenu = self.createContextMenu(target.__data__)
 	            contextMenu.showAt([d3.event.clientX,d3.event.clientY]);
 			});			
@@ -262,7 +262,7 @@ Ext.define('Precon.controller.GraphWin', {
 			mygraph.setModel(this.getGraphModel())			
 		}
 		else{
-			console.log("Redraw graph")    
+			log.debug("Redraw graph")    
 			// redraw
 			//Ext.select("svg").remove();
 			mygraph.resize(Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true))
@@ -273,7 +273,7 @@ Ext.define('Precon.controller.GraphWin', {
 	    var viewport = Ext.getCmp('viewport')
 	    if(!viewport) return
 		if(screen.height === window.outerHeight){
-			console.log("Switch to fullscreen mode")
+			log.debug("Switch to fullscreen mode")
 			// full screen mode			
 			viewport.getLayout().padding = '0 0 0 0'
 			viewport.doLayout()			
@@ -285,7 +285,7 @@ Ext.define('Precon.controller.GraphWin', {
 		else{
 			if(viewport.fullscreen){
 				viewport.fullscreen = false
-				console.log("quit fullscreen mode")			
+				log.debug("quit fullscreen mode")			
 				viewport.getLayout().padding = '52 0 0 0'
 				viewport.doLayout()
 				Ext.getCmp("west").setWidth(Ext.getBody().getSize().width *0.6)
@@ -304,7 +304,7 @@ Ext.define('Precon.controller.GraphWin', {
 				items.push({
 		                    text: 'Expand',
 		                    handler:function() {
-		                  	  console.log("Centered on", obj)
+		                  	  log.debug("Centered on", obj)
 		                  	  if(obj.get('entity'))
 		                      	  precon.searchNetworks( obj.get('entity'), function(nets){ self.loadNetworks(nets, true, true) })
 		                    }, 
@@ -348,7 +348,7 @@ Ext.define('Precon.controller.GraphWin', {
 	   
 	}, // end createContext
 	openRemoveWindow: function(selected){
-		console.log("remove node", selected)
+		log.debug("remove node", selected)
 		var sel = []
 		var graphModel = this.getGraphModel()
 		if(selected) sel = [selected]		
@@ -371,7 +371,7 @@ Ext.define('Precon.controller.GraphWin', {
 	saveGraph: function(){
 		var self = this
 		var f = function(){
-			console.log("Continue saveGraph")
+			log.debug("Continue saveGraph")
 			self.saveGraph()
 		}
 		 	
@@ -381,7 +381,7 @@ Ext.define('Precon.controller.GraphWin', {
 			return;
 		}
 		
-		console.log("Doing saving")
+		log.debug("Doing saving")
 		var graphModel = this.getGraphModel()
 		
 		var gNetwork = graphModel.getGraphNetwork() 
@@ -441,7 +441,7 @@ Ext.define('Precon.controller.GraphWin', {
 				    obj.nodes.forEach(function(anode) {
 				    	var label = self.getGraphModel().findNode(getId(anode)).get("label")
 				    	formnodes.push([label, label])
-				    	//precon.getObject(getId(anode),function(obj){console.log(obj);formnodes.push([obj.label,obj.label])})
+				    	//precon.getObject(getId(anode),function(obj){log.debug(obj);formnodes.push([obj.label,obj.label])})
 				    	//formnodestemp.push([anode,anode])}
 				    	});
 					

@@ -1,3 +1,14 @@
+
+/** bootstrap code */
+window.console = window.console || {log:function(){}}
+if( m = document.location.href.match(/logger=(DEBUG|INFO)/))
+	loglevel = m[1]
+else
+	loglevel = 'INFO'
+window.log = new Log(Log[loglevel], Log.consoleLogger);
+log.info('Script Loading Start')
+
+
 precon =  {}
 precon.conf = {
 	local_cache: true,
@@ -19,8 +30,7 @@ var getId = function(obj){
 	else
 		return obj
 };
-window.console = window.console || {log:function(){}}
-
+	
 /**
  * Create a random id
  * @type: one of: network, connection, node, entity, etc
@@ -63,7 +73,7 @@ precon.quickSearch = function(query, callback, filter){
 }
  
 precon._ajax = function(url, callback){
-	//console.log("Performing ajax query: "+ unescape(url))
+	//log.debug("Performing ajax query: "+ unescape(url))
 	var timer = new Timer("ajax " + url)
 	if($.jStorage.get(url)){
 		timer.elapsed()
@@ -113,7 +123,7 @@ precon.searchNetworks = function(query, callback){
 	else if(query.people)
 		qstr = escape('{"owner":"TOKEN"}'.replace("TOKEN",query.people))
 	else{
-		console.log("Invalid query:", query)
+		log.debug("Invalid query:", query)
 		throw "Not a valid query specification: "+ query
 	}
 	query.limit = query.limit || precon.conf.max_objects_per_request;  // maximum 
@@ -184,7 +194,7 @@ precon.searchNetworks = function(query, callback){
 						var cons = unloadedConnections.join('","')
 						cons = '"'+  cons+ '"'					
 						qstr = '{"_id":{"$in":[TOKEN]}}'.replace("TOKEN", cons)
-						//console.log("Qstr", qstr)
+						//log.debug("Qstr", qstr)
 						var qstr = escape(qstr )
 						precon.loadConnections(qstr, function(results){
 							networks[0].getRawdata()._connections= networks[0].getRawdata()._connections.concat(results)						
@@ -204,15 +214,15 @@ precon.searchNetworks = function(query, callback){
 	});
 }
 precon.loadConnections = function(qstr, callback){
-	console.log("loadConnections:" ,unescape(qstr))
+	log.debug("loadConnections:" ,unescape(qstr))
 	url = precon.conf.api_base + "/connection?query="+ qstr
 	precon._ajax(url,  function(results){		 
-		console.log("###### loadConnections got " + results.length+" records ###########")
+		log.debug("###### loadConnections got " + results.length+" records ###########")
 		callback && callback(results)
 	});
 }
 precon.preload = function(network){
-	console.log("preloading "+ network._id)
+	log.debug("preloading "+ network._id)
     // preload the nodes
 	var ids = []
     for(var c in network._connections){
@@ -246,7 +256,7 @@ precon.getNetwork=function(network_id, callback){
 			qstr = escape('{"_id":{"$in": ["TOKEN"]}}'.replace("TOKEN",ids))
 			
 		precon.loadConnections(qstr, function(results){
-			console.log("Adding connections to network ", network)			
+			log.debug("Adding connections to network ", network)			
 			results.forEach(function(r){
 				network._connections.push(new precon.Connection(r))
 			})			
@@ -263,7 +273,7 @@ precon.getNetwork=function(network_id, callback){
  */
 precon.getNetworksByUser=function(user_id, callback){
 	if(!user_id) throw ("user_id is not specified")
-	console.log("Loading networks for "+ user_id)
+	log.debug("Loading networks for "+ user_id)
 	var qstr = escape('{"owner":"TOKEN"}'.replace("TOKEN",user_id))
 	var url = precon.conf.api_base + "/network?query="+ qstr
 	precon._ajax(url,  function(networks){
@@ -283,11 +293,11 @@ precon.getNetworksByUser=function(user_id, callback){
  */
 precon.getObject = function(obj_id, callback){
 	if(!obj_id) throw "Obj id must be specified"
-	//console.log("getObject: "+ obj_id)	// 
+	//log.debug("getObject: "+ obj_id)	// 
 	obj_id = obj_id.trim()
 	//TBD: use localStorage cache instead so it can persist
 	if(obj_id in precon.cache) {
-		console.log("Cache hit: "+ obj_id)
+		log.debug("Cache hit: "+ obj_id)
 		callback && callback( precon.cache[obj_id] )
 		return
 	}	
@@ -318,7 +328,7 @@ precon.cache = {}
  */
 precon.getObjects = function(obj_ids, callback){
 	if(!obj_ids || obj_ids.length == 0 ) throw "An array of Obj ids must be specified"
-	//console.log("getObjects: "+ obj_ids)	// 
+	//log.debug("getObjects: "+ obj_ids)	// 
 	
 	// mapping
 	if(!obj_ids[0]) return
@@ -394,7 +404,7 @@ precon.annotate= function(obj, annotator_id, comments){
 }
 precon.flushCache = function(){
 	$.jStorage && $.jStorage.flush()
-	console.log("Flushed jstorage cache")
+	log.debug("Flushed jstorage cache")
 }
 
 
@@ -466,7 +476,7 @@ precon.util.processAbstract = function(publication){
 	}
 	entities.forEach(function(en){
 		var re = new RegExp("\\b" + en.name+"\\b", 'gi')
-		console.log("Replacing " + en.name)
+		//log.debug("Replacing " + en.name)
 		ab = ab.replace(re, '<a href="#" class="mined-entity" group="' +en.group+'" onclick="$(document).trigger(\'mined-entity-clicked\', this) ">'+ en.name+'</a>')  
 	});
 	return ab
@@ -475,121 +485,3 @@ precon.event = {
 	ViewportCreated:'ViewPortCreated',
 	UserLogin:'UserLogin'
 }
-/**
-
- 
-
-Network.fromEdges = function(db_edges){
-	nodes = []
-	edges= []
-	nodesMap = {}
-	edgesMap = {}
-	
-	for(i in db_edges){
-		dbedge = db_edges[i]
-		
-		edge = {}
-		edge.id = dbedge._id
-		edge.source = dbedge.source
-		edge.target = dbedge.target
-		
-		nd = {}
-		nd.id = edge.source
-		nodesMap[nd.id] = nd
-		nd = {}
-		nd.id = edge.target
-		nodesMap[nd.id] = nd
-		
-		edgesMap[edge.id] = edge
-	}	
-	for (i in nodesMap)
-		nodes.push(nodesMap[i])
-	for (i in edgesMap)
-		edges.push(edgesMap[i])
-	return new Network(nodes, edges)
-}
-
-
-function searchEdges(node, level, result, callback){	
-	baseurl = "http://one-chart.com:3000/oc/edge"
-	query = '{"$or": [{"source":"TOKEN"}, {"target":"TOKEN"}]}'
-	url = baseurl + "?query="+ escape( query.replace("TOKEN", node.toUpperCase()) )
-	console.log("Calling search edge with: "+node+", level: "+level+"")
-	if(! result.cnt) 
-		result.cnt =1
-	else
-		result.cnt +=1
-		
-	$.ajax({
-	  url: url,
-	  dataType: 'jsonp',	
-	  success: function(edges){
-		  console.log("Got edges ")
-		  console.log(edges)
-		  console.log("cnt was "+ result.cnt+", level is "+ level)
-		  
-		  for(i =0;edges && edges.length>i;i++){
-			  edge = edges[i]
-			  if(!result.edges) result.edges = []
-			  if(result.edges.indexOf(edge)<0)
-				  result.edges.push(edge)
-			  if(level>0) {
-				  console.log("Recursively search level "+(level-1) )				  				  
-				  searchEdges(edge.source, level-1, result, callback)
-				  searchEdges(edge.target, level-1, result, callback)
-		  	  }			  
-		  }
-		  result.cnt -=1
-		  if(result.cnt == 0){
-			  console.log("Calling back with result "+ result)  
-			  callback(result.edges)
-		  }
-	  } 
-	});
-}
- 
- 
-
-$(function(){
-
-	$("#btn_search").click(function(){
-		g = $("#gene_name").attr("value")
-		if(!g){
-			alert("Enter gene name and try again. Example: P4HB")
-			return
-		}
-		Network.search(g, function(network){
-			if(network && network.nodes && network.nodes.length>0)
-				drawModel(network)
-			else
-				alert("Did not find any data")
-		})
-	})
-	
-})
-
- 
-     */
-
-
-/**
- * 
- *  Ignore this
- *  Standard JSON response for returning one object
-	{
-		"data": {}
-		"error": "",
-		"total": 1,
-		"offset" 0
-	}
-	
- *  Standard JSON response for returning more than one item
-	{
-		"data": [  {}, {} ],
-		"error": "",
-		"total": 2,
-		"offset" 0
-	}	
- * 
- * 
- */

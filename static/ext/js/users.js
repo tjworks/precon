@@ -77,11 +77,11 @@ function doSignup(){
         data: $("#login-form").serialize(), // serializes the form's elements.
         success: function(data)
         {
-        	console.log("Signup complete: ", data)
+        	log.debug("Signup complete: ", data)
             if(data.indexOf("error")>=0)      	   
             	 $("#login-error").text( $(data).find("li").text() )      
             else {
-         	    //console.log("User is ", data)
+         	    //log.debug("User is ", data)
          	    $('#mask , .login-popup').fadeOut(300 , function() { 
          	    	$('#mask').remove();
          	    });         	   
@@ -101,7 +101,7 @@ function doSignin(){
             if(data.indexOf("error")>=0)      	   
             	$("#login-error").text("Invalid login")
             else {
-         	   //console.log("User is ", data)
+         	   //log.debug("User is ", data)
          	    $('#mask , .login-popup').fadeOut(300 , function() { 
          	    	$('#mask').remove();
          	    });
@@ -115,7 +115,7 @@ function doSignin(){
 }
 
 function updateUserLogin(evt, username){
-	console.log("User logged in: "+ username)
+	log.debug("User logged in: "+ username)
 	$("#userid").text("Hi, "+ username)
  	$("#signin-link").css("display", "none")	
  	

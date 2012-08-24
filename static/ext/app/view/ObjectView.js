@@ -12,7 +12,7 @@ Ext.define('Precon.view.ObjectView' ,{
 		    }
 	},	
 	constructor: function(config) {
-			console.log("config is ", config)
+			log.debug("config is ", config)
 			
 			var obj = config.object
 			if(obj.getRawdata) obj = obj.getRawdata()
@@ -44,7 +44,7 @@ Ext.define('Precon.view.PublicationView', {
 			'</table>',
 			'</tpl>'),
 	constructor: function(config){
-			console.log("config is! ", config)			
+			log.debug("config is! ", config)			
 			var obj = config.object
 			if(obj.getRawdata) obj = obj.getRawdata()			
 			obj.processed_abstract = precon.util.processAbstract(obj)	

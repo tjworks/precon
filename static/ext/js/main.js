@@ -67,7 +67,7 @@ Ext.onReady(function(){
         listeners: {
         	itemclick:{        		
         		fn:function(evt, rec){        	
-        			console.log("Clicked literature!", arguments)
+        			log.debug("Clicked literature!", arguments)
         			
         			        			
         		}
@@ -112,12 +112,12 @@ Ext.onReady(function(){
 });
 
 Ext.onReady(function(){
-    //console.log("!!! setup auto")
+    //log.debug("!!! setup auto")
     $( "#ingraph-search-inputEl" ).autocomplete({
           source: validateKeyword,
           minLength:2,
           select: function(event, ui) {
-              console.log("selected ", ui)
+              log.debug("selected ", ui)
               precon.searchNetworks(ui.item._id, function(networks){ loadNetworks(networks, false)})
           }         
         });       
@@ -196,7 +196,7 @@ function createViewPort() {
 			                                                    icon:"/ext/resources/images/help.png",
 			                                                    tooltip:'Display available geocoders',
 			                                                    handler : function() {
-			                                                        console.log("test");
+			                                                        log.debug("test");
 			                                                    }
 			                                                }
 			                                        ]
@@ -260,7 +260,7 @@ function createViewPort() {
 			                                        setTimeout(function(){			                                            
 			                                            Ext.getCmp("legendToggleBtn").toggle();
 			                                        },600);
-			                                     console.log('western panel rendered');
+			                                     log.debug('western panel rendered');
 			                        //Ext.getCmp('west').getEl().on('contextmenu', function(e) {
 			                                                    
 			                                     }
@@ -379,7 +379,7 @@ function addSelectStyle(el) {
     //el.setStyle("stroke","yellow");
     //el.setStyle("stroke-width",4);
     //el.style("stroke")="yellow";
-    //console.log(el);
+    //log.debug(el);
 }
 
 function hideTips() {
@@ -393,7 +393,7 @@ function createContextMenu(obj) {
 		items.push({
                     text: 'Expand',
                     handler:function() {
-                  	  console.log("Centered on", obj)
+                  	  log.debug("Centered on", obj)
                   	  if(obj.get('entity'))
                       	  precon.searchNetworks( obj.get('entity'), function(nets){ loadNetworks(nets, true, true) })
                     }, 
@@ -590,7 +590,7 @@ function showObject(obj){
 			    obj.nodes.forEach(function(anode) {
 			    	var label = graphModel.findNode(getId(anode)).get("label")
 			    	formnodes.push([label, label])
-			    	//precon.getObject(getId(anode),function(obj){console.log(obj);formnodes.push([obj.label,obj.label])})
+			    	//precon.getObject(getId(anode),function(obj){log.debug(obj);formnodes.push([obj.label,obj.label])})
 			    	//formnodestemp.push([anode,anode])}
 			    	});
 				var objPanel = Ext.create('Ext.form.Panel', 
@@ -669,7 +669,7 @@ function showObject(obj){
 							           ddReorder: true,
 							           listeners: {
 									  	afterrender: {
-									  		fn:function(){ var d=Ext.getCmp('linkupdateform_m'+obj.label); console.log(d);}
+									  		fn:function(){ var d=Ext.getCmp('linkupdateform_m'+obj.label); log.debug(d);}
 									  	}
 									  }
 								  },
@@ -748,7 +748,7 @@ function showObject(obj){
 }
 
 function renderObject(obj){
-	console.log("Rendering object: ", obj)
+	log.debug("Rendering object: ", obj)
 	if(precon.getObjectType(obj._id) =='publication' ){
 		var authors = ''
 		if(obj.authors){
@@ -771,7 +771,7 @@ function renderObject(obj){
 		}
 		entities.forEach(function(en){
 			var re = new RegExp("\\b" + en.name+"\\b", 'gi')
-			console.log("Replacing " + en.name)
+			log.debug("Replacing " + en.name)
 			ab = ab.replace(re, '<a href="#" class="entity-name" group="' +en.group+'">'+ en.name+'</a>')  
 		});
 		
@@ -800,10 +800,10 @@ function renderObject(obj){
  */
 function initNetwork(networkObjects) {
 // sample static data for the store
-   console.log('here is the returns from JT. ');
-   console.log(networkObjects);
+   log.debug('here is the returns from JT. ');
+   log.debug(networkObjects);
 	if(!networkObjects || networkObjects.length == 0){
-		console.log("Error: no result")
+		log.debug("Error: no result")
 		return
 	}
 	if(networkObjects.length == 1 && getObjectIdFromUrl() == networkObjects[0].get('id')){
@@ -910,14 +910,14 @@ function createNetworkGrid(){
         	click:{
         		element:'el',
         		fn:function(evt, item){        	
-        			console.log("Clicked!", arguments)
+        			log.debug("Clicked!", arguments)
         			if(item.type == 'checkbox'){
         				filterNetwork(item,groupingFeature)
         			}        			
         		}
         	},        	
         	itemdblclick:function(view, row){
-        		console.log("double Clicked network: " + row.data._id)      
+        		log.debug("double Clicked network: " + row.data._id)      
         		showObject(row.data)
         		
         	},
@@ -1041,12 +1041,12 @@ function nodeCreate(nodeData) {
 				    	afterrender: {
 					    	element:'',
 					    	fn: function(){
-					    		console.log("After render!")
+					    		log.debug("After render!")
 					    		$( "#entityname-inputEl" ).autocomplete({
 					    	          source: validateEntity,
 					    	          minLength:2,
 					    	          select: function(event, ui) {
-					    	              console.log("selected entity", ui)
+					    	              log.debug("selected entity", ui)
 					    	              $( "#entityname-inputEl" ).attr("entityName", ui.item._id)
 					    	              $( "#entityname-inputEl" ).attr("entityId", ui.item._id)					    	             
 					    	              //precon.searchNetworks(ui.item._id, function(networks){ loadNetworks(networks, false)})
@@ -1271,7 +1271,7 @@ function linkCreate() {
 															nodearray.forEach(function(anode){
 																if (anode.getLabel().toLowerCase()==Ext.getCmp('linkname1_c').getValue().toLowerCase()) {
 																	nodes.push(anode);
-																	console.log(anode.getLabel()+"<===>"+anode.getId());
+																	log.debug(anode.getLabel()+"<===>"+anode.getId());
 																	//node1=new precon.Node({"label":'""'+anode.getLabel()+'"', "_id":'"'+anode.getId()+'"'});
 																}
 																if (anode.getLabel().toLowerCase()==Ext.getCmp('linkname2_c').getValue().toLowerCase()) {
@@ -1279,8 +1279,8 @@ function linkCreate() {
 																	//node2=new precon.Node({"label":'""'+anode.getLabel()+'"', "_id":'"'+anode.getId()+'"'});
 																}
 															});
-															//console.log(node1);
-															//console.log(node2);
+															//log.debug(node1);
+															//log.debug(node2);
 															if (nodes.length>=2) {																
 																graphModel.connectNodes(nodes[0], nodes[1], Ext.getCmp('linktype_c').getValue());
 																Ext.getCmp('linkname2_c').setValue("");
@@ -1362,9 +1362,9 @@ function openCreateWindow() {
                                 listeners: {
                                 	change : {
                                 		fn: function(f,v) {
-                                			console.log("combo changed")
-                                			console.log(f);
-                                			console.log(v);
+                                			log.debug("combo changed")
+                                			log.debug(f);
+                                			log.debug(v);
                                 			if (v=='link') {
                                 				if (typeof Ext.getCmp('entityname2_c') !="undefined" && typeof Ext.getCmp('entityname1_c') !="undefined") {
 	                                				Ext.getCmp('entityname2_c').show();
@@ -1488,7 +1488,7 @@ function openCreateWindow() {
 									      source: validateKeyword,
 									      minLength:2,
 									      select: function(event, ui) {
-									    	  console.log("selected ", ui)
+									    	  log.debug("selected ", ui)
 									    	  document.location='/graph/'+ ui.item._id	    	  
 									      }	    	
 									    });
@@ -1558,40 +1558,40 @@ function openRemoveWindow(selected) {
 }
 
 function createGraph() {
-	//console.log("Recreating graph")
+	//log.debug("Recreating graph")
     //
     //graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
-	console.log("Creating graph")    
+	log.debug("Creating graph")    
 	//Ext.select("svg").remove();
 	//graph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));	
 	if(!window.mygraph){
-		console.log("Creating graph")    
+		log.debug("Creating graph")    
 		mygraph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
 		
 		
 		mygraph.on("click", function(evt, target){
-			//console.log("dblclick", evt, target.__data__)			
+			//log.debug("dblclick", evt, target.__data__)			
 			if(window.contextMenu) contextMenu.hide()
 		});		
 		mygraph.on("dblclick", function(evt, target){
-			console.log("dblclick", evt, target.__data__)
+			log.debug("dblclick", evt, target.__data__)
 			//showObject(target.__data__)
 			if(target.__data__ && target.__data__.get('entity'))
 		           precon.searchNetworks( target.__data__.get('entity'), function(nets){ loadNetworks(nets, true, false) })
 		});		
 		mygraph.on("contextmenu",function(evt, target){
             d3.event.preventDefault();
-            console.log("Contexted", target.__data__)
+            log.debug("Contexted", target.__data__)
             contextMenu = createContextMenu(target.__data__)
             contextMenu.showAt([d3.event.clientX,d3.event.clientY]);
 		});
 		mygraph.on("mouseover",function(evt, target){
-			//console.log("mouseover", target.__data__)
+			//log.debug("mouseover", target.__data__)
 			if(target.__data__.getClass() == 'connection')
 				highlightConnectionRef(target.__data__, true)				
 		});
 		mygraph.on("mouseout",function(evt, target){
-			//console.log("mouseover", target.__data__)
+			//log.debug("mouseover", target.__data__)
 			if(target.__data__.getClass() == 'connection')
 				highlightConnectionRef(target.__data__, false)				
 		});
@@ -1601,7 +1601,7 @@ function createGraph() {
 		
 	}
 	else{
-		console.log("Redraw graph")    
+		log.debug("Redraw graph")    
 		// redraw
 		//Ext.select("svg").remove();
 		mygraph.resize(Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true))
@@ -1612,7 +1612,7 @@ function createGraph() {
  
 function saveGraph(){
 	 var f = function(){
-		console.log("Continue saveGraph")
+		log.debug("Continue saveGraph")
 		saveGraph()
 	}
 	 	
@@ -1622,7 +1622,7 @@ function saveGraph(){
 		return;
 	}
 	
-	console.log("Doing saving")
+	log.debug("Doing saving")
 	
 	var gNetwork = graphModel.getGraphNetwork() 
 	if(!gNetwork || gNetwork.get('owner') != window.user.user_id ){
@@ -1699,7 +1699,7 @@ function saveGraph(){
 												}
 												Ext.getCmp("saveNetworkBtn").setDisabled(true)
 												graphModel.save(function(data, textStatus, jqXHR){
-													console.log("post result", data, textStatus)
+													log.debug("post result", data, textStatus)
 													Ext.getCmp("saveNetworkBtn").setDisabled(false)
 													if(data.indexOf("netw") ==0){
 														alert("Successfully saved network graph, page will reload with the new network.")
@@ -1743,7 +1743,7 @@ function updateReference(){
 	});
 	// for now we only deal with pubmed
 	p = all_refs['pubmed']	
-	console.log("Updating refs", p)
+	log.debug("Updating refs", p)
 	if(p.length== 0) return
 	
 	pids = [] 
@@ -1789,7 +1789,7 @@ function highlightConnectionRef(con, on){
 
 function toggleFullscreenMode(){
 	if(screen.height === window.outerHeight){
-		console.log("Switch to fullscreen mode")
+		log.debug("Switch to fullscreen mode")
 		// full screen mode
 		if(window.viewport){
 			viewport.getLayout().padding = '0 0 0 0'
@@ -1803,7 +1803,7 @@ function toggleFullscreenMode(){
 	else{
 		if(window.fullscreen){
 			window.fullscreen = false
-			console.log("quit fullscreen mode")
+			log.debug("quit fullscreen mode")
 			if(window.viewport){
 				viewport.getLayout().padding = '52 0 0 0'
 				viewport.doLayout()

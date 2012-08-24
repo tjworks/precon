@@ -11,13 +11,13 @@ Ext.define('Precon.controller.Reference', {
     extend: 'Precon.controller.BaseController',
     requires:['Precon.view.ReferenceGrid'],
     init: function() {
-     		console.log("ReferenceController.init"); 
+     		log.debug("ReferenceController.init"); 
      		this.control({
      				"#refgrid": {
      					
      					itemclick:{        		
      		        		fn:function(evt, rec){        	
-     		        			console.log("Clicked literature!", arguments)
+     		        			log.debug("Clicked literature!", arguments)
      		        		}
      		        	},        	      
      		        	itemmouseenter:function(view, row){
@@ -30,16 +30,16 @@ Ext.define('Precon.controller.Reference', {
      		});     	
     },      
 	onLaunch: function(){
-		console.log("ReferenceController.onlaunch")	
+		log.debug("ReferenceController.onlaunch")	
 		var self= this
 		
 		mygraph.on("mouseover",function(evt, target){
-			//console.log("mouseover", target.__data__)
+			//log.debug("mouseover", target.__data__)
 			if(target.__data__.getClass() == 'connection')
 				highlightConnectionRef(target.__data__, true)				
 		});
 		mygraph.on("mouseout",function(evt, target){
-			//console.log("mouseover", target.__data__)
+			//log.debug("mouseover", target.__data__)
 			if(target.__data__.getClass() == 'connection')
 				highlightConnectionRef(target.__data__, false)				
 		});
@@ -50,7 +50,7 @@ Ext.define('Precon.controller.Reference', {
 		
 	},
 	updateReference:function(){
-		console.log("Updating references!")
+		log.debug("Updating references!")
 		var self = this
 		var literatureGrid = Ext.getCmp("refgrid")
 		//var sel = graphModel.getSelections('connection')
@@ -77,7 +77,7 @@ Ext.define('Precon.controller.Reference', {
 		precon.getObjects(pids, function(results){
 			results.forEach(function(pub){
 				if(literatureGrid.getStore().findExact("_id", pub._id) <0  ){ // add only if not already exists
-					console.log("Add ref ", pub._id, pub)
+					log.debug("Add ref ", pub._id, pub)
 					pub.authors = pub.authors && pub.authors.length>0? pub.authors:[]
 				 	var a = ''
 				 	if(_.isArray(pub.authors)){					 	
