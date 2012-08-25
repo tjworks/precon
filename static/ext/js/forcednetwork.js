@@ -20,7 +20,9 @@
 function myGraph(el,w,h) {
 	$d = d3.select;
 	var graph = this;
+	var rectSelectMode = true; // by default drag mode is true
 	var observable = $({})
+	var graphZoom, graphDrag;
 	
 	this.on = function(eventType,  handler){
 		observable.on(eventType, handler);
@@ -78,6 +80,33 @@ function myGraph(el,w,h) {
 		})
 		//$("path").fi
 	}
+	
+	this.setRectSelectMode=function(mode){
+		rectSelectMode = mode
+		console.log("rectSelectMode :", mode)
+		if(rectSelectMode){
+			// we use d3.behavior.drag() behavior events to perform the rect select drawing
+			viszoompang.call(graphDrag)			
+
+			// disable zoom
+		    viszoompang.on("mousedown.zoom", null)		 
+		        //.on("mousewheel.zoom", null)
+		        .on("mousemove.zoom", null)
+		        //.on("DOMMouseScroll.zoom", null)
+		        .on("dblclick.zoom", null)
+		        .on("touchstart.zoom", null)
+		        .on("touchmove.zoom", null)
+		        .on("touchend.zoom", null);		        
+		}
+		else{
+			// enable zoom
+			viszoompang.call(graphZoom)
+			
+			// disabling drag behavior because it interferes with zoom's mouse up events			
+			viszoompang.on("mousedown.drag", null)
+		    viszoompang.on("touchstart.drag", null);
+		}		
+	},
 	
 	this._selectionChanged = function(evt, sel){
 		/**
@@ -224,16 +253,15 @@ function myGraph(el,w,h) {
            .style("fill","none");
     */
     var eventsProxy= function(obj){
-    	
+    	//console.log("event got", d3.event)
     	if(d3.event.detail >1){    		
     		myGraph.doubleClicked=true
     		observable.trigger('dblclick', d3.event.target, d3.event )
     	}
     	else{
     		observable.trigger(d3.event.type, d3.event.target, d3.event)
-    	}    	
-    	
-    }
+    	}    	    	
+    };
     
     force = d3.layout.force()
         .gravity(.01)
@@ -273,6 +301,8 @@ function myGraph(el,w,h) {
     * initialize the SVG drawing environment
     * 
     */
+  
+		
     var initSVG=function () {
     	 log.debug("initializing the network graph....");
 	     vis = d3.select(el).append("svg:svg")
@@ -298,6 +328,25 @@ function myGraph(el,w,h) {
 	    .append("path")
 	    .attr("d", "M0,-4L10,0L0,4");
 	   
+		graphZoom = d3.behavior.zoom().on("zoom",redraw );
+		graphDrag = d3.behavior.drag()
+			 	.on('dragstart', eventsProxy)
+			 	.on('dragend', eventsProxy)
+				.on("drag",eventsProxy)
+	 		
+		 viszoompang = vis.append('svg:g');
+		 viszoompang.call(graphZoom);
+
+			
+         visg=viszoompang.append("svg:g");
+    			
+		 visg.append('svg:rect')
+		    .attr('width', w)
+		    .attr('height', h)
+		    .attr('fill', 'green')
+		 vis.on("click", eventsProxy ).on("contextmenu", eventsProxy);
+		 		/**
+		 
         visg=vis.append('svg:g')
     			.call(d3.behavior.zoom().on("zoom", redraw))
     			.append("svg:g");
@@ -305,9 +354,10 @@ function myGraph(el,w,h) {
 		visg.append('svg:rect')
 		    .attr('width', w)
 		    .attr('height', h)
-		    .attr('fill', 'white')
+		    .attr('fill', 'green')
 		vis.on("click", eventsProxy ).on("contextmenu", eventsProxy);
-		//visg.on('mousedown',recSelect('down')).on('mouseup',recSelect('up')).on('mousemove',recSelect('move'));		
+		//visg.on('mousedown',recSelect('down')).on('mouseup',recSelect('up')).on('mousemove',recSelect('move'));
+		*/		
  	} 
  	  
    var recSelect=function (flag) {

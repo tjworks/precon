@@ -50,19 +50,19 @@ Ext.define('Precon.controller.GraphWin', {
    onRecSelect: function(btn,pressed) {
    	log.debug('rectangle selction is '+pressed);
    	    if (pressed) {
-   	    	
+   	    	mygraph.setRectSelectMode(true);
    			Ext.core.DomHelper.applyStyles(Ext.DomQuery.select('svg')[0],{cursor:'crosshair'});
    			//visg.on('mousedown',_graphController.recSelect('down')).on('mouseup',_graphController.recSelect('up')).on('mousemove',_graphController.recSelect('move'));
-   			visg.on('mousedown',function(){_graphController.recSelect('down')}).on('mouseup',function(){_graphController.recSelect('up')}).on('mousemove',function(){_graphController.recSelect('move')});
-
+   			//visg.on('mousedown',function(){_graphController.recSelect('down')}).on('mouseup',function(){_graphController.recSelect('up')}).on('mousemove',function(){_graphController.recSelect('move')});
    		}
    		else {
+   			mygraph.setRectSelectMode(false);
    			Ext.core.DomHelper.applyStyles(Ext.DomQuery.select('svg')[0],{cursor:'default'});
-   			visg.on('mousedown',null).on('mouseup',null).on('mousemove',null);
-   			d3.select('#selectRect').remove();
+   			//visg.on('mousedown',null).on('mouseup',null).on('mousemove',null);
+   			//d3.select('#selectRect').remove();
    		}
    },
-   recSelect: function (flag) {
+   recSelect: function (flag) {	  
     	if (flag=='down') {
     		visg.on('mouseup',function(){_graphController.recSelect('up')}).on('mousemove',function(){_graphController.recSelect('move')});
     		log.debug('rectangle selction is on');
@@ -222,7 +222,8 @@ Ext.define('Precon.controller.GraphWin', {
 	   log.info("GraphWin.Onlaunch")	   
 	   this.createGraph()
 	   this.showMainObject()
-	   
+
+	   // bind graph events 
 	   var self = this
 	   $(document).on("mined-entity-clicked", function(evt, em){
 		   log.debug("mined click", arguments)

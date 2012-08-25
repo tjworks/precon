@@ -58,7 +58,7 @@ Ext.define('Precon.view.GraphViewport' ,{
                                     xtype: 'button', 
                                     text : 'Rec Select',
                                     id:'recSelectBtn',
-                                    //enableToggle: true,
+                                    enableToggle: true,
                                     icon:"/ext/resources/images/rec_select.png",
                                     handler : function() {
                                         //openRemoveWindow();
