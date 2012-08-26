@@ -15,7 +15,7 @@ from userena import settings as userena_settings
 from guardian.shortcuts import get_perms
 from guardian.shortcuts import assign
 
-from easy_thumbnails.fields import ThumbnailerImageField
+#from easy_thumbnails.fields import ThumbnailerImageField
 
 import datetime, random
 
@@ -209,12 +209,14 @@ class UserenaBaseProfile(models.Model):
                                  userena_settings.USERENA_MUGSHOT_SIZE),
                         'crop': userena_settings.USERENA_MUGSHOT_CROP_TYPE}
 
+    """
     mugshot = ThumbnailerImageField(_('mugshot'),
                                     blank=True,
                                     upload_to=upload_to_mugshot,
                                     resize_source=MUGSHOT_SETTINGS,
                                     help_text=_('A personal image displayed in your profile.'))
-
+    """
+    
     privacy = models.CharField(_('privacy'),
                                max_length=15,
                                choices=PRIVACY_CHOICES,
