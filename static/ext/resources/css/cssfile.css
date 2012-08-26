@@ -216,3 +216,11 @@ input.filterByNetwork {
 .mined-entity {
     padding: 0px 2px;        
 }
+.clickable {
+	cursor:pointer;	
+	color: #132C99
+}
+.clickable:hover {
+	text-decoration:underline;
+	
+}

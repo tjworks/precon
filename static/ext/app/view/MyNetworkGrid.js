@@ -18,8 +18,8 @@ Ext.define('Precon.view.MyNetworkGrid' ,{
     initComponent: function() {
               this.columns = [
 								{
-								    text     : '', 
-								    width    : 60, 
+								    text     : 'Add to Graph', 
+								    width    : 80, 
 								    sortable : false, 
 								    renderer : function(val,meta, record) {                				
 								    				 return "<input type=checkbox "+ (val?"checked":"")+ " name='filterByNetwork' value='"+  record.get("_id") + "'>"
@@ -30,7 +30,11 @@ Ext.define('Precon.view.MyNetworkGrid' ,{
 								    text     : 'Network',
 								    flex     : 1,
 								    sortable : true,                 
-								    dataIndex: 'name'
+								    dataIndex: 'name',
+								    renderer: function(val, meta, record){
+								    	return "<span class='clickable'>"+ val+"</a>"
+								    }
+								    	
 								},							
 								{
 								    text     : 'Last Changed', 

@@ -343,7 +343,7 @@ function myGraph(el,w,h) {
 		 visg.append('svg:rect')
 		    .attr('width', w)
 		    .attr('height', h)
-		    .attr('fill', 'green')
+		    .attr('fill', 'white')
 		 vis.on("click", eventsProxy ).on("contextmenu", eventsProxy);
 		 		/**
 		 

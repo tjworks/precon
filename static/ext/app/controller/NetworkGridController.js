@@ -36,14 +36,27 @@ Ext.define('Precon.controller.NetworkGridController', {
      	        		var netId = row.data._id
      	        		mygraph.highlight(netId, false)
      	        	},
+     	        	itemclick:function(view, row, el, rowIndex, evt){
+     					log.debug("clicked network!", arguments)     					      				
+     					if(evt && evt.target && evt.target.name == 'filterByNetwork'){
+     	    				filterNetwork(evt.target, groupingFeature)  
+     	    			}     
+     					else{
+     						this.changeNetworkGraph(row.data)
+     					}
+     				},
      				scope: this
      			},
      			'mynetworkgrid':{
      				itemclick:function(view, row, el, rowIndex, evt){
-     					log.debug("clicked mynetwork", arguments)
+     					log.debug("clicked mynetwork!", arguments)     					
+     					
      					if(evt && evt.target && evt.target.name == 'filterByNetwork'){
      						this.toggleMyNetwork(row.data, evt.target)
-     					}     					
+     					}
+     					else{
+     						this.changeNetworkGraph(row.data)
+     					}
      				},
      				itemdblclick:function(view, row){
      	        		log.debug("double Clicked my network! ", row.data)      
@@ -51,6 +64,15 @@ Ext.define('Precon.controller.NetworkGridController', {
      	        	}
      			}
      		});     	
+    },
+    changeNetworkGraph: function(networkData){
+    	var self = this
+    	Ext.Msg.confirm("Load Network", "This will clear graph and load network '"+ networkData.name+"', would you like to continue?<p>&nbsp;</p>If you just want to add network to the existing graph, use the checkbox instead.", function(btn){    		
+    		if(btn == 'no') return
+    		precon.getNetwork(networkData._id, function(network){
+    			self.loadNetworks([network], true, true)
+    		})
+    	}, this);    	
     },
     toggleMyNetwork:function(networkData, checkbox){
     	var networkStore= app.getStore('Networks')
@@ -113,11 +135,11 @@ Ext.define('Precon.controller.NetworkGridController', {
 	 */
    loadNetworks: function(networkObjects, toGraph, toReplace){
 		if(!networkObjects) return
+		var networkStore= app.getStore('Networks')
 		if(toReplace){
 			this.getGraphModel().removeAll();
 			networkStore.removeAll();
-		}		
-		var networkStore= app.getStore('Networks')
+		}				
 		log.debug(networkObjects);
 		log.debug('is the networkobjects');
 		var self = this;

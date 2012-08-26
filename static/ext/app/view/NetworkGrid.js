@@ -38,7 +38,10 @@ Ext.define('Precon.view.NetworkGrid' ,{
 								    text     : 'Network',
 								    flex     : 1,
 								    sortable : true,                 
-								    dataIndex: 'name'
+								    dataIndex: 'name',
+								    renderer: function(val, meta, record){
+								    	return "<span class='clickable'>"+ val+"</a>"
+								    }
 								},
 								{
 								    text     : 'Creator', 
@@ -58,17 +61,5 @@ Ext.define('Precon.view.NetworkGrid' ,{
                           ];
      
               this.callParent(arguments);
-    },
-    listeners:{
-    	//  couldn't figure out why it doesn't work if move this chunk of listener code to the controller
-    	click: {
-			 element:'el',	
-			 fn:function(evt, item){        	     				 
-    			//log.debug("Clicked!", arguments)
-    			if(item.type == 'checkbox'){
-    				filterNetwork(item, groupingFeature)  
-    			}        			     	
-			 }
-		 }       	
     }
 });

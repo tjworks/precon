@@ -11,7 +11,10 @@ Python and modules
 - Once setup_tools installed, run following::
 
 
-	easy_install django pymongo	requests easy_thumbnails django-guardian pil
+	easy_install django pymongo	requests easy_thumbnails django-guardian 
+	easy_install pil
+		
+	If "easy_install pil" does not work, you may also directly download at: http://effbot.org/downloads/PIL-1.1.7.win32-py2.7.exe
 
 
 Git and Checkout
