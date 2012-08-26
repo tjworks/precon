@@ -10,11 +10,11 @@ Python and modules
 - Install setup_tools for python: http://pypi.python.org/pypi/setuptools
 - Once setup_tools installed, run following::
 
-
-	easy_install django pymongo	requests easy_thumbnails django-guardian 
-	easy_install pil
-		
-	If "easy_install pil" does not work, you may also directly download at: http://effbot.org/downloads/PIL-1.1.7.win32-py2.7.exe
+	    easy_install django pymongo	requests easy_thumbnails django-guardian 
+	    
+- Following step is NOT required for now
+	#easy_install pil 		
+	#If "easy_install pil" does not work, you may also directly download at: http://effbot.org/downloads/PIL-1.1.7.win32-py2.7.exe
 
 
 Git and Checkout
@@ -81,6 +81,17 @@ For Linux
 
 Startup Mongo and Node.js for DB server
 ---------------------------------------
+- Configure scripts to use local database
+
+  - Open precon/static/ext/js/precon.client.js
+  - find this line::
+  
+  		    api_base: 'http://one-chart.com:3000/oc',
+  		  		
+  - change to:
+  
+  		    api_base: 'http://localhost:3000/oc',
+  		
 - Start mongod:
 
 
@@ -100,7 +111,5 @@ Startup Mongo and Node.js for DB server
 		cd precon
 		run.bat
 	
-	
-	
-	
+
 
