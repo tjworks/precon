@@ -127,7 +127,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'onechart','graph','myutil',
-    'userena', 'guardian','easy_thumbnails'    
+    'userena', 'guardian'   
 )
 
 # A sample logging configuration. The only tangible logging
