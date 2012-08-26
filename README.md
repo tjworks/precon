@@ -11,7 +11,7 @@ Python and modules
 - Once setup_tools installed, run following::
 
 
-	easy_install django pymongo	requests
+	easy_install django pymongo	requests easy_thumbnails django-guardian pil
 
 
 Git and Checkout
