@@ -49,7 +49,7 @@ Ext.define('Precon.controller.GraphWin', {
    },  
    onRecSelect: function(btn,pressed) {
    	   var me=this;
-   	log.debug('rectangle selction is '+pressed);
+   		log.debug('rectangle selction is '+pressed);
    	    if (pressed) {
    	    	mygraph.setRectSelectMode(true);
    			Ext.core.DomHelper.applyStyles(Ext.DomQuery.select('svg')[0],{cursor:'crosshair'});
@@ -108,15 +108,7 @@ Ext.define('Precon.controller.GraphWin', {
 			var y0=d3.select("#selectRect").attr("y");
 			var x1=1*x0+1*d3.select("#selectRect").attr("width");
 			var y1=1*y0+1*d3.select("#selectRect").attr("height");
-			Ext.Array.forEach(d3.selectAll("circle")[0], function(acircle) {
-			    var cx=acircle.parentNode.getAttribute("cx");
-			    var cy=acircle.parentNode.getAttribute("cy");
-			    //console.log("x0: "+x0+" y0"+y0+" x1 "+x1+" y1 "+y1+" cx "+cx+" cy "+cy );
-			    if (cx>=x0 && cx<=x1 && cy>=y0 && cy<=y1)
-			        acircle.classList.add("state-highlight");
-			    else
-			     	acircle.classList.remove("state-highlight");
-			});
+			mygraph.selectWithinRect(x0,y0,x1,y1);
 			d3.selectAll('#selectRect').remove();
     	}
    },

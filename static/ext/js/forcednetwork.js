@@ -173,6 +173,37 @@ function myGraph(el,w,h) {
     }
     
     /*
+     * loop through the nodes and links to see if they fall within a rectangle
+     * 
+     * @param x0  left coordinate of rectangle
+     * @param y0  top coordinate of rectangle
+     * @param x1  right coordinate of rectangle
+     * @param y1  bottom coordinate of rectangle 
+     * 
+     * @Return   array of objects
+     */
+    
+    this.selectWithinRect=function(x0,y0,x1,y1) {
+    	var returnarr=[];
+    	Ext.Array.forEach(nodearray, function(node){
+    		var cx=node.x;
+    		var cy=node.y;
+    		if (cx>=x0 && cx<=x1 && cy>=y0 && cy<=y1)
+    			returnarr[returnarr.length]=node;
+    	});
+    	
+    	Ext.Array.forEach(linkarray, function(link){
+    		var scx=link.source.x;
+    		var scy=link.source.y;
+    		var tcx=link.target.x;
+    		var tcy=link.target.y;
+    		if ((scx>=x0 && scx<=x1 && scy>=y0 && scy<=y1) ||(tcx>=x0 && tcx<=x1 && tcy>=y0 && tcy<=y1) )
+    			returnarr[returnarr.length]=link;
+    	});
+        app.graphModel.select(returnarr,false);
+    }
+    
+    /*
      * This status flat is used to flag if a node/link is double clicked; if not, we can go ahead to zoom in the map 
      */
     this.doubleClicked=false
