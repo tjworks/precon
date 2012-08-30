@@ -262,6 +262,7 @@ class UserenaBaseProfile(models.Model):
             by ``USERENA_MUGSHOT_DEFAULT``.
 
         """
+        return None
         # First check for a mugshot and if any return that.
         if self.mugshot:
             return self.mugshot.url
