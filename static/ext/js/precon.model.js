@@ -118,6 +118,7 @@ precon.NetworkGraph = function(){
 	
 	/****** Public graph model manipulation funcitons *************/
 	this.removeAll = function(){
+		log.debug("Removing all networks")
 		networks.forEach(function(network){
 			graphModel.removeNetwork(network)
 		})		
@@ -147,7 +148,7 @@ precon.NetworkGraph = function(){
 	 * Remove network 
 	 */
 	this.removeNetwork=function(netObj){
-		
+		log.debug("Removing network " +netObj)
 		var netId = getId(netObj)
 		var netObj= this.findNetwork(netId)
 		
@@ -382,10 +383,16 @@ precon.NetworkGraph = function(){
 	this.getConnections= function(){ return connections }
 	this.getNetworks = function(){return networks}
 	
-	this.setGraphNetwork=function(network){
+	this.setGraphNetwork=function(network, reload){
 		// set the main network (used for saving later)
 		//_.extend( this.rawdata, network.getRawdata())
+		if(reload){
+			this.removeAll();
+			this.addNetwork(network)
+		}
 		this.graphNetwork = network
+		jq.trigger('change.graphnetwork')
+		
 	}
 	this.getGraphNetwork = function(){ 
 		return this.graphNetwork
@@ -421,6 +428,8 @@ precon.NetworkGraph = function(){
 		json = JSON.stringify(json)
 		$.post("/graph/save.json", {'data':json},callback, 'json');
 		// flush cache
+		
+		
 		precon.flushCache()
 	};
 	
@@ -568,6 +577,7 @@ precon.Network = function(rawdata){
 		}
 		var connections= []
 		rawdata._connections.forEach(function(con){
+			if(!con.get) console.log("Con is", con)
 			connections.push( con.get('_id' ))
 		})
 		return connections

@@ -236,6 +236,19 @@ Ext.define('Precon.controller.GraphWin', {
 		   log.debug("mined click", arguments)
 		   self.addNodeFromAbstract(em)
 	   })
+	   
+	   var self = this
+	   this.getGraphModel().on('change.graphnetwork', function(){
+		   console.log("graph changed")
+		   var t =  'Network: ' + self.getGraphModel().getGraphNetwork().get('name')
+		   Ext.getCmp("west").setTitle(t)
+		   try{
+			   history.pushState({}, t, "/graph/"+self.getGraphModel().getGraphNetwork().get("_id") );
+		   }
+		   catch(err){
+			   log.debug("Unsupported operation: "+ err)
+		   }
+	   })
    },
    createGraph: function() {
 	   	//log.debug("Recreating graph")
@@ -403,7 +416,7 @@ Ext.define('Precon.controller.GraphWin', {
 		
 		window.saveGraphWindow = window.saveGraphWindow || this.getView('SaveGraphWindow').create()
 		
-		//if(! Ext.getCmp("graphname").getValue()) Ext.getCmp("graphname").setValue(gNetwork.get("name"))
+		if(! Ext.getCmp("graphname").getValue()) Ext.getCmp("graphname").setValue(gNetwork.get("name"))
 		
 		saveGraphWindow.show()	
 	} // end saveGraph

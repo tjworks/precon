@@ -55,6 +55,7 @@ Ext.define('Precon.view.SaveGraphWindow', {
 							handler : function() {				
 								Ext.getCmp("validation-msg").setText("")
 								if( Ext.getCmp("graphname").getValue()){
+									var graphModel = app.graphModel
 									graphModel.getGraphNetwork().set("name", Ext.getCmp("graphname").getValue());
 									var errors = graphModel.validate();
 									if(errors.length>0){
@@ -65,9 +66,11 @@ Ext.define('Precon.view.SaveGraphWindow', {
 									graphModel.save(function(data, textStatus, jqXHR){
 										log.debug("post result", data, textStatus)
 										Ext.getCmp("saveNetworkBtn").setDisabled(false)
-										if(data.indexOf("netw") ==0){
-											alert("Successfully saved network graph, page will reload with the new network.")
-											document.location.href= "/graph/"+ data
+										if(data.indexOf("netw") ==0){													
+											precon.getNetwork(data, function(network){
+												graphModel.setGraphNetwork(network, true);
+											}, true)
+											alert("Successfully saved network graph")
 										}
 										else alert(textStatus+": "+ data)
 										

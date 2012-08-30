@@ -72,10 +72,10 @@ precon.quickSearch = function(query, callback, filter){
 		});	
 }
  
-precon._ajax = function(url, callback){
+precon._ajax = function(url, callback, noCache){
 	//log.debug("Performing ajax query: "+ unescape(url))
 	var timer = new Timer("ajax " + url)
-	if($.jStorage.get(url)){
+	if(!noCache && $.jStorage.get(url)){
 		timer.elapsed()
 		callback(JSON.parse( $.jStorage.get(url)) )
 		return
@@ -238,7 +238,7 @@ precon.preload = function(network){
  * @return list of connection objects 
  
 */
-precon.getNetwork=function(network_id, callback){
+precon.getNetwork=function(network_id, callback, noCache){
 	if(!network_id) throw "network_id must be specified"
 	
 	precon.getObject(network_id, function(network){					
@@ -263,7 +263,7 @@ precon.getNetwork=function(network_id, callback){
 			network = new precon.Network(network)
 			callback && callback(network)
 		});		
-	})
+	}, noCache)
 };
 
 /**
@@ -291,12 +291,12 @@ precon.getNetworksByUser=function(user_id, callback){
  * 
  * @reutrn: A JSON object contains the detailed attributes of the object, such as name, references, group/type etc.
  */
-precon.getObject = function(obj_id, callback){
+precon.getObject = function(obj_id, callback, noCache){
 	if(!obj_id) throw "Obj id must be specified"
 	//log.debug("getObject: "+ obj_id)	// 
 	obj_id = obj_id.trim()
 	//TBD: use localStorage cache instead so it can persist
-	if(obj_id in precon.cache) {
+	if(! noCache && (obj_id in precon.cache)) {
 		log.debug("Cache hit: "+ obj_id)
 		callback && callback( precon.cache[obj_id] )
 		return
@@ -311,7 +311,7 @@ precon.getObject = function(obj_id, callback){
 		// results should be an object
 		precon.encache( results )
 		callback && callback(results)		 
-	});
+	}, noCache);
 }
 
 precon.encache=function(obj){

@@ -5,7 +5,7 @@ Ext.define('Precon.model.Network', {
             ,{name: 'name'}           
            //{name: 'ctime'},
            ,{name:'include'}
-           ,{name: 'creator'}           
+           ,{name: 'owner'}           
            ,{name: 'source'}
            ,{name: 'group'} 
            ,{name: 'update_tm'}

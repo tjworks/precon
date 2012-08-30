@@ -70,7 +70,8 @@ Ext.define('Precon.controller.NetworkGridController', {
     	Ext.Msg.confirm("Load Network", "This will clear graph and load network '"+ networkData.name+"', would you like to continue?<p>&nbsp;</p>If you just want to add network to the existing graph, use the checkbox instead.", function(btn){    		
     		if(btn == 'no') return
     		precon.getNetwork(networkData._id, function(network){
-    			self.loadNetworks([network], true, true)
+    			//self.loadNetworks([network], true, true)
+    			self.getGraphModel().setGraphNetwork(network, true)
     		})
     	}, this);    	
     },
