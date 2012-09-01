@@ -356,10 +356,10 @@ function myGraph(el,w,h) {
  			.enter()
  			.append("svg:marker")
 	    .attr("id", String)
-	    .attr("viewBox", "0 -4 13 13")
-	    .attr("refX", 15)
+	    .attr("viewBox", "0 -6 13 13")
+	    .attr("refX", 10)
 	    .attr("refY", 0)
-	    .attr("markerWidth", 6)
+	    .attr("markerWidth", 8)
 	    .attr("markerHeight", 6)
 	    .attr("orient", "auto")
 	    .append("path")
@@ -427,16 +427,18 @@ function myGraph(el,w,h) {
  	
  	var redraw=function() {
   		//log.debug("here is the scale: "+d3.event.scale);
-  		if (! myGraph.doubleClicked && d3.event.scale>=0.5 && d3.event.scale<=6 ) {
-  			myGraph.scale=myGraph.scale
-	  		visg.attr("transform",
-			      "translate(" + d3.event.translate + ")"
-			      + " scale(" + d3.event.scale + ")");
-	        force.start();
-	        myGraph.doubleClicked=false;
-       }
-       else 
-       		myGraph.doubleClicked=false;
+  		
+		  if (! myGraph.doubleClicked && d3.event.scale>=0.5 && d3.event.scale<=6 ) {
+						myGraph.scale=myGraph.scale
+						visg.attr("transform",
+							"translate(" + d3.event.translate + ")"
+							+ " scale(" + d3.event.scale + ")");
+					  force.start();
+					  myGraph.doubleClicked=false;
+				 }
+				 else 
+						 myGraph.doubleClicked=false;
+		  
  	}
  	
  	var _combineRefs = function(refs){

@@ -63,7 +63,9 @@ path{
   stroke:grey;
 }
 
-
+marker {
+	stroke-width:2px;
+}
 marker#decreases {
   fill: blue;
 }
