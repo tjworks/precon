@@ -12,7 +12,8 @@ Ext.define('Precon.controller.GraphWin', {
     	'SaveGraphWindow',
     	'LinkCreateWindow',
     	'GraphLegendWindow',
-    	'ObjectView'
+    	'ObjectView',
+    	'ZoomSliderView'
     ],    
     requires:['Ext.ux.form.MultiSelect'],
     init: function() {
@@ -44,9 +45,17 @@ Ext.define('Precon.controller.GraphWin', {
 		  },
 		  '#legendToggleBtn':{
 			  toggle: this.toggleLegend
+		  },
+		  '#zoomslider': {
+		  	  change: this.onZoom
 		  }
         });
    },  
+   onZoom: function(s,v,t) {
+   	 // if(v+1<8)
+   	      mygraph.zoom(v/10)
+   		//console.log(s+"---"+v+"---"+t);
+   },
    onRecSelect: function(btn,pressed) {
    	   var me=this;
    		log.debug('rectangle selction is '+pressed);

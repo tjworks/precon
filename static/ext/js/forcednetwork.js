@@ -107,7 +107,13 @@ function myGraph(el,w,h) {
 		    viszoompang.on("touchstart.drag", null);
 		}		
 	},
-	
+	this.zoom=function(scale) {
+  		//if (scale>=0.1 && scale<=15 ) {
+	  		visg.attr("transform",
+			       " scale(" + scale + ")");
+	        force.start();
+       //}
+	},
 	this._selectionChanged = function(evt, sel){
 		/**
 		sel.target.forEach(function(target){

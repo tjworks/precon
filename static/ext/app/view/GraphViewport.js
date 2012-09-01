@@ -1,6 +1,9 @@
 Ext.define('Precon.view.GraphViewport' ,{
     extend: 'Ext.Viewport', 
     id:'viewport',
+       requires: [
+    	'Precon.view.ZoomSliderView'
+    ],
     layout: {
         type: 'border'
         ,padding: '52 0 0 0'
@@ -122,7 +125,12 @@ Ext.define('Precon.view.GraphViewport' ,{
                              }
                        ]
             }
-         ]        
+         ],
+         listeners: {
+         	afterrender: function() {
+         		Ext.widget('zoomslider',{renderTo:Ext.get('west-body')});
+         	}
+         }          
       },{
         region: 'center',
         //border: false,

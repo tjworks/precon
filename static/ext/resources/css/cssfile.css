@@ -39,8 +39,10 @@
 	}
 	
 	
-	
-	
+	.zoomslider {
+	   	 background-image: url(../images/ticks.gif);
+	   	 background-repeat:no-repeat;
+	}
 /** following were moved from original d3ext.html */	
 	
 
