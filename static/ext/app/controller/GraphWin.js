@@ -93,13 +93,27 @@ Ext.define('Precon.controller.GraphWin', {
     		
     	if (flag=='drag') {
     		if (d3.event) {
-    			if (d3.event.x-_graphController.rectSelectX0<0)
+    			var flagx=d3.event.x-_graphController.rectSelectX0;
+    			var flagy=d3.event.y-_graphController.rectSelectY0;
+    			if (flagx<0 && flagy<0)
 	    			d3.select('#selectRect')
 	    							 .attr('x',d3.event.x)
 	    							 .attr('y',d3.event.y)
 									 .attr('width',Math.abs(d3.event.x-_graphController.rectSelectX0))
 									 .attr('height',Math.abs(d3.event.y-_graphController.rectSelectY0));
-				 else {
+			   
+			    else if (flagx>=0 && flagy<0)
+	    			d3.select('#selectRect')
+	    							 .attr('y',d3.event.y)
+									 .attr('width',Math.abs(d3.event.x-_graphController.rectSelectX0))
+									 .attr('height',Math.abs(d3.event.y-_graphController.rectSelectY0));
+			    else if (flagx<0 && flagy>=0)
+	    			d3.select('#selectRect')
+	    							 .attr('x',d3.event.x)
+									 .attr('width',Math.abs(d3.event.x-_graphController.rectSelectX0))
+									 .attr('height',Math.abs(d3.event.y-_graphController.rectSelectY0));
+
+			    else {
 					// console.log(_graphController.rectSelectX0+"---"+_graphController.rectSelectX0+"----"+d3.event.x+"----"+d3.event.x);
 					 d3.select('#selectRect')
 					 				 .attr('x',_graphController.rectSelectX0)
