@@ -23,7 +23,8 @@ Ext.define('Precon.controller.NetworkGridController', {
      				 // itemdblclick:this.networkGridDblClicked,
      				  //select: this.networkGridSelect,
      				  //deselect: this.networkGridDeselect,
-     				
+     			
+     			
      	        	itemdblclick:function(view, row){
      	        		log.debug("double Clicked network! " + row.data._id)      
      	        		//showObject(row.data)     	        		
@@ -44,6 +45,7 @@ Ext.define('Precon.controller.NetworkGridController', {
      					else{
      						this.changeNetworkGraph(row.data)
      					}
+     					evt.stopPropagation();
      				},
      				scope: this
      			},

@@ -10,3 +10,26 @@ Ext.define('Precon.store.Networks', {
         ]*/
     
 });
+
+
+
+Precon.store.ConnectionType = Ext.create('Ext.data.Store', {
+    model:'Precon.model.ConnectionType',     
+    data   : [
+         {name : 'beinguptaken',   value: 'beinguptaken'},
+         {name : 'activates',  value: 'activates'},
+         {name : 'inhibits', value: 'inhibits'},
+         {name : 'stimulats',   value: 'stimulats'},
+         {name : 'activates',  value: 'association'},
+         {name : 'physical_interaction', value: 'physical_interaction'},
+          {name : 'predicted',   value: 'predicted'},
+          {name : 'activates',  value: 'activates'},
+          {name : 'pathway', value: 'pathway'}
+    ]
+})
+
+
+Precon.store.Nodes = Ext.create('Ext.data.Store', {
+    model:'Precon.model.Node',     
+    data   : []
+})

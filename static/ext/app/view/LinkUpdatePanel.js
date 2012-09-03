@@ -1,9 +1,14 @@
+
+
 Ext.define('Precon.view.LinkUpdatePanel' ,{
     extend: 'Ext.form.Panel',
     alias : 'widget.linkupdatepanel',
-   
+    config: { data: null },
+    constructor: function(obj) {
+        if(obj.data) this.bindObject = obj.data
+        this.callParent(obj);
+    },
     title : '',
-	
     layout: 'anchor',
     					buttonAlign:'left',
     				    defaults: {
@@ -12,58 +17,68 @@ Ext.define('Precon.view.LinkUpdatePanel' ,{
     				    },
     				    defaultType: 'textfield',
     					items:[
-    								  {
-    									  fieldLabel: 'Id',
-    									  name: 'id',
-    									  //value: obj._id,
-    									  value: '',
-    									  disabled: true
-    								  },{
-    									  fieldLabel: 'Label',
-    									  name: 'label',
-    									  //value:obj.label
-    									  value:''
+    								 
+    								  {	  xtype:'label',
+    									  fieldLabel: 'Owner',
+    									  name: 'owner'    									  
     								  },
+
+    								  {
+    	                            	  xtype:'textfield',
+    									  fieldLabel: 'Label',
+    									  name: 'label'
+    									  //value:obj.label    						
+    								  },
+    								  {
+    	                                    //the width of this field in the HBox layout is set directly
+    	                                    //the other 2 items are given flex: 1, so will share the rest of the space
+    	                                    xtype:          'combo',
+    	                                    mode:           'local',
+    	                                    triggerAction:  'all',
+    	                                    forceSelection: true,
+    	                                    hidden:			false,
+    	                                    editable:       false,
+    	                                    fieldLabel:     'Belong to Network',
+    	                                    name:           'network',
+    	                                    displayField:   'name',
+    	                                    //value: 			obj.type,    	                                    
+    	                                    valueField:     '_id',
+    	                                    queryMode: 'local',
+    	                                    store:     'Networks'
+    	                              },
     								   {
                                     //the width of this field in the HBox layout is set directly
                                     //the other 2 items are given flex: 1, so will share the rest of the space
                                     xtype:          'combo',
                                     mode:           'local',
-                                    value:          'mrs',
                                     triggerAction:  'all',
-                                    forceSelection: true,
+                                    forceSelection: false,
                                     hidden:			false,
-                                    editable:       false,
-                                    fieldLabel:     'Type',
-                                    name:           'Type',
+                                    editable:       true,
+                                    fieldLabel:     'Link Type',
+                                    name:           'type',
                                     displayField:   'name',
                                     //value: 			obj.type,
                                     value: 			'',
                                     valueField:     'value',
                                     queryMode: 'local',
-                                    store:          Ext.create('Ext.data.Store', {
-                                        fields : ['name', 'value'],
-                                        data   : [
-                                             {name : 'beinguptaken',   value: 'beinguptaken'},
-                                             {name : 'activates',  value: 'activates'},
-                                             {name : 'inhibits', value: 'inhibits'},
-                                             {name : 'stimulats',   value: 'stimulats'},
-                                             {name : 'activates',  value: 'association'},
-                                             {name : 'physical_interaction', value: 'physical_interaction'},
-                                              {name : 'predicted',   value: 'predicted'},
-                                              {name : 'activates',  value: 'activates'},
-                                              {name : 'pathway', value: 'pathway'}
-                                        ]
-                                    })
+                                    store:      Precon.store.ConnectionType
                                	 },
-    								  {
-    									  fieldLabel: 'Network',
-    									  name: 'network',
-    									  //id:'linkupdateform_'+obj.label,
-    									  id:'linkupdateform_',
-    									  //value:obj.network? graphModel.findNetwork(obj.network).get("name"):''							  
-    									  value:''							  
-    								  },
+                               	{
+                                     //the width of this field in the HBox layout is set directly
+                                     //the other 2 items are given flex: 1, so will share the rest of the space
+                                     xtype:          'combo',
+                                     mode:           'local',
+                                     forceSelection: false,
+                                     editable:       false,
+                                     fieldLabel:     'Link Nodes',
+                                     name:           'nodes',
+                                     displayField:   'label',
+                                     multiSelect: true,                                     
+                                     valueField:     'label',
+                                     queryMode: 'local',
+                                     store:      Precon.store.Nodes
+                                	 },
     								  /**
     								  {
     									   anchor: '100%',
@@ -82,25 +97,26 @@ Ext.define('Precon.view.LinkUpdatePanel' ,{
     									  		//fn:function(){ var d=Ext.getCmp('linkupdateform_m'+obj.label); log.debug(d);}
     									  	}
     									  }
-    								  },*/
+    								  },
     								  {
     									  fieldLabel: 'Ref Pubmed',
-    									  name: 'Pubmed',
+    									  name: 'refs',
     									  //value:obj.refs?obj.refs.pubmed:''
     									  value:''
-    								  }
-    						],
+    								  }*/
+                               	 {
+                               		 xtype:'button',
+                               		 text:'Save Changes'
+                               	 }
+    						]
+    				    /**,
     						fbar: [
     							'->',
     					          {
-    					              text: 'Update Link',
-    					              handler: function () {
-    					              	  alert("peng peng");
-    					                  var tabs = this.up('tabpanel');
-    					              }
+    					              text: 'Save Changes'    					             
     					          },
     					          '->'
-    					      ]
+    					      ]*/
 });
 		
 

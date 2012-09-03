@@ -35,6 +35,8 @@ function myGraph(el,w,h) {
 		
 		this.model.bind('remove.connection',this._removeLink);
 		this.model.bind('remove.node', this._removeNode);
+		
+		this.model.bind('change.connection', this._updateConnection);
 				
 		//this.model.bind('add.network', function(){ update()  })
 	}
@@ -124,13 +126,18 @@ function myGraph(el,w,h) {
 		
 		nodearray.forEach(function(mynode){		
 			//log.debug("node is ", mynode)
-			$d( "[id="+ mynode.getId() +"]" ).classed('state-selected', mynode.selected);			
+			$d( "[id="+ mynode.get('id') +"]" ).classed('state-selected', mynode.selected);			
 		});
 		
 		linkarray.forEach(function(mylink){						
-			$d( "[id="+ mylink.getId() +"]" ).classed('state-selected', mylink.selected);
+			$d( "[id="+ mylink.get('id') +"]" ).classed('state-selected', mylink.selected);
 		});
 				
+	}
+	this._updateConnection = function(evt, data){
+		if(!data.connection) return
+		var thelink= $d( "[id="+ data.connection.get('id') +"]" )
+		thelink && thelink.attr("class",function(d){ return "link "+d.get('type').replace(" ","").replace("/","_");}) 	    
 	}
     this._addNode = function(evt, data){
     	if(!data.node) return
@@ -145,13 +152,13 @@ function myGraph(el,w,h) {
     this._removeNode=function(evt, data){
     	//log.debug("_removeNode ", data)
     	if(!data.node) return
-    	nodearray.splice(findNodeIndex(data.node.getId()),1);
+    	nodearray.splice(findNodeIndex(data.node.get('id')),1);
         update();
     }
     this._removeLink = function(evt, data){
     	//log.debug("_remove ", data)
     	if(!data.connection) return
-    	linkarray.splice(findLinkIndex(data.connection.getId()),1);
+    	linkarray.splice(findLinkIndex(data.connection.get('id')),1);
     	update();
     }
     this._addLink= function(evt, data){
@@ -162,8 +169,8 @@ function myGraph(el,w,h) {
     				//log.debug("Adding link "+ nodes[0]+", "+ nodes[1])
     				var link = data.connection
     				
-    				link.source = findNode(nodes[0].getId())    				
-    				link.target= findNode(nodes[1].getId())
+    				link.source = findNode(nodes[0].get('id'))    				
+    				link.target= findNode(nodes[1].get('id'))
     				if(link.source && link.target && link.source!=link.target){
     					    					
         				var linkobj = {"type":link.get('type'), "id":link.get('id'), getId:function(){return this.id}, "multiplier":processLinkArray(link.source,link.target)}
@@ -171,7 +178,7 @@ function myGraph(el,w,h) {
     					
     					linkarray.push(link)
     					update()
-    					//graph.addLink(nodes[0].getId(), nodes[1].getId(), data.connection.getType(), data.connection.getId())
+    					//graph.addLink(nodes[0].get('id'), nodes[1].get('id'), data.connection.getType(), data.connection.getId())
     				}    					
     				//graph.addLink(nodes[0].getId(), nodes[1].getId(), data.connection.getType())
     			}
@@ -480,8 +487,8 @@ function myGraph(el,w,h) {
 			      .append("path")
 		  		  .attr("id",function(d){return d.id})
 		  		  .attr("network", function(d){ return d.get('network') })		  		  
-				  .attr("class",function(d){return "link "+d.type.replace(" ","").replace("/","_");})
-				  .attr("marker-end", function(d) { return "url(#" + d.type.replace(" ","") + ")"; })
+				  .attr("class",function(d){ddd = d; return "link "+d.get('type').replace(" ","").replace("/","_");})
+				  .attr("marker-end", function(d) { return "url(#" + d.get('type').replace(" ","") + ")"; })
 				  .attr("refs", function(d){ return _combineRefs(d.get('refs'))});
 		    
 		   
@@ -523,7 +530,7 @@ function myGraph(el,w,h) {
 	            .attr("class", "nodetext")
 	            .attr("dx", -r)
 	            .attr("dy", ".35em")
-	            .text(function(d) {return d.getLabel()});
+	            .text(function(d) {return d.get('label')});
 	            
 	        nodeEnterg.on("mouseover", eventsProxy ).on("mouseout", eventsProxy )
         	 	
@@ -574,7 +581,7 @@ function myGraph(el,w,h) {
         
         graph._selectionChanged()
         
-        timer.elapsed("Graph size: " + nodearray.length +" nodes, "+ linkarray.length+" links")        
+        log.info("Graph rendered:" + nodearray.length +" nodes, "+ linkarray.length+" links")        
     };
     var update = function () {
     	if(!window.graphUpdateTrigger)

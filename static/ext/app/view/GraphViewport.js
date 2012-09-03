@@ -162,7 +162,7 @@ Ext.define('Precon.view.GraphViewport' ,{
                 region:'north',
                 title:'Overview',
                 split:true,
-                height: 200,
+                height: 500,
                 autoScroll:true,
                 collapsible:true,
                 //items:[networkgrid] //networkGrid

@@ -418,6 +418,9 @@ precon.findObject = function(search, callback){
 }
 
 precon.util = {}
+precon.util.isMe = function(uname){
+	return window.user && user.user_id === uname
+}
 precon.util.truncate = function(str, length){
 	length = length || 12
 	if(str.length<length) return str
@@ -485,3 +488,4 @@ precon.event = {
 	ViewportCreated:'ViewPortCreated',
 	UserLogin:'UserLogin'
 }
+

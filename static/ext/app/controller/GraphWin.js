@@ -174,8 +174,8 @@ Ext.define('Precon.controller.GraphWin', {
 		window.linkCreateWindow = window.linkCreateWindow || this.getView('LinkCreateWindow').create()
 		
 		if(nodes.length>=2){
-			Ext.getCmp("linkname1_c").setValue(nodes[0].getLabel());
-			Ext.getCmp("linkname2_c").setValue(nodes[1].getLabel());
+			Ext.getCmp("linkname1_c").setValue(nodes[0].get('label'));
+			Ext.getCmp("linkname2_c").setValue(nodes[1].get('label'));
 		} 						
 		linkCreateWindow.show();	
    },
@@ -481,19 +481,25 @@ Ext.define('Precon.controller.GraphWin', {
 				    	//formnodestemp.push([anode,anode])}
 				    	});
 					
+				    linkUpdatePanel = Ext.create('widget.linkupdatepanel',{data:ob});
 					tab = Ext.getCmp("infopanel").add(
 						{
-							title:title,
+							title: ob.getLabel(),
 							layout:'fit',
-							id:obj._id,
+							id:  ob.get('id'),
 							closable:true,
 							defaults: {
 					        	anchor: '100%',
 					        	bodyPadding:20
 					   		},
-					   		items:[{xtype:'linkupdatepanel'}]						
-						}
+					   		items:[linkUpdatePanel]						
+						}					
 					);
+					obb = ob
+					console.log("Set form", ob.getRawdata())
+					form = tab.down('linkupdatepanel').getForm()
+							
+					
 			} else
 			{
 				tab = Ext.getCmp("infopanel").add({

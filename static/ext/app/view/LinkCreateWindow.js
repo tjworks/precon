@@ -87,22 +87,7 @@ Ext.define('Precon.view.LinkCreateWindow' ,
                 value: 			'Gene',
                 valueField:     'value',
                 queryMode: 'local',
-                store:          Ext.create('Ext.data.Store', {
-                    fields : ['name', 'value'],
-                    data   : [
-                         {name : 'regulates',  value: 'regulates'},
-                         {name : 'beinguptaken',   value: 'beinguptaken'},
-                         {name : 'activates',  value: 'activates'},
-                         {name : 'inhibits', value: 'inhibits'},
-                         {name : 'beinguptaken',   value: 'stimulats'},
-                         {name : 'association',  value: 'association'},
-                         {name : 'phsical_interaction', value: 'physical_interaction'},
-                          {name : 'predicted',   value: 'predicted'},
-                          {name : 'pathway', value: 'pathway'}
-                    ]
-                }),
-                listeners: {
-                }
+                store:     'ConnectionType'
            	 }
 		],
 		buttons : 

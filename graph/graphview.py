@@ -5,7 +5,7 @@ from django.template.context import RequestContext
 from django.views.decorators.http import require_http_methods
 from myutil import fileutil
 from onechart import mongo
-from onechart.models import Network
+from onechart.models import Network, Connection
 from onechart.webutils import SmartResponse
 import json
 import logging
@@ -32,14 +32,19 @@ def persist(req):
     logger.debug("Persisting")    
     logger.debug( "%s" % (initdata) )
     fileutil.writeFile("test1", jsondata)
-    
+        
     try:
-        network = Network(initdata)
-        network.save()
-        index(network.name, network)
-        return SmartResponse(network._id, req)    
+        if(initdata['_id'][:4] == 'conn'):
+            con = Connection(initdata)
+            con.save()
+            return SmartResponse(con._id, req)            
+        else:    
+            network = Network(initdata)
+            network.save()
+            index(network.name, network)
+            return SmartResponse(network._id, req)    
     except Error as e:
-        logger.error("Error saving network: %s" %traceback.format_exc())
+        logger.error("Error saving data: %s" %traceback.format_exc())
         return SmartResponse(e, req)
 
 def index(keywords, obj):

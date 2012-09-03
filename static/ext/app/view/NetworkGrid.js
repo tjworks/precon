@@ -22,7 +22,15 @@ Ext.define('Precon.view.NetworkGrid' ,{
 			//this.initConfig(config);
 			return this.callParent(arguments);
 	}, 
-		
+	listeners:{
+		click:{
+			element:'el',
+			fn: function(view, target){	
+				if(target && target.type == 'checkbox' && target.name.indexOf('filter')==0 )
+					filterNetwork(target, groupingFeature)  				
+			}
+		}
+	},
     initComponent: function() {
               this.columns = [
 								{

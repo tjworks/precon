@@ -114,8 +114,7 @@ precon.NetworkGraph = function(){
 	this.findNetwork = function(networkId){
 		return _.find(networks, function(n){ return getId(n) == networkId })
 	}
-	
-	
+		
 	/****** Public graph model manipulation funcitons *************/
 	this.removeAll = function(){
 		log.debug("Removing all networks")
@@ -535,6 +534,7 @@ precon.BasePrototype = {
  * 
  * @required fields: TBD
  */
+
 precon.Network = function(rawdata){
 	this._class = 'network'	
 	this.init(rawdata);
@@ -576,8 +576,7 @@ precon.Network = function(rawdata){
 			return []
 		}
 		var connections= []
-		rawdata._connections.forEach(function(con){
-			if(!con.get) console.log("Con is", con)
+		rawdata._connections.forEach(function(con){			
 			connections.push( con.get('_id' ))
 		})
 		return connections
@@ -589,6 +588,8 @@ precon.Network = function(rawdata){
 	}	
 	return this
 }
+
+
 
 precon.Connection = function(rawdata){
 	this._class = 'connection'
@@ -602,6 +603,8 @@ precon.Connection = function(rawdata){
 	}
 	if(! (rawdata.nodes && rawdata.nodes.length>1) )
 		throw "Must at least provide to nodes"
+	rawdata.label = rawdata.label || '' 
+	
 	if( rawdata.nodes[0] instanceof precon.Node){
 		nodes = rawdata.nodes		
 	}
@@ -617,7 +620,7 @@ precon.Connection = function(rawdata){
 	this.getLabel = function() { 
 		if(rawdata.label) return rawdata.label
 		if(nodes.length>1){
-			return nodes[0].label +"-"+ node[1].label
+			return nodes[0].get('label') +"-"+ nodes[1].get('label')
 		}
 		if(rawdata.nodes.length>1)
 			return rawdata.nodes[0] +"-"+ rawdata.node[1]
@@ -660,7 +663,21 @@ precon.Connection = function(rawdata){
 			obj.entities.push((node.get('entity') || ''))
 		})
 		return obj
-	}	
+	};	
+	/**
+	 * Save connection to server
+	 */
+	this.save = function(callback){
+		// name
+		var json = this.toJson()		
+		log.debug("Going to save: ", json)		
+		json = JSON.stringify(json)
+		$.post("/graph/save.json", {'data':json},callback, 'json');
+		// flush cache		
+		precon.flushCache()
+		
+		
+	};
 	return this
 }
 
@@ -680,16 +697,11 @@ precon.Node = function(rawdata){
 	this.merge = function(nodeId){		
 		this.noderefs = _.union(this.noderefs, [nodeId])
 	};
-		
-	this.getId = function(){
-		return this.get("_id")
+	this.getLabel = function() { 
+		if(rawdata.label) return rawdata.entity
 	}
 	this.getNetwork=function(){
 		return rawdata?rawdata.network : ''
-	}
-	
-	this.getLabel = function(){
-		return rawdata.label
 	}
 	this.getEntity = function(){	
 		return rawdata.entity // this is entity ID
@@ -740,3 +752,99 @@ precon.Connection.prototype = precon.BasePrototype
 		
 })();
 
+
+/**
+Ext.define('precon.BaseModel', {
+    extend: 'Ext.data.Model',
+    isNew:function(){
+		return this.get("newflag") && this.get("newflag")>0 
+	},	
+	rawdata:{},
+	init: function(rawdata){
+		this.rawdata = rawdata || {}
+		this.rawdata.newflag = this.rawdata._id ? 0: 1
+		this.rawdata._id = this.rawdata._id || precon.randomId(this._class)
+	},
+	getRawdata: function(){
+		return this.raw
+	},
+	setRawdata: function(rawdata){
+		this.rawdata = rawdata
+	},
+	// used by nodes, keep track how many duplicated nodes
+	noderefs: [],
+	// used by Nodes, keep track how many connections this node belongs to in the graph
+	connectionrefs:[],
+	// used by connections/nodes, keep track which network this connection belongs to
+	networkrefs :[],
+	addRef:function(id, refType){
+		id = getId(id)
+		if(!id) return
+		this[ refType+"refs" ] = _.union( this[refType+"refs"], [id]);
+	},
+	delRef:function(id, refType){
+		id = getId(id)
+		if(!id) return
+		this[ refType+"refs" ] = _.without( this[refType+"refs"], id);		
+	},
+	getRefs: function(refType){
+		return this [refType+"refs"];
+	},
+	toString:function(){
+		var id = this.get("id") || ""
+		if(id) return id.substring(0,4).toUpperCase()+"-"+ id.substring(id.length - 6);
+		return Object.prototype.toString.call(this)
+	},
+	getClass:function(){
+		return this._class
+	} 
+});
+
+Ext.define('precon.Connection',{
+    extend: 'precon.BaseModel',
+    _class: 'connection',
+    nodes:[],
+    fields:['id', 'type', 'label', 'owner', 'create_tm', 'update_tm', 'refs'],
+	getNodeIds: function(){
+		return this.raw.nodes
+	},
+	getNodes: function(callback){
+		if(this.nodes.length>0){
+			if(callback) callback(nodes)			
+			return this.nodes
+		}		
+		//log.debug("con nodes", rawdata.nodes)
+		// nodes is list of node IDs
+		var self = this
+		precon.getObjects(this.raw.nodes, function(objs){
+			nodes = _.clone(self.raw.nodes)
+			for(var i=0; objs && i<objs.length;i++){
+				for(var k=0;k<nodes.length;k++) // doing this to ensure order is same
+					if(getId(nodes[k]) == getId(objs[i]) )
+						nodes[k] =  new precon.Node(objs[i])
+			}			
+			this.nodes = nodes
+			callback && callback(nodes);			
+		});				
+		
+		//if(callback)  callback([])
+		return []
+	},	
+	setNodes:  function(nds){
+		//rawdata.nodes = nds
+		this.nodes = nds
+	},
+	toJson : function(){
+		// only record ids
+		var obj = this.raw
+		//nodes & entities
+		obj.nodes = []		
+		obj.entities = []
+		this.nodes.forEach(function(node){
+			obj.nodes.push(getId(node))
+			obj.entities.push((node.get('entity') || ''))
+		})
+		return obj
+	}	
+    
+})*/
