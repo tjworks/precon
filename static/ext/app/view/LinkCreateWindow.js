@@ -87,7 +87,7 @@ Ext.define('Precon.view.LinkCreateWindow' ,
                 value: 			'Gene',
                 valueField:     'value',
                 queryMode: 'local',
-                store:     'ConnectionType'
+                store:     Precon.store.ConnectionType
            	 }
 		],
 		buttons : 

@@ -20,10 +20,9 @@ Precon.store.ConnectionType = Ext.create('Ext.data.Store', {
          {name : 'activates',  value: 'activates'},
          {name : 'inhibits', value: 'inhibits'},
          {name : 'stimulats',   value: 'stimulats'},
-         {name : 'activates',  value: 'association'},
+         {name : 'association',  value: 'association'},
          {name : 'physical_interaction', value: 'physical_interaction'},
           {name : 'predicted',   value: 'predicted'},
-          {name : 'activates',  value: 'activates'},
           {name : 'pathway', value: 'pathway'}
     ]
 })

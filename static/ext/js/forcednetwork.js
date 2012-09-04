@@ -359,7 +359,7 @@ function myGraph(el,w,h) {
         //Create the Marker for path arrow. Delayed to allow the vis created first
 		// vis.select("defs").selectAll("marker").remove();
 		 vis.select("defs").selectAll("marker")
-		.data(["decreases", "beinguptaken", "activates", "inhibits", "stimulats", "association", "physical_interaction", "predicted", "activates", "pathway"])
+		.data(["decreases", "beinguptaken", "activates", "inhibits", "stimulats", "association", "physical_interaction", "predicted", "pathway"])
  			.enter()
  			.append("svg:marker")
 	    .attr("id", String)

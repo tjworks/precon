@@ -201,8 +201,10 @@ precon.NetworkGraph = function(){
 		var con = {nodes:[node1, node2]}
 		if(networkId) con.network = networkId
 		if(type) con.type = type		
+		con.owner = window.user ? user.user_id : ''
 		var conn  = new precon.Connection(con)
 		this.addConnection(conn, networkId)
+		return conn
 	}
 	/**
 	 * Add a connection to the graph. Can be a precon.Connection object or id

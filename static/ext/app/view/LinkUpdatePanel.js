@@ -35,7 +35,7 @@ Ext.define('Precon.view.LinkUpdatePanel' ,{
     	                                    xtype:          'combo',
     	                                    mode:           'local',
     	                                    triggerAction:  'all',
-    	                                    forceSelection: true,
+    	                                    forceSelection: false,
     	                                    hidden:			false,
     	                                    editable:       false,
     	                                    fieldLabel:     'Belong to Network',
@@ -51,6 +51,7 @@ Ext.define('Precon.view.LinkUpdatePanel' ,{
                                     //the other 2 items are given flex: 1, so will share the rest of the space
                                     xtype:          'combo',
                                     mode:           'local',
+                                    width:			'200',
                                     triggerAction:  'all',
                                     forceSelection: false,
                                     hidden:			false,

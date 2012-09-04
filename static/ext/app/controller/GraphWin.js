@@ -171,13 +171,17 @@ Ext.define('Precon.controller.GraphWin', {
 			alert("Please select two nodes first")
 			return;
 		}
-		window.linkCreateWindow = window.linkCreateWindow || this.getView('LinkCreateWindow').create()
+		
+		var con = this.getGraphModel().connectNodes(nodes[0], nodes[1], 'association')
+		this.showObject(con)
+		/**window.linkCreateWindow = window.linkCreateWindow || this.getView('LinkCreateWindow').create()
 		
 		if(nodes.length>=2){
 			Ext.getCmp("linkname1_c").setValue(nodes[0].get('label'));
 			Ext.getCmp("linkname2_c").setValue(nodes[1].get('label'));
 		} 						
-		linkCreateWindow.show();	
+		linkCreateWindow.show();
+		*/	
    },
       
  	//
@@ -277,7 +281,8 @@ Ext.define('Precon.controller.GraphWin', {
 			log.debug("Creating graph ", Ext.get("west-body").getWidth(true), Ext.get("west-body").getHeight(true))    
 			mygraph = new myGraph("#west-body",Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true));
 			mygraph.on("click", function(evt, target){
-				//log.debug("dblclick", evt, target.__data__)			
+				//log.debug("dblclick", evt, target.__data__)
+				window.contextMenu && contextMenu.hide()
 			});		
 			mygraph.on("dblclick", function(evt, target){
 				log.debug("dblclick", evt, target.__data__)
@@ -336,7 +341,15 @@ Ext.define('Precon.controller.GraphWin', {
 		var items= []
 		var label = 'Link'
 		if(obj && obj.getClass && obj.getClass() == 'node'){	
-			if(obj.get("entity"))
+			if(obj.get("entity")){
+				if(app.graphModel.getSelections('node').length == 2){
+					items.push({
+	                    text: 'Link Selected Nodes',
+	                    handler:function() {
+	                    	self.onLinkCreateBtn()	                  	  
+	                    } 	                    
+	                });
+				}				
 				items.push({
 		                    text: 'Expand',
 		                    handler:function() {
@@ -346,6 +359,7 @@ Ext.define('Precon.controller.GraphWin', {
 		                    }, 
 		                    iconCls:'update'
 		                });
+			}
 			label = 'Node '
 		};
 			
@@ -368,7 +382,7 @@ Ext.define('Precon.controller.GraphWin', {
 	              
 	              {
 	                  text: 'Create Node',
-	                  handler:function(menuItem,menu) { nodeCreate() }, 
+	                  handler:function(menuItem,menu) { self.nodeCreate() }, 
 	                  iconCls:'create'
 	              },
 	              {

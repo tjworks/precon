@@ -35,9 +35,7 @@ Ext.define('Precon.controller.LinkController', {
      					    formpanel.getForm().findField('nodes').getStore().loadData([ con.getNodes()[0].getRawdata(), con.getNodes()[1].getRawdata()])
      					    if(!con) return
      					    if(!precon.util.isMe( con.get('owner') )){
-     					    	// disable the fields for non-owner
-     					    	console.log("disabling ", formpanel.getId())
-     					    	formpanel.getForm().getFields().each(function(i){i.setDisabled(true)})
+     					    	formpanel.query('button')[0]. setDisabled(true)
      					    }
      					}
      				}
