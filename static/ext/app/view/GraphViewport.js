@@ -187,6 +187,7 @@ Ext.define('Precon.view.GraphViewport' ,{
             	title:'Details',
             	id:'infopanel',
             	activeTab:0,
+            	autoScroll:true,
             	split:true,
             	items: [			                                	 
                 	 /**{

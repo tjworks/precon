@@ -725,7 +725,19 @@ precon.Node = function(rawdata){
 		for(var i in attrs)
 			if(this.hasOwnProperty(i)) obj[i] = this[i]
 		return obj
-	}	
+	}
+	/**
+	 * Save node to server
+	 */
+	this.save = function(callback){
+		// name
+		var json = this.toJson()		
+		log.debug("Going to save: ", json)		
+		json = JSON.stringify(json)
+		$.post("/graph/save.json", {'data':json},callback, 'json');
+		// flush cache		
+		precon.flushCache()
+	};	
 	return this
 }
 precon.NetworkGraph.prototype = precon.BasePrototype

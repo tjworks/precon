@@ -37,6 +37,7 @@ function myGraph(el,w,h) {
 		this.model.bind('remove.node', this._removeNode);
 		
 		this.model.bind('change.connection', this._updateConnection);
+		this.model.bind('change.node', this._updateNode);
 				
 		//this.model.bind('add.network', function(){ update()  })
 	}
@@ -139,6 +140,13 @@ function myGraph(el,w,h) {
 		var thelink= $d( "[id="+ data.connection.get('id') +"]" )
 		thelink && thelink.attr("class",function(d){ return "link "+d.get('type').replace(" ","").replace("/","_");}) 	    
 	}
+	
+	this._updateNode = function(evt, data){
+		if(!data.node) return
+		var thenode= $d( "[id="+ data.node.get('id') +"]" )
+		//thenode && thenode.attr("class",function(d){ return "link "+d.get('type').replace(" ","").replace("/","_");}) 	    
+	}
+	
     this._addNode = function(evt, data){
     	if(!data.node) return
     	var node = data.node

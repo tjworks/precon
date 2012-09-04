@@ -5,7 +5,6 @@ Ext.define('Precon.controller.GraphWin', {
     models:['Network'],
     views: [
     	'NetworkGrid',
-    	'NodeUpdatePanel',
     	'LinkUpdatePanel',
     	'NodeCreatePanel',
     	'ReferenceGrid',
@@ -464,25 +463,35 @@ Ext.define('Precon.controller.GraphWin', {
 				
 				tab = Ext.getCmp("infopanel").add(
 					{
-						title:title,
-						layout:'fit',
-						id:obj._id,
-						closable:true,
-						defaults: {
-				        	anchor: '100%',
-				        	bodyPadding:20
-				   		},
-						items:[{xtype:'nodeupdatepanel'}],
-						fbar: [
-					          {
-					              text: 'Update Node',
-					              handler: function () {
-					              	  alert("peng peng");
-					                  var tabs = this.up('tabpanel');
-					              }
-					          }
-					      ]
+						 xtype:'nodeupdatepanel',
+						 node: obj,
+						 title: title,
+						 autoScroll:true,
+						 id:obj._id,
+						 data:ob
 					}
+					/*
+					{
+											title:title,
+											layout:'fit',
+											id:obj._id,
+											closable:true,
+											defaults: {
+												anchor: '100%',
+												bodyPadding:20
+											   },
+											items:[{xtype:'nodeupdatepanel'}],
+											fbar: [
+												  {
+													  text: 'Update Node',
+													  handler: function () {
+															alert("peng peng");
+														  var tabs = this.up('tabpanel');
+													  }
+												  }
+											  ]
+										}*/
+					
 				);
 			}
 			else if (ob.getClass && ob.getClass()=="connection") {

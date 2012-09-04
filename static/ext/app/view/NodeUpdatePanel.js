@@ -3,12 +3,14 @@ Ext.define('Precon.view.NodeUpdatePanel' ,{
     alias : 'widget.nodeupdatepanel',
     title : '',
 	config: {
+		 	data:null,
 			layout: 'anchor',
-		    defaults: {
-		        anchor: '100%',
-		        bodyPadding:10
-		    },
 		    defaultType: 'textfield',
+		    buttonAlign:'left',
+		    defaults: {
+    				        anchor: '100%',
+    				        bodyPadding:10
+    				    },
 			items:[
 				  		{
 		                    fieldLabel: 'id',
@@ -41,17 +43,38 @@ Ext.define('Precon.view.NodeUpdatePanel' ,{
 		                    //value:obj.role
 		                    value:''
 		                },{
-		                    fieldLabel: 'update_tm',
+		                    fieldLabel: 'Create Time',
+		                    name: 'create_tm',
+		                    //value:obj.update_tm
+		                    value:''
+		                },
+		                {
+		                    fieldLabel: 'Update Time',
 		                    name: 'update_tm',
 		                    //value:obj.update_tm
 		                    value:''
-		                }
+		                },
+		                 {
+                               		 xtype:'button',
+                               		 text:'Save Changes',
+                               		 disabled:true
+                          }
+				],
+				fbar: [
+					/*
+					{ type: 'button', text: 'Save Changes', disabled: true },
+										'->'*/
+					
 				]
 	},
 	constructor: function(config) {
 			//this.initConfig(config);
+			if(config.data) this.bindObject = config.data
 			return this.callParent(arguments);
-    }
+   },
+   listeners: {
+   	}
+   
 });
 		
 

@@ -22,7 +22,7 @@ Ext.application({
     
     //defines the controllers 
     controllers: [
-    	'GraphWin','Reference','NetworkGridController','LinkController'
+    	'GraphWin','Reference','NetworkGridController','LinkController', 'NodeController'
     ],    
     stores:['MyNetworks', 'Networks'],
     views:[ 'GraphViewport'],    
