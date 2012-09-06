@@ -1,29 +1,32 @@
 Ext.define('Precon.view.ZoomSliderView' ,{
+    extend: 'Ext.slider.Single',
+        alias : 'widget.zoomslider',
+    /*
     extend: 'Ext.window.Window',
-    alias : 'widget.zoomslider',
-    title : 'this is test',
-   	 width: 50,
-     height:160,  
-     hidden:false,
-     frame:false,
-     border:false,
-     resizable:false,
-     closable:false,
-     header:false,
-     shadow:false,
-     draggable:false,
-     x:30,
-     y:10,
-     bodyStyle:" border-color:white; background-color:white; ",
-     style:"left:30px; top 10px; border-width:0px; border-color:white; background-color:white; box-shadow: 0 0px 0 0 white inset, 0 -1px 0 0 white inset, -1px 0 0 0 white inset, 1px 0 0 0 white inset",
-     layout: 'anchor',
-	 //buttonAlign:'left',
-	 items:[
-				  {
-					  xtype: 'slider',
+        alias : 'widget.zoomslider',
+        title : 'this is test',
+            width: 50,
+         height:190,  
+         hidden:false,
+         frame:false,
+         border:false,
+         resizable:false,
+         closable:false,
+         header:false,
+         shadow:false,
+         draggable:false,
+         x:30,
+         y:10,
+         bodyStyle:" border-color:white; background-color:white; ",
+         style:"left:30px; top 10px; border-width:0px; border-color:white; background-color:white; box-shadow: 0 0px 0 0 white inset, 0 -1px 0 0 white inset, -1px 0 0 0 white inset, 1px 0 0 0 white inset",
+         layout: 'anchor',
+         //buttonAlign:'left',
+         items:[
+                      {*/
+    
+					  //xtype: 'slider',
 					  name: 'label',
 					  cls:'zoomslider',
-					  id:'zoomslider',
 					  //value:obj.label
 					  vertical:true,
 					  value:8,
@@ -32,15 +35,48 @@ Ext.define('Precon.view.ZoomSliderView' ,{
 				      increment: 1,
 					  width:45,
 					  height:150,
+					  label:'label',
+					  fieldSubTpl:[
+							        '<div style="width: 16; height:16; background-image:url(resources/images/slider-top.png)" role="presentation">',
+							                '</div>',
+							        '<div id="{id}" class="' + Ext.baseCSSPrefix + 'slider {fieldCls} {vertical}" aria-valuemin="{minValue}" aria-valuemax="{maxValue}" aria-valuenow="{value}" aria-valuetext="{value}">',
+							            
+							            '<div id="{cmpId}-endEl" class="' + Ext.baseCSSPrefix + 'slider-end" role="presentation">',
+							                '<div id="{cmpId}-innerEl" class="' + Ext.baseCSSPrefix + 'slider-inner" role="presentation">',
+							                    '{%this.renderThumbs(out, values)%}',
+							                '</div>',
+							            '</div>',
+							        '</div>',
+							        '<div style="width: 16; height:16; background-image:url(resources/images/slider-end.png)" role="presentation">',
+							                '</div>',
+							        {
+							            renderThumbs: function(out, values) {
+							                var me = values.$comp,
+							                    i = 0,
+							                    thumbs = me.thumbs,
+							                    len = thumbs.length,
+							                    thumb,
+							                    thumbConfig;
+							
+							                for (; i < len; i++) {
+							                    thumb = thumbs[i];
+							                    thumbConfig = thumb.getElConfig();
+							                    thumbConfig.id = me.id + '-thumb-' + i;
+							                    Ext.DomHelper.generateMarkup(thumbConfig, out);
+							                }
+							            },
+							            disableFormats: true
+							        }
+							    ],
 					  tipText: function (v) {if (v.value>8) return "+"+(v.value-8); else if (v.value<8) return "-"+(8-v.value); else return ""},
-					  hideLabel:true,
-					  tpl:new Ext.XTemplate('<tpl for=".">','<table class="x-field zoomslider x-form-item x-field-default x-anchor-form-item" style="height: 150px; table-layout: auto;" id="slider-1011" cellpadding="0"><tbody><tr id="slider-1011-inputRow"><td id="slider-1011-labelCell" style="display:none;" halign="left" class="x-field-label-cell" valign="top" width="105"><label id="slider-1011-labelEl" for="slider-1011-inputEl" class="x-form-item-label x-form-item-label-left" style="width:100px;margin-right:5px;">sliderlabel</label>test</td><td class="x-form-item-body " id="slider-1011-bodyEl" colspan="3" role="presentation"><div style="-moz-user-select: text;" data-errorqtip="" aria-invalid="false" id="slider-1011-inputEl" class="x-slider x-form-field x-slider-vert" aria-valuemin="0" aria-valuemax="15" aria-valuenow="" aria-valuetext=""><div id="slider-1011-endEl" class="x-slider-end" role="presentation"><div style="height: 136px;" id="slider-1011-innerEl" class="x-slider-inner" role="presentation"><div style="bottom:0%;" id="slider-1011-thumb-0" class="x-slider-thumb"></div></div></div></div></td></tr></tbody></table>','</tpl>'),
+					  hideLabel:false,
 					  listeners: {
 					  	afterrender: function() {
+					  		console.log(this);
 					  	}
-					  }
-				  }
-		],
+					  },
+				 // }
+	//	],
 	constructor: function(config) {
 		//this.initConfig(config);
 		this.callParent(arguments);
