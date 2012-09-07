@@ -30,6 +30,7 @@ Ext.define('Precon.view.ZoomSliderView' ,{
 					  //value:obj.label
 					  vertical:true,
 					  value:8,
+					   feildStyle:"left:30px; top 10px; ",
 				       minValue: 0,
 				       maxValue: 14,
 				      increment: 1,
@@ -37,8 +38,8 @@ Ext.define('Precon.view.ZoomSliderView' ,{
 					  height:150,
 					  label:'label',
 					  fieldSubTpl:[
-							        '<div style="width: 16; height:16; background-image:url(resources/images/slider-top.png)" role="presentation">',
-							                '</div>',
+							        '<img src="../ext/resources/images/plus.png" alt="plus" width="16"; height="16" style="margin:4px" role="presentation">',
+							                '</img>',
 							        '<div id="{id}" class="' + Ext.baseCSSPrefix + 'slider {fieldCls} {vertical}" aria-valuemin="{minValue}" aria-valuemax="{maxValue}" aria-valuenow="{value}" aria-valuetext="{value}">',
 							            
 							            '<div id="{cmpId}-endEl" class="' + Ext.baseCSSPrefix + 'slider-end" role="presentation">',
@@ -47,8 +48,8 @@ Ext.define('Precon.view.ZoomSliderView' ,{
 							                '</div>',
 							            '</div>',
 							        '</div>',
-							        '<div style="width: 16; height:16; background-image:url(resources/images/slider-end.png)" role="presentation">',
-							                '</div>',
+							        '<img src="../ext/resources/images/minus.png" alt="plus" width="16"; height="16" style="margin:4px" role="presentation">',
+							                '</img>',
 							        {
 							            renderThumbs: function(out, values) {
 							                var me = values.$comp,

@@ -8,12 +8,6 @@
 		padding-left: 40px ;
 		}
 		
-	.x-slider-vert .x-slider-end {
-		  padding-bottom: 7px;
-		  zoom: 1;
-		  /*background-image:url(../images/slider-end.png) !important;*/
-		  width: 22px; 
-		  }
 	.node {
 		background-image:url(../images/node.png);
 		}
@@ -45,10 +39,11 @@
 		background-image:url(../images/delete.png);
 	}
 	
-	
 	.zoomslider {
 	   	 background-image: url(../images/ticks.gif);
 	   	 background-repeat:no-repeat;
+	   	 margin:30px;
+	   	 background-position:0 20px;
 	}
 /** following were moved from original d3ext.html */	
 	
