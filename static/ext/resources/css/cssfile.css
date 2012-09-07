@@ -42,8 +42,8 @@
 	.zoomslider {
 	   	 background-image: url(../images/ticks.gif);
 	   	 background-repeat:no-repeat;
-	   	 margin:30px;
 	   	 background-position:0 20px;
+	   	 background-color:transparent;
 	}
 /** following were moved from original d3ext.html */	
 	

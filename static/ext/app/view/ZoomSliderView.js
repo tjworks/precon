@@ -18,8 +18,8 @@ Ext.define('Precon.view.ZoomSliderView' ,{
          draggable:false,
          x:30,
          y:10,
-         bodyStyle:" border-color:white; background-color:white; ",
-         style:"left:30px; top 10px; border-width:0px; border-color:white; background-color:white; box-shadow: 0 0px 0 0 white inset, 0 -1px 0 0 white inset, -1px 0 0 0 white inset, 1px 0 0 0 white inset",
+         bodyStyle:" border-color:transparant; background-color:transparant; ",
+         style:"left:30px; top 10px; border-width:0px; border-color:transparent; background-color:transparent; box-shadow: 0 0px 0 0 transparent inset, 0 -1px 0 0 transparent inset, -1px 0 0 0 transparent inset, 1px 0 0 0 transparent inset",
          layout: 'anchor',
          //buttonAlign:'left',
          items:[
@@ -32,7 +32,8 @@ Ext.define('Precon.view.ZoomSliderView' ,{
 					  vertical:true,
 					  id: "zoomslider",
 					  value:8,
-					  // feildStyle:"left:30px; top 10px; float:left; ",
+					  fieldStyle:"border-color:transparant; background-color:transparant; ",
+					  style:"border-color:transparant; background-color:transparant;",
 				       minValue: 0,
 				       maxValue: 14,
 				      increment: 1,
@@ -75,7 +76,9 @@ Ext.define('Precon.view.ZoomSliderView' ,{
 					  hideLabel:false,
 					  listeners: {
 					  	afterrender: function() {
-					  		console.log(this);
+					  		console.log(this.el.dom.parentElement);
+					  		console.log(this.el.dom.parentElement.id);
+					  		Ext.get(this.el.dom.parentElement.id).setStyle("background","none repeat scroll 0 0 transparent");
 					  	}
 					  },
 				  }
