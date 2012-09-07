@@ -1,12 +1,13 @@
 Ext.define('Precon.view.ZoomSliderView' ,{
-    extend: 'Ext.slider.Single',
-        alias : 'widget.zoomslider',
-    /*
+    //extend: 'Ext.slider.Single',
+   //     alias : 'widget.zoomslider',
+    
     extend: 'Ext.window.Window',
         alias : 'widget.zoomslider',
         title : 'this is test',
-            width: 50,
-         height:190,  
+         width: 80,
+         height:240,  
+         //id:"zoomslider",
          hidden:false,
          frame:false,
          border:false,
@@ -22,15 +23,16 @@ Ext.define('Precon.view.ZoomSliderView' ,{
          layout: 'anchor',
          //buttonAlign:'left',
          items:[
-                      {*/
+                      {
     
-					  //xtype: 'slider',
+					  xtype: 'slider',
 					  name: 'label',
 					  cls:'zoomslider',
 					  //value:obj.label
 					  vertical:true,
+					  id: "zoomslider",
 					  value:8,
-					   feildStyle:"left:30px; top 10px; ",
+					  // feildStyle:"left:30px; top 10px; float:left; ",
 				       minValue: 0,
 				       maxValue: 14,
 				      increment: 1,
@@ -76,8 +78,8 @@ Ext.define('Precon.view.ZoomSliderView' ,{
 					  		console.log(this);
 					  	}
 					  },
-				 // }
-	//	],
+				  }
+		],
 	constructor: function(config) {
 		//this.initConfig(config);
 		this.callParent(arguments);
