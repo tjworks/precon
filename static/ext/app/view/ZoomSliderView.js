@@ -76,8 +76,6 @@ Ext.define('Precon.view.ZoomSliderView' ,{
 					  hideLabel:false,
 					  listeners: {
 					  	afterrender: function() {
-					  		console.log(this.el.dom.parentElement);
-					  		console.log(this.el.dom.parentElement.id);
 					  		Ext.get(this.el.dom.parentElement.id).setStyle("background","none repeat scroll 0 0 transparent");
 					  	}
 					  },
