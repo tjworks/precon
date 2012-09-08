@@ -55,10 +55,11 @@ Source: http://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/
 - You might want to add "c:\mongodb\bin" to your PATH
 - Download db dump file: http://one-chart.com/assets/oc.tar.gz
 - Extract to c:\
+- Make sure you have a directory c:\oc
 - Execute following dommands::
 	
-	
-			c:\mongodb\bin\mongorestore c:\dump
+		
+			c:\mongodb\bin\mongorestore c:\oc
 
 
 Install Node.js 

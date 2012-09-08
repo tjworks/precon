@@ -44,15 +44,30 @@ $(document).ready( function() {
 /******* End of Demonstration code  *****************/
 $(document).ready( function() {
 	 log.info("jquery - DOMContentReady")
-	 $( "#searchtxt" ).autocomplete({
+	  searchctl = $("#searchtxt")
+	 searchctl.autocomplete({
 	      source: validateKeyword,
 	      minLength:2,
 	      select: function(event, ui) {
 	    	  log.debug("selected ", ui)
 	    	  document.location='/graph/'+ ui.item._id	    	  
-	      }	    	
+	      },
+	      focus: function(event, ui) { 
+	    	  console.log('focused', ui.item._id);
+	    	  if(ui.item && ui.item._id)
+	    	  {
+	    		  searchctl.attr('data', ui.item._id)
+	    		  $("#search-btn").removeClass('disabled')
+	    	  }
+	    	  
+	      },
+	      search: function(event, ui){
+	    	  searchctl.attr('data', '')
+	    	  $("#search-btn").addClass('disabled')
+	      }
 	    });
-	$("#searchbtn").click(doSearch)
+	
+	$("#search-btn").click(searchBtnClicked)
 	 
  });
 
@@ -78,22 +93,11 @@ function validateEntity(req, callback){
 	}, 'entity')		  
 }
 
-function doSearch(){
-		var val = $("#searchtxt").attr("value")
+function searchBtnClicked(){
+		var val = $("#searchtxt").attr("data")
 		if(!val) return
+		document.location='/graph/'+ val
 		
-		query = parseSearchToken(val)
-		if(!query) return
-		precon.searchNetworks(query, function(networks){
-			log.debug(" search results", networks)
-			lists = "<UL>"
-	         for(var n in networks){
-	             network = networks[n]
-	             lists += '<li><input type=checkbox><a href="/graph/' + network.get('id')  +'">'+  precon.util.truncate(network.get('name'), 20)+'</a></li>'
-	         }
-	         lists+="</UL>"
-	         $("#foundnetworks").html(lists)	
-		});	
 }
 function parseSearchToken(token){		
 	if(/^\d{7,}$/.test(token)) return {pubmed: token}

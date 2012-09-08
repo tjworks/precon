@@ -354,7 +354,7 @@ Ext.define('Precon.controller.GraphWin', {
 		                    handler:function() {
 		                  	  log.debug("Centered on", obj)
 		                  	  if(obj.get('entity'))
-		                      	  precon.searchNetworks( obj.get('entity'), function(nets){ self.loadNetworks(nets, true, true) })
+		                      	  precon.searchNetworks( obj.get('entity'), function(nets){ app.getController('NetworkGridController').loadNetworks(nets, true, true) })
 		                    }, 
 		                    iconCls:'update'
 		                });

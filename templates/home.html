@@ -36,9 +36,11 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
 {% if user.username %}
 window.user = {
 		email: "{{ user.email }}",
-		username:"{{ user.username }}",
-		user_id:"{{ user.email }}"
+		username:"{{ user.username }}"
 }
+if(user.username && user.username.indexOf('@')>0)
+	user.username = user.username.substring( 0, user.username.indexOf('@'))
+user.user_id = user.username
 {% endif %}
 
 //console.log= function(){}
@@ -118,7 +120,7 @@ window.user = {
                </ul>
                 -->    
            
-           <button id="search-btn" class="button">  &nbsp;&nbsp;GO &nbsp;&nbsp;</button>
+           <button id="search-btn" class="button disabled">  &nbsp;&nbsp;GO &nbsp;&nbsp;</button>
            
            
            <div class="bgcolor" style="margin-top:200px;width:800px" align="left">

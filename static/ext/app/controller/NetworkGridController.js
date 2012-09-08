@@ -17,6 +17,10 @@ Ext.define('Precon.controller.NetworkGridController', {
   				  afterrender:this.autoCompleteSearch,
   				  scope:this
      			},
+     			'#ingraph-search-btn':{
+     				click: this.performSearch,
+     				scope:this
+     			},
      			'networkgrid': {
      				  //afterrender:this.initApp,
      				  //itemclick: this.networkGridClicked,
@@ -157,16 +161,36 @@ Ext.define('Precon.controller.NetworkGridController', {
 			}		
 		})	
 	},
+	performSearch: function(){
+		var data = $("#ingraph-search-inputEl").attr('data')
+		if(!data) return
+		var self= this
+		precon.searchNetworks(data, function(networks){ self.loadNetworks(networks, false)})
+	},
 	autoCompleteSearch: function() {
    	    var self = this;
-	    $( "#ingraph-search-inputEl" ).autocomplete({
+   	    var searchctrl = $("#ingraph-search-inputEl")
+	    searchctrl.autocomplete({
 	          source: validateKeyword,
 	          minLength:2,
 	          select: function(event, ui) {
 	              log.debug("selected ", ui)
 	              precon.searchNetworks(ui.item._id, function(networks){ self.loadNetworks(networks, false)})
-	          }         
+	          },	         
+		      focus: function(event, ui) { 
+		    	  console.log('focused', ui.item._id);
+		    	  if(ui.item && ui.item._id)
+		    	  {
+		    		  searchctrl.attr('data', ui.item._id)
+		    	  }
+		    	  
+		      },
+		      search: function(event, ui){
+		    	  searchctrl.attr('data', '')		    	  
+		      }
+	    
 	        });
+	    
    }
 	
 }); // end Controller
