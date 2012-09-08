@@ -302,4 +302,6 @@ class PreconProfile(UserenaLanguageBaseProfile ):
     favourite_snack = models.CharField( 'favourite snack' ,
                                        max_length=5)
 prefix_mapping =  {'netw':'network' , 'ntwk':'network', 'enti':'entity', 'node':'node', 'conn': 'connection', 'publ':'publication'}
+model_label_mapping =  {'network':'Study' ,  'entity':'Entity', 'node':'Node', 'connection': 'Link', 'publication':'Publication'}
+
 
