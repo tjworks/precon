@@ -70,15 +70,12 @@
     }],
     highlight:function(pubids, on){
     	for(var i=0;i<this.getStore().count();i++)
-    		this.getView().removeRowCls(index, 'state-highlight')
+    		this.getView().removeRowCls(i, 'state-highlight')
     	for(var i=0;i<pubids.length;i++){        		
     		pubid = pubids[i]
     		if(pubid.indexOf("publ")<0) pubid = 'publ'+ pubid
     		var index = this.getStore().find('_id', pubid)
-    		if(index>=0 && on)
-    			this.getView().addRowCls(index, 'state-highlight')
-    		if(index>=0 && !on)
-    			this.getView().removeRowCls(index, 'state-highlight')
+    		if(index>=0 && on) this.getView().addRowCls(index, 'state-highlight')    		
     	}
     }
 });

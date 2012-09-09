@@ -12,7 +12,7 @@ Ext.define('Precon.view.NetworkGrid' ,{
     //selModel: Ext.create('Ext.selection.CheckboxModel'),
     features: [groupingFeature],
     alias : 'widget.networkgrid',
-
+    id:'network-grid',
     title : 'Networks in Graph',
 	
 	//define the data
@@ -69,5 +69,16 @@ Ext.define('Precon.view.NetworkGrid' ,{
                           ];
      
               this.callParent(arguments);
+    },
+    highlight:function(ids, on){
+    	for(var i=0;i<this.getStore().count();i++)
+    		this.getView().removeRowCls(i, 'state-highlight')
+    	for(var i=0;i<ids.length;i++){        		
+    		var id = ids[i]    		
+    		var index = this.getStore().find('_id', id)
+    		if(index>=0 && on)
+    			this.getView().addRowCls(index, 'state-highlight')
+    		if(index>=0 && !on)    			this.getView().removeRowCls(index, 'state-highlight')
+    	}
     }
 });

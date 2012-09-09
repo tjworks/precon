@@ -94,7 +94,8 @@ Ext.define('Precon.controller.NetworkGridController', {
     },
     onLaunch:function(){
     	log.info("NetworkGridController.Onlaunch")
-    	objid = this.getObjectIdFromUrl()	    	
+    	objid = this.getObjectIdFromUrl()
+    	var self = this
     	if (objid){
     		
     		var self = this
@@ -114,8 +115,23 @@ Ext.define('Precon.controller.NetworkGridController', {
     			});			
     	}
     	$(document).on(precon.event.UserLogin, this.loadMyNetworks)    	
+    	
+    	mygraph.on("mouseover",function(evt, target){
+    		var data = target.__data__    		
+    		if(data && data.getRefs('network')){
+    			self.highlightSelections(data.getRefs('network'));
+    		}				
+		});
+		mygraph.on("mouseout",self.highlightSelections)		
+		mygraph.getModel().on("selectionchanged", self.highlightSelections)
     },
-   
+    highlightSelections: function(additional){    	 
+    	var ids = additional? ( _.isArray(additional)? additional: [additional]) : []
+		_.each( mygraph.getModel().getSelections(), function(item,  self ){
+			 ids = ids.concat ( item.getRefs('network') )
+		});		
+		Ext.getCmp("network-grid").highlight( ids, true)
+    },
     loadMyNetworks: function(){
     	log.info("Loading my networks")
     	if(!app.getUser()) return;  // not logged in
@@ -177,8 +193,7 @@ Ext.define('Precon.controller.NetworkGridController', {
 	              log.debug("selected ", ui)
 	              precon.searchNetworks(ui.item._id, function(networks){ self.loadNetworks(networks, false)})
 	          },	         
-		      focus: function(event, ui) { 
-		    	  console.log('focused', ui.item._id);
+		      focus: function(event, ui) { 		    	  
 		    	  if(ui.item && ui.item._id)
 		    	  {
 		    		  searchctrl.attr('data', ui.item._id)

@@ -189,7 +189,7 @@ path.state-selected {
     fill:none
 }
 .state-highlight {
-    background-color:#ffff9c
+    background-color:#ffff9c !important
 }
 circle.state-highlight {
     stroke:#ffff9c;  
@@ -229,4 +229,12 @@ input.filterByNetwork {
 .clickable:hover {
 	text-decoration:underline;
 	
+}
+
+
+
+/** Ext Overrides */
+/** necessary to apply row style in the grid */
+.x-grid-row .x-grid-cell {
+  background-color: Transparent !important;
 }
