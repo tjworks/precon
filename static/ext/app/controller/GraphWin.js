@@ -267,6 +267,13 @@ Ext.define('Precon.controller.GraphWin', {
 			   log.debug("Unsupported operation: "+ err)
 		   }
 	   })
+	   
+	   this.getGraphModel().on('add.connection', this.onGraphChange ).on('add.node', this.onGraphChange).on('remove.connection', this.onGraphChange).on('remove.node',this.onGraphChange)
+   },
+   onGraphChange: function(){
+	  // update footer_summary
+	  var html = "Nodes: " + app.graphModel.getConnections().length + "  Links: "+ app.graphModel.getNodes().length
+	  Ext.getCmp("footer_summary").setText(html);
    },
    createGraph: function() {
 	   	//log.debug("Recreating graph")

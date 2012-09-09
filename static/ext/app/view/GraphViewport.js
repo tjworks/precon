@@ -100,7 +100,7 @@ Ext.define('Precon.view.GraphViewport' ,{
 						        //toggleHandler: toggleLegend
 						    },
 						    '->',
-                            {xtype:"textfield", width:400, fieldLabel:"Filter Graph by:", labelAlign:"right",allowBlank:true},
+                            {xtype:"label", id: 'footer_summary', width:400, text:""},
                             '->',
                             {
 						        text: 'C Tree',
