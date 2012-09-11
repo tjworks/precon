@@ -58,14 +58,14 @@ user.user_id = user.username
         <div id="myheaderContent">
          <div class="myheaderNav right">
              <ul>
-                 <li><a href="/">首页</a></li>
-                 <li><a href="/graph">普康一历</a></li>                 
-                 <li><a href="/howto">如何工作</a></li>
+                 <li><a href="/">Home</a></li>
+                 <li><a href="/graph">One Chart</a></li>                 
+                 <!-- <li><a href="/howto">如何工作</a></li> -->
                  {% if user.username %}
                     <li><a id="userid" class="">Hi, {{ user.username }}</a></li>
-                    <li><a id="signout-link" href="#">退出</a></li>
+                    <li><a id="signout-link" href="#">Logout</a></li>
                  {% else %}
-				    <li><a href="#login-box" id="signin-link" class="login-window">登录</a></li>
+				    <li><a href="#login-box" id="signin-link" class="login-window">Login</a></li>
 				    <li><a id="userid" class=""></a></li>   
 				 {% endif %}
                 </ul>                                       
