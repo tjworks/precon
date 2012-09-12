@@ -85,6 +85,24 @@ Ext.define('Precon.view.GraphViewport' ,{
                                     handler : function() {
                                         log.debug("test");
                                     }
+                                },
+                                '->',
+                               
+                               
+                                {
+                                	xtype:'label',
+                                	text:'Loading',
+                                	cls:'network-spinner',
+                                	id:'spinner-label'
+                                },
+                                {
+                                    //text:'Loading...',
+                                	xtype:'image',
+                                	id:'spinner-img',
+                                	cls:'network-spinner', 
+                                    style:{width:'20px',height:'20px'},
+                                    //icon:"/ext/resources/images/loading1.gif",
+                                    src: "/ext/resources/images/loading.gif"
                                 }
                         ]
             },
