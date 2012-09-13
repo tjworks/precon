@@ -121,11 +121,22 @@ Ext.define('Precon.view.GraphViewport' ,{
                             {xtype:"label", id: 'footer_summary', width:400, text:""},
                             '->',
                             {
-						        text: 'C Tree',
-						        enableToggle: true,
+						        text: 'Animated Tree',
+						          enableToggle: true,
 						        toggleGroup: 'trees',
 						        icon:"/ext/resources/images/legend.png",
-						        toggleHandler: null
+						        menu: [
+							         {
+								        text: 'Arc Link',
+								        id:"togglearclink",
+								        icon:"/ext/resources/images/legend.png"
+								     },
+							         {
+								        text: 'Straight link',
+								        id:"togglestraightlink",
+								        icon:"/ext/resources/images/legend.png"
+							          }
+						        ]
 						    },
                             {
 						        text: 'S Tree',

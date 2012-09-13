@@ -47,9 +47,20 @@ Ext.define('Precon.controller.GraphWin', {
 		  },
 		  '#zoomslider': {
 		  	  change: this.onZoom
+		  },
+		  '#togglestraightlink': {
+		  	  click: this.onToggle
+		  },
+		  '#togglearclink': {
+		  	  click: this.onToggle
 		  }
         });
    },  
+   onToggle: function(btn) {
+   	  if (btn.text.toLowerCase().indexOf("arc")>=0) mygraph.linklinetype="arc";
+   	  else mygraph.linklinetype="straight";
+   	  mygraph.redraw();
+   },
    onZoom: function(s,v,t) {
    	 // if(v+1<8)
    	      mygraph.zoom(v/10)

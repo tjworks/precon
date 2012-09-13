@@ -23,7 +23,7 @@ function myGraph(el,w,h) {
 	var rectSelectMode = true; // by default drag mode is true
 	var observable = $({})
 	var graphZoom, graphDrag;
-	
+	this.linklinetype="arc";  // by default the line type of links is arc; it can be "straight" 
 	this.on = function(eventType,  handler){
 		observable.on(eventType, handler);
 	}
@@ -116,6 +116,9 @@ function myGraph(el,w,h) {
 			       " scale(" + scale + ")");
 	        force.start();
        //}
+	},
+	this.redraw=function() {
+		update();
 	},
 	this._selectionChanged = function(evt, sel){
 		/**
@@ -561,15 +564,24 @@ function myGraph(el,w,h) {
 							   lastobj.lastsy=String.valueOf(d.source.y);
 							   lastobj.lastdx=String.valueOf(d.target.x);
 							   lastobj.lastdy=String.valueOf(d.target.y);*/
+				   	  
 				   	   if(!d.source.x) log.debug
 				   	   var pnts=getPointOnCircle(d.source.x,d.source.y,r,d.target.x,d.target.y,r);
 				   	   if (pnts) {
 					   	   var a=pnts[0];
 					   	   var b=pnts[1];
-					   	   return "M" + a.x + "," + a.y + "A" + dr + "," + dr + " 0 0,1 " + b.x + "," + b.y;
+					   	   if (mygraph.linklinetype=="arc")
+					   	   		return "M" + a.x + "," + a.y + "A" + dr + "," + dr + " 0 0,1 " + b.x + "," + b.y;
+					   	   	else
+					   	   		return "M" + a.x + "," + a.y + "L" + b.x + "," + b.y;
 				   	  }
 				   	  else
-					   return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+				   	  {
+					   if (mygraph.linklinetype=="arc")
+					   		return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+					   	else
+					   		return "M" + a.x + "," + a.y + "L" + b.x + "," + b.y;
+					   }
 			//	}
 			 //   else {
 			//           return "M" + lastobj.lastsx + "," + lastobj.lastsy + "A" + lastobj.lastdr + "," + lastobj.lastdr + " 0 0,1 " + lastobj.lastdx + "," + lastobj.lastdy;
