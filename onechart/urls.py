@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     # Examples:
     #url(r'^$', 'onechart.views.home', name='home'),
     url(r'^assets/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'static'}),
-    url(r'^(?P<path>.*.(css|js|png|gif|swf|jpg|html|htm))$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.(css|js|png|gif|swf|jpg|html|htm|pdf))$', 'django.views.static.serve', {'document_root': 'static'}),
     
     # url(r'^onechart/', include('onechart.foo.urls')),
 
@@ -24,6 +24,7 @@ urlpatterns = patterns('',
         
     url(r'^howto$', 'onechart.views.home'),
     
+    url(r'^export', 'graph.converter.handler'),
     # graph app
     url(r'^graph/(?P<precon_id>.*)$', 'graph.graphview.handler'),
     

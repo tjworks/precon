@@ -25,6 +25,38 @@ Ext.define('Precon.view.GraphViewport' ,{
                 xtype: 'toolbar',
                 dock: 'top',
                 items: [
+								{
+								    text: 'File',
+								    enableToggle: false,
+								    //toggleGroup: 'trees',
+								    icon:"/ext/resources/images/file-16.png",
+								    menu: [
+								           /**
+								         {
+									        text: 'Upload Network',
+									        id:"menuItemUpload",
+									        icon:"/ext/resources/images/upload.png"
+									     },*/
+								         {
+									        text: 'Save as PNG',
+									        id:"menuItemPNG",
+									        icon:"/ext/resources/images/png.png",
+									        handler : function() { app.getController("GraphWin").exportGraph('image/png'); }
+								          }
+									     ,
+								         {
+									        text: 'Save as PDF',
+									        id:"menuItemPDF",
+									        icon:"/ext/resources/images/pdf.png",
+									        handler : function() { app.getController("GraphWin").exportGraph('application/pdf'); }
+								          },
+								          {			                                 			                                    
+			                                    text : 'Save Graph',
+			                                    icon:"/ext/resources/images/save-16.png",
+			                                    handler : function() { app.getController("GraphWin").saveGraph(); }
+			                               }
+								    ]
+								},
                                 {
                                     xtype: 'button', 
                                     text : 'Create Node',
@@ -72,7 +104,7 @@ Ext.define('Precon.view.GraphViewport' ,{
                                     id:'saveGraphBtn',
                                     text : 'Save Graph',
                                     //iconCls:'x-btn-inner remove',
-                                    icon:"/ext/resources/images/link_.png",
+                                    icon:"/ext/resources/images/save-16.png",
                                     handler : function() {
                                         //saveGraph();
                                     }

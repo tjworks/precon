@@ -1,4 +1,7 @@
 # Django settings for onechart project.
+import os
+PROJECT_PATH = os.path.dirname(os.path.dirname(__file__) )
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 

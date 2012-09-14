@@ -17,6 +17,9 @@ Python and modules
 	#If "easy_install pil" does not work, you may also directly download at: http://effbot.org/downloads/PIL-1.1.7.win32-py2.7.exe
 
 
+sudo yum install batik-rasterizer
+
+
 Git and Checkout
 ============================
 - Install Git client: http://git-scm.com/downloads

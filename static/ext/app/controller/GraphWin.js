@@ -480,6 +480,31 @@ Ext.define('Precon.controller.GraphWin', {
 		saveGraphWindow.show()	
 	} // end saveGraph
 	,
+	// export graph to PNG or PDF
+	exportGraph: function(format){
+		var src = $("svg").parent().html();
+		if(!src)
+			return app.ui.alert("Graph is empty");					
+		src = src.substring( src.indexOf("<svg"), src.indexOf("</svg>"));
+		src+="</svg>"
+			
+		msgbox = Ext.Msg.wait('', 'Converting graph...', {interval:100,increments:1});
+			
+		var data = {"svg": src, "format":format}		
+		$.fileDownload('/export', {
+			data:data,
+			httpMethod:'POST',
+		    successCallback: function (url) {
+		    	msgbox.hide()		    	
+		    },
+		    failCallback: function (html, url) {
+		    	msgbox.hide()
+		    	Ext.Msg.alert('Error', html)		    	
+		    }
+		});
+			
+	}
+	,
 	showObject: function(ob){
 		var self = this
 		if('getRawdata' in ob) obj = ob.getRawdata()
