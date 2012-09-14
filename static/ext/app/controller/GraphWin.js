@@ -47,9 +47,20 @@ Ext.define('Precon.controller.GraphWin', {
 		  },
 		  '#zoomslider': {
 		  	  change: this.onZoom
+		  },
+		  '#togglestraightlink': {
+		  	  click: this.onToggle
+		  },
+		  '#togglearclink': {
+		  	  click: this.onToggle
 		  }
         });
    },  
+   onToggle: function(btn) {
+   	  if (btn.text.toLowerCase().indexOf("arc")>=0) mygraph.linklinetype="arc";
+   	  else mygraph.linklinetype="straight";
+   	  mygraph.redraw();
+   },
    onZoom: function(s,v,t) {
    	 // if(v+1<8)
    	      mygraph.zoom(v/10)
@@ -246,7 +257,20 @@ Ext.define('Precon.controller.GraphWin', {
    onLaunch: function(){
 	   log.info("GraphWin.Onlaunch")	   
 	   this.createGraph()
-	   this.showMainObject()
+	   this.showMainObject()	   
+	   $(document)		  
+		    .ajaxStart(function() {
+		    	log.debug("show")
+		        Ext.getCmp("spinner-img").show();
+		    	Ext.getCmp("spinner-label").show();
+		    })
+		    .ajaxStop(function() {
+		    	log.debug("hide")
+		    	Ext.getCmp("spinner-img").hide();
+		    	Ext.getCmp("spinner-label").hide();
+	   });
+	   Ext.getCmp("spinner-img").hide();
+	   Ext.getCmp("spinner-label").hide();
 
 	   // bind graph events 
 	   var self = this

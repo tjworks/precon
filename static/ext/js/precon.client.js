@@ -3,6 +3,8 @@
 window.console = window.console || {log:function(){}}
 if( m = document.location.href.match(/logger=(DEBUG|INFO)/))
 	loglevel = m[1]
+else if(m=document.location.href.match(/(localhost|127.0.0.1)/i))
+	loglevel='DEBUG'
 else
 	loglevel = 'INFO'
 window.log = new Log(Log[loglevel], Log.consoleLogger);
@@ -11,7 +13,7 @@ log.info('Script Loading Start')
 
 precon =  {}
 precon.conf = {
-	local_cache: true,
+	//local_cache: true,
 	max_objects_per_request:500,
 	api_base: 'http://one-chart.com:3000/oc',
 	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication',peop:'people'},	

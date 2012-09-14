@@ -85,6 +85,24 @@ Ext.define('Precon.view.GraphViewport' ,{
                                     handler : function() {
                                         log.debug("test");
                                     }
+                                },
+                                '->',
+                               
+                               
+                                {
+                                	xtype:'label',
+                                	text:'Loading',
+                                	cls:'network-spinner',
+                                	id:'spinner-label'
+                                },
+                                {
+                                    //text:'Loading...',
+                                	xtype:'image',
+                                	id:'spinner-img',
+                                	cls:'network-spinner', 
+                                    style:{width:'20px',height:'20px'},
+                                    //icon:"/ext/resources/images/loading1.gif",
+                                    src: "/ext/resources/images/loading.gif"
                                 }
                         ]
             },
@@ -103,11 +121,22 @@ Ext.define('Precon.view.GraphViewport' ,{
                             {xtype:"label", id: 'footer_summary', width:400, text:""},
                             '->',
                             {
-						        text: 'C Tree',
-						        enableToggle: true,
+						        text: 'Animated Tree',
+						          enableToggle: true,
 						        toggleGroup: 'trees',
 						        icon:"/ext/resources/images/legend.png",
-						        toggleHandler: null
+						        menu: [
+							         {
+								        text: 'Arc Link',
+								        id:"togglearclink",
+								        icon:"/ext/resources/images/legend.png"
+								     },
+							         {
+								        text: 'Straight link',
+								        id:"togglestraightlink",
+								        icon:"/ext/resources/images/legend.png"
+							          }
+						        ]
 						    },
                             {
 						        text: 'S Tree',

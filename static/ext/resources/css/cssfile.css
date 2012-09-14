@@ -238,3 +238,7 @@ input.filterByNetwork {
 .x-grid-row .x-grid-cell {
   background-color: Transparent !important;
 }
+
+.network-spinner {
+	color:#3d4253;		
+}
