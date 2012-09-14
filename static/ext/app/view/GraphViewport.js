@@ -44,12 +44,12 @@ Ext.define('Precon.view.GraphViewport' ,{
 									        handler : function() { app.getController("GraphWin").exportGraph('image/png'); }
 								          }
 									     ,
-								         {
+								         /**{
 									        text: 'Save as PDF',
 									        id:"menuItemPDF",
 									        icon:"/ext/resources/images/pdf.png",
 									        handler : function() { app.getController("GraphWin").exportGraph('application/pdf'); }
-								          },
+								          },*/
 								          {			                                 			                                    
 			                                    text : 'Save Graph',
 			                                    icon:"/ext/resources/images/save-16.png",
