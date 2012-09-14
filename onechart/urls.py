@@ -7,9 +7,12 @@ from django.contrib import admin
 urlpatterns = patterns('',
     # Examples:
     #url(r'^$', 'onechart.views.home', name='home'),
+
+    url(r'^export/(?P<filename>.*)$', 'graph.converter.handler'),
+
     url(r'^assets/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'static'}),
     url(r'^(?P<path>.*.(css|js|png|gif|swf|jpg|html|htm|pdf))$', 'django.views.static.serve', {'document_root': 'static'}),
-    
+
     # url(r'^onechart/', include('onechart.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
@@ -17,22 +20,21 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    
+
 
     # Home page
     url(r'^$', 'onechart.views.home'),
-        
+
     url(r'^howto$', 'onechart.views.home'),
-    
-    url(r'^export', 'graph.converter.handler'),
+
     # graph app
     url(r'^graph/(?P<precon_id>.*)$', 'graph.graphview.handler'),
-    
-    
-    
+
+
+
     # search/proxy
     url(r'^search', 'onechart.search.handler'),
-    
+
     # Userena app
     url(r'^accounts/', include('userena.urls')),
 )
@@ -46,4 +48,4 @@ urlpatterns = patterns('',
     url(r'^(?P<path>.*.jpg)$', 'django.views.static.serve', {'document_root': 'static'}),
     url(r'^(?P<path>.*.html)$', 'django.views.static.serve', {'document_root': 'static'}),
     """
-    
+
