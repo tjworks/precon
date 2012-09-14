@@ -150,7 +150,7 @@ Ext.define('Precon.view.GraphViewport' ,{
 	            {
 	                xtype: 'button',
 	                id:'ingraph-search-btn',
-	                text: 'Find and add related studies to the list',
+	                text: 'Find and add related networks to the list',
 	                tooltip: '',
 	                //iconStyle:'color:#04408C; font-size:11px',
 	                icon:"/ext/resources/images/find.png"
