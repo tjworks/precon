@@ -31,12 +31,15 @@ Ext.define('Precon.view.GraphViewport' ,{
 								    //toggleGroup: 'trees',
 								    icon:"/ext/resources/images/file-16.png",
 								    menu: [
-								           /**
+								         
 								         {
 									        text: 'Upload Network',
 									        id:"menuItemUpload",
-									        icon:"/ext/resources/images/upload.png"
-									     },*/
+									        icon:"/ext/resources/images/upload.png",
+									        handler : function() { 
+									        	Ext.require('Precon.controller.Importer')
+									        	app.getController("Importer").showWindow() }
+									     },
 								         {
 									        text: 'Save as PNG',
 									        id:"menuItemPNG",

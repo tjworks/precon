@@ -1,0 +1,19 @@
+# Any line starts with # is a comment line
+# Format: NODE-A DIRECTION NODE-B
+# Direction: ->, --, <-, or <->
+
+TRADD -> MAF 
+TRADD -> TTC39A 
+TRADD -> CEP170 
+BAD2 -> NCRNA00094 
+BAD3 -> DUSP14 
+BAD -> ATOX1 
+PRPF8 -> KIAA0100 
+PRPF8 -> ZZEF1 
+RPL35 -> RPS6 
+RPL35 -> SSR2 
+RPL35 -> RPL29 
+RPL35 -> PPP1CA 
+RPL35 -> ZNF593 
+RPL35 -> DPM2 
+RPL35 -> SSNA1 

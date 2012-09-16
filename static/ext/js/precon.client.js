@@ -10,14 +10,15 @@ else
 window.log = new Log(Log[loglevel], Log.consoleLogger);
 log.info('Script Loading Start')
 
-
 precon =  {}
 precon.conf = {
 	//local_cache: true,
-	max_objects_per_request:500,
-	api_base: 'http://one-chart.com:3000/oc',
-	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication',peop:'people'},	
+	max_objects_per_request:500,	
+	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication',peop:'people'}
 }
+precon.conf.server = 'one-chart.com';  //document.location.hostname ||  
+precon.conf.node_url = 'http://'+ precon.conf.server+':3000';
+precon.conf.api_base = precon.conf.node_url+"/oc";
 
 precon.getObjectType = function(objid){
 	if(!objid) return ''
@@ -489,5 +490,48 @@ precon.util.processAbstract = function(publication){
 precon.event = {
 	ViewportCreated:'ViewPortCreated',
 	UserLogin:'UserLogin'
+};
+
+
+(function() {
+      var ga = document.createElement('script'); 
+      ga.type = 'text/javascript'; 
+      ga.async = true;
+      ga.src = precon.conf.node_url+ '/socket.io/socket.io.js' ;
+      var s = document.getElementsByTagName('script')[0]; 
+      s.parentNode.insertBefore(ga, s);
+    })();
+
+$(function(){
+	setTimeout(function(){
+		window.socket = io.connect(precon.conf.node_url); ///?uid='+ getUid()+"&sid="+ getSid());
+		socket.on('news', function (data) {
+			console.log("socket.io connection success");
+			//socket.emit('authenticate', {uid: getUid(), sid:random_id});	    	 
+		});	
+	}, 1000)	
+});
+
+
+precon.invoke = function(fn, arg , callback){
+	if(typeof arg == 'function'){
+		callback = arg
+		arg = null
+	}
+	var args = {fn: fn, arg:arg}		
+	console.log("client invoke: ",args)
+	socket.emit('invoke', args, function(data){
+		console.log("invoke server response: ",data);			
+		callback && callback(data);
+	});
 }
 
+function evil( stmt, callback){
+	var args={}; 	
+	args.stmt = stmt
+	socket.emit('evil', args, function(data){
+		console.log("evil response: ",  $.dump(data));			
+		callback && callback(data);
+	});
+}
+//

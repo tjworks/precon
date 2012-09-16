@@ -242,3 +242,12 @@ input.filterByNetwork {
 .network-spinner {
 	color:#3d4253;		
 }
+
+#uploadbox {
+	padding:20px;
+	border:5px dashed #AAA;
+	margin:5px 0px;
+}
+#uploadbox.hover {
+    border:5px dashed #3d4253;    
+}
