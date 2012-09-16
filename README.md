@@ -10,7 +10,7 @@ Python and modules
 - Install setup_tools for python: http://pypi.python.org/pypi/setuptools
 - Once setup_tools installed, run following::
 
-	    easy_install django pymongo	requests easy_thumbnails django-guardian 
+	    easy_install django pymongo	requests easy_thumbnails django-guardian cssselect tinycss
 	    
 - Following step is NOT required for now
 	#easy_install pil 		
