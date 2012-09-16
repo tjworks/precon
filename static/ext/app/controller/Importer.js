@@ -3,13 +3,8 @@ Ext.define('Precon.controller.Importer', {
     requires:['Precon.view.ImporterWindow'],
     init: function() {
      		log.debug("Importer.init"); 
-     		this.control({    
-     			"#btnPreview": function(){ this.preview() },
-     			"#uploadbox input": {
-     				change: function(){
-     					console.log("changed!")
-     				}
-     			}
+     		this.control({         			
+     			
      		});     	
     },    
 	onLaunch: function(){
@@ -54,13 +49,14 @@ Ext.define('Precon.controller.Importer', {
 			var pat = /(.+)(--|->|<-|<->)(.+)/ 
 			
 			var store = Ext.getCmp("importerGrid").getStore();
+			store.removeAll();
 			var lineNo = 0;
 			
 	        for(var i=0;i<lines.length;i++){
 	            line = lines[i]
 	            line = $.trim(line)
-	            if(line.indexOf("#") == 0) continue;
 	            lineNo++
+	            if(line.indexOf("#") == 0) continue;
 	            
 	            var record=  {line: lineNo }
 	            var matcher = pat.exec(line);
@@ -92,6 +88,7 @@ Ext.define('Precon.controller.Importer', {
         	if(! record.get("idB") && _.indexOf(nodes,record.get('nodeB').toLowerCase())<0)
         		nodes.push(record.get('nodeB').toLowerCase());
         });
+        var self = this
         // call server to validate the nodes
         precon.invoke('entityService.validate', nodes, function(result){
         	// result is a hash of symbol->_id
@@ -102,16 +99,27 @@ Ext.define('Precon.controller.Importer', {
         			if(rec.get('nodeB').toLowerCase() == k ) rec.set('idB', result[k]);
         		})
         	}
-        	var hasError = false;
+        	self.errorCount = 0;
         	store.each(function(rec){
         		if(!rec.get("idA")  || ! rec.get("idB")){
-        			hasError = true;
+        			self.errorCount++;
             		return false
         		}        		
         	});
-        	if(!hasError) Ext.getCmp("btnImport").enable();
+        	self.toggleImportButton();
         });        
+	},
+	toggleImportButton:function(){
+		console.log("Toggling", self.hasError,Ext.getCmp("chkboxIgnoreError").getValue() )
+		if( (!this.errorCount) || Ext.getCmp("chkboxIgnoreError").getValue() ) 
+			Ext.getCmp("btnImport").enable();
+		else
+			Ext.getCmp("btnImport").disable();
 	}
+	,doImport:function(){
+		
+	}
+	
 });
 
  

@@ -1,6 +1,6 @@
 var previewStore = Ext.create('Ext.data.ArrayStore', {
 							storeId: 'previewStore',
-    						fields: ['nodeA','direction','nodeB', 'idA', 'idB'],    		               
+    						fields: ['nodeA','direction','nodeB', 'idA', 'idB', 'line'],    		               
     						data: []
     		          })
 Ext.define('Precon.view.Container', {
@@ -13,11 +13,11 @@ Ext.define('Precon.view.ImporterWindow', {
 	extend:'Ext.window.Window',
 	bodyPadding: 10,
     width: 800,
-    height: 600,
+    height: 700,
     icon:'/ext/resources/images/upload.png',
     title: 'Upload Network',
     id:'importerWindow',
-    autoHeight:true,
+    //autoHeight:true,
     extentStore:null,
     closeAction: 'hide',
     listeners:{
@@ -56,79 +56,101 @@ Ext.define('Precon.view.ImporterWindow', {
 					   
 					   ]
     		},
-    		
     		{
-    		    xtype: 'gridpanel',    		   
-    		    title : 'Preview',
-    			id: 'importerGrid',
-    			width:'auto',
-    			scroll:true,
-    			height: 'auto',
-    			//define the data
-    			store:   Ext.data.StoreManager.lookup('previewStore'),
-    		    columns: [
-							{
-							    text     : 'Node A', 
-							    width    : 80, 
-							    sortable : true,     										   
-							    dataIndex: 'nodeA',
-							    editable:true
-							},
-							{
-								text: 'Valid',
-								width:150,
-								sortable:false,
-								dataIndex: 'idA',
-								renderer: function(val, meta, record){
-									return val?"<img src='/ext/resources/images/ok-16.png'>":"<img src='/ext/resources/images/cross-16.png'>"
-								}
-							},
-							{
-							    text     : 'Direction',
-							    width:50,
-							    sortable : false,                 
-							    dataIndex: 'direction',
-							    renderer: function(val, meta, record){
-							    	return "<b>"+ val+"</b>"
-							    }
-							    	
-							},							
-							{
-							    text     : 'Node B', 
-							    width    : 80, 							    
-							    sortable : true, 
-							    dataIndex: 'nodeB',
-							    editable:true
-							   // renderer: change
-							},
-							{
-								text: 'Valid',
-								width:150,
-								sortable:false,
-								dataIndex: 'idB',
-								renderer: function(val, meta, record){
-									return val?"<img src='/ext/resources/images/ok-16.png'>":"<img src='/ext/resources/images/cross-16.png'>"
-								}
-							},
-				]
-    		     ,
-    		    viewConfig: {
-    		        emptyText: '',
-    		        deferEmptyText: false,
-    		        markDirty: false
-    		    }
+    			xtype:'container',
+    			layout:'fit',
+    			height:450,
+    			items:[
+						{
+						    xtype: 'gridpanel',    		   
+						    title : 'Preview',
+							id: 'importerGrid',
+							width:'auto',
+							autoScroll:true,
+							
+							//define the data
+							store:   Ext.data.StoreManager.lookup('previewStore'),
+						    columns: [
+										{
+										    text     : 'Line #', 
+										    width    : 50, 
+										    sortable : false,     										   
+										    dataIndex: 'line',
+										    editable:true
+										},
+										{
+										    text     : 'Node A', 
+										    width    : 100, 
+										    sortable : true,     										   
+										    dataIndex: 'nodeA',
+										    editable:true
+										},
+										{
+											text: 'Valid',
+											width:50,
+											sortable:false,
+											dataIndex: 'idA',
+											renderer: function(val, meta, record){
+												return val?"<img src='/ext/resources/images/ok-16.png'>":"<img src='/ext/resources/images/cross-16.png'>"
+											}
+										},
+										{
+										    text     : 'Direction',
+										    width:80,
+										    sortable : false,                 
+										    dataIndex: 'direction',
+										    renderer: function(val, meta, record){
+										    	return "<b>"+ val+"</b>"
+										    }
+										    	
+										},							
+										{
+										    text     : 'Node B', 
+										    width    : 100, 							    
+										    sortable : true, 
+										    dataIndex: 'nodeB',
+										    editable:true
+										   // renderer: change
+										},
+										{
+											text: 'Valid',
+											width:50,
+											sortable:false,
+											dataIndex: 'idB',
+											renderer: function(val, meta, record){
+												return val?"<img src='/ext/resources/images/ok-16.png'>":"<img src='/ext/resources/images/cross-16.png'>"
+											}
+										},
+							]
+						     ,
+						    viewConfig: {
+						        emptyText: '',
+						        deferEmptyText: false,
+						        markDirty: false
+						    }
+						}
+    			       ]
     		}
+    		
+    		,{
+    			xtype:"checkbox",			
+                boxLabel  : 'Ignore errors',
+                name      : 'topping',
+                inputValue: '1',
+                id        : 'chkboxIgnoreError',
+                handler: function(){ app.getController("Importer").toggleImportButton()}
+            }
                          	
 		],
 		buttons : 
 		  			 [
-						 {
+						 /**{
 							xtype : 'button',										
 							text : 'Re-Validate',
 							id:'btnValidate',
 							handler : function() { app.getController("Importer").validate() }
-						}
-						,{
+						} */
+						{
 								xtype : 'button',										
 								text : 'Import',
 								id:'btnImport',
