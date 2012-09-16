@@ -15,7 +15,7 @@ var config = {
 	"db": {
 			'port': 27017,
 			'host': "localhost",
-			'name':'oc1'
+			'name':'oc'
 		},
 	'server': {
 		'port': 3000,
