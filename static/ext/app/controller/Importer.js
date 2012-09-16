@@ -3,8 +3,7 @@ Ext.define('Precon.controller.Importer', {
     requires:['Precon.view.ImporterWindow'],
     init: function() {
      		log.debug("Importer.init"); 
-     		this.control({         			
-     			
+     		this.control({         			     			
      		});     	
     },    
 	onLaunch: function(){
@@ -24,12 +23,20 @@ Ext.define('Precon.controller.Importer', {
 					          $("#uploadbox input[type=text]").attr('value', e.originalEvent.dataTransfer.files[0].name)
 					          self.processFile( e.originalEvent.dataTransfer.files );					            
 		});   		 
+		$("#chkboxIgnoreError").click(function(){
+			self.toggleImportButton();
+		});
 		return vyew
 	},
 	hide: function(){
 		this.win.hide()
 	},
 	showWindow: function(){
+		if(!window.user || !user.user_id){
+			Ext.Msg.alert("Info", "Please log in or sign up first");
+			return;
+		}
+		
 		this.win = this.win || this.createWindow()
 		this.win.show();
 				
@@ -81,12 +88,12 @@ Ext.define('Precon.controller.Importer', {
 	,validate:function(){
 		var store = Ext.getCmp("importerGrid").getStore();
         msgbox = Ext.Msg.wait('', 'Validating nodes...', {interval:100,increments:1});
-        var nodes = [];
+        var nodes = [], allnodes = [];        
         store.each(function(record){
         	if(! record.get("idA") && _.indexOf(nodes,record.get('nodeA').toLowerCase())<0)
         		nodes.push(record.get('nodeA').toLowerCase());
         	if(! record.get("idB") && _.indexOf(nodes,record.get('nodeB').toLowerCase())<0)
-        		nodes.push(record.get('nodeB').toLowerCase());
+        		nodes.push(record.get('nodeB').toLowerCase());        	
         });
         var self = this
         // call server to validate the nodes
@@ -103,23 +110,64 @@ Ext.define('Precon.controller.Importer', {
         	store.each(function(rec){
         		if(!rec.get("idA")  || ! rec.get("idB")){
         			self.errorCount++;
-            		return false
         		}        		
         	});
+        	$("#previewInvalidCounts").text( self.errorCount);
+    		$("#previewTotalLinks").text( store.getCount());
+    		$("#previewTotalNodes").text(nodes.length);
         	self.toggleImportButton();
         });        
 	},
 	toggleImportButton:function(){
-		console.log("Toggling", self.hasError,Ext.getCmp("chkboxIgnoreError").getValue() )
-		if( (!this.errorCount) || Ext.getCmp("chkboxIgnoreError").getValue() ) 
+		//console.log("Toggling", self.hasError,$("#chkboxIgnoreError").attr('checked'))		
+		if( (!this.errorCount) || $("#chkboxIgnoreError").attr('checked') ) 
 			Ext.getCmp("btnImport").enable();
 		else
 			Ext.getCmp("btnImport").disable();
 	}
 	,doImport:function(){
+		log.debug("Creating imported network");
+		var store = Ext.getCmp("importerGrid").getStore();
+		var cons = []
+		var nodes = {}
 		
-	}
-	
+		store.each(function(rec){
+    		if(!rec.get("idA")  || ! rec.get("idB")) return true;
+    		var nodeA = nodes[rec.get("idA") ] || new precon.Node({
+	    			_id: precon.randomId("node"),
+	    			label: rec.get("nodeA"),
+	    			entity: rec.get("idA"),
+	    			owner:user.user_id
+	    		})
+    		nodes[rec.get("idA")] = nodeA
+    		
+    		var nodeB = nodes[rec.get("idB") ] ||new precon.Node({
+    			_id: precon.randomId("node"),
+    			label: rec.get("nodeB"),
+    			entity: rec.get("idB"),
+    			owner:user.user_id
+    		})
+    		nodes[rec.get("idB")] = nodeB
+    		
+    		var con = new precon.Connection({
+    			nodes: [ nodeA._id, nodeB._id],
+    			//_nodes: [nodeA.getRawdata(), nodeB.getRawdata()],
+    			entities:[rec.get('idA'), rec.get('idB')],    	
+    			type: rec.get("direction") =='->' ? 'activates': "association",
+    			owner:user.user_id
+    		});
+    		con.setNodes([nodeA, nodeB]);
+    		cons.push(con);    		
+    	}); // end each
+		console.log("total nodes: " , nodes)
+		var network = new precon.Network({
+			name:'Imported Network',
+			_connections:cons,
+			owner:user.user_id
+		})
+		app.graphModel.setGraphNetwork(network, true);
+		this.hide();
+	}	
 });
 
  

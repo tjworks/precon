@@ -16,7 +16,7 @@ precon.conf = {
 	max_objects_per_request:500,	
 	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication',peop:'people'}
 }
-precon.conf.server = 'one-chart.com';  //document.location.hostname ||  
+precon.conf.server = 'one-chart.com';
 precon.conf.node_url = 'http://'+ precon.conf.server+':3000';
 precon.conf.api_base = precon.conf.node_url+"/oc";
 
@@ -330,11 +330,14 @@ precon.cache = {}
  * @reutrn: A list of JSON objects contains the detailed attributes of the object
  */
 precon.getObjects = function(obj_ids, callback){
-	if(!obj_ids || obj_ids.length == 0 ) throw "An array of Obj ids must be specified"
+	//if(!obj_ids || obj_ids.length == 0 ) throw "An array of Obj ids must be specified"
 	//log.debug("getObjects: "+ obj_ids)	// 
 	
 	// mapping
-	if(!obj_ids[0]) return
+	if(!obj_ids || !obj_ids[0]){
+		callback && callback([]);
+		return;
+	}
 	prefix = obj_ids[0].substring(0,4)
 	model = precon.conf.prefix_mapping[prefix]
 	if(!model) throw "Invalid or unsupported object id: "+ obj_ids

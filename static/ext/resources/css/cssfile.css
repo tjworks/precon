@@ -251,3 +251,7 @@ input.filterByNetwork {
 #uploadbox.hover {
     border:5px dashed #3d4253;    
 }
+
+#previewSummary span {
+    padding:0px 5px;
+}

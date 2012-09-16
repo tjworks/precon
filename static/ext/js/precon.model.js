@@ -23,9 +23,9 @@ precon.NetworkGraph = function(){
 		// load all nodes first
 		var ids = []
 		var conns = netObj.getConnections()
-		conns.forEach(function(con){
-			ccon = con
-			ids = ids.concat ( con.getNodeIds() )			
+		conns.forEach(function(con){			
+			if(!con.isNodeLoaded())
+				ids = ids.concat ( con.getNodeIds() )			
 		})
 		
 		precon.getObjects(ids, function(){				 	
@@ -460,7 +460,7 @@ precon.NetworkGraph = function(){
 				
 				if(node.getRefs('connection').length != 0 ){
 					node.set('owner', window.user.user_id)
-					obj.nodes.push(node.get('id'))
+					obj.nodes.push(getId(node))
 					obj._nodes.push(node.toJson())
 				}				
 			}
@@ -534,11 +534,16 @@ precon.BasePrototype = {
 /**
  * Network model object, can be constructed from a JSON object.
  * 
+ * requires _connections (Need to fix)
  * @required fields: TBD
  */
 
 precon.Network = function(rawdata){
 	this._class = 'network'	
+	
+	rawdata._id = rawdata._id || precon.randomId('network')
+		
+		
 	this.init(rawdata);
 	var rawdata = this.rawdata
 	this.getId = function(){
@@ -606,6 +611,7 @@ precon.Connection = function(rawdata){
 	if(! (rawdata.nodes && rawdata.nodes.length>1) )
 		throw "Must at least provide to nodes"
 	rawdata.label = rawdata.label || '' 
+	rawdata.refs = rawdata.refs || {}
 	
 	if( rawdata.nodes[0] instanceof precon.Node){
 		nodes = rawdata.nodes		
@@ -629,7 +635,10 @@ precon.Connection = function(rawdata){
 	}
 	this.getNodeIds=function(){
 		return rawdata.nodes
-	}
+	};
+	this.isNodeLoaded=function(){
+		return nodes.length >0
+	};
 	this.getNodes = function(callback){
 		if(nodes.length>0){
 			if(callback) callback(nodes)			
@@ -685,8 +694,7 @@ precon.Connection = function(rawdata){
 
 precon.Node = function(rawdata){
 	this._class = 'node'
-	this.init(rawdata);
-	rawdata = this.rawdata
+	this.init(rawdata);	
 	if(!rawdata._id || !rawdata.label)
 		throw "Missing _id or label"	
 	

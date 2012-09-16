@@ -83,7 +83,10 @@ Ext.define('Precon.view.ImporterWindow', {
 										    width    : 100, 
 										    sortable : true,     										   
 										    dataIndex: 'nodeA',
-										    editable:true
+										    editable:true,
+										    renderer: function(val, meta, record){
+												return record.get("idA")?val:'<span class="state-error">'+val+'</span>'
+											}
 										},
 										{
 											text: 'Valid',
@@ -109,8 +112,10 @@ Ext.define('Precon.view.ImporterWindow', {
 										    width    : 100, 							    
 										    sortable : true, 
 										    dataIndex: 'nodeB',
-										    editable:true
-										   // renderer: change
+										    editable:true,
+										    renderer: function(val, meta, record){
+												return record.get("idB")?val:'<span class="state-error">'+val+'</span>'
+											}
 										},
 										{
 											text: 'Valid',
@@ -131,7 +136,17 @@ Ext.define('Precon.view.ImporterWindow', {
 						}
     			       ]
     		}
-    		
+    		,{
+    			xtype:'container',
+    			id:'previewSummary',
+    			style:{
+    				margin:'5px'
+    			},
+    			html:"<b>Total links:</b><span id='previewTotalLinks'>0</span> <b>Total Nodes</b>: <span id='previewTotalNodes'>0</span> "+
+    				"<b>Errors found</b>: <span id='previewInvalidCounts' class='state-error'>0</span> " +
+    				"<span><input type='checkbox' id='chkboxIgnoreError'> Ignore errors</span>"
+    		 }
+    		/**
     		,{
     			xtype:"checkbox",			
                 boxLabel  : 'Ignore errors',
@@ -139,7 +154,7 @@ Ext.define('Precon.view.ImporterWindow', {
                 inputValue: '1',
                 id        : 'chkboxIgnoreError',
                 handler: function(){ app.getController("Importer").toggleImportButton()}
-            }
+            }*/
                          	
 		],
 		buttons : 

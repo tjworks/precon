@@ -296,7 +296,7 @@ Ext.define('Precon.controller.GraphWin', {
    },
    onGraphChange: function(){
       // update footer_summary
-      var html = "Nodes: " + app.graphModel.getConnections().length + "  Links: "+ app.graphModel.getNodes().length
+      var html = "Links: " + app.graphModel.getConnections().length + "  Nodes: "+ app.graphModel.getNodes().length
       Ext.getCmp("footer_summary").setText(html);
    },
    createGraph: function() {
