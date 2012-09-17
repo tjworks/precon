@@ -540,9 +540,7 @@ precon.BasePrototype = {
 
 precon.Network = function(rawdata){
 	this._class = 'network'	
-	
-	rawdata._id = rawdata._id || precon.randomId('network')
-		
+	if(rawdata) rawdata._id = rawdata._id || precon.randomId('network')
 		
 	this.init(rawdata);
 	var rawdata = this.rawdata
