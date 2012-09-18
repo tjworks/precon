@@ -31,7 +31,7 @@ Ext.application({
 		// create model instance
     	this.graphModel = new precon.NetworkGraph()    	
 		// define a global reference to the appication
-		app = this
+		app = this;
 	},
 	//start the view port components
     launch: function() {    	

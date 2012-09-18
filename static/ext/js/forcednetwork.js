@@ -24,9 +24,16 @@ function myGraph(el,w,h) {
 	var observable = $({})
 	var graphZoom, graphDrag;
 	this.linklinetype="arc";  // by default the line type of links is arc; it can be "straight" 
+	var treetype="dynamic";  //by default the tree type is "dynamic"; it can be: "dendrogram", "cluster"
 	this.on = function(eventType,  handler){
 		observable.on(eventType, handler);
 	}
+	
+	this.setTreeType=function(type) {
+	   treetype=type;
+	   _update();
+	}
+	
 	this.setModel=function(graphModel){
 		this.model = graphModel		
 		this.model.bind('add.connection', this._addLink)
@@ -86,7 +93,6 @@ function myGraph(el,w,h) {
 	
 	this.setRectSelectMode=function(mode){
 		rectSelectMode = mode
-		console.log("rectSelectMode :", mode)
 		if(rectSelectMode){
 			// we use d3.behavior.drag() behavior events to perform the rect select drawing
 			viszoompang.call(graphDrag)			
@@ -267,11 +273,11 @@ function myGraph(el,w,h) {
    // var w = $(el).innerWidth(),
    //     h = $(el).innerHeight(),
     
-     var  r=12;
+   var  r=12;
         
-	var fisheye = d3.fisheye.circular()
-	    .radius(10)
-	    .distortion(2);
+	// var fisheye = d3.fisheye.circular()
+	    // .radius(10)
+	    // .distortion(2);
 	
 	//Create the SVG Canvas Environment    
   /*
@@ -318,14 +324,8 @@ function myGraph(el,w,h) {
     	}    	    	
     };
     
-    force = d3.layout.force()
-        .gravity(.01)
-        .distance(200)
-        .charge(-100)
-        .size([w, h]);
-
-     nodearray = force.nodes(),
-        linkarray = force.links();
+    
+        
     var withinWindow=function(d) {
     	if ((d.target.x<0) || (d.target.y<0) ||(d.target.x>w) ||(d.target.y>h)|| (d.source.x<0) || (d.source.y<0) ||(d.source.x>w) ||(d.source.y>h) ) {
     		return false;}
@@ -352,6 +352,24 @@ function myGraph(el,w,h) {
 		  return result;
     }
     
+   /*
+    *initialize the Static Tree variables 
+    */
+   force=null;
+   nodearray=null;
+   linkarray=null;
+    
+   var initDynamicTree=function () {
+	   	force = d3.layout.force()
+	        .gravity(.01)
+	        .distance(200)
+	        .charge(-100)
+	        .size([w, h]);
+	
+	    nodearray = force.nodes(),
+	    linkarray = force.links();
+   }
+   
    /*
     * initialize the SVG drawing environment
     * 
@@ -477,129 +495,247 @@ function myGraph(el,w,h) {
      * update the SVG canvas to reflect the data changes
      */
     var _update = function(){
-    	clearTimeout(window.graphUpdateTrigger)
-    	window.graphUpdateTrigger = null
-	     //log.debug(linkarray);
-	     //log.debug(nodearray);
-	     //log.debug("Updating")
-		 timer = Timer("Updating Graph")
-		  //Check if SVG has been initialized
-	     //if(typeof vis=="undefined") initSVG();
-	  
-      
-		//create links
-		link=visg.selectAll("path")
-	    	   .data(linkarray, function(d){return d.id});
-	      
-	    var linkenter=link.enter();
-	      
-		    linkenter
-		    	  //.append("g")
-			      //.attr("render-order","-1")
-			      .append("path")
-		  		  .attr("id",function(d){return d.id})
-		  		  .attr("network", function(d){ return d.get('network') })		  		  
-				  .attr("class",function(d){ddd = d; return "link "+d.get('type').replace(" ","").replace("/","_");})
-				  .attr("marker-end", function(d) { return "url(#" + d.get('type').replace(" ","") + ")"; })
-				  .attr("refs", function(d){ return _combineRefs(d.get('refs'))});
-		    
-		   
-		    link.on("mouseover", eventsProxy ).on("mouseout", eventsProxy )
-		      
-		    link.exit().remove();  
-	
-		
-		 var lastobj={"lastdr":0,
-        			"lastsx":0,
-        			"lastsy":0,
-        			"lastdx":0,
-    				"lastdy":0};
-        
-            var node = visg.selectAll("g.node").remove();
-            
-            var node = visg.selectAll("g.node")
-            .data(nodearray, function(d) { return d.id;});
-		
-   			var nodeEnter = node.enter();
-	        var nodeEnterg=nodeEnter.append("g")
-	            //.attr("render-order","1")
-	            .attr("class", "node")
-	            .attr("network", function(d){
-	            	return d.networkrefs+""
-	            })
-	            .call(force.drag);
-	          
-	        nodeEnterg.append("circle")
-	            .attr("class", "circle")
-	            .attr("name",function(d){return d.id})           
-	            .attr("id",function(d){return d.id})
-	            .attr("network", function(d){
-	            	return d.networkrefs+""
-	            })
-	            .attr("r",r);
-	            
-	        nodeEnterg.append("text")
-	            .attr("class", "nodetext")
-	            .attr("dx", -r)
-	            .attr("dy", ".35em")
-	            .text(function(d) {return d.get('label')});
-	            
-	        nodeEnterg.on("mouseover", eventsProxy ).on("mouseout", eventsProxy )
-        	 	
-        node.exit().remove();
-	    
-		
-        force.on("tick", function() {
-       	  link.attr("d", function(d) {
-       	  	       //insert a random disturbance to allow multiple links between two points. 
-				   var dx = d.target.x - d.source.x,
-				       dy = d.target.y - d.source.py,
-				       dr = Math.sqrt(dx * dx + dy * dy)*d.multiplier;
-				   
-				  
-				  
-			//	if (withinWindow(d)) { 
-		/*
-					   lastobj.lastdr=dr;
-							   lastobj.lastsx=String.valueOf(d.source.x)
-							   lastobj.lastsy=String.valueOf(d.source.y);
-							   lastobj.lastdx=String.valueOf(d.target.x);
-							   lastobj.lastdy=String.valueOf(d.target.y);*/
-				   	  
-				   	   if(!d.source.x) log.debug
-				   	   var pnts=getPointOnCircle(d.source.x,d.source.y,r,d.target.x,d.target.y,r);
-				   	   if (pnts) {
-					   	   var a=pnts[0];
-					   	   var b=pnts[1];
-					   	   if (mygraph.linklinetype=="arc")
-					   	   		return "M" + a.x + "," + a.y + "A" + dr + "," + dr + " 0 0,1 " + b.x + "," + b.y;
-					   	   	else
-					   	   		return "M" + a.x + "," + a.y + "L" + b.x + "," + b.y;
-				   	  }
-				   	  else
-				   	  {
-					   if (mygraph.linklinetype=="arc")
-					   		return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
-					   	else
-					   		return "M" + a.x + "," + a.y + "L" + b.x + "," + b.y;
-					   }
-			//	}
-			 //   else {
-			//           return "M" + lastobj.lastsx + "," + lastobj.lastsy + "A" + lastobj.lastdr + "," + lastobj.lastdr + " 0 0,1 " + lastobj.lastdx + "," + lastobj.lastdy;
-			           
-			//    }
-		  });
+    	//start drawing dynamic tree
+    	if (treetype=="dynamic") {
+	    	if (!force) initDynamicTree();
+	    	
+	    	clearTimeout(window.graphUpdateTrigger)
+	    	window.graphUpdateTrigger = null
+		     //log.debug(linkarray);
+		     //log.debug(nodearray);
+		     //log.debug("Updating")
+			 timer = Timer("Updating Graph")
+			  //Check if SVG has been initialized
+		     //if(typeof vis=="undefined") initSVG();
 		  
-          //node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-          node.attr("cx", function(d) { return d.x = Math.max(r, Math.min(w - r, d.x)); })
-        	  .attr("cy", function(d) { return d.y = Math.max(r, Math.min(h - r, d.y)); })
-        	  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });;
-          
-        });
-
-        // Restart the force layout.
-        force.start();
-        
+	      
+			//create links
+			link=visg.selectAll("path")
+		    	   .data(linkarray, function(d){return d.id});
+		      
+		    var linkenter=link.enter();
+		      
+			    linkenter
+			    	  //.append("g")
+				      //.attr("render-order","-1")
+				      .append("path")
+			  		  .attr("id",function(d){return d.id})
+			  		  .attr("network", function(d){ return d.get('network') })		  		  
+					  .attr("class",function(d){ddd = d; return "link "+d.get('type').replace(" ","").replace("/","_");})
+					  .attr("marker-end", function(d) { return "url(#" + d.get('type').replace(" ","") + ")"; })
+					  .attr("refs", function(d){ return _combineRefs(d.get('refs'))});
+			    
+			   
+			    link.on("mouseover", eventsProxy ).on("mouseout", eventsProxy )
+			      
+			    link.exit().remove();  
+		
+			
+			 var lastobj={"lastdr":0,
+	        			"lastsx":0,
+	        			"lastsy":0,
+	        			"lastdx":0,
+	    				"lastdy":0};
+	        
+	            var node = visg.selectAll("g.node").remove();
+	            
+	            var node = visg.selectAll("g.node")
+	            .data(nodearray, function(d) { return d.id;});
+			
+	   			var nodeEnter = node.enter();
+		        var nodeEnterg=nodeEnter.append("g")
+		            //.attr("render-order","1")
+		            .attr("class", "node")
+		            .attr("network", function(d){
+		            	return d.networkrefs+""
+		            })
+		            .call(force.drag);
+		          
+		        nodeEnterg.append("circle")
+		            .attr("class", "circle")
+		            .attr("name",function(d){return d.id})           
+		            .attr("id",function(d){return d.id})
+		            .attr("network", function(d){
+		            	return d.networkrefs+""
+		            })
+		            .attr("r",r);
+		            
+		        nodeEnterg.append("text")
+		            .attr("class", "nodetext")
+		            .attr("dx", -r)
+		            .attr("dy", ".35em")
+		            .text(function(d) {return d.get('label')});
+		            
+		        nodeEnterg.on("mouseover", eventsProxy ).on("mouseout", eventsProxy )
+	        	 	
+	        node.exit().remove();
+		    
+			
+	        force.on("tick", function() {
+	       	  link.attr("d", function(d) {
+	       	  	       //insert a random disturbance to allow multiple links between two points. 
+					   var dx = d.target.x - d.source.x,
+					       dy = d.target.y - d.source.py,
+					       dr = Math.sqrt(dx * dx + dy * dy)*d.multiplier;
+					   
+					  
+					  
+				//	if (withinWindow(d)) { 
+			/*
+						   lastobj.lastdr=dr;
+								   lastobj.lastsx=String.valueOf(d.source.x)
+								   lastobj.lastsy=String.valueOf(d.source.y);
+								   lastobj.lastdx=String.valueOf(d.target.x);
+								   lastobj.lastdy=String.valueOf(d.target.y);*/
+					   	  
+					   	   if(!d.source.x) log.debug
+					   	   var pnts=getPointOnCircle(d.source.x,d.source.y,r,d.target.x,d.target.y,r);
+					   	   if (pnts) {
+						   	   var a=pnts[0];
+						   	   var b=pnts[1];
+						   	   if (mygraph.linklinetype=="arc")
+						   	   		return "M" + a.x + "," + a.y + "A" + dr + "," + dr + " 0 0,1 " + b.x + "," + b.y;
+						   	   	else
+						   	   		return "M" + a.x + "," + a.y + "L" + b.x + "," + b.y;
+					   	  }
+					   	  else
+					   	  {
+						   if (mygraph.linklinetype=="arc")
+						   		return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+						   	else
+						   		return "M" + a.x + "," + a.y + "L" + b.x + "," + b.y;
+						   }
+				//	}
+				 //   else {
+				//           return "M" + lastobj.lastsx + "," + lastobj.lastsy + "A" + lastobj.lastdr + "," + lastobj.lastdr + " 0 0,1 " + lastobj.lastdx + "," + lastobj.lastdy;
+				           
+				//    }
+			  });
+			  
+	          //node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+	          node.attr("cx", function(d) { return d.x = Math.max(r, Math.min(w - r, d.x)); })
+	        	  .attr("cy", function(d) { return d.y = Math.max(r, Math.min(h - r, d.y)); })
+	        	  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });;
+	          
+	        });
+	
+	        // Restart the force layout.
+	        force.start();
+        }
+/*
+End of Dynamic Tree and start of Dendrogram Tree
+*/
+		//start drawing Denrogram tree
+    	else if (treetype=="dendrogram") {
+	          console.log("dendrogram tree start");
+	          d3.selectAll("g.node").remove();
+	          d3.selectAll("path").remove();
+	          
+		     var cluster = d3.layout.cluster()
+	      		.size([h, w]);
+		    
+		     var diagonal = d3.svg.diagonal()
+	             .projection(function(d) { return [d.y, d.x]; });
+		    
+			    visg.attr("width", w)
+			     	.attr("height", h)
+			   		.append("g")
+			     	.attr("transform", "translate(40, 0)");
+		       
+		        d3.json("/ext/app/data/flare.json", function(json) {
+					   var nodes = cluster.nodes(json);
+					 
+					   console.log("nodes");
+					   console.log(nodes);
+					  
+					   var link = vis.selectAll("path.link")
+					       .data(cluster.links(nodes))
+					       .enter().append("path")
+					       .attr("class", "link")
+					       .attr("d", diagonal);
+					       
+					   
+					   var node = vis.selectAll("g.node")
+					       .data(nodes)
+					     .enter().append("g")
+					       .attr("class", "node")
+					       .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+					 
+					   node.append("circle")
+					       .attr("r", 4.5);
+					 
+					   node.append("text")
+					       .attr("dx", function(d) { return d.children ? -8 : 8; })
+					       .attr("dy", 3)
+					       .attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
+					       .text(function(d) { return d.name; });
+		        });
+       }
+       
+  /*
+End of Dynamic Tree and start of Static Tree
+*/
+		//start drawing Denrogram tree
+    	else if (treetype=="cluster") {
+	             console.log("dendrogram tree start");
+	             d3.selectAll("g.node").remove();
+	             d3.selectAll("path").remove();
+	             w=1280;
+	             h=800;
+		        var rx = w / 2,
+				    ry = h / 2,
+				    m0,
+				    rotate = 0;
+		       
+		        
+				var cluster = d3.layout.cluster()
+				    .size([360, ry - 120])
+				    .sort(null);
+		    
+				var diagonal = d3.svg.diagonal.radial()
+				    .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
+				
+				 visg.attr("width", w/2)
+			     	.attr("height", h/2)
+			   		.append("g")
+			     	.attr("transform", "translate(" + rx + "," + ry + ")");
+			    
+			    vis=visg;
+				
+				vis.append("svg:path")
+				    .attr("class", "arc")
+				    .attr("d", d3.svg.arc().innerRadius(ry - 120).outerRadius(ry).startAngle(0).endAngle(2 * Math.PI));
+				  //  .on("mousedown", mousedown);
+				
+				d3.json("/ext/app/data/flare.json", function(json) {
+				  var nodes = cluster.nodes(json);
+				
+				  var link = vis.selectAll("path.link")
+				      .data(cluster.links(nodes))
+				    .enter().append("svg:path")
+				      .attr("class", "link")
+				      .attr("d", diagonal);
+				
+				  var node = vis.selectAll("g.node")
+				      .data(nodes)
+				    .enter().append("svg:g")
+				      .attr("class", "node")
+				      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+				
+				  node.append("svg:circle")
+				      .attr("r", 3);
+				
+				  node.append("svg:text")
+				      .attr("dx", function(d) { return d.x < 180 ? 8 : -8; })
+				      .attr("dy", ".31em")
+				      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
+				      .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
+				      .text(function(d) { return d.name; });
+				});
+       }
+       
+            
+		
         graph._selectionChanged()
         
         log.info("Graph rendered:" + nodearray.length +" nodes, "+ linkarray.length+" links")        

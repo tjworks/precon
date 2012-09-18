@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     url(r'^export/(?P<filename>.*)$', 'graph.converter.handler'),
 
     #url(r'^assets/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'static'}),
-    url(r'^(?P<path>.*.(css|js|png|gif|swf|jpg|html|htm|pdf|csv))$', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^(?P<path>.*.(css|js|png|gif|swf|jpg|html|htm|pdf|csv|json))$', 'django.views.static.serve', {'document_root': 'static'}),
 
     # url(r'^onechart/', include('onechart.foo.urls')),
 
