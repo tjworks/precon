@@ -497,6 +497,9 @@ function myGraph(el,w,h) {
     var _update = function(){
     	//start drawing dynamic tree
     	if (treetype=="dynamic") {
+    		d3.selectAll("path.link").remove();
+    		d3.selectAll("g.node").remove();
+    		
 	    	if (!force) initDynamicTree();
 	    	
 	    	clearTimeout(window.graphUpdateTrigger)
@@ -682,7 +685,7 @@ End of Dynamic Tree and start of Static Tree
 	             d3.selectAll("path").remove();
 	             w=1280;
 	             h=800;
-		        var rx = w / 2,
+		        var rx = w ,
 				    ry = h / 2,
 				    m0,
 				    rotate = 0;

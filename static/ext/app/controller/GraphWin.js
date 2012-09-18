@@ -57,8 +57,14 @@ Ext.define('Precon.controller.GraphWin', {
         });
    },  
    onToggle: function(btn) {
-      if (btn.text.toLowerCase().indexOf("arc")>=0) mygraph.linklinetype="arc";
-      else mygraph.linklinetype="straight";
+      if (btn.text.toLowerCase().indexOf("arc")>=0) {
+      	mygraph.linklinetype="arc";
+      	mygraph.setTreeType("dynamic");
+      }
+      else {
+      	mygraph.linklinetype="straight";
+      	mygraph.setTreeType("dynamic");
+      }
       mygraph.redraw();
    },
    onZoom: function(s,v,t) {
