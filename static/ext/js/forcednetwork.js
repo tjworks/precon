@@ -642,7 +642,7 @@ End of Dynamic Tree and start of Dendrogram Tree
 			   		.append("g")
 			     	.attr("transform", "translate(40, 0)");
 		       
-		        d3.json("/ext/app/data/flare.json", function(json) {
+		        d3.json("/ext/flare.json", function(json) {
 					   var nodes = cluster.nodes(json);
 					 
 					   console.log("nodes");
@@ -707,7 +707,7 @@ End of Dynamic Tree and start of Static Tree
 				    .attr("d", d3.svg.arc().innerRadius(ry - 120).outerRadius(ry).startAngle(0).endAngle(2 * Math.PI));
 				  //  .on("mousedown", mousedown);
 				
-				d3.json("/ext/app/data/flare.json", function(json) {
+				d3.json("/ext/flare.json", function(json) {
 				  var nodes = cluster.nodes(json);
 				
 				  var link = vis.selectAll("path.link")
