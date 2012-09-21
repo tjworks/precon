@@ -157,7 +157,7 @@ Ext.define('Precon.view.GraphViewport' ,{
                             '->',
                             {
 						        text: 'Animated Tree',
-						          enableToggle: true,
+						        enableToggle: true,
 						        toggleGroup: 'trees',
 						        icon:"/ext/resources/images/legend.png",
 						        menu: [
@@ -173,20 +173,26 @@ Ext.define('Precon.view.GraphViewport' ,{
 							          }
 						        ]
 						    },
-                            {
-						        text: 'S Tree',
-						        enableToggle: true,
-						        toggleGroup: 'trees',
+						     {
+						        text: 'Static Tree',
 						        icon:"/ext/resources/images/legend.png",
-						        toggleHandler: null
-						    },
-						    {
-						        text: 'H Tree',
-						        enableToggle: true,
-						        toggleGroup: 'trees',
-						        icon:"/ext/resources/images/legend.png",
-						        toggleHandler: null
-                             }
+						        menu: [
+							         {
+								        text: 'Dendrogram',
+								        icon:"/ext/resources/images/legend.png",
+								        handler:function() {
+								        	mygraph.setTreeType("dendrogram");
+								        }
+								     },
+							         {
+								        text: 'Cluster Tree',
+								        icon:"/ext/resources/images/legend.png",
+								        handler:function() {
+								        	mygraph.setTreeType("cluster");
+								        }
+							          }
+						        ]
+						    }
                        ]
             }
          ],
