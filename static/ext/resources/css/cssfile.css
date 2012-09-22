@@ -233,6 +233,20 @@ input.filterByNetwork {
 
 
 
+#uploadbox {
+    padding:20px;
+    border:5px dashed #AAA;
+    margin:5px 0px;
+}
+#uploadbox.hover {
+    border:5px dashed #3d4253;    
+}
+
+#previewSummary span {
+    padding:0px 5px;
+}
+
+
 /** Ext Overrides */
 /** necessary to apply row style in the grid */
 .x-grid-row .x-grid-cell {
@@ -243,15 +257,8 @@ input.filterByNetwork {
 	color:#3d4253;		
 }
 
-#uploadbox {
-	padding:20px;
-	border:5px dashed #AAA;
-	margin:5px 0px;
-}
-#uploadbox.hover {
-    border:5px dashed #3d4253;    
-}
-
-#previewSummary span {
-    padding:0px 5px;
+.x-grid-row-selected .x-grid-cell, .x-grid-row-selected .x-grid-rowwrap-div {
+	border-style: dotted;
+    border-color: #FFAB68; 
+    background-color: #E6FFA2 !important 
 }

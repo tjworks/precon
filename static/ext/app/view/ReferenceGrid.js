@@ -21,6 +21,7 @@
     alias : 'widget.referencegrid',
 
     title : 'References',
+    multiSelect:true,
 	
 	//define the data
 	store: literatureStore,
@@ -39,7 +40,8 @@
 								    sortable : true, 
 								    dataIndex: 'name',
 								    renderer: function(val, meta, record){
-								    	return '<a href="http://www.ncbi.nlm.nih.gov/pubmed?term='+ record.get('_id').substring(4)+'" target="pubmed">' + val+"</a>"
+								    	return val
+								    	//return '<a href="http://www.ncbi.nlm.nih.gov/pubmed?term='+ record.get('_id').substring(4)+'" target="pubmed">' + val+"</a>"
 								    }
 								   // renderer: change
 								},
@@ -85,7 +87,8 @@
         margin:'0 0 20 0',
 //      defaults: {minWidth: minButtonWidth},
         items: [
-             { type: 'button', text: 'Export All References', handler:function(){ app.getController("Reference").exportReference() } }
+             { type: 'button', text: 'Export All References', handler:function(){ app.getController("Reference").exportReference() } },
+             { type: 'button', text: 'Export Selected References', handler:function(){ app.getController("Reference").exportReference('selected') } }
         ]
     }]
    

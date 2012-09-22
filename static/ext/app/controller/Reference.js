@@ -31,7 +31,8 @@ Ext.define('Precon.controller.Reference', {
     },      
 	onLaunch: function(){
 		log.debug("ReferenceController.onlaunch")	
-		var self= this
+		this.grid = Ext.getCmp("refgrid");
+		var self= this		
 		
 		mygraph.on("mouseover",function(evt, target){
 			//log.debug("mouseover", target.__data__)
@@ -47,8 +48,25 @@ Ext.define('Precon.controller.Reference', {
 		this.getGraphModel().on('add.network', function(){
 			self.updateReference()
 		})
+		mygraph.getModel().on("selectionchanged", self.selectReferences)
 		
 	},
+	selectReferences: function(){
+		var grid =  Ext.getCmp("refgrid")
+		var selmodel =  grid.getSelectionModel()
+		selmodel.deselectAll();
+		_.each( mygraph.getModel().getSelections(), function(item,  self ){			
+			var refs = item.get('refs')
+			var pubids = refs.pubmed? refs.pubmed: []			
+	    	for(var i=0;i<pubids.length;i++){        		
+	    		pubid = pubids[i]
+	    		if(pubid.indexOf("publ")<0) pubid = 'publ'+ pubid
+	    		var index = grid.getStore().find('_id', pubid)
+	    		if(index>=0 ) selmodel.select(index, true)	
+	    	}			 
+		});		
+		//Ext.getCmp("network-grid").highlight( ids, true)
+    },
 	updateReference:function(){
 		log.debug("Updating references!")
 		var self = this
@@ -97,10 +115,14 @@ Ext.define('Precon.controller.Reference', {
 	    }); // end getObjects
 			
 	} // end function
-	,exportReference:function(){
-		console.log("Exporting")
+	,exportReference:function(selected){		
 		var ids = [] 
-		 Ext.getCmp("refgrid").getStore().each(function(rec){
+		var grid= Ext.getCmp("refgrid")
+		if(selected)
+			var recs = grid.getSelectionModel().getSelection(); // selected refs
+		else 
+			recs = grid.getStore().getRange(); // all refs
+		_.each(recs,  function( rec, indx){
 			ids.push( rec.get('_id') )
 		});
 		console.log('Exporting ' + ids)
