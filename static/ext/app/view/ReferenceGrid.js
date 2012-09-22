@@ -84,7 +84,7 @@
         xtype: 'toolbar',
         dock: 'bottom',
         ui: 'footer',
-        margin:'0 0 20 0',
+        //margin:'0 0 20 0',
 //      defaults: {minWidth: minButtonWidth},
         items: [
              { type: 'button', text: 'Export All References', handler:function(){ app.getController("Reference").exportReference() } },

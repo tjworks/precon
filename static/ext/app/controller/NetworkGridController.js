@@ -31,6 +31,7 @@ Ext.define('Precon.controller.NetworkGridController', {
      			
      	        	itemdblclick:function(view, row){
      	        		log.debug("double Clicked network! " + row.data._id)      
+     	        		this.changeNetworkGraph(row.data)
      	        		//showObject(row.data)     	        		
      	        	},
      	        	itemmouseenter:function(view, row){
@@ -42,17 +43,17 @@ Ext.define('Precon.controller.NetworkGridController', {
      	        		mygraph.highlight(netId, false)
      	        	},
      	        	itemclick:function(view, row, el, rowIndex, evt){
-     					log.debug("clicked network!", arguments)     					      				
-     					if(evt && evt.target && evt.target.name == 'filterByNetwork'){
-     	    				filterNetwork(evt.target, groupingFeature)  
-     	    			}     
-     					else{
-     						this.changeNetworkGraph(row.data)
-     					}
-     					evt.stopPropagation();
-     				},
-     				scope: this
-     			},
+           					log.debug("clicked network!", arguments)     					      				
+           					if(evt && evt.target && evt.target.name == 'filterByNetwork'){
+           	    				filterNetwork(evt.target, groupingFeature)  
+           	    			}     
+           					else{
+           						
+           					}
+           					evt.stopPropagation();
+           				},
+           				scope: this
+           			},
      			'mynetworkgrid':{
      				itemclick:function(view, row, el, rowIndex, evt){
      					log.debug("clicked mynetwork!", arguments)     					
@@ -61,11 +62,12 @@ Ext.define('Precon.controller.NetworkGridController', {
      						this.toggleMyNetwork(row.data, evt.target)
      					}
      					else{
-     						this.changeNetworkGraph(row.data)
+     						//this.changeNetworkGraph(row.data)
      					}
      				},
      				itemdblclick:function(view, row){
-     	        		log.debug("double Clicked my network! ", row.data)      
+     	        		log.debug("double Clicked my network! ", row.data)    
+     	        		this.changeNetworkGraph(row.data)  
      	        		//showObject(row.data)     	        		
      	        	}
      			}
@@ -123,7 +125,19 @@ Ext.define('Precon.controller.NetworkGridController', {
     		}				
 		});
 		mygraph.on("mouseout",self.highlightSelections)		
-		mygraph.getModel().on("selectionchanged", self.highlightSelections)
+		mygraph.getModel().on("selectionchanged", self.selectNetworks)
+    },
+    selectNetworks: function(){
+      var grid =  Ext.getCmp("network-grid")
+      var selmodel =  grid.getSelectionModel()
+      selmodel.deselectAll();
+      _.each( mygraph.getModel().getSelections(), function(item,  self ){     
+        var ids = item.get('network')
+          for(var i=0;i<ids.length;i++){           
+            var index = grid.getStore().find('_id', ids[i])
+            if(index>=0 ) selmodel.select(index, true)  
+          }      
+      });   
     },
     highlightSelections: function(additional){    	 
     	var ids = additional? ( _.isArray(additional)? additional: [additional]) : []
