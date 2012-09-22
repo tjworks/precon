@@ -122,3 +122,28 @@ function Timer(name){
 	}
 	return this
 }
+
+
+
+precon.util = precon.util || {}
+/**
+ * url: download url
+ */
+precon.util.downloadFile = function(url, overrides){
+	var msgbox = null;
+	var params = {
+		httpMethod:'GET',
+        successCallback: function (url) {
+            msgbox.hide()               
+        },
+        failCallback: function (html, url) {
+            msgbox.hide()
+            Ext.Msg.alert('Error', html)                
+        },
+        title:'Processing, please wait...'
+	}
+	overrides = overrides || {}
+	$.extend(  params, overrides)
+	msgbox = Ext.Msg.wait('', params.title, {interval:100,increments:1});		
+	$.fileDownload(url, params );
+}

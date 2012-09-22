@@ -5,13 +5,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.template.context import RequestContext
 from django.views.decorators.http import require_http_methods
+from myutil.downloadutil import createFileDownloadResponse
 from onechart import mongo, models, settings
 from onechart.webutils import SmartResponse
 import json
+import logging
 import os
 import re
 import tempfile
-import logging
 
 CSSFILE = "/static/ext/resources/css/cssfile.css"
 
@@ -46,12 +47,14 @@ def handler(req, filename=""):
         result = subprocess.check_output(cmd)
         logger.debug("rasterizer result: %s" %result)
         if( 'success' in result):
-
+            return createFileDownloadResponse(outfile[1])
+            """
             from myutil import fileutil
             raw = fileutil.contentsOfFile( outfile[1])
             hr = HttpResponse(raw, content_type="application/raw")
             hr.set_cookie("fileDownload", "true", path="/")
             return hr
+            """
         return SmartResponse(Exception(result), req)
     except Exception as ex:
         return SmartResponse(ex, req)

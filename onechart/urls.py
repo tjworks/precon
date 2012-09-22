@@ -8,7 +8,10 @@ urlpatterns = patterns('',
     # Examples:
     #url(r'^$', 'onechart.views.home', name='home'),
 
-    url(r'^export/(?P<filename>.*)$', 'graph.converter.handler'),
+    url(r'^api/graph/export/(?P<filename>.*)$', 'graph.converter.handler'),
+        
+    url(r'^api/reference/(?P<action>.*)/(?P<args>.*).ris$', 'inout.views.handler'),
+    
 
     #url(r'^assets/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'static'}),
     url(r'^(?P<path>.*.(css|js|png|gif|swf|jpg|html|htm|pdf|csv|json))$', 'django.views.static.serve', {'document_root': 'static'}),
@@ -38,7 +41,6 @@ urlpatterns = patterns('',
     # Userena app
     url(r'^accounts/', include('userena.urls')),
 )
-
 
 """
     url(r'^(?P<path>.*.js)$', 'django.views.static.serve', {'document_root': 'static'}),

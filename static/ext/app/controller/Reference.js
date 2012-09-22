@@ -97,7 +97,17 @@ Ext.define('Precon.controller.Reference', {
 	    }); // end getObjects
 			
 	} // end function
-
+	,exportReference:function(){
+		console.log("Exporting")
+		var ids = [] 
+		 Ext.getCmp("refgrid").getStore().each(function(rec){
+			ids.push( rec.get('_id') )
+		});
+		console.log('Exporting ' + ids)
+		if(ids.length>0){
+			precon.util.downloadFile('/api/reference/export/'+ ids.join(",")+".ris", {title:'Downloading file...'})
+		}		
+	}
 });
 
 

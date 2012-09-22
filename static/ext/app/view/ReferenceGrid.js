@@ -77,7 +77,18 @@
     		var index = this.getStore().find('_id', pubid)
     		if(index>=0 && on) this.getView().addRowCls(index, 'state-highlight')    		
     	}
-    }
+    },
+    dockedItems: [{
+        xtype: 'toolbar',
+        dock: 'bottom',
+        ui: 'footer',
+        margin:'0 0 20 0',
+//      defaults: {minWidth: minButtonWidth},
+        items: [
+             { type: 'button', text: 'Export All References', handler:function(){ app.getController("Reference").exportReference() } }
+        ]
+    }]
+   
 });
 
 /**

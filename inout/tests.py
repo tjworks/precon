@@ -17,9 +17,13 @@ class InoutTest(TestCase):
         self.assertEqual(1 + 1, 2)
     
     def test_export_lig(self):
+        #print pubmed.exportReference([])
+       
         ids='19465464,18945920'.split(",")
-        ret = pubmed.exportReference(ids)
+        ret = pubmed.medline2ris(sample_ris)
         self.assertTrue(ret)
+        from myutil import fileutil
+        fileutil.writeFile("tmp/output.ris", ret)
         print "##%s##" %ret
         self.assertIn('TY  - JOUR', ret)
        
