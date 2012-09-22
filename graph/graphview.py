@@ -4,7 +4,7 @@ from django.template import loader
 from django.template.context import RequestContext
 from django.views.decorators.http import require_http_methods
 from myutil import fileutil
-from onechart import mongo
+from onechart import mongo, settings
 from onechart.models import Network, Connection
 from onechart.webutils import SmartResponse
 import json
@@ -22,6 +22,8 @@ def handler(req, precon_id=None):
     #ctx = gf_template.get_context(req, {})
     
     ctx = RequestContext(req, {})
+    ctx.node_server= settings.NODE_SERVER or 'ONE-CHART.COM'
+    print( "Node server: %s" %ctx.node_server)
     ctx.mvc = True if req.META['HTTP_HOST'].find('mvc')>=0 else False
     
     return HttpResponse(template.render(ctx))

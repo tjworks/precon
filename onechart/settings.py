@@ -1,6 +1,7 @@
 # Django settings for onechart project.
 import os
 PROJECT_PATH = os.path.dirname(os.path.dirname(__file__) )
+APP_ENV = os.environ.get('APP_ENV', 'dev')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -181,7 +182,7 @@ LOGGING = {
         #catch all
         '': {
             'handlers': ['filelog','console'],
-            'level': 'DEBUG'
+            'level': 'INFO'
         },
     }
 }
@@ -211,3 +212,17 @@ USERENA_ACTIVATION_REQUIRED=False
 #mongoengine.connect(MONGODB_NAME, alias='default', host=MONGODB_HOST  )
 MONGODB_HOST='localhost'
 MONGODB_NAME='oc'
+
+
+NODE_SERVER='one-chart.com'
+NODE_PORT=3000
+
+
+
+#Gameface Application settings - Env specific
+envfile =  os.path.join(PROJECT_PATH,  "%s.py" % APP_ENV)
+if( os.path.exists(envfile)):
+    print "Loading file: %s" % envfile
+    execfile(envfile)
+
+

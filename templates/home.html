@@ -21,6 +21,30 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
 <![endif]--> 
 
 {% block css_include %} {% endblock %}
+
+<script>
+// bootstrap code, configurations etc
+window.precon = {
+  conf:{
+    node_server:"{{ node_server }}"
+  }
+}
+
+{% if user.username %}
+window.user = {
+    email: "{{ user.email }}",
+    username:"{{ user.username }}"
+}
+if(user.username && user.username.indexOf('@')>0)
+  user.username = user.username.substring( 0, user.username.indexOf('@'))
+user.user_id = user.username
+{% endif %}
+
+//console.log= function(){}
+//console.debug= function(){}
+</script>
+
+<script type="text/javascript" src="http://{{ node_server }}:3000/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="/ext/lib/log4js.js"></script>
 <script type="text/javascript" src="/ext/lib/jquery-1.7.2.js"></script>
 <script type="text/javascript" src="/ext/lib/jquery-ui-1.8.21.js"></script>
@@ -31,21 +55,6 @@ ul.addtoany_list a:hover img,ul.addtoany_list a.addtoany_share_save img{filter:a
 <script type="text/javascript" src="/ext/js/precon.model.js"></script>
 <script type="text/javascript" src="/ext/js/precon.search.js"></script>
 
-<script>
-// init server data:
-{% if user.username %}
-window.user = {
-		email: "{{ user.email }}",
-		username:"{{ user.username }}"
-}
-if(user.username && user.username.indexOf('@')>0)
-	user.username = user.username.substring( 0, user.username.indexOf('@'))
-user.user_id = user.username
-{% endif %}
-
-//console.log= function(){}
-//console.debug= function(){}
-</script>
 {% block js_include %} {% endblock %}
 
 </head>

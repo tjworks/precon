@@ -10,15 +10,15 @@ else
 window.log = new Log(Log[loglevel], Log.consoleLogger);
 log.info('Script Loading Start')
 
-precon =  {}
-precon.conf = {
-	//local_cache: true,
-	max_objects_per_request:500,	
-	prefix_mapping : {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication',peop:'people'}
-}
-precon.conf.server = 'one-chart.com';
-precon.conf.node_url = 'http://'+ precon.conf.server+':3000';
-precon.conf.api_base = precon.conf.node_url+"/oc";
+precon =  precon || {conf:{}}
+
+precon.conf.local_cache = true;
+precon.conf.max_objects_per_request=500;
+precon.conf.prefix_mapping = {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication',peop:'people'},
+precon.conf.node_server=precon.conf.node_server || 'one-chart.com'
+
+precon.conf.node_url = 'http://'+ precon.conf.node_server+':3000';
+precon.conf.api_base = precon.conf.node_url +"/oc";
 
 precon.getObjectType = function(objid){
 	if(!objid) return ''
@@ -90,6 +90,9 @@ precon._ajax = function(url, callback, noCache){
 			  timer.elapsed()
 			  $.jStorage.set(url, JSON.stringify(results))
 			  callback(results)
+		  },
+		  failure: function(results){
+		    console.log("error loading ajax requests", arguments)
 		  } 
 		});	
 }
@@ -496,23 +499,15 @@ precon.event = {
 };
 
 
-(function() {
-      var ga = document.createElement('script'); 
-      ga.type = 'text/javascript'; 
-      ga.async = true;
-      ga.src = precon.conf.node_url+ '/socket.io/socket.io.js' ;
-      var s = document.getElementsByTagName('script')[0]; 
-      s.parentNode.insertBefore(ga, s);
-    })();
 
 $(function(){
-	setTimeout(function(){
-		window.socket = io.connect(precon.conf.node_url); ///?uid='+ getUid()+"&sid="+ getSid());
-		socket.on('news', function (data) {
-			console.log("socket.io connection success");
-			//socket.emit('authenticate', {uid: getUid(), sid:random_id});	    	 
-		});	
-	}, 1000)	
+	 
+	window.socket = io.connect(precon.conf.node_url); ///?uid='+ getUid()+"&sid="+ getSid());
+	socket.on('news', function (data) {
+		console.log("socket.io connection success");
+		//socket.emit('authenticate', {uid: getUid(), sid:random_id});	    	 
+	});	
+	 
 });
 
 

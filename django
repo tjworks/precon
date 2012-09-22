@@ -1,0 +1,45 @@
+
+# stop it first
+
+pid=`ps -ef | grep runserver | grep -v grep | awk '{ print $2 }'`
+echo "Existing django process:"
+for i in $pid
+do 
+  echo "  $i"
+done
+pid=`ps -ef | grep run.js | grep -v grep | awk '{ print $2 }'`
+echo "Existing node process:"
+for i in $pid
+do 
+  echo "  $i"
+done
+
+
+if [ "$1" == "" ]
+then
+  echo
+  echo "Usage: django [start | stop]"
+  echo
+  exit 0
+fi
+
+pid=`ps -ef | grep runserver | grep -v grep | awk '{ print $2 }'`
+echo "Stoping django process"
+echo $pid
+sudo kill -9 $pid
+
+pid=`ps -ef | grep mongodb-rest | grep -v grep | awk '{ print $2 }'`
+echo "Stoping node process $pid"
+sudo kill -9 $pid
+
+
+if [ "$1" == "start" ]
+then
+  echo "Starting django, log file at logs/django.log"
+  nohup sudo python manage.py runserver 0.0.0.0:80 > logs/django.log 2>&1 &
+  
+  echo "Starting node.js, log file at logs/node.log"
+  (cd nodejs/bin && exec /usr/bin/nohup mongodb-rest > ../../logs/node.log 2>&1 & )
+  echo
+fi
+

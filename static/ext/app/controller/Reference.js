@@ -57,13 +57,13 @@ Ext.define('Precon.controller.Reference', {
 		selmodel.deselectAll();
 		_.each( mygraph.getModel().getSelections(), function(item,  self ){			
 			var refs = item.get('refs')
-			var pubids = refs.pubmed? refs.pubmed: []			
-	    	for(var i=0;i<pubids.length;i++){        		
-	    		pubid = pubids[i]
-	    		if(pubid.indexOf("publ")<0) pubid = 'publ'+ pubid
-	    		var index = grid.getStore().find('_id', pubid)
-	    		if(index>=0 ) selmodel.select(index, true)	
-	    	}			 
+			var pubids = (refs && refs.pubmed)? refs.pubmed: []			
+    	for(var i=0;i<pubids.length;i++){        		
+    		pubid = pubids[i]
+    		if(pubid.indexOf("publ")<0) pubid = 'publ'+ pubid
+    		var index = grid.getStore().find('_id', pubid)
+    		if(index>=0 ) selmodel.select(index, true)	
+    	}			 
 		});		
 		//Ext.getCmp("network-grid").highlight( ids, true)
     },
