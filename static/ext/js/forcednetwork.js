@@ -389,17 +389,28 @@ function myGraph(el,w,h) {
 		// vis.select("defs").selectAll("marker").remove();
 		 vis.select("defs").selectAll("marker")
 		 // TBD: list should come from ConnectionType store to be consistent
-		.data(["decreases", "beinguptaken", "activates", "inhibits", "stimulats", "association", "physical_interaction", "predicted", "pathway", "regulates"])
+		.data([{"id":"decreases", "stroke":"blue"}, {"id":"beinguptaken","stroke":"lightsalmon"}, {"id":"activates","stroke":"dodgerblue"}, {"id":"inhibits","stroke":"lightgreen"}, {"id":"stimulats","stroke":"mediumpurple"}, {"id":"association","stroke":"grey"}, {"id":"physical_interaction","stroke":"olive"}, {"id":"predicted","stroke":"red"}, {"id":"pathway","stroke":"lightpink"}, {"id":"regulates","stroke":"brown"}])
  			.enter()
  			.append("svg:marker")
-	    .attr("id", String)
+	    .attr("id", function(d){return d.id})
 	    .attr("viewBox", "0 -6 13 13")
 	    .attr("refX", 10)
+	    //.attr("class",String)
+	    //.attr("stroke","red")
+	    //.attr("fill","red")
+	    .attr("stroke",function(d){return d.stroke})
+	    .attr("fill",function(d){return d.stroke})
+	    .attr("strokeWidth",6)
+	    .attr("markerUnits","strokeWidth")
 	    .attr("refY", 0)
 	    .attr("markerWidth", 8)
 	    .attr("markerHeight", 6)
 	    .attr("orient", "auto")
 	    .append("path")
+	   //  .attr("stroke","red")
+	  //  .attr("fill","red")
+	  //  .attr("strokeWidth",6)
+	  //  .attr("markerUnits","strokeWidth")
 	    .attr("d", "M0,-4L10,0L0,4");
 	   
 		graphZoom = d3.behavior.zoom().on("zoom",redraw );
@@ -525,7 +536,7 @@ function myGraph(el,w,h) {
 			  		  .attr("id",function(d){return d.id})
 			  		  .attr("network", function(d){ return d.get('network') })		  		  
 					  .attr("class",function(d){ddd = d; return "link "+d.get('type').replace(" ","").replace("/","_");})
-					  .attr("marker-end", function(d) { return "url(#" + d.get('type').replace(" ","") + ")"; })
+					  .attr("marker-end", function(d) {ddd=d; return "url(#" + d.get('type').replace(" ","") + ")"; })
 					  .attr("refs", function(d){ return _combineRefs(d.get('refs'))});
 			    
 			   

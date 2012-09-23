@@ -62,13 +62,13 @@
 /**default style for path**/
 path{
   fill: none;
-  stroke:grey;
+//  stroke:grey;
 }
 
 marker {
 	stroke-width:2px;
 }
-marker#decreases {
+marker .decreases {
   fill: blue;
 }
 .decreases{
@@ -76,7 +76,7 @@ marker#decreases {
     stroke-width: 2px;
 }
 
-marker#beinguptaken {
+marker .beinguptaken {
   fill: lightsalmon;
 }
 .beinguptaken 
@@ -86,7 +86,7 @@ marker#beinguptaken {
   stroke-width: 2px;
   /**stroke-dasharray: 0,2 1; */
 }
-marker#inhibits {
+marker .inhibits {
   fill: lightgreen;
 }
 .inhibits
@@ -94,7 +94,7 @@ marker#inhibits {
 	stroke-width: 2px;
     stroke: lightgreen;
 }
-marker#stimulats {
+marker .stimulats {
   fill: mediumpurple;
 }
 .stimulats 
@@ -103,7 +103,7 @@ marker#stimulats {
   fill:none;
   stroke:mediumpurple;
 }
-marker#association {
+marker .association {
   fill: grey;
 }
 .association{
@@ -111,14 +111,14 @@ marker#association {
   /** stroke-dasharray: 5,1 5,1; */
   stroke:grey;
 }
-marker#physical_interaction {
+marker .physical_interaction {
   fill: olive;
 }
 .physical_interaction {
 	stroke-width: 2px;
     stroke: olive ;
 }
-marker#predicted {
+marker .predicted {
   fill: red;
 }
 .predicted {
@@ -134,7 +134,7 @@ marker#predicted {
   /** stroke-dasharray: 0,2 1; */
 	
 }
-marker#activates {
+marker .activates {
   fill: dodgerblue;
 }
 .activates {
@@ -142,7 +142,7 @@ marker#activates {
   /**stroke-dasharray: 4,5 2; */
   stroke:dodgerblue;
 }
-marker#regulates {
+marker .regulates {
   fill: brown;
 }
 .regulates {
@@ -150,7 +150,7 @@ marker#regulates {
   /** stroke-dasharray: 4,5 2; */
   stroke:brown;
 }
-marker#pathway {
+marker .pathway {
   fill: lightpink;
 }
 .pathway { 

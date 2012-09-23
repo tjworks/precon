@@ -37,7 +37,8 @@ Ext.application({
     launch: function() {    	
     	log.info("Ext Application launch")
     	// create view
-    	Ext.create('Precon.view.GraphViewport' )    	
+    	Ext.create('Precon.view.GraphViewport' )  
+    	precon.flushCache();  	
     },
     getUser:function(){
     	if(window.user && window.user.user_id)
