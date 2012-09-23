@@ -1,0 +1,8 @@
+Django==1.4.1
+cssselect==0.7.1
+django-guardian==1.0.4
+easy-thumbnails==1.1
+pymongo==2.3
+requests==0.14.0
+tinycss==0.3
+wsgiref==0.1.2
