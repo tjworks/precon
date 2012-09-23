@@ -15,9 +15,8 @@ precon =  precon || {conf:{}}
 precon.conf.local_cache = true;
 precon.conf.max_objects_per_request=500;
 precon.conf.prefix_mapping = {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication',peop:'people'},
-precon.conf.node_server=precon.conf.node_server || 'one-chart.com'
 
-precon.conf.node_url = 'http://'+ precon.conf.node_server+':3000';
+precon.conf.node_url = precon.conf.node_url || 'http://One-Chart.com:3000';
 precon.conf.api_base = precon.conf.node_url +"/oc";
 
 precon.getObjectType = function(objid){

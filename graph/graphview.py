@@ -22,8 +22,8 @@ def handler(req, precon_id=None):
     #ctx = gf_template.get_context(req, {})
     
     ctx = RequestContext(req, {})
-    ctx.node_server= settings.NODE_SERVER or 'ONE-CHART.COM'
-    print( "Node server: %s" %ctx.node_server)
+    ctx.node_url= settings.NODE_URL or 'http://ONE-CHART.COM:3000'
+    
     ctx.mvc = True if req.META['HTTP_HOST'].find('mvc')>=0 else False
     
     return HttpResponse(template.render(ctx))

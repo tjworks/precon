@@ -214,8 +214,7 @@ MONGODB_HOST='localhost'
 MONGODB_NAME='oc'
 
 
-NODE_SERVER='one-chart.com'
-NODE_PORT=3000
+NODE_URL='http://one-chart.com:3000'
 
 
 
