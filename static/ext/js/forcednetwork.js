@@ -53,11 +53,15 @@ function myGraph(el,w,h) {
 	}	
 	// register internal events handler	
 	this.on('mouseover', function(evt, target){
+		$d(target).attr('marker-end',"url(#selected)");
 		var r = $d(target).attr('r')
 		$d(target).classed('state-highlight', true)		
 	})
 	this.on('mouseout', function(evt, target){
 		var r = $d(target).attr('r')
+		var cls=$d(target).attr('class').split(" ")[1];
+		cls="url(#"+cls+")";
+		$d(target).attr('marker-end',cls);
 		//$d(target).classed('state-highlight', false).attr('r', r/2  )
 		$d(target).classed('state-highlight', false)				
 	});
@@ -389,7 +393,7 @@ function myGraph(el,w,h) {
 		// vis.select("defs").selectAll("marker").remove();
 		 vis.select("defs").selectAll("marker")
 		 // TBD: list should come from ConnectionType store to be consistent
-		.data([{"id":"decreases", "stroke":"blue"}, {"id":"beinguptaken","stroke":"lightsalmon"}, {"id":"activates","stroke":"dodgerblue"}, {"id":"inhibits","stroke":"lightgreen"}, {"id":"stimulats","stroke":"mediumpurple"}, {"id":"association","stroke":"grey"}, {"id":"physical_interaction","stroke":"olive"}, {"id":"predicted","stroke":"red"}, {"id":"pathway","stroke":"lightpink"}, {"id":"regulates","stroke":"brown"}])
+		.data([{"id":"selected", "stroke":"yellow"},{"id":"decreases", "stroke":"blue"}, {"id":"beinguptaken","stroke":"lightsalmon"}, {"id":"activates","stroke":"dodgerblue"}, {"id":"inhibits","stroke":"lightgreen"}, {"id":"stimulats","stroke":"mediumpurple"}, {"id":"association","stroke":"grey"}, {"id":"physical_interaction","stroke":"olive"}, {"id":"predicted","stroke":"red"}, {"id":"pathway","stroke":"lightpink"}, {"id":"regulates","stroke":"brown"}])
  			.enter()
  			.append("svg:marker")
 	    .attr("id", function(d){return d.id})
