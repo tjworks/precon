@@ -122,11 +122,14 @@ function myGraph(el,w,h) {
 	},
 	this.zoom=function(scale) {
   		//if (scale>=0.1 && scale<=15 ) {
-	  		visg.attr("transform",
+  		 if (typeof graph.visg !="undefined") {
+	  		graph.visg.attr("transform",
 			       " scale(" + scale + ")");
-	        force.start();
+	       if (force) force.start();
+	       }
        //}
 	},
+	
 	this.redraw=function() {
 		update();
 	},
@@ -270,7 +273,14 @@ function myGraph(el,w,h) {
     var findLinkIndex = function(id) {
         for (var i in linkarray) {if (linkarray[i]["id"] === id) return i};
     }
-
+	/*
+	 * zoomTo will set the value of the slider and let slider calls the zoom()
+	 */
+	function zoomTo() {
+		if ( d3.event) {
+			Ext.getCmp("zoomslider").setValue(7+Math.log(d3.event.scale)/Math.log(2));
+		}
+	}
     // set up the D3 visualisation in the specified element
  
     
@@ -362,7 +372,7 @@ function myGraph(el,w,h) {
    force=null;
    nodearray=null;
    linkarray=null;
-    
+   graph.force=force; 
    var initDynamicTree=function () {
 	   	force = d3.layout.force()
 	        .gravity(.01)
@@ -417,7 +427,7 @@ function myGraph(el,w,h) {
 	  //  .attr("markerUnits","strokeWidth")
 	    .attr("d", "M0,-4L10,0L0,4");
 	   
-		graphZoom = d3.behavior.zoom().on("zoom",redraw );
+		graphZoom = d3.behavior.zoom().on("zoom",zoomTo );
 		graphDrag = d3.behavior.drag()
 			 	.on('dragstart', eventsProxy)
 			 	.on('dragend', eventsProxy)
@@ -428,7 +438,7 @@ function myGraph(el,w,h) {
 
 			
          visg=viszoompang.append("svg:g");
-    			
+    	 graph.visg=visg;		
 		 visg.append('svg:rect')
 		    .attr('width', w)
 		    .attr('height', h)
