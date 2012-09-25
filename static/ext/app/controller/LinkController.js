@@ -2,7 +2,7 @@
 
 Ext.define('Precon.controller.LinkController', {
     extend: 'Precon.controller.BaseController',
-    requires:['Precon.view.LinkUpdatePanel'],
+    requires:['Precon.view.LinkUpdatePanel', 'Precon.view.ReferenceEditor'],
     init: function() {
      		 
      		this.control({
@@ -38,10 +38,48 @@ Ext.define('Precon.controller.LinkController', {
      					    	formpanel.query('button')[0]. setDisabled(true)
      					    }
      					}
+     				},
+     				'refeditor':{
+     				  click:function(){
+     				    console.log("click ", arguments)
+     				  },
+     				  itemclick:function(){
+     				    console.log("ref item click", arguments)
+     				  }
+     				  
      				}
      		});     	
+    }, // end init
+    // create and show the link update window
+    show: function(con){
+       //var getName=function(id) {precon.getObject(id,function(obj){obj.name})};
+       // ref store
+        var self = this;
+        var formnodes=[];
+        obj.nodes.forEach(function(anode) {
+            var label = self.getGraphModel().findNode(getId(anode)).get("label")
+            formnodes.push([label, label])
+            //precon.getObject(getId(anode),function(obj){log.debug(obj);formnodes.push([obj.label,obj.label])})
+            //formnodestemp.push([anode,anode])}
+            });
+        
+        linkUpdatePanel = Ext.create('widget.linkupdatepanel',{data:con});
+        tmpwin = Ext.create('Precon.view.Window', {
+            items:[linkUpdatePanel],
+            title:'Link Details',
+            width:600
+          });
+        tmpwin.show();
+        
+        var refstore = tmpwin.down("refeditor").getStore();
+        tmpstore = Ext.getCmp("refgrid").getStore();
+        tmpstore.each(function(rec){
+            refstore.add(rec);
+        });
+        
+        form = tmpwin.down('linkupdatepanel').getForm()
     }      
-	
+	 
 });
 
 

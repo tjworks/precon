@@ -1,4 +1,4 @@
- var literatureStore = Ext.create('Ext.data.ArrayStore', {
+/**  var literatureStore = Ext.create('Ext.data.ArrayStore', {
         fields: [         
            {name:'_id'},
            {name: 'name'},
@@ -9,12 +9,13 @@
         ],
         data: []
     });
-    
+    */
  Ext.define('Precon.view.ReferenceGrid' ,{
     extend: 'Ext.grid.Panel',
     requires: [
         //'Ext.selection.CheckboxModel',
-        'Ext.ux.RowExpander'
+        'Ext.ux.RowExpander',
+        'Precon.model.Reference'
     ],
     //selModel: Ext.create('Ext.selection.CheckboxModel'),
     id:'refgrid',
@@ -24,7 +25,10 @@
     multiSelect:true,
 	
 	//define the data
-	store: literatureStore,
+	store: Ext.create('Ext.data.ArrayStore', {
+	  model:'Precon.model.Reference',
+	  data:[]
+	}),
 	
 	constructor: function(config) {
 			//this.initConfig(config);

@@ -559,33 +559,7 @@ Ext.define('Precon.controller.GraphWin', {
                 );
             }
             else if (ob.getClass && ob.getClass()=="connection") {
-                    //var getName=function(id) {precon.getObject(id,function(obj){obj.name})};
-                    var formnodes=[];
-                    obj.nodes.forEach(function(anode) {
-                        var label = self.getGraphModel().findNode(getId(anode)).get("label")
-                        formnodes.push([label, label])
-                        //precon.getObject(getId(anode),function(obj){log.debug(obj);formnodes.push([obj.label,obj.label])})
-                        //formnodestemp.push([anode,anode])}
-                        });
-                    
-                    linkUpdatePanel = Ext.create('widget.linkupdatepanel',{data:ob});
-                    tab = Ext.getCmp("infopanel").add(
-                        {
-                            title: ob.getLabel(),
-                            layout:'fit',
-                            id:  ob.get('id'),
-                            closable:true,
-                            defaults: {
-                                anchor: '100%',
-                                bodyPadding:20
-                            },
-                            items:[linkUpdatePanel]                     
-                        }                   
-                    );
-                    obb = ob
-                    console.log("Set form", ob.getRawdata())
-                    form = tab.down('linkupdatepanel').getForm()
-                            
+                   app.getController('LinkController').show(ob);
                     
             } else
             {

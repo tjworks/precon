@@ -210,6 +210,12 @@ path.state-highlight {
 input.filterByNetwork {
 	margin-left:30px
 }
+input[type=text],select{
+  font-size:1.1em;
+  padding:3px
+} 
+
+
 #infopanel th {
   color:#5f6b87;
   font-weight:bold;
@@ -261,4 +267,11 @@ input.filterByNetwork {
 	border-style: dotted;
     border-color: #FFAB68; 
     background-color: #E6FFA2 !important 
+}
+.x-form-item-label-top {
+  margin: 10px 0px 5px 0px;
+  font-weight:bold
+}
+.x-form-field {
+  font-size:large
 }
