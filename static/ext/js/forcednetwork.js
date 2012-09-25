@@ -356,8 +356,8 @@ function myGraph(el,w,h) {
     *initialize the Static Tree variables 
     */
    force=null;
-   nodearray=null;
-   linkarray=null;
+   nodearray=[];
+   linkarray=[];
     
    var initDynamicTree=function () {
 	   	force = d3.layout.force()

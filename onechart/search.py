@@ -25,13 +25,13 @@ def handler(req):
 			tmp.append(id)	
 			if(not name): continue	
 			name = ("%s"%name)[0:80]
-			col = ''
+			md = ''
 			if id[0:4] in models.prefix_mapping:				
 				md = models.prefix_mapping[id[0:4]]
 				pre = models.model_label_mapping[md]
 				label = "%s: %s" %(pre, name)
 			
-			if(filter and filter!=col): continue
+			if(filter and filter!=md): continue
 			ret.append( {'label':label, 'value':name, '_id':id} )
 		if(len(ret)>50): break  # max 20 results
 				

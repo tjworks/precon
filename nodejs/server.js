@@ -10,11 +10,11 @@
 var fs = require("fs"),
 		sys = require("sys"),
 		express = require('express');
-		
+	
 var config = { 
 	"db": {
 			'port': 27017,
-			'host': "localhost",
+			'host': "one-chart.com",
 			'name':'oc'
 		},
 	'server': {
