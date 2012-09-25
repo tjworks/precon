@@ -54,6 +54,7 @@ Ext.define('Precon.controller.LinkController', {
     show: function(con){
        //var getName=function(id) {precon.getObject(id,function(obj){obj.name})};
        // ref store
+       mycon = con
         var self = this;
         var formnodes=[];
         obj.nodes.forEach(function(anode) {
@@ -71,10 +72,17 @@ Ext.define('Precon.controller.LinkController', {
           });
         tmpwin.show();
         
+        var conrefs = con.get('refs')
+        conrefs = conrefs.pubmed? conrefs.pubmed : []
+        conrefs = _.isArray(conrefs)? conrefs: [conrefs]
         var refstore = tmpwin.down("refeditor").getStore();
         tmpstore = Ext.getCmp("refgrid").getStore();
         tmpstore.each(function(rec){
-            refstore.add(rec);
+            var rid = rec.get('_id');
+            rid = rid.indexOf('publ') == 0? rid.substring(4):rid
+            if (_.indexOf(conrefs, rid) >=0){
+              refstore.add(rec);
+            }
         });
         
         form = tmpwin.down('linkupdatepanel').getForm()

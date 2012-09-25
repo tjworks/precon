@@ -115,8 +115,45 @@ Ext.define('Precon.view.ReferenceEditor', {
 //      defaults: {minWidth: minButtonWidth},
         items: [
              {xtype:'textfield', flex:1,width:300, id:'add-ref-input'},
-             { type: 'button', text: 'Add Reference', handler:function(){  } },
+             { type: 'button', id:'add-ref-btn', text: 'Add Reference', handler:function(){ console.log("add-ref-btn clicked") } },
         ]
-    }] 
+    }],
+    listeners:{
+      afterrender:function(){
+         var searchctl = $("#add-ref-input-inputEl")
+         console.log("Refeditor afterrender ",searchctl);
+        
+         searchctl.autocomplete({
+              source: function(req, callback){
+                    term = req.term
+                    log.debug("validating ref")
+                    precon.quickSearch(term, function(results){
+                      log.debug("kw search results by "+term, results)
+                      callback(results)
+                    }, 'publication')      
+              },
+              minLength:2,
+              select: function(event, ui) {
+                log.debug("selected " + ui)
+                //document.location='/graph/'+ ui.item._id          
+              },
+              focus: function(event, ui) { 
+                console.log('focused '+ ui.item._id);
+                if(ui.item && ui.item._id)
+                {
+                  searchctl.attr('data', ui.item._id)
+                  $("#add-ref-btn").removeClass('disabled')
+                }
+                
+              },
+              search: function(event, ui){
+                searchctl.attr('data', '')
+                $("#add-ref-btn").addClass('disabled')
+              }
+            });
+        
+       
+      }
+    }
 })
 

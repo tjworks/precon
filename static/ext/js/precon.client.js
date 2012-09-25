@@ -54,6 +54,7 @@ precon.randomId = function(type){
  *          ...
  *       ]
  * 
+ *  filter: one of the entity, publication, connection, network to limit the search 
  */
 precon.quickSearch = function(query, callback, filter){
 	// only entity is supported for now

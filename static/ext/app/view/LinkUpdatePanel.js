@@ -38,7 +38,6 @@ Ext.define('Precon.view.LinkUpdatePanel' ,{
     								  },
                         {
                           xtype:'refeditor',
-                          height:200
                         },
     								 
     								   {
