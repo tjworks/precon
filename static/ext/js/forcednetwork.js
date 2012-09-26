@@ -53,11 +53,15 @@ function myGraph(el,w,h) {
 	}	
 	// register internal events handler	
 	this.on('mouseover', function(evt, target){
+		$d(target).attr('marker-end',"url(#selected)");
 		var r = $d(target).attr('r')
 		$d(target).classed('state-highlight', true)		
 	})
 	this.on('mouseout', function(evt, target){
 		var r = $d(target).attr('r')
+		var cls=$d(target).attr('class').split(" ")[1];
+		cls="url(#"+cls+")";
+		$d(target).attr('marker-end',cls);
 		//$d(target).classed('state-highlight', false).attr('r', r/2  )
 		$d(target).classed('state-highlight', false)				
 	});
@@ -118,11 +122,14 @@ function myGraph(el,w,h) {
 	},
 	this.zoom=function(scale) {
   		//if (scale>=0.1 && scale<=15 ) {
-	  		visg.attr("transform",
+  		 if (typeof graph.visg !="undefined") {
+	  		graph.visg.attr("transform",
 			       " scale(" + scale + ")");
-	        force.start();
+	       if (force) force.start();
+	       }
        //}
 	},
+	
 	this.redraw=function() {
 		update();
 	},
@@ -266,7 +273,14 @@ function myGraph(el,w,h) {
     var findLinkIndex = function(id) {
         for (var i in linkarray) {if (linkarray[i]["id"] === id) return i};
     }
-
+	/*
+	 * zoomTo will set the value of the slider and let slider calls the zoom()
+	 */
+	function zoomTo() {
+		if ( d3.event) {
+			Ext.getCmp("zoomslider").setValue(7+Math.log(d3.event.scale)/Math.log(2));
+		}
+	}
     // set up the D3 visualisation in the specified element
  
     
@@ -356,9 +370,9 @@ function myGraph(el,w,h) {
     *initialize the Static Tree variables 
     */
    force=null;
-   nodearray=[];
-   linkarray=[];
-    
+   nodearray=null;
+   linkarray=null;
+   graph.force=force; 
    var initDynamicTree=function () {
 	   	force = d3.layout.force()
 	        .gravity(.01)
@@ -389,20 +403,31 @@ function myGraph(el,w,h) {
 		// vis.select("defs").selectAll("marker").remove();
 		 vis.select("defs").selectAll("marker")
 		 // TBD: list should come from ConnectionType store to be consistent
-		.data(["decreases", "beinguptaken", "activates", "inhibits", "stimulats", "association", "physical_interaction", "predicted", "pathway", "regulates"])
+		.data([{"id":"selected", "stroke":"yellow"},{"id":"decreases", "stroke":"blue"}, {"id":"beinguptaken","stroke":"lightsalmon"}, {"id":"activates","stroke":"dodgerblue"}, {"id":"inhibits","stroke":"lightgreen"}, {"id":"stimulats","stroke":"mediumpurple"}, {"id":"association","stroke":"grey"}, {"id":"physical_interaction","stroke":"olive"}, {"id":"predicted","stroke":"red"}, {"id":"pathway","stroke":"lightpink"}, {"id":"regulates","stroke":"brown"}])
  			.enter()
  			.append("svg:marker")
-	    .attr("id", String)
+	    .attr("id", function(d){return d.id})
 	    .attr("viewBox", "0 -6 13 13")
 	    .attr("refX", 10)
+	    //.attr("class",String)
+	    //.attr("stroke","red")
+	    //.attr("fill","red")
+	    .attr("stroke",function(d){return d.stroke})
+	    .attr("fill",function(d){return d.stroke})
+	    .attr("strokeWidth",6)
+	    .attr("markerUnits","strokeWidth")
 	    .attr("refY", 0)
 	    .attr("markerWidth", 8)
 	    .attr("markerHeight", 6)
 	    .attr("orient", "auto")
 	    .append("path")
+	   //  .attr("stroke","red")
+	  //  .attr("fill","red")
+	  //  .attr("strokeWidth",6)
+	  //  .attr("markerUnits","strokeWidth")
 	    .attr("d", "M0,-4L10,0L0,4");
 	   
-		graphZoom = d3.behavior.zoom().on("zoom",redraw );
+		graphZoom = d3.behavior.zoom().on("zoom",zoomTo );
 		graphDrag = d3.behavior.drag()
 			 	.on('dragstart', eventsProxy)
 			 	.on('dragend', eventsProxy)
@@ -413,7 +438,7 @@ function myGraph(el,w,h) {
 
 			
          visg=viszoompang.append("svg:g");
-    			
+    	 graph.visg=visg;		
 		 visg.append('svg:rect')
 		    .attr('width', w)
 		    .attr('height', h)
@@ -525,7 +550,7 @@ function myGraph(el,w,h) {
 			  		  .attr("id",function(d){return d.id})
 			  		  .attr("network", function(d){ return d.get('network') })		  		  
 					  .attr("class",function(d){ddd = d; return "link "+d.get('type').replace(" ","").replace("/","_");})
-					  .attr("marker-end", function(d) { return "url(#" + d.get('type').replace(" ","") + ")"; })
+					  .attr("marker-end", function(d) {ddd=d; return "url(#" + d.get('type').replace(" ","") + ")"; })
 					  .attr("refs", function(d){ return _combineRefs(d.get('refs'))});
 			    
 			   

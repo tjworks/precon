@@ -39,6 +39,7 @@ Ext.application({
     	precon.flushCache();
     	// create view
     	Ext.create('Precon.view.GraphViewport' )    	
+    	precon.flushCache();  	
     },
     getUser:function(){
     	if(window.user && window.user.user_id)
