@@ -351,9 +351,9 @@ ul.ui-autocomplete.ui-menu{
   background: -o-linear-gradient(top, #FFF, #00B7F9);
   
    padding: 0.5em 0.5em;
-   -webkit-border-radius: 16px;
-   -moz-border-radius: 16px;
-   border-radius: 16px;
+   -webkit-border-radius: 6px;
+   -moz-border-radius: 6px;
+   border-radius: 6px;
    -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
    -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
    box-shadow: rgba(0,0,0,1) 0 1px 0;
@@ -362,10 +362,12 @@ ul.ui-autocomplete.ui-menu{
    
    width:620px;
    overflow:hidden;
+   z-index:20001; /** Ext's modal window z-index is 19020? */ 
 }
 
 li.ui-menu-item {
-    padding:3px 5px
+    padding:3px 5px;
+    z-index:20001;
 }
 .ui-state-hover, .ui-autocomplete li:hover
 {

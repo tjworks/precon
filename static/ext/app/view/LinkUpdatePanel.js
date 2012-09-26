@@ -117,20 +117,20 @@ Ext.define('Precon.view.LinkUpdatePanel' ,{
     									  	}
     									  }
     								  },
-    								 */
+    								
                                	 {
                                		 xtype:'button',
+                               		 id: 'save-link-btn',
                                		 text:'Save Changes'
-                               	 }
-    						]
-    				    /**,
+                               	 } */
+    						],
+    				   
     						fbar: [
     							'->',
-    					          {
-    					              text: 'Save Changes'    					             
-    					          },
+    					          {   text: 'Save Changes'    					             },
+    					          {text:'Cancel'},
     					          '->'
-    					      ]*/
+    					      ]
 });
 		
 

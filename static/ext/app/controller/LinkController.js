@@ -6,7 +6,7 @@ Ext.define('Precon.controller.LinkController', {
     init: function() {
      		 
      		this.control({
-     				"linkupdatepanel button": {
+     				"#save-link-btn": {
      					click: function(btn){ 
      						console.log('clicked btn', arguments)     						 
 			                 var formpanel  = btn.up('linkupdatepanel')
@@ -35,7 +35,7 @@ Ext.define('Precon.controller.LinkController', {
      					    formpanel.getForm().findField('nodes').getStore().loadData([ con.getNodes()[0].getRawdata(), con.getNodes()[1].getRawdata()])
      					    if(!con) return
      					    if(!precon.util.isMe( con.get('owner') )){
-     					    	formpanel.query('button')[0]. setDisabled(true)
+     					    	//Ext.getCmp("save-link-btn"). setDisabled(true)
      					    }
      					}
      				},
@@ -68,7 +68,7 @@ Ext.define('Precon.controller.LinkController', {
         tmpwin = Ext.create('Precon.view.Window', {
             items:[linkUpdatePanel],
             title:'Link Details',
-            width:600
+            width:700
           });
         tmpwin.show();
         
