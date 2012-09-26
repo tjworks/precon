@@ -125,10 +125,9 @@ Ext.define('Precon.view.ReferenceEditor', {
         ]
     }],
     listeners:{
-      itemdblclick:function(a1,a2,a3, rowindex){
+      itemdblclick:function(vw,a2,a3, rowIndex){
         console.log("dbclick", arguments)
-        myarg = arguments
-        
+        myarg = arguments        
         vw.up("refeditor").getStore().removeAt(rowIndex);
       },
       afterrender:function(){

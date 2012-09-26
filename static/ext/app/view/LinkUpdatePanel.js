@@ -58,8 +58,9 @@ Ext.define('Precon.view.LinkUpdatePanel' ,{
                           valueField:     'value',
                           queryMode: 'local',
                           store:      Precon.store.ConnectionType
-                     	 },                     	  
-                     	  
+                     	 },      
+                     		  
+                     	/**  
                      	{
                            //the width of this field in the HBox layout is set directly
                            //the other 2 items are given flex: 1, so will share the rest of the space
@@ -74,10 +75,10 @@ Ext.define('Precon.view.LinkUpdatePanel' ,{
                            valueField:     'label',
                            queryMode: 'local',
                            store:      Precon.store.Nodes
-                      	 },
+                      }, */
                       	  {
                             xtype:'textfield',
-                            fieldLabel: 'Label',
+                            fieldLabel: 'Link Label (optional)',
                             name: 'label'
                             //value:obj.label               
                           },
@@ -98,6 +99,12 @@ Ext.define('Precon.view.LinkUpdatePanel' ,{
                                 queryMode: 'local',
                                 store:     'Networks'
                           },
+                           {
+                            xtype: 'displayfield',
+                            fieldLabel: 'Link Nodes',
+                            name: 'linknodes',
+                            value: ''
+                            }   
     								  /**
     								  {
     									   anchor: '100%',
@@ -127,8 +134,17 @@ Ext.define('Precon.view.LinkUpdatePanel' ,{
     				   
     						fbar: [
     							'->',
-    					          {   text: 'Save Changes'    					             },
-    					          {text:'Cancel'},
+    					          {   text: 'Save Changes',
+    					              id:'save-link-btn'					             
+    					          },
+    					          {
+    					            text:'Cancel',
+    					            handler:function(){
+    					              this.up("window").hide();
+    					              this.up("window").destroy();
+    					            }
+    					          
+    					          }, 
     					          '->'
     					      ]
 });

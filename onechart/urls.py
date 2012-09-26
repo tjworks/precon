@@ -12,6 +12,10 @@ urlpatterns = patterns('',
         
     url(r'^api/reference/(?P<action>.*)/(?P<args>.*).ris$', 'inout.views.handler'),
     
+    
+    # graph app
+    url(r'^graph/(?P<precon_id>.*)$', 'graph.graphview.handler'),
+    
     # search/proxy
     url(r'^search.json', 'onechart.search.handler'),
 
@@ -32,8 +36,6 @@ urlpatterns = patterns('',
 
     url(r'^howto$', 'onechart.views.home'),
 
-    # graph app
-    url(r'^graph/(?P<precon_id>.*)$', 'graph.graphview.handler'),
 
 
 

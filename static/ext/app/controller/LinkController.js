@@ -17,23 +17,38 @@ Ext.define('Precon.controller.LinkController', {
 				                	 formpanel.bindObject.set(i, data[i])
 				                 }
 			                 })
-     						 
+     						       // update references
+     						       var refstore = formpanel.down("refeditor").getStore();
+     						       var pids = []
+     						       refstore.each(function(rec){
+     						         pids.push(rec.get("_id").substring(4))
+     						       });
+     						       formpanel.bindObject.set("refs", {pubmed: pids });
+     						       
 			                 formpanel.bindObject.save(function(data){
-			                	 if(data && data.indexOf('conn') ==0)
-			                		 alert("Successfully updated connection")
+			                	 if(data && data.indexOf('conn') ==0){
+			                	   //Ext.Msg.alert("INFO", "Successfully updated connection");
+                           app.graphModel.trigger('change.connection', {connection:formpanel.bindObject} )
+                           formpanel.up("window").hide();
+                           formpanel.up("window").destroy();
+			                	 }
 			                	 else
-			                		 alert("Error: "+ data)
+			                		 Ext.Msg.alert("ERROR",data);
 			                 })
-			                 
-			                 app.graphModel.trigger('change.connection', {connection:formpanel.bindObject} )
      					}
      				},
      				'linkupdatepanel': {
      					afterrender: function(formpanel){     						
      					    var con = formpanel.bindObject
-     					    formpanel.getForm().loadRecord({data: con.getRawdata()} )
-     					    formpanel.getForm().findField('nodes').getStore().loadData([ con.getNodes()[0].getRawdata(), con.getNodes()[1].getRawdata()])
      					    if(!con) return
+     					    formpanel.getForm().loadRecord({data: con.getRawdata()} )
+     					    var label = '' ;
+     					    _.each(con.getNodes(), function(node){
+     					        label = label? label+", ":label;
+     					        label += node.get("label")
+     					    })
+     					    formpanel.getForm().findField("linknodes").setValue(label);
+     					    $("#add-ref-input-inputEl").val("");
      					    if(!precon.util.isMe( con.get('owner') )){
      					    	//Ext.getCmp("save-link-btn"). setDisabled(true)
      					    }
@@ -54,16 +69,7 @@ Ext.define('Precon.controller.LinkController', {
     show: function(con){
        //var getName=function(id) {precon.getObject(id,function(obj){obj.name})};
        // ref store
-       mycon = con
         var self = this;
-        var formnodes=[];
-        obj.nodes.forEach(function(anode) {
-            var label = self.getGraphModel().findNode(getId(anode)).get("label")
-            formnodes.push([label, label])
-            //precon.getObject(getId(anode),function(obj){log.debug(obj);formnodes.push([obj.label,obj.label])})
-            //formnodestemp.push([anode,anode])}
-            });
-        
         linkUpdatePanel = Ext.create('widget.linkupdatepanel',{data:con});
         tmpwin = Ext.create('Precon.view.Window', {
             items:[linkUpdatePanel],
@@ -76,6 +82,7 @@ Ext.define('Precon.controller.LinkController', {
         conrefs = conrefs.pubmed? conrefs.pubmed : []
         conrefs = _.isArray(conrefs)? conrefs: [conrefs]
         var refstore = tmpwin.down("refeditor").getStore();
+        refstore.removeAll();
         tmpstore = Ext.getCmp("refgrid").getStore();
         tmpstore.each(function(rec){
             var rid = rec.get('_id');

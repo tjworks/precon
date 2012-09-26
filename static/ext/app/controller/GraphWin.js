@@ -321,13 +321,15 @@ Ext.define('Precon.controller.GraphWin', {
                 window.contextMenu && contextMenu.hide()
             });     
             mygraph.on("dblclick", function(evt, target){
-                log.debug("dblclick", evt, target.__data__)
+                log.debug("dblclick!", evt, target.__data__)
                 //showObject(target.__data__)
                 if(target.__data__ && target.__data__.get('entity'))
                        precon.searchNetworks( target.__data__.get('entity'), function(nets){ 
                            var netController = self.getController('NetworkGridController')
                            netController.loadNetworks(nets, true, false) 
                            })
+                if(target.__data__ instanceof precon.Connection) self.showObject(target.__data__)
+                
             });     
             mygraph.on("contextmenu",function(evt, target){
                 d3.event.preventDefault();
