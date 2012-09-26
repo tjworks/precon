@@ -2,13 +2,13 @@
 
 Ext.define('Precon.controller.LinkController', {
     extend: 'Precon.controller.BaseController',
-    requires:['Precon.view.LinkUpdatePanel'],
+    requires:['Precon.view.LinkUpdatePanel', 'Precon.view.ReferenceEditor'],
     init: function() {
      		 
      		this.control({
-     				"linkupdatepanel button": {
+     				"#save-link-btn": {
      					click: function(btn){ 
-     						console.log('clicked btn', arguments)     						 
+     						       //console.log('clicked btn', arguments)     						 
 			                 var formpanel  = btn.up('linkupdatepanel')
 			                 
 			                 formpanel.getForm().getFields().each(function(f){
@@ -17,31 +17,84 @@ Ext.define('Precon.controller.LinkController', {
 				                	 formpanel.bindObject.set(i, data[i])
 				                 }
 			                 })
-     						 
+     						       // update references
+     						       var refstore = formpanel.down("refeditor").getStore();
+     						       var pids = []
+     						       refstore.each(function(rec){
+     						         pids.push(rec.get("_id").substring(4))
+     						       });
+     						       formpanel.bindObject.set("refs", {pubmed: pids });
+     						       
 			                 formpanel.bindObject.save(function(data){
-			                	 if(data && data.indexOf('conn') ==0)
-			                		 alert("Successfully updated connection")
+			                	 if(data && data.indexOf('conn') ==0){
+			                	   //Ext.Msg.alert("INFO", "Successfully updated connection");
+                           app.graphModel.trigger('change.connection', {connection:formpanel.bindObject} )
+                           formpanel.up("window").hide();
+                           formpanel.up("window").destroy();
+			                	 }
 			                	 else
-			                		 alert("Error: "+ data)
+			                		 Ext.Msg.alert("ERROR",data);
 			                 })
-			                 
-			                 app.graphModel.trigger('change.connection', {connection:formpanel.bindObject} )
      					}
      				},
      				'linkupdatepanel': {
      					afterrender: function(formpanel){     						
      					    var con = formpanel.bindObject
-     					    formpanel.getForm().loadRecord({data: con.getRawdata()} )
-     					    formpanel.getForm().findField('nodes').getStore().loadData([ con.getNodes()[0].getRawdata(), con.getNodes()[1].getRawdata()])
      					    if(!con) return
+     					    formpanel.getForm().loadRecord({data: con.getRawdata()} )
+     					    var label = '' ;
+     					    _.each(con.getNodes(), function(node){
+     					        label = label? label+", ":label;
+     					        label += node.get("label")
+     					    })
+     					    formpanel.getForm().findField("linknodes").setValue(label);
+     					    $("#add-ref-input-inputEl").val("");
      					    if(!precon.util.isMe( con.get('owner') )){
-     					    	formpanel.query('button')[0]. setDisabled(true)
+     					    	//Ext.getCmp("save-link-btn"). setDisabled(true)
      					    }
      					}
+     				},
+     				'refeditor':{
+     				  click:function(){
+     				    //console.log("click ", arguments)
+     				  },
+     				  itemclick:function(){
+     				    //console.log("ref item click", arguments)
+     				  }
+     				  
      				}
      		});     	
+    }, // end init
+    // create and show the link update window
+    show: function(con){
+       //var getName=function(id) {precon.getObject(id,function(obj){obj.name})};
+       // ref store
+        var self = this;
+        linkUpdatePanel = Ext.create('widget.linkupdatepanel',{data:con});
+        tmpwin = Ext.create('Precon.view.Window', {
+            items:[linkUpdatePanel],
+            title:'Link Details',
+            width:700
+          });
+        tmpwin.show();
+        
+        var conrefs = con.get('refs')
+        conrefs = conrefs.pubmed? conrefs.pubmed : []
+        conrefs = _.isArray(conrefs)? conrefs: [conrefs]
+        var refstore = tmpwin.down("refeditor").getStore();
+        refstore.removeAll();
+        tmpstore = Ext.getCmp("refgrid").getStore();
+        tmpstore.each(function(rec){
+            var rid = rec.get('_id');
+            rid = rid.indexOf('publ') == 0? rid.substring(4):rid
+            if (_.indexOf(conrefs, rid) >=0){
+              refstore.add(rec);
+            }
+        });
+        
+        form = tmpwin.down('linkupdatepanel').getForm()
     }      
-	
+	 
 });
 
 

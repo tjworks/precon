@@ -25,7 +25,7 @@ Ext.application({
     	'GraphWin','Reference','NetworkGridController','LinkController', 'NodeController'
     ],    
     stores:['MyNetworks', 'Networks'],
-    views:[ 'GraphViewport'],    
+    views:[ 'GraphViewport', 'Window'],    
 	init: function(){
 		log.info("Ext Application init")
 		// create model instance
@@ -36,8 +36,10 @@ Ext.application({
 	//start the view port components
     launch: function() {    	
     	log.info("Ext Application launch")
+    	precon.flushCache();
     	// create view
     	Ext.create('Precon.view.GraphViewport' )    	
+    	precon.flushCache();  	
     },
     getUser:function(){
     	if(window.user && window.user.user_id)

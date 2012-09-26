@@ -427,10 +427,8 @@ precon.NetworkGraph = function(){
 		var json = this.toJson()		
 		log.debug("Going to save: ", json)		
 		json = JSON.stringify(json)
-		$.post("/graph/save.json", {'data':json},callback, 'json');
+		$.post("/api/graph/save.json", {'data':json},callback, 'json');
 		// flush cache
-		
-		
 		precon.flushCache()
 	};
 	
@@ -681,7 +679,7 @@ precon.Connection = function(rawdata){
 		var json = this.toJson()		
 		log.debug("Going to save: ", json)		
 		json = JSON.stringify(json)
-		$.post("/graph/save.json", {'data':json},callback, 'json');
+		$.post("/api/graph/save.json", {'data':json},callback, 'json');
 		// flush cache		
 		precon.flushCache()
 		
@@ -740,7 +738,7 @@ precon.Node = function(rawdata){
 		var json = this.toJson()		
 		log.debug("Going to save: ", json)		
 		json = JSON.stringify(json)
-		$.post("/graph/save.json", {'data':json},callback, 'json');
+		$.post("/api/graph/save.json", {'data':json},callback, 'json');
 		// flush cache		
 		precon.flushCache()
 	};	

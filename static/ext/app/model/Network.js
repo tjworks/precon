@@ -30,3 +30,17 @@ Ext.define('Precon.model.Node', {
            ,{name: 'label'}
     ]
 });
+
+
+
+Ext.define('Precon.model.Reference', {
+   extend: 'Ext.data.Model',
+   fields: [         
+         {name:'_id'},
+         {name: 'name'},
+         {name: 'authors'},
+         {name:'abstract'},
+         {name:'entities'},
+         {name:'processed_abstract'}
+      ]
+});

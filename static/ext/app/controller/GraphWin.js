@@ -321,13 +321,15 @@ Ext.define('Precon.controller.GraphWin', {
                 window.contextMenu && contextMenu.hide()
             });     
             mygraph.on("dblclick", function(evt, target){
-                log.debug("dblclick", evt, target.__data__)
+                log.debug("dblclick!", evt, target.__data__)
                 //showObject(target.__data__)
                 if(target.__data__ && target.__data__.get('entity'))
                        precon.searchNetworks( target.__data__.get('entity'), function(nets){ 
                            var netController = self.getController('NetworkGridController')
                            netController.loadNetworks(nets, true, false) 
                            })
+                if(target.__data__ instanceof precon.Connection) self.showObject(target.__data__)
+                
             });     
             mygraph.on("contextmenu",function(evt, target){
                 d3.event.preventDefault();
@@ -499,7 +501,7 @@ Ext.define('Precon.controller.GraphWin', {
         filename = filename.replace(/\W/g, '-')
         filename += "." + format.substr(-3)
         var data = {"svg": src, "format":format}        
-        $.fileDownload('/export/'+ filename, {
+        $.fileDownload('/api/export/'+ filename, {
             data:data,
             httpMethod:'POST',
             successCallback: function (url) {
@@ -559,33 +561,7 @@ Ext.define('Precon.controller.GraphWin', {
                 );
             }
             else if (ob.getClass && ob.getClass()=="connection") {
-                    //var getName=function(id) {precon.getObject(id,function(obj){obj.name})};
-                    var formnodes=[];
-                    obj.nodes.forEach(function(anode) {
-                        var label = self.getGraphModel().findNode(getId(anode)).get("label")
-                        formnodes.push([label, label])
-                        //precon.getObject(getId(anode),function(obj){log.debug(obj);formnodes.push([obj.label,obj.label])})
-                        //formnodestemp.push([anode,anode])}
-                        });
-                    
-                    linkUpdatePanel = Ext.create('widget.linkupdatepanel',{data:ob});
-                    tab = Ext.getCmp("infopanel").add(
-                        {
-                            title: ob.getLabel(),
-                            layout:'fit',
-                            id:  ob.get('id'),
-                            closable:true,
-                            defaults: {
-                                anchor: '100%',
-                                bodyPadding:20
-                            },
-                            items:[linkUpdatePanel]                     
-                        }                   
-                    );
-                    obb = ob
-                    console.log("Set form", ob.getRawdata())
-                    form = tab.down('linkupdatepanel').getForm()
-                            
+                   app.getController('LinkController').show(ob);
                     
             } else
             {

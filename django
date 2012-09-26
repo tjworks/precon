@@ -36,10 +36,10 @@ sudo kill -9 $pid
 if [ "$1" == "start" ]
 then
   echo "Starting django, log file at logs/django.log"
-  nohup sudo python manage.py runserver 0.0.0.0:80 > logs/django.log 2>&1 &
+  nohup sudo ./ENV/bin/python manage.py runserver 0.0.0.0:80 > logs/django.log 2>&1 &
   
   echo "Starting node.js, log file at logs/node.log"
-  (cd nodejs/bin && exec /usr/bin/nohup mongodb-rest > ../../logs/node.log 2>&1 & )
+  (cd nodejs/bin && exec /usr/bin/nohup ./mongodb-rest > ../../logs/node.log 2>&1 & )
   echo
 fi
 

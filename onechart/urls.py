@@ -8,9 +8,14 @@ urlpatterns = patterns('',
     # Examples:
     #url(r'^$', 'onechart.views.home', name='home'),
 
-    url(r'^api/graph/export/(?P<filename>.*)$', 'graph.converter.handler'),
+    url(r'^api/export/(?P<filename>.*)$', 'graph.converter.handler'),
         
     url(r'^api/reference/(?P<action>.*)/(?P<args>.*).ris$', 'inout.views.handler'),
+    
+    url(r'^api/graph/save.json', 'graph.graphview.handler'),
+    
+    # graph app
+    url(r'^graph/(?P<precon_id>.*)$', 'graph.graphview.handler'),
     
     # search/proxy
     url(r'^search.json', 'onechart.search.handler'),
@@ -32,8 +37,6 @@ urlpatterns = patterns('',
 
     url(r'^howto$', 'onechart.views.home'),
 
-    # graph app
-    url(r'^graph/(?P<precon_id>.*)$', 'graph.graphview.handler'),
 
 
 
