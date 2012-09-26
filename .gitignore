@@ -11,3 +11,4 @@ d3/
 .settings/
 tmp/
 ENV/
+db.sqlite

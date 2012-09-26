@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     # Examples:
     #url(r'^$', 'onechart.views.home', name='home'),
 
-    url(r'^api/graph/export/(?P<filename>.*)$', 'graph.converter.handler'),
+    url(r'^api/export/(?P<filename>.*)$', 'graph.converter.handler'),
         
     url(r'^api/reference/(?P<action>.*)/(?P<args>.*).ris$', 'inout.views.handler'),
     
