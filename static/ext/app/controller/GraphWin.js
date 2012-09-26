@@ -501,7 +501,7 @@ Ext.define('Precon.controller.GraphWin', {
         filename = filename.replace(/\W/g, '-')
         filename += "." + format.substr(-3)
         var data = {"svg": src, "format":format}        
-        $.fileDownload('/export/'+ filename, {
+        $.fileDownload('/api/export/'+ filename, {
             data:data,
             httpMethod:'POST',
             successCallback: function (url) {

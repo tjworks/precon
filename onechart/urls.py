@@ -12,6 +12,7 @@ urlpatterns = patterns('',
         
     url(r'^api/reference/(?P<action>.*)/(?P<args>.*).ris$', 'inout.views.handler'),
     
+    url(r'^api/graph/save.json', 'graph.graphview.handler'),
     
     # graph app
     url(r'^graph/(?P<precon_id>.*)$', 'graph.graphview.handler'),
