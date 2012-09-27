@@ -248,7 +248,6 @@ Ext.define('Precon.controller.GraphWin', {
     renderObject:function(obj){
         var objType = precon.getObjectType( getId(obj) )
         var v = this.getView(objType.substring(0,1).toUpperCase()+ objType.substring(1) +'View').create({object:obj})
-        log.debug("View is ", v)
         return v;       
     },
   
@@ -272,12 +271,10 @@ Ext.define('Precon.controller.GraphWin', {
        this.showMainObject()       
        $(document)        
             .ajaxStart(function() {
-                log.debug("show")
                 Ext.getCmp("spinner-img").show();
                 Ext.getCmp("spinner-label").show();
             })
             .ajaxStop(function() {
-                log.debug("hide")
                 Ext.getCmp("spinner-img").hide();
                 Ext.getCmp("spinner-label").hide();
        });
@@ -329,11 +326,7 @@ Ext.define('Precon.controller.GraphWin', {
             mygraph.on("dblclick", function(evt, target){
                 log.debug("dblclick!", evt, target.__data__)
                 //showObject(target.__data__)
-                if(target.__data__ && target.__data__.get('entity'))
-                       precon.searchNetworks( target.__data__.get('entity'), function(nets){ 
-                           var netController = self.getController('NetworkGridController')
-                           netController.loadNetworks(nets, true, false) 
-                           })
+                self.expandNode(target.__data__);
                 if(target.__data__ instanceof precon.Connection) self.showObject(target.__data__)
                 
             });     
@@ -353,8 +346,18 @@ Ext.define('Precon.controller.GraphWin', {
             mygraph.resize(Ext.get("west-body").getWidth(true),Ext.get("west-body").getHeight(true))
         }
         this.toggleFullscreenMode()
-   },
-   toggleFullscreenMode:function(){    
+   }
+   ,expandNode: function(node){
+      if(!(  node instanceof precon.Connection)  || (!node.get("entity"))) return;
+      if(node.loaded) return;
+      var self = this;
+      precon.searchNetworks( node.get('entity'), function(nets){ 
+         var netController = self.getController('NetworkGridController')
+         netController.loadNetworks(nets, true, false)
+         node.loaded = 'loaded'; 
+      })     
+   }
+   ,toggleFullscreenMode:function(){    
         var viewport = Ext.getCmp('viewport')
         if(!viewport) return
         if(screen.height === window.outerHeight){
@@ -600,53 +603,114 @@ Ext.define('Precon.controller.GraphWin', {
         } 
     }  // end of toggleLegend
     ,changeScope: function(btn){
+      if(Ext.getCmp("graph-depth").pressed)
+        return this.testFakeNetwork(btn)
+        
+      var model = app.graphModel
+      log.debug("Change depth ", btn.data);
+      
+      var nodes = model.getNodes()
+      
+      var curDepth = model._depth;  
+      var self = this;
+      if(btn.data == 'more'){
+          if(model._depth == 10 ) {
+            Ext.Msg.alert("max reached");
+            return;
+          }
+         model._depth++;
+         //
+         var tokens = [];         
+         for(var n in nodes){
+            var nd = nodes[n];
+            if(nd._depth === curDepth && nd.get('entity'))   tokens.push( nd.get('entity')); //this.expandNode(nd);
+         } // end for
+         
+         msgbox = Ext.Msg.wait('', 'Loading...', {interval:100,increments:1});
+         precon.searchNetworks({entity: tokens}, function(nets){ 
+           var netController = self.getController('NetworkGridController')
+           netController.loadNetworks(nets, true, false)
+           for(var n in nodes){
+            var nd = nodes[n];
+            nd.loaded = 'loaded';
+           }
+           msgbox.hide();
+         })   
+      }    
+      else if(btn.data == 'less'){   
+            if(model._depth == 0 ) {
+              Ext.Msg.alert("min reached");
+              return;
+            }
+            var copy = [].concat(nodes)
+            for(var n in copy){
+              var nd = copy[n];
+              if(nd._depth === curDepth){
+                delete nd._depth;
+                model.removeNode(nd, null, true, true); // node, network, forceRemove, muted                
+              } 
+            } // end for
+            model._depth--;
+            // now we need to change the "loaded" flag on the current deepest nodes
+            for(var n in model.getNodes()){
+              var nd = model.getNodes()[n]
+              if(nd._depth == model._depth) nd.loaded = ''
+            }
+      }
+      else
+          return;
+      Ext.getCmp("graph-depth").setText(model._depth || '0');
+      mygraph.modelUpdated();
+      this.onGraphChange();
+    }
+    ,testFakeNetwork: function(btn){
       var model = app.graphModel
       log.debug("Change scope ", btn.data);
-      if(!  '_scale' in model )
+      if(_.isUndefined(model._depth)  )
         model.removeAll();
       var nodes = model.getNodes()
       if(nodes.length == 0){
           var net = new precon.Network({name:'Test Network'})
           model.setGraphNetwork(net);
           var nd = model.addNode({ label:'A', _id:'nodeA'}, net);
-          nd._scale = 0;
-          model._scale = 0;
+          nd._depth = 0;
+          model._depth = 0;
           nodes = model.getNodes();
       }
-      var newScale = model._scale;  
+      var newScale = model._depth;  
       var self = this;
       if(btn.data == 'more'){
-          if(model._scale == 10 ) {
+          if(model._depth == 10 ) {
             Ext.Msg.alert("max reached");
             return;
           }
          // for each node, we add 5 more
          for(var n in nodes){
             var nd = nodes[n];
-            if(nd._scale === model._scale){ 
+            if(nd._depth === model._depth){ 
                 this.addFakeLinks(nd)
                 nd.loaded = 'loaded'
              }
          } // end for
-         model._scale ++;
+         model._depth ++;
       }    
       else if(btn.data == 'less'){   
-           if(model._scale == 0 ) {
+           if(model._depth == 0 ) {
               Ext.Msg.alert("min reached");
               return;
             }
             var copy = [].concat(nodes)
            for(var n in copy){
               var nd = copy[n];
-              if(nd._scale === model._scale){
-                nd._scale = null;
-                model.removeNode(nd, null, true, false); // node, network, forceRemove, muted                
+              if(nd._depth === model._depth){
+                delete nd._depth;
+                model.removeNode(nd, null, true, true); // node, network, forceRemove, muted                
               } 
            } // end for
-           model._scale--;
+           model._depth--;
            for(var n in model.getNodes()){
               var nd = model.getNodes()[n]
-              if(nd._scale == model._scale)
+              if(nd._depth == model._depth)
                 nd.loaded = ''
            }
            
@@ -654,7 +718,7 @@ Ext.define('Precon.controller.GraphWin', {
       }
       else
           return;
-      Ext.getCmp("graph-scale").setText(model._scale || '0');
+      Ext.getCmp("graph-depth").setText(model._depth || '0');
       mygraph.modelUpdated();
       this.onGraphChange();
     }
@@ -664,9 +728,9 @@ Ext.define('Precon.controller.GraphWin', {
        var LETTERS = ['A','B','C','D','E','F']
        var model = app.graphModel;
        for(var i=0;i<2;i++){
-         var id = LETTERS[nd._scale + 1] + nd.get("label")+ i;
+         var id = LETTERS[nd._depth + 1] + nd.get("label")+ i;
          newnode = model.addNode({ _id: "node"+ id, label:id }, null,null, true)
-         newnode._scale = nd._scale+1
+         newnode._depth = nd._depth+1
          var con = new precon.Connection({
            nodes: [nd, newnode]
          });
