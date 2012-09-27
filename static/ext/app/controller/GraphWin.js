@@ -640,7 +640,7 @@ Ext.define('Precon.controller.GraphWin', {
               var nd = copy[n];
               if(nd._scale === model._scale){
                 nd._scale = null;
-                model.removeNode(nd, null, true, false); // node, network, forceRemove, muted                
+                model.removeNode(nd, null, true, true); // node, network, forceRemove, muted                
               } 
            } // end for
            model._scale--;

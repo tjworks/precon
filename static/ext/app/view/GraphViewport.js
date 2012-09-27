@@ -133,7 +133,7 @@ Ext.define('Precon.view.GraphViewport' ,{
                                     id: 'less-btn'
                                     //enableToggle:true,
                                     ,iconCls:'toolbar-icon'
-                                    ,icon:"/ext/resources/images/minus.png"
+                                    ,icon:"/ext/resources/images/dbl-left.png"
                                     
                                     //toggleGroup:'scopeGroup'
                                    // ,allowDepress:true
@@ -150,7 +150,7 @@ Ext.define('Precon.view.GraphViewport' ,{
                                     id: 'more-btn'
                                     //enableToggle:true,
                                     //iconCls:'x-btn-inner help',
-                                    ,icon:"/ext/resources/images/plus.png" 
+                                    ,icon:"/ext/resources/images/dbl-right.png" 
                                    
                                     //toggleGroup:'scopeGroup',
                                     //allowDepress:true

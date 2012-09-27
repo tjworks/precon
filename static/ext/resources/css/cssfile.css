@@ -166,12 +166,16 @@ circle {
   stroke: #333;
   stroke-width: 1px;
   fill-opacity:0.5;
-  stroke-dasharray: 2,2
+  stroke-dasharray: 1,1
 }
 circle.loaded {
    stroke-dasharray: none
 }
 circle.unloaded {
+}
+
+circle.small {
+  
 }
 text {
   font: 10px sans-serif;
@@ -283,8 +287,3 @@ input[type=text],select{
   font-size:large
 }
 
-
-.toolbar-icon {
-  width:16px;
-  height:16px;
-}

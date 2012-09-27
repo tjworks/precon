@@ -56,12 +56,12 @@ function myGraph(el,w,h) {
 	   // this is to be called after there're batch changes to nodes/links  to update the nodearray/linkarray in one go
 	   log.debug("modelUpdated")
 	   var self = this;
-	   //nodearray = [];
+	   nodearray.splice(0, nodearray.length)
 	   _.each(this.model.getNodes(), function(nd){
 	     self._addNode(null, {node:nd})
 	   })
 	   log.debug("modelUpdated: added nodes")
-	   linkarray = [];
+	   linkarray.splice(0, linkarray.length)
 	   
 	   _.each(this.model.getConnections(), function(con){
 	       log.debug("adding con "+ con.get('id'))
@@ -397,7 +397,7 @@ function myGraph(el,w,h) {
 	   	force = d3.layout.force()
 	        .gravity(.01)
 	        .distance(200)
-	        .charge(-100)
+	        .charge(-10)
 	        .size([w, h]);
 	
 	    nodearray = force.nodes(),
