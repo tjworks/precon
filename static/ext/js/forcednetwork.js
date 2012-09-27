@@ -50,7 +50,25 @@ function myGraph(el,w,h) {
 	}
 	this.getModel =function(){
 		return this.model
-	}	
+	};
+	
+	this.modelUpdated = function(){
+	   // this is to be called after there're batch changes to nodes/links  to update the nodearray/linkarray in one go
+	   log.debug("modelUpdated")
+	   var self = this;
+	   //nodearray = [];
+	   _.each(this.model.getNodes(), function(nd){
+	     self._addNode(null, {node:nd})
+	   })
+	   log.debug("modelUpdated: added nodes")
+	   linkarray = [];
+	   
+	   _.each(this.model.getConnections(), function(con){
+	       log.debug("adding con "+ con.get('id'))
+	       self._addLink(null, {connection:con});
+	   });
+	   log.debug("done modelUpdated");
+	}
 	// register internal events handler	
 	this.on('mouseover', function(evt, target){
 		$d(target).attr('marker-end',"url(#selected)");
@@ -165,13 +183,15 @@ function myGraph(el,w,h) {
 	
     this._addNode = function(evt, data){
     	if(!data.node) return
+    	log.debug("Add node");
     	var node = data.node
     	//	graph.addNode(data.node)
     	var id = node.get('id')
     	node.id = id
     	if(findNode(id)) return;    	
-        nodearray.push(node);
-        update();
+      nodearray.push(node);
+      update();
+      log.debug("done add node in forcenetwork")
     }
     this._removeNode=function(evt, data){
     	//log.debug("_removeNode ", data)
@@ -193,11 +213,11 @@ function myGraph(el,w,h) {
     				//log.debug("Adding link "+ nodes[0]+", "+ nodes[1])
     				var link = data.connection
     				
-    				link.source = findNode(nodes[0].get('id'))    				
-    				link.target= findNode(nodes[1].get('id'))
+    				link.source = findNode(nodes[0].get('_id'))    				
+    				link.target= findNode(nodes[1].get('_id'))
     				if(link.source && link.target && link.source!=link.target){
     					    					
-        				var linkobj = {"type":link.get('type'), "id":link.get('id'), getId:function(){return this.id}, "multiplier":processLinkArray(link.source,link.target)}
+        				var linkobj = {"type":link.get('type'), "id":link.get('_id'), getId:function(){return this.id}, "multiplier":processLinkArray(link.source,link.target)}
         				$.extend(link, linkobj);
     					
     					linkarray.push(link)
@@ -263,15 +283,15 @@ function myGraph(el,w,h) {
     }
     
     var findNode = function(id) {
-        for (var i in nodearray) {if (nodearray[i]["id"] === id) return nodearray[i]};
+        for (var i in nodearray) {if (nodearray[i].get('_id') === id) return nodearray[i]};
         return null;
     }
 
     var findNodeIndex = function(id) {
-        for (var i in nodearray) {if (nodearray[i]["id"] === id) return i};
+        for (var i in nodearray) {if (nodearray[i].get('_id') === id) return i};
     }
     var findLinkIndex = function(id) {
-        for (var i in linkarray) {if (linkarray[i]["id"] === id) return i};
+        for (var i in linkarray) {if (linkarray[i].get('_id') === id) return i};
     }
 	/*
 	 * zoomTo will set the value of the slider and let slider calls the zoom()
@@ -403,7 +423,7 @@ function myGraph(el,w,h) {
 		// vis.select("defs").selectAll("marker").remove();
 		 vis.select("defs").selectAll("marker")
 		 // TBD: list should come from ConnectionType store to be consistent
-		.data([{"id":"selected", "stroke":"yellow"},{"id":"decreases", "stroke":"blue"}, {"id":"beinguptaken","stroke":"lightsalmon"}, {"id":"activates","stroke":"dodgerblue"}, {"id":"inhibits","stroke":"lightgreen"}, {"id":"stimulats","stroke":"mediumpurple"}, {"id":"association","stroke":"grey"}, {"id":"physical_interaction","stroke":"olive"}, {"id":"predicted","stroke":"red"}, {"id":"pathway","stroke":"lightpink"}, {"id":"regulates","stroke":"brown"}])
+		.data([{"id":"selected", "stroke":"yellow"},{"id":"decreases", "stroke":"blue"}, {"id":"beinguptaken","stroke":"lightsalmon"}, {"id":"activates","stroke":"dodgerblue"}, {"id":"inhibits","stroke":"lightgreen"}, {"id":"stimulats","stroke":"mediumpurple"}, {"id":"physical_interaction","stroke":"olive"}, {"id":"predicted","stroke":"red"}, {"id":"pathway","stroke":"lightpink"}, {"id":"regulates","stroke":"brown"}])
  			.enter()
  			.append("svg:marker")
 	    .attr("id", function(d){return d.id})
@@ -529,7 +549,7 @@ function myGraph(el,w,h) {
 	    	
 	    	clearTimeout(window.graphUpdateTrigger)
 	    	window.graphUpdateTrigger = null
-		     //log.debug(linkarray);
+	    	log.debug("Start update()");
 		     //log.debug(nodearray);
 		     //log.debug("Updating")
 			 timer = Timer("Updating Graph")
@@ -573,14 +593,16 @@ function myGraph(el,w,h) {
 	   			var nodeEnter = node.enter();
 		        var nodeEnterg=nodeEnter.append("g")
 		            //.attr("render-order","1")
-		            .attr("class", "node")
+		            .attr("class", function(d){
+		            	return "node " + (d.expanded? "expanded":"collapsed")
+		            })
 		            .attr("network", function(d){
 		            	return d.networkrefs+""
 		            })
 		            .call(force.drag);
 		          
 		        nodeEnterg.append("circle")
-		            .attr("class", "circle")
+		            .attr("class", function(d){ return "circle "+ (d.loaded || "")})
 		            .attr("name",function(d){return d.id})           
 		            .attr("id",function(d){return d.id})
 		            .attr("network", function(d){
@@ -747,7 +769,7 @@ End of Dynamic Tree and start of Static Tree
 				  var node = vis.selectAll("g.node")
 				      .data(nodes)
 				    .enter().append("svg:g")
-				      .attr("class", "node")
+				      .attr("class", function(d){ return "node "+ d.loaded})
 				      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
 				
 				  node.append("svg:circle")
@@ -771,6 +793,7 @@ End of Dynamic Tree and start of Static Tree
     var update = function () {
     	if(!window.graphUpdateTrigger)
     		graphUpdateTrigger = setTimeout(_update, 50);    	
+    	//else log.debug("update request in place")
     };
     
     // delete this?

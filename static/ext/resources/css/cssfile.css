@@ -103,9 +103,11 @@ marker .stimulats {
   fill:none;
   stroke:mediumpurple;
 }
-marker .association {
+/**  association shouldn't have arrow
+ marker .association {
   fill: grey;
 }
+*/
 .association{
   stroke-width: 2px;
   /** stroke-dasharray: 5,1 5,1; */
@@ -164,6 +166,14 @@ circle {
   stroke: #333;
   stroke-width: 1px;
   fill-opacity:0.5;
+  stroke-dasharray: 2,2
+}
+
+circle.loaded {
+   stroke-dasharray: none
+}
+circle.unloaded {
+    
 }
 
 text {
@@ -274,4 +284,10 @@ input[type=text],select{
 }
 .x-form-field {
   font-size:large
+}
+
+
+.toolbar-icon {
+  width:16px;
+  height:16px;
 }

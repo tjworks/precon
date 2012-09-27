@@ -53,9 +53,16 @@ Ext.define('Precon.controller.GraphWin', {
           },
           '#togglearclink': {
               click: this.onToggle
+          },
+          '#less-btn':{
+        	  click: this.changeScope
+          },
+          '#more-btn':{
+        	  click: this.changeScope
           }
         });
    },  
+   
    onToggle: function(btn) {
       if (btn.text.toLowerCase().indexOf("arc")>=0) {
       	mygraph.linklinetype="arc";
@@ -593,4 +600,84 @@ Ext.define('Precon.controller.GraphWin', {
             item.setText("Show Legend");
         } 
     }  // end of toggleLegend
+    ,changeScope: function(btn){
+      var model = app.graphModel
+      log.debug("Change scope ", btn.data);
+      if(!  '_scale' in model )
+        model.removeAll();
+      var nodes = model.getNodes()
+      if(nodes.length == 0){
+          var net = new precon.Network({name:'Test Network'})
+          model.setGraphNetwork(net);
+          var nd = model.addNode({ label:'A', _id:'nodeA'}, net);
+          nd._scale = 0;
+          model._scale = 0;
+          nodes = model.getNodes();
+      }
+      var newScale = model._scale;  
+      var self = this;
+      if(btn.data == 'more'){
+          if(model._scale == 10 ) {
+            Ext.Msg.alert("max reached");
+            return;
+          }
+         // for each node, we add 5 more
+         for(var n in nodes){
+            var nd = nodes[n];
+            if(nd._scale === model._scale){ 
+                this.addFakeLinks(nd)
+                nd.loaded = 'loaded'
+             }
+         } // end for
+         model._scale ++;
+      }    
+      else if(btn.data == 'less'){   
+           if(model._scale == 0 ) {
+              Ext.Msg.alert("min reached");
+              return;
+            }
+            var copy = [].concat(nodes)
+           for(var n in copy){
+              var nd = copy[n];
+              if(nd._scale === model._scale){
+                nd._scale = null;
+                model.removeNode(nd, null, true, false); // node, network, forceRemove, muted                
+              } 
+           } // end for
+           model._scale--;
+           for(var n in model.getNodes()){
+              var nd = model.getNodes()[n]
+              if(nd._scale == model._scale)
+                nd.loaded = ''
+           }
+           
+           
+      }
+      else
+          return;
+      Ext.getCmp("graph-scale").setText(model._scale || '0');
+      mygraph.modelUpdated();
+      this.onGraphChange();
+    }
+    ,addFakeLinks:function(nd){
+       // create 5 fake links (and fake nodes)
+       log.debug("add fake links")
+       var LETTERS = ['A','B','C','D','E','F']
+       var model = app.graphModel;
+       for(var i=0;i<2;i++){
+         var id = LETTERS[nd._scale + 1] + nd.get("label")+ i;
+         newnode = model.addNode({ _id: "node"+ id, label:id }, null,null, true)
+         newnode._scale = nd._scale+1
+         var con = new precon.Connection({
+           nodes: [nd, newnode]
+         });
+         
+         model.addConnection(con, null, true);  
+       };
+    }
+    ,clearGraph:function(){
+        app.graphModel.removeAll();                
+        history.pushState({},"Graph", "/graph" );
+    }
+    
 });
