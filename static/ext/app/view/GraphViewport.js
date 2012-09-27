@@ -154,6 +154,7 @@ Ext.define('Precon.view.GraphViewport' ,{
                                    
                                     //toggleGroup:'scopeGroup',
                                     //allowDepress:true
+
                                 },
                                 '->',
                                

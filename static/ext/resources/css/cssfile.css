@@ -168,14 +168,11 @@ circle {
   fill-opacity:0.5;
   stroke-dasharray: 2,2
 }
-
 circle.loaded {
    stroke-dasharray: none
 }
 circle.unloaded {
-    
 }
-
 text {
   font: 10px sans-serif;
   pointer-events: none;
@@ -193,7 +190,7 @@ text.shadow {
   	stroke:yellow;
 }
 path.state-selected {   
-    stroke:yellow
+    stroke:yellow;
     stroke-width:2;
     stroke-color:yellow;
     fill:none

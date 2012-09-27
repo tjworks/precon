@@ -62,7 +62,6 @@ Ext.define('Precon.controller.GraphWin', {
           }
         });
    },  
-   
    onToggle: function(btn) {
       if (btn.text.toLowerCase().indexOf("arc")>=0) {
       	mygraph.linklinetype="arc";
