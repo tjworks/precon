@@ -121,6 +121,29 @@ Ext.define('Precon.view.GraphViewport' ,{
                                         log.debug("test");
                                     }
                                 },
+                                {
+                                    xtype: 'button', 
+                                    text : 'Less',
+                                    id: 'less-btn',
+                                    enableToggle:true,
+                                    //iconCls:'x-btn-inner help',
+                                    //icon:"/ext/resources/images/help.png",
+                                    
+                                    toggleGroup:'scopeGroup'
+                                    ,allowDepress:true
+                                    ,pressed:true
+                                },
+                                {
+                                    xtype: 'button', 
+                                    text : 'More',
+                                    id: 'more-btn',
+                                    enableToggle:true,
+                                    //iconCls:'x-btn-inner help',
+                                    //icon:"/ext/resources/images/help.png",
+                                   
+                                    toggleGroup:'scopeGroup',
+                                    allowDepress:true
+                                },
                                 '->',
                                
                                
@@ -149,7 +172,7 @@ Ext.define('Precon.view.GraphViewport' ,{
 						        text: 'Show Legend',
 						        enableToggle: true,
 						        icon:"/ext/resources/images/legend.png",
-						        id:'legendToggleBtn'
+						        id:'legendToggleBtn'						        
 						        //toggleHandler: toggleLegend
 						    },
 						    '->',

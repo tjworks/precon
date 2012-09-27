@@ -164,6 +164,14 @@ circle {
   stroke: #333;
   stroke-width: 1px;
   fill-opacity:0.5;
+  stroke-dasharray: 2,2
+}
+
+circle.expanded {
+   
+}
+circle.collapsed {
+    stroke-dasharray: none
 }
 
 text {

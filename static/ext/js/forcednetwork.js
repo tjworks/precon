@@ -573,7 +573,9 @@ function myGraph(el,w,h) {
 	   			var nodeEnter = node.enter();
 		        var nodeEnterg=nodeEnter.append("g")
 		            //.attr("render-order","1")
-		            .attr("class", "node")
+		            .attr("class", function(d){
+		            	return "node " + (d.expanded? "expanded":"collapsed")
+		            })
 		            .attr("network", function(d){
 		            	return d.networkrefs+""
 		            })

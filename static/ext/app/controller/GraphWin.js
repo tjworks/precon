@@ -53,9 +53,23 @@ Ext.define('Precon.controller.GraphWin', {
           },
           '#togglearclink': {
               click: this.onToggle
+          },
+          '#less-btn':{
+        	  click: this.changeScope
+          },
+          '#more-btn':{
+        	  click: this.changeScope
           }
         });
    },  
+   changeScope: function(btn){
+	  console.log("Change scope ", btn);
+	  var self = this;
+	  if(btn.text == 'More'){
+		  
+	  }
+	  
+   },
    onToggle: function(btn) {
       if (btn.text.toLowerCase().indexOf("arc")>=0) {
       	mygraph.linklinetype="arc";
