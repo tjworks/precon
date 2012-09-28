@@ -142,8 +142,6 @@ precon.searchNetworks = function(query, callback){
 	
 	if(query.skip) qstr+="&skip="+query.skip
 	
-	log.error("QSTR" + unescape(qstr))
-	
 	if(query.network){
 		// special handling for search by network case
 		precon.getNetwork(query.network, function(netObj){
@@ -163,12 +161,11 @@ precon.searchNetworks = function(query, callback){
 			var con = results[r];
 			var connexion = null;
 			try{
-			  connexion = new precon.Connection(con)
-			  if(con.nodes.length >2){
-			    console.error("Skipping more than 2 nodes connection", con);
-			    continue
-			  }
-      
+			  if(con.nodes.length !=2){
+          console.error("Skipping more than 2 nodes connection", con);
+          continue
+        }
+			  connexion = new precon.Connection(con)     
 			}
 			catch(err){
 			  console.error("Invalid connection rawdata", con)

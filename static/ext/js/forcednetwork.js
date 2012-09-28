@@ -549,7 +549,7 @@ function myGraph(el,w,h) {
 	    	
 	    	clearTimeout(window.graphUpdateTrigger)
 	    	window.graphUpdateTrigger = null
-	    	log.debug("Start update()");
+	    	log.info("Force Update Begin");
 		     //log.debug(nodearray);
 		     //log.debug("Updating")
 			 timer = Timer("Updating Graph")
