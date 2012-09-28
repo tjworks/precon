@@ -37,6 +37,9 @@ Ext.define('Precon.controller.GraphWin', {
           '#saveGraphBtn': {
             click: this.saveGraph
           },
+          '#freezeGraphBtn': {
+            toggle: this.toggleFreeze
+          },
           '#removeNodeBtn':{
               click: function(){
                   this.openRemoveWindow()
@@ -66,6 +69,12 @@ Ext.define('Precon.controller.GraphWin', {
       	mygraph.setTreeType("dynamic");
       }
       mygraph.redraw();
+   },
+   toggleFreeze: function(o, pressed){
+   	   if (pressed)
+   	   		mygraph.freezeGraph(true)
+   	   	else
+   	   		mygraph.freezeGraph(false)
    },
    onZoom: function(s,v,t) {
      // if(v+1<8)

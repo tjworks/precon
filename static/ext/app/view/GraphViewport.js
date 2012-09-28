@@ -31,7 +31,16 @@ Ext.define('Precon.view.GraphViewport' ,{
 								    //toggleGroup: 'trees',
 								    icon:"/ext/resources/images/file-16.png",
 								    menu: [
-								         
+								          {
+			                                    xtype: 'button', 
+			                                    id:'saveGraphBtn',
+			                                    text : 'Save Graph',
+			                                    //iconCls:'x-btn-inner remove',
+			                                    icon:"/ext/resources/images/save-16.png",
+			                                    handler : function() {
+			                                        //saveGraph();
+			                                    }
+			                               },
 								         {
 									        text: 'Upload Network',
 									        id:"menuItemUpload",
@@ -46,18 +55,17 @@ Ext.define('Precon.view.GraphViewport' ,{
 									        icon:"/ext/resources/images/png.png",
 									        handler : function() { app.getController("GraphWin").exportGraph('image/png'); }
 								          }
-									     ,
 								         /**{
 									        text: 'Save as PDF',
 									        id:"menuItemPDF",
 									        icon:"/ext/resources/images/pdf.png",
 									        handler : function() { app.getController("GraphWin").exportGraph('application/pdf'); }
-								          },*/
+								          },
 								          {			                                 			                                    
 			                                    text : 'Save Graph',
 			                                    icon:"/ext/resources/images/save-16.png",
 			                                    handler : function() { app.getController("GraphWin").saveGraph(); }
-			                               }
+			                               }*/
 								    ]
 								},
                                 {
@@ -102,16 +110,19 @@ Ext.define('Precon.view.GraphViewport' ,{
                                         //openRemoveWindow();
                                     }
                                },
-                               {
-                                    xtype: 'button', 
-                                    id:'saveGraphBtn',
-                                    text : 'Save Graph',
-                                    //iconCls:'x-btn-inner remove',
-                                    icon:"/ext/resources/images/save-16.png",
-                                    handler : function() {
-                                        //saveGraph();
-                                    }
-                               },
+                            /*
+                              {
+                                                                xtype: 'button', 
+                                                                id:'freezeGraphBtn',
+                                                                text : 'Freeze Graph',
+                                                                enableToggle:true,
+                                                                //iconCls:'x-btn-inner remove',
+                                                                icon:"/ext/resources/images/save-16.png",
+                                                                handler : function() {
+                                                                    //saveGraph();
+                                                                }
+                                                          },*/
+                            
                                {
                                     xtype: 'button', 
                                     text : 'Help',

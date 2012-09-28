@@ -23,7 +23,7 @@ function myGraph(el,w,h) {
 	var rectSelectMode = true; // by default drag mode is true
 	var observable = $({})
 	var graphZoom, graphDrag;
-	this.linklinetype="arc";  // by default the line type of links is arc; it can be "straight" 
+	this.linklinetype="straight";  // by default the line type of links is arc; it can be "straight" 
 	var treetype="dynamic";  //by default the tree type is "dynamic"; it can be: "dendrogram", "cluster"
 	this.on = function(eventType,  handler){
 		observable.on(eventType, handler);
@@ -208,7 +208,17 @@ function myGraph(el,w,h) {
     			}
     	}    		    	
     }
+    //a flag variable to flag if a node is being drag
+    this.mouseovernode=0
     
+    //a function to freeze the graph, flag is a boolean parameter
+    this.freezeGraph=function(flag) {
+    	if (flag) 
+    		this.mouseovernode=-1;
+    	else
+    		this.mouseovernode=0;
+    
+    }
     /*
      * loop through the nodes and links to see if they fall within a rectangle
      * 
@@ -249,6 +259,14 @@ function myGraph(el,w,h) {
      * scale defines the scale of the graph
      */
     this.scale=1
+    
+    /**
+     * Set the link length of the force graph, default is 200
+     */
+    this.setLinkDistance=function(d) {
+    	force.linkDistance([d])
+    	force.start()
+    }
     
      //Return true if a directoned link already exists, other return false;
     var processLinkArray=function(s,d) {
@@ -328,7 +346,14 @@ function myGraph(el,w,h) {
            .style("fill","none");
     */
     var eventsProxy= function(obj){
-    	//console.log("event got", d3.event)
+    	if (d3.event.type=="mouseover") {
+    		graph.mouseovernode=d3.event.target.id
+    	}
+    	if (d3.event.type=="mouseout") {
+    		graph.mouseovernode=0;
+    		force.start();
+    	}
+    	
     	if(d3.event.detail >1){    		
     		myGraph.doubleClicked=true
     		observable.trigger('dblclick', d3.event.target, d3.event )
@@ -337,8 +362,6 @@ function myGraph(el,w,h) {
     		observable.trigger(d3.event.type, d3.event.target, d3.event)
     	}    	    	
     };
-    
-    
         
     var withinWindow=function(d) {
     	if ((d.target.x<0) || (d.target.y<0) ||(d.target.x>w) ||(d.target.y>h)|| (d.source.x<0) || (d.source.y<0) ||(d.source.x>w) ||(d.source.y>h) ) {
@@ -378,6 +401,8 @@ function myGraph(el,w,h) {
 	        .gravity(.01)
 	        .distance(200)
 	        .charge(-100)
+	        .linkStrength(0.3)
+	        .theta(0.1)
 	        .size([w, h]);
 	
 	    nodearray = force.nodes(),
@@ -495,7 +520,7 @@ function myGraph(el,w,h) {
 						visg.attr("transform",
 							"translate(" + d3.event.translate + ")"
 							+ " scale(" + d3.event.scale + ")");
-					  force.start();
+					 // force.start();
 					  myGraph.doubleClicked=false;
 				 }
 				 else 
@@ -544,11 +569,13 @@ function myGraph(el,w,h) {
 		    var linkenter=link.enter();
 		      
 			    linkenter
-			    	  //.append("g")
+			    	  //.append("g")l
 				      //.attr("render-order","-1")
 				      .append("path")
 			  		  .attr("id",function(d){return d.id})
-			  		  .attr("network", function(d){ return d.get('network') })		  		  
+			  		  .attr("network", function(d){ return d.get('network') })	
+			  		  .attr("source", function(d){return d.source.id})
+			  		  .attr("target", function(d){return d.target.id})	  		  
 					  .attr("class",function(d){ddd = d; return "link "+d.get('type').replace(" ","").replace("/","_");})
 					  .attr("marker-end", function(d) {ddd=d; return "url(#" + d.get('type').replace(" ","") + ")"; })
 					  .attr("refs", function(d){ return _combineRefs(d.get('refs'))});
@@ -577,6 +604,7 @@ function myGraph(el,w,h) {
 		            .attr("network", function(d){
 		            	return d.networkrefs+""
 		            })
+		             .attr("id",function(d){return d.id})
 		            .call(force.drag);
 		          
 		        nodeEnterg.append("circle")
@@ -598,57 +626,64 @@ function myGraph(el,w,h) {
 	        	 	
 	        node.exit().remove();
 		    
-			
 	        force.on("tick", function() {
-	       	  link.attr("d", function(d) {
-	       	  	       //insert a random disturbance to allow multiple links between two points. 
-					   var dx = d.target.x - d.source.x,
-					       dy = d.target.y - d.source.py,
-					       dr = Math.sqrt(dx * dx + dy * dy)*d.multiplier;
+		          	node.filter(function(d,i){
+										  if (graph.mouseovernode!=0) {
+												 if (d.id==graph.mouseovernode) {
+													 force.stop();
+												 }
+										 }
+											 return true;
+									  })
+		              .attr("cx", function(d) { 
+		          		    return d.x = Math.max(r, Math.min(w - r, d.x)); 
+		          		})
+		        	  .attr("cy", function(d) { 
+		        	  		return d.y = Math.max(r, Math.min(h - r, d.y)); }
+		        	  	)
+		        	  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+		        	  
+		        	link.filter(function(d,i){
+						if (graph.mouseovernode!=0) {
+							if (d.source.id==graph.mouseovernode || d.target.id==graph.mouseovernode) { 
+							     force.stop();
+							  }
+							}
+							return true;
+					   })
 					   
-					  
-					  
-				//	if (withinWindow(d)) { 
-			/*
-						   lastobj.lastdr=dr;
-								   lastobj.lastsx=String.valueOf(d.source.x)
-								   lastobj.lastsy=String.valueOf(d.source.y);
-								   lastobj.lastdx=String.valueOf(d.target.x);
-								   lastobj.lastdy=String.valueOf(d.target.y);*/
-					   	  
-					   	   if(!d.source.x) log.debug
-					   	   var pnts=getPointOnCircle(d.source.x,d.source.y,r,d.target.x,d.target.y,r);
-					   	   if (pnts) {
-						   	   var a=pnts[0];
-						   	   var b=pnts[1];
-						   	   if (mygraph.linklinetype=="arc")
-						   	   		return "M" + a.x + "," + a.y + "A" + dr + "," + dr + " 0 0,1 " + b.x + "," + b.y;
-						   	   	else
-						   	   		return "M" + a.x + "," + a.y + "L" + b.x + "," + b.y;
-					   	  }
-					   	  else
-					   	  {
-						   if (mygraph.linklinetype=="arc")
+       	  		    .attr("d", function(d) {	
+       	  	        //insert a random disturbance to allow multiple links between two points.
+			        var dx = d.target.x - d.source.x,
+			        dy = d.target.y - d.source.py,
+			        dr = Math.sqrt(dx * dx + dy * dy)*d.multiplier;
+			   	  
+			   	    if(!d.source.x) log.debug
+			   	   		var pnts=getPointOnCircle(d.source.x,d.source.y,r,d.target.x,d.target.y,r);
+			   	    if (pnts) {
+				   	    var a=pnts[0];
+				   	    var b=pnts[1];
+				   	    if (mygraph.linklinetype=="arc")
+				   	   		return "M" + a.x + "," + a.y + "A" + dr + "," + dr + " 0 0,1 " + b.x + "," + b.y;
+				   	   	else
+				   	   		return "M" + a.x + "," + a.y + "L" + b.x + "," + b.y;
+			   	     }
+			   	     else
+			   	     {
+						if (mygraph.linklinetype=="arc")
 						   		return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
-						   	else
-						   		return "M" + a.x + "," + a.y + "L" + b.x + "," + b.y;
-						   }
-				//	}
-				 //   else {
-				//           return "M" + lastobj.lastsx + "," + lastobj.lastsy + "A" + lastobj.lastdr + "," + lastobj.lastdr + " 0 0,1 " + lastobj.lastdx + "," + lastobj.lastdy;
-				           
-				//    }
-			  });
-			  
-	          //node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-	          node.attr("cx", function(d) { return d.x = Math.max(r, Math.min(w - r, d.x)); })
-	        	  .attr("cy", function(d) { return d.y = Math.max(r, Math.min(h - r, d.y)); })
-	        	  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });;
-	          
+						 else
+						   		return "M" + d.source.x+ "," +d.source.y+ "L" + d.target.x + "," + d.target.y;
+					  }
+		  		  });  
+				        	  
 	        });
-	
+			
 	        // Restart the force layout.
-	        force.start();
+	        if (mygraph.mouseovernode==0)
+	        	force.start();
+	        else
+	        	force.stop();
         }
 /*
 End of Dynamic Tree and start of Dendrogram Tree
