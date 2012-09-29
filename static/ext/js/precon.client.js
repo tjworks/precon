@@ -119,8 +119,12 @@ precon.searchNetworks = function(query, callback){
 		obj[model] = query
 		query = obj 
 	}
-	if(query.entity)
-		qstr = escape('{"entities":"TOKEN"}'.replace("TOKEN",query.entity))
+	if(query.entity){
+	  if(_.isArray(query.entity))
+	     qstr = escape (   '{"entities": {"$in":  ["' +   ( query.entity.join('","') )+'"]  }}' );
+	  else
+	     qstr = escape('{"entities":"TOKEN"}'.replace("TOKEN",query.entity))
+	}
 	else if(query.network)
 		qstr = escape('{"network":"TOKEN"}'.replace("TOKEN",query.network))
 		
@@ -138,8 +142,6 @@ precon.searchNetworks = function(query, callback){
 	
 	if(query.skip) qstr+="&skip="+query.skip
 	
-	
-	
 	if(query.network){
 		// special handling for search by network case
 		precon.getNetwork(query.network, function(netObj){
@@ -156,14 +158,28 @@ precon.searchNetworks = function(query, callback){
 		var nets = {}
 		var ids = []
 		for(var r in results){
-			con = results[r]
+			var con = results[r];
+			var connexion = null;
+			try{
+			  if(con.nodes.length !=2){
+          console.error("Skipping more than 2 nodes connection", con);
+          continue
+        }
+			  connexion = new precon.Connection(con)     
+			}
+			catch(err){
+			  console.error("Invalid connection rawdata", con)
+			  continue;
+			}
+			
+			
 			if( ids.indexOf(con.network )<0)
 				ids.push(con.network)
 			var net = nets[con.network] || {} 
 			nets[con.network] = net	
 			net.connections = net.connections || []  // ids
 			net._connections = net._connections || []  // _connections keeps track of all loaded connection objects
-			net._connections.push(new precon.Connection(con))
+			net._connections.push(connexion)
 			net.connections.push(con._id)
 			net._id = con.network
 		}

@@ -103,9 +103,11 @@ marker .stimulats {
   fill:none;
   stroke:mediumpurple;
 }
-marker .association {
+/**  association shouldn't have arrow
+ marker .association {
   fill: grey;
 }
+*/
 .association{
   stroke-width: 2px;
   /** stroke-dasharray: 5,1 5,1; */
@@ -164,8 +166,17 @@ circle {
   stroke: #333;
   stroke-width: 1px;
   fill-opacity:0.5;
+  stroke-dasharray: 1,1
+}
+circle.loaded {
+   stroke-dasharray: none
+}
+circle.unloaded {
 }
 
+circle.small {
+  
+}
 text {
   font: 10px sans-serif;
   pointer-events: none;
@@ -183,7 +194,7 @@ text.shadow {
   	stroke:yellow;
 }
 path.state-selected {   
-    stroke:yellow
+    stroke:yellow;
     stroke-width:2;
     stroke-color:yellow;
     fill:none
@@ -275,3 +286,4 @@ input[type=text],select{
 .x-form-field {
   font-size:large
 }
+

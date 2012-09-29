@@ -4,9 +4,12 @@
 		
 precon.NetworkGraph = function(){
 	this._class = 'networkgraph'
+	this._depth = 0; // indicates the current depth of the graph, 0 is the initial state when graph is first loaded
+	
 	/****** Internal properties/functions ******/
 	this.init()	
-	var jq = $(this)	
+	
+	var jq = $({});	
 	var networks = []
 	var connections = []
 	var nodes = []
@@ -14,6 +17,7 @@ precon.NetworkGraph = function(){
 	var graphModel = this
 	
 	var selections = []
+	
 	
 	
 	var _addNetwork = function(netObj){
@@ -121,7 +125,7 @@ precon.NetworkGraph = function(){
 		networks.forEach(function(network){
 			graphModel.removeNetwork(network)
 		})		
-	}
+	};
 	/**
 	 * Add network 
 	 */
@@ -141,7 +145,7 @@ precon.NetworkGraph = function(){
 		else		
 			_addNetwork(netObj)
 		return this	
-	}
+	};
 	
 	/**
 	 * Remove network 
@@ -213,6 +217,7 @@ precon.NetworkGraph = function(){
 	 * 
 	 */
 	this.addConnection=function(con, network, muted){   // muted: no events
+	  log.debug("in model.addConnection")
 		var conId = getId(con);
 		var existing = this.findConnection(conId)
 		if(existing){
@@ -254,6 +259,7 @@ precon.NetworkGraph = function(){
 			var node = nodes[i]
 			if(getId(node) == getId(existing)){
 				nodes.splice(i, 1)
+				delete node._depth;
 				return true;
 			};
 		};
@@ -280,8 +286,8 @@ precon.NetworkGraph = function(){
 	 * returns the precon.Node object
 	 */
 	this.addNode=function(node, connection, network, muted){
-		
-		var found = null
+		log.debug("in model.addNode "+ node._id)
+		var self=this;
 		if(isObject(node) && !(node instanceof precon.Node) ){
 			node = new precon.Node(node)
 		}
@@ -302,20 +308,27 @@ precon.NetworkGraph = function(){
 				existing.addRef(connection.get('network'), "network"); 
 			return existing;			
 		}
-		
 		// case 3: not exists at all		
 		if(isObject(node) ){
 			node.addRef(connection, "connection"); 
 			nodes.push(node)
-			if(!muted)
+			
+			if( _.isUndefined( node._depth ) ) node._depth = self._depth
+			
+			if(!muted){ 
 				graphModel.trigger('add.node', {
 					node:node
 				})
+		  }
+		  
+		  
 			precon.encache(node); // add to cache so it can looked up later
 			if(connection)
 				node.addRef(connection.get('network'), "network");
 			return node;
 		}
+		
+		//log.debug("in model.addNode Step 3")
 		// TBD: using ajax queue to ensure no multiple  requests for same object happen same time
 		precon.getObject(nodeId, function(obj){
 			obj = new precon.Node(obj)
@@ -323,6 +336,7 @@ precon.NetworkGraph = function(){
 			if(connection)
 				obj.addRef(connection.get('network'), "network");
 			nodes.push(obj)
+			obj._depth = self._depth
 			if(!muted)
 				graphModel.trigger('add.node', {
 					node:obj
@@ -337,20 +351,27 @@ precon.NetworkGraph = function(){
 	 * @param force: if set to true will remove node unconditionally (as opposed to check existing ref)
 	 * @events: remove.node event will be triggered. 
 	 */
-	this.removeNode = function(node, connection, force){
-		//log.debug("Removing nodes: "+ node)
+	this.removeNode = function(node, connection, force, muted){
+		
 		var nodeId = getId(node);
+		log.debug("Removing nodes: "+ nodeId)
 		var existing = this.findNode(nodeId);
 		if(!existing) return
 		if(connection){
 			existing.delRef(connection,"connection");			
 		}
-		if(existing.getRefs("connection").length > 0 && !force){
+		conids = existing.getRefs("connection")
+		if(conids && conids.length>0){
 			//log.debug("More refs remain for node ", node)
-			return;
+			if(!force)	return;
+			// delete links
+			for(var c in conids){
+			   var cid = conids[c];
+			   this.removeConnection(cid, true, muted);
+			}
 		} 
 		
-		if( _deleteNode(existing) ){			
+		if( _deleteNode(existing) && !muted){					  
 			graphModel.trigger('remove.node', {
 				node: existing
 			})
@@ -362,20 +383,25 @@ precon.NetworkGraph = function(){
 	 * 
 	 * @events: remove.connection event will be triggered. 
 	 */
-	this.removeConnection = function(con){
+	this.removeConnection = function(con, keepNodes, muted){
 		//log.debug("Removing connection ", con)
 		var conId = getId(con);
 		for(var i=0;i<connections.length;i++){
 			var con = connections[i];
 			if(getId(con) == conId){
-				var nodes = con.getNodes();
-				nodes.forEach(function(node){
-					graphModel.removeNode(node, con);
-				})				
+			  if(!keepNodes){
+			     var nodes = con.getNodes();
+           nodes.forEach(function(node){
+            graphModel.removeNode(node, con);
+           })    
+			  }
+							
 				connections.splice(i,1)
-				graphModel.trigger('remove.connection', {
-					connection: con
-				});
+				if(!muted){
+				  graphModel.trigger('remove.connection', {
+            connection: con
+          });
+				} // end if
 			};
 		};
 	};
@@ -493,6 +519,7 @@ precon.BasePrototype = {
 		this.rawdata = rawdata || {}
 		this.rawdata.newflag = this.rawdata._id ? 0: 1
 		this.rawdata._id = this.rawdata._id || precon.randomId(this._class)
+		this.rawdata.id =  this.rawdata._id
 	},
 	getRawdata: function(){
 		return this.rawdata
@@ -604,10 +631,13 @@ precon.Connection = function(rawdata){
 		// create new id
 		rawdata._id = precon.randomId("connection")
 	}
-	if(! (rawdata.nodes && rawdata.nodes.length>1) )
-		throw "Must at least provide to nodes"
+	if(! (rawdata.nodes && rawdata.nodes.length>1) ){
+	  console.error("Invalid connection rawdata: ", rawdata) 
+	  throw "Must at least provide two nodes"
+	}
 	rawdata.label = rawdata.label || '' 
 	rawdata.refs = rawdata.refs || {}
+	rawdata.type = rawdata.type || 'association'
 	
 	if( rawdata.nodes[0] instanceof precon.Node){
 		nodes = rawdata.nodes		

@@ -60,24 +60,28 @@ Ext.define('Precon.view.GraphViewport' ,{
 									        id:"menuItemPDF",
 									        icon:"/ext/resources/images/pdf.png",
 									        handler : function() { app.getController("GraphWin").exportGraph('application/pdf'); }
-								          },
-								          {			                                 			                                    
-			                                    text : 'Save Graph',
-			                                    icon:"/ext/resources/images/save-16.png",
-			                                    handler : function() { app.getController("GraphWin").saveGraph(); }
-			                               }*/
+								          }, */
+								          ,{			                                 			                                    
+                              text : 'Save Graph',
+                              icon:"/ext/resources/images/save-16.png",
+                              handler : function() { app.getController("GraphWin").saveGraph(); }
+                         }
+                         ,{
+                           text:'Clear Graph',
+                           //icon:"",
+                           handler:function(){app.getController("GraphWin").clearGraph(); }
+                         }
 								    ]
 								},
-                                {
-                                    xtype: 'button', 
-                                    text : 'Create Node',
-                                    id:'nodeCreateBtn',
-                                    //iconCls:'x-btn-inner node',
-                                    icon:"/ext/resources/images/node.png",
-                                    handler : function() {
-                                       // nodeCreate();
-                                    }
-                               },
+                {
+                    xtype: 'button', 
+                    text : 'Create Node',
+                    id:'nodeCreateBtn',
+                    icon:"/ext/resources/images/node.png",
+                    handler : function() {
+                       // nodeCreate();
+                    }
+               },
                            
 							   {
 								    xtype: 'button', 
@@ -132,6 +136,38 @@ Ext.define('Precon.view.GraphViewport' ,{
                                         log.debug("test");
                                     }
                                 },
+                                {
+                                    xtype: 'button', 
+                                   // text : 'Less',
+                                    data:'less',
+                                    id: 'less-btn'
+                                    //enableToggle:true,
+                                    ,iconCls:'toolbar-icon'
+                                    ,icon:"/ext/resources/images/dbl-left.png"
+                                    
+                                    //toggleGroup:'scopeGroup'
+                                   // ,allowDepress:true
+                                    //,pressed:true
+                                },
+                                {
+                                  text: '0',
+                                  id:'graph-depth'
+                                  ,allowDepress:true
+                                  ,enableToggle:true
+                                }, 
+                                {
+                                    xtype: 'button', 
+                                    //text : 'More',
+                                    data:'more',
+                                    id: 'more-btn'
+                                    //enableToggle:true,
+                                    //iconCls:'x-btn-inner help',
+                                    ,icon:"/ext/resources/images/dbl-right.png" 
+                                   
+                                    //toggleGroup:'scopeGroup',
+                                    //allowDepress:true
+
+                                },
                                 '->',
                                
                                
@@ -160,7 +196,7 @@ Ext.define('Precon.view.GraphViewport' ,{
 						        text: 'Show Legend',
 						        enableToggle: true,
 						        icon:"/ext/resources/images/legend.png",
-						        id:'legendToggleBtn'
+						        id:'legendToggleBtn'						        
 						        //toggleHandler: toggleLegend
 						    },
 						    '->',

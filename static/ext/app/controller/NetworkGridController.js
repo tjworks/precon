@@ -133,7 +133,7 @@ Ext.define('Precon.controller.NetworkGridController', {
       selmodel.deselectAll();
       _.each( mygraph.getModel().getSelections(), function(item,  self ){     
         var ids = item.get('network')
-          for(var i=0;i<ids.length;i++){           
+          for(var i=0;ids && i<ids.length;i++){           
             var index = grid.getStore().find('_id', ids[i])
             if(index>=0 ) selmodel.select(index, true)  
           }      
