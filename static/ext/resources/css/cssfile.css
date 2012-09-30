@@ -121,13 +121,13 @@ marker .physical_interaction {
     stroke: olive ;
 }
 marker .predicted {
-  fill: red;
+  fill: grey;
 }
 .predicted {
-  stroke-width: 2px;
+  stroke-width: 1px;
   fill:none;
-  stroke:red;
-  stroke-dasharray: 0,2 1;
+  stroke:grey;
+  /**stroke-dasharray: 0,2 1; */
 }
 .phosphorylates_activates {
   stroke-width: 2px;
@@ -166,7 +166,7 @@ circle {
   stroke: #333;
   stroke-width: 1px;
   fill-opacity:0.5;
-  stroke-dasharray: 1,1
+  /** stroke-dasharray: 1,1 */
 }
 circle.loaded {
    stroke-dasharray: none
