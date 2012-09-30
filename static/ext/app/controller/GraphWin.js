@@ -12,7 +12,8 @@ Ext.define('Precon.controller.GraphWin', {
         'LinkCreateWindow',
         'GraphLegendWindow',
         'ObjectView',
-        'ZoomSliderView'
+        'ZoomSliderView',
+        'Window'
     ],    
     requires:['Ext.ux.form.MultiSelect'],
     init: function() {
@@ -418,20 +419,33 @@ Ext.define('Precon.controller.GraphWin', {
             }
             label = 'Node '
         };
-            
-        if(obj){
+        if(obj && obj instanceof precon.Connection){
             items.push(                
                       {
-                          text: 'View/Edit '+ label,
+                          text: 'Vote/Annotate',
+                          handler:function(menuItem,menu) {
+                            self.getController('LinkController').showVoteWindow(obj)
+                          }, 
+                          iconCls:'update'
+                      });
+        };
+            
+        if(obj){
+            var disabled = !( window.user && user.user_id == obj.get('owner') ) 
+            items.push(                
+                      {
+                          text: 'Edit '+ label,
                           handler:function(menuItem,menu) {
                             self.showObject(obj)
                           }, 
-                          iconCls:'update'
+                          iconCls:'update',
+                          disabled: disabled 
                       },
                       {
                           text: 'Remove '+ label+": " + (obj.get('label') || ''),
                           handler:function(menuItem,menu) {  self.openRemoveWindow(obj) }, 
-                          iconCls:'remove'
+                          iconCls:'remove',
+                          disabled: disabled
                       })
         }
         items.push(                              

@@ -94,7 +94,14 @@ Ext.define('Precon.controller.LinkController', {
         
         form = tmpwin.down('linkupdatepanel').getForm()
     }      
-	 
+	  ,showVoteWindow: function(con){
+        var self = this;
+        votewin = Ext.create('Precon.view.LinkVoteWindow',{data:con});
+        votewin.show();
+    }
+    ,handleVote:function(btn){
+      
+    }      
 });
 
 

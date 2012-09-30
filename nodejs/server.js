@@ -56,6 +56,7 @@ require('./lib/command');
 require('./lib/rest');
 
 entityService = require('./service/EntityService.js');
+linkService = require('./service/LinkService.js');
 
 if(!process.argv[2] || !process.argv[2].indexOf("expresso")) {
   app.listen(config.server.port, config.server.address);
@@ -81,6 +82,8 @@ io.configure(function (){
 });
 */
 
+
+
 io.sockets.on('connection', function (socket) {
 	console.log("connection for uid "+ socket.handshake.uid+" established, setting up listeners");
 
@@ -98,16 +101,34 @@ io.sockets.on('connection', function (socket) {
 	*/
 
 	  console.log("entity service " + entityService)
-	  socket.on('invoke', function(args, clientCallback){
+	  socket.on('invoke', function(req, clientCallback){
 		  console.log("\n=============== Client invocation  ===============")
-		  console.log(args);				   
+		  console.log(req);				   
 		  /**@todo: move to separate module*/		  
 		  try{
-			  if(!args.fn) throw "Function name not specified";
-			  var fname = eval( args.fn );
-			  fname(args.arg, clientCallback);
-			  //console.log("===== Client invocation result: ")			  
-			  //clientCallback(ret);
+		    var fname =req.method || req.fn 
+			  if(!fname) throw "Function name not specified";
+			  var func = eval(fname);
+			  var ret = {id:req.id};
+			  if(req.tm) { // debugging purpose
+			    ret.tm = req.tm;
+			    ret.tm.handling = new Date().getTime();
+			  } 
+			  var instaResult = func(req.params, function(res){
+           ret.success = 1;
+           ret.data = res;           
+           if(ret.tm)  ret.tm.response = new Date().getTime();
+			     if(clientCallback)  clientCallback( ret ); 
+			  });
+        
+        // if method returns a non-null result immediately, consider it done
+			  if(instaResult){ 
+			    ret.success = 1
+			    ret.data = instaResult;
+			    if(ret.tm) ret.tm.response = new Date().getTime();
+			    clientCallback(ret)
+			  }
+			  
 		  }
 		  catch(err){
 			  //doError(clientCallback, err);
@@ -131,3 +152,5 @@ io.sockets.on('connection', function (socket) {
 		  }
 	  });
 });
+
+

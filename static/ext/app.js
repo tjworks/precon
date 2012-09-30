@@ -8,7 +8,7 @@ Ext.Loader.setConfig({
         } 
 	});
 Ext.require([
-    //'Ext.selection.CheckboxModel'
+	
 ]);
 Ext.onReady(function(){
 	log.info("Ext ready");
@@ -25,7 +25,7 @@ Ext.application({
     	'GraphWin','Reference','NetworkGridController','LinkController', 'NodeController'
     ],    
     stores:['MyNetworks', 'Networks'],
-    views:[ 'GraphViewport', 'Window'],    
+    views:[ 'GraphViewport'],    
 	init: function(){
 		log.info("Ext Application init")
 		// create model instance

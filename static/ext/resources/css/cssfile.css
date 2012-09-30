@@ -59,6 +59,8 @@
 
 
 
+
+
 /**default style for path**/
 path{
   fill: none;
@@ -121,13 +123,13 @@ marker .physical_interaction {
     stroke: olive ;
 }
 marker .predicted {
-  fill: red;
+  fill: grey;
 }
 .predicted {
-  stroke-width: 2px;
+  stroke-width: 1px;
   fill:none;
-  stroke:red;
-  stroke-dasharray: 0,2 1;
+  stroke:grey;
+  /**stroke-dasharray: 0,2 1; */
 }
 .phosphorylates_activates {
   stroke-width: 2px;
@@ -166,7 +168,7 @@ circle {
   stroke: #333;
   stroke-width: 1px;
   fill-opacity:0.5;
-  stroke-dasharray: 1,1
+  /** stroke-dasharray: 1,1 */
 }
 circle.loaded {
    stroke-dasharray: none
@@ -247,7 +249,11 @@ input[type=text],select{
 	text-decoration:underline;
 	
 }
-
+.bio-term {
+  
+  color:darkblue;
+  font-style:italic;
+}
 
 
 #uploadbox {
@@ -287,3 +293,41 @@ input[type=text],select{
   font-size:large
 }
 
+
+
+
+
+
+textarea {
+  font-size:1.2em;
+  padding:4px;
+}
+
+.precon-form div {
+  margin-top:8px; margin-bottom:8px;
+}
+
+
+
+
+/**  Vote window */
+  
+.vote-summary {
+  height:24px;
+  
+}
+.vote-up {
+  background: url(/ext/resources/images/thumb-upx24.png) no-repeat;
+  padding-left:28px;
+}
+.vote-down {
+  background: url(/ext/resources/images/thumb-downx24.png) no-repeat;
+  padding-left:28px;
+}
+.vote-comments {
+  padding:5px 15px;
+}
+
+.date-time {
+  color: #666;
+}

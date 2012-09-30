@@ -14,7 +14,7 @@ precon =  precon || {conf:{}}
 
 precon.conf.local_cache = true;
 precon.conf.max_objects_per_request=500;
-precon.conf.prefix_mapping = {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication',peop:'people'},
+precon.conf.prefix_mapping = {netw:'network' , ntwk:'network', enti:'entity', node:'node', conn: 'connection', publ:'publication',peop:'people', 'json':'jsonrpc'},
 
 precon.conf.node_url = precon.conf.node_url || 'http://One-Chart.com:3000';
 precon.conf.api_base = precon.conf.node_url +"/oc";
@@ -526,17 +526,22 @@ $(function(){
 	 
 });
 
-
+/**
+ * @param {Object} fn function name to be invoked on the server side
+ * @param {Object} arg  An JSON object encapsulates the arguments
+ * @param {Object} callback function. Argument is the method return from server side
+ */
 precon.invoke = function(fn, arg , callback){
 	if(typeof arg == 'function'){
 		callback = arg
 		arg = null
 	}
-	var args = {fn: fn, arg:arg}		
+	var args = {method: fn, data:arg, id: precon.randomId('json'), tm:  { request: new Date().getTime() } }		
 	console.log("client invoke: ",args)
-	socket.emit('invoke', args, function(data){
-		console.log("invoke server response: ",data);			
-		callback && callback(data);
+	socket.emit('invoke', args, function(ret){
+	  ret.tm.receive = new Date().getTime();
+		console.log("invoke server response: ",ret);			
+		callback && callback(ret.data);
 	});
 }
 
@@ -548,4 +553,29 @@ function evil( stmt, callback){
 		callback && callback(data);
 	});
 }
+ 
+
+
+reload=function(){
+  $.getScript('/ext/app/view/LinkVoteWindow.js')
+  $.getScript('/ext/app/controller/LinkController.js')
+  $.getScript('/ext/app/controller/GraphWin.js')
+  $.getScript('/ext/js/precon.client.js');
+  var queryString = '?reload=' + new Date().getTime();
+    $('link[rel="stylesheet"]').each(function () {
+        if(this.href.indexOf("ext-all")<0){
+          console.log("realoding " + this.href)
+          this.href = this.href.replace(/\?.*|$/, queryString);
+        }
+          
+    });
+ 
+  window.w && w.hide()
+  link = linkarray[0] 
+  link.set("voteCount", 3)
+  w = app.getView('Precon.view.LinkVoteWindow').create({data: link  }).show() 
+
+}
+
+
 //
