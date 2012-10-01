@@ -108,3 +108,21 @@ Ext.define('Precon.controller.LinkController', {
 
 
 })();
+
+
+window.tests = window.tests ||{}
+tests.addVote=function(){
+     var d = new Date();
+     var votereq = {
+       connection_id: 'conn_intact_184907',
+       user_id:'TJ',
+       comments:'This is a comment at ' + d.getHours()+":" +d.getMinutes()+":"+ d.getSeconds(),
+       type:'up',
+       
+     }
+     
+     precon.invoke('linkService.annotate', votereq, function(res){
+       console.log("Vote result:", res)
+     })
+   } // end testAddVote 
+ 

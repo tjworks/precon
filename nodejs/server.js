@@ -109,12 +109,13 @@ io.sockets.on('connection', function (socket) {
 		    var fname =req.method || req.fn 
 			  if(!fname) throw "Function name not specified";
 			  var func = eval(fname);
+			  if(!func) throw "Function "+ fname+" is not defined"
 			  var ret = {id:req.id};
 			  if(req.tm) { // debugging purpose
 			    ret.tm = req.tm;
 			    ret.tm.handling = new Date().getTime();
 			  } 
-			  var instaResult = func(req.params, function(res){
+			  var instaResult = func(req.data, function(res){
            ret.success = 1;
            ret.data = res;           
            if(ret.tm)  ret.tm.response = new Date().getTime();

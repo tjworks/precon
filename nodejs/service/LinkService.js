@@ -3,6 +3,7 @@ var mongo = require("mongodb"),
     app = module.parent.exports.app,
     config = module.parent.exports.config,
     util = require("../lib/util"),
+    myutil = require("../lib/myutil"),
     BSON = mongo.BSONPure,
   	_ = module.parent.exports._;
   	 
@@ -21,10 +22,29 @@ req spec
   *
 */
 exports.annotate = function(req, callback){
+  if(!req.connection_id) throw  "Invalid request: missing connection id";
+  if(!req.user_id) throw  "Invalid request: missing user_id";
+  if(!req.comments) throw  "Invalid request: missing comments";
+  var type=  req.type || 'commentonly' 
+  
+  var vote = {comments: req.comments, user_id:req.user_id, type:type, update_time: myutil.formate_date() };
   getCollection('connection', function(col){
-      col.find({}, {limit:1}).toArray( function(err, docs){
-          callback(docs);
-      }  );
+      var cursor = col.findOne({_id: req.connection_id}, function(err, item){
+          console.log('got link', item)
+          var votes = item.votes || []
+          for(var i=0;i<votes.length;i++){
+            var v = votes[i];
+            if(!v) continue;
+            if(v.user_id == req.user_id && type!='commentonly'){
+              callback( myutil.exception('Double vote not allowed')  )
+              return;
+            }
+          }
+          col.update({_id:req.connection_id}, {$push: {votes: vote  }}, {safe:true}, function(err, result){
+              if(err) callback(new Exception(err));
+              callback("OK");
+          } );
+      });
   });
 }
 /**

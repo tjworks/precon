@@ -532,14 +532,17 @@ $(function(){
  * @param {Object} callback function. Argument is the method return from server side
  */
 precon.invoke = function(fn, arg , callback){
-	if(typeof arg == 'function'){
+  var req = null
+  if(typeof fn == 'object')
+    req = fn
+  else if(typeof arg == 'function'){
 		callback = arg
 		arg = null
 	}
-	var args = {method: fn, data:arg, id: precon.randomId('json'), tm:  { request: new Date().getTime() } }		
-	console.log("client invoke: ",args)
-	socket.emit('invoke', args, function(ret){
-	  ret.tm.receive = new Date().getTime();
+	req = req || {method: fn, data:arg, id: precon.randomId('json'), tm:  { request: new Date().getTime() } }		
+	console.log("client invoke: ",req)
+	socket.emit('invoke', req, function(ret){
+	  if(ret.tm) ret.tm.receive = new Date().getTime();
 		console.log("invoke server response: ",ret);			
 		callback && callback(ret.data);
 	});
