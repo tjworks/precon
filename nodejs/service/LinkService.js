@@ -22,7 +22,10 @@ req spec
   *
 */
 exports.annotate = function(req, callback){
-  if(!req.connection_id) throw  "Invalid request: missing connection id";
+  if(!req.connection_id) {
+    callback(myutil.exception ("Invalid request: missing connection id" ));
+    return;
+  } 
   if(!req.user_id) throw  "Invalid request: missing user_id";
   if(!req.comments) throw  "Invalid request: missing comments";
   var type=  req.type || 'comment' 
@@ -35,8 +38,8 @@ exports.annotate = function(req, callback){
           for(var i=0;i<votes.length;i++){
             var v = votes[i];
             if(!v) continue;
-            if(v.user_id == req.user_id && type!='comment'){
-              callback( myutil.exception('Double vote not allowed')  )
+            if(v.user_id === req.user_id && type!='comment'){
+              callback( myutil.exception('You have already voted for this link')  )
               return;
             }
           }

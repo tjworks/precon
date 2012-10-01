@@ -99,12 +99,12 @@ Ext.define('Precon.controller.LinkController', {
         votewin = Ext.create('Precon.view.LinkVoteWindow',{data:con});
         votewin.show();
         
-        
+        self.updateVotes(votewin, con);
     }
     ,handleVote:function(btn){
         var win = Ext.getCmp("linkvotewin");
         console.log(btn)
-        
+        var self = this;
         var vote = {}
         vote.type = btn.data
         vote.comments = win.down("textarea").getValue();
@@ -116,23 +116,47 @@ Ext.define('Precon.controller.LinkController', {
           return
         }
         
+       
+        win.down("textarea").setValue("");
         precon.invoke('linkService.annotate', vote, function(data){
            if(data && data.error){
              Ext.Msg.alert("ERROR", data.error);
              return;
            }
-          
+           var votes = votewin.data.get('votes')  || []
+            votes.push(vote);
+            votewin.data.set('votes', votes);
+            self.updateVotes(votewin)
            console.log("Added vote", data);
-           votewin.data.getRawdata().votes = votewin.data.getRawdata().votes || []
-           votewin.data.getRawdata().votes.push(vote);
-           votewin.doLayout();        
+           
         });
         
         
         
     }
-    ,updateVotes:function(){
-      
+    ,updateVotes:function(votewin){
+       votewin.remove(Ext.getCmp("votelist"));
+       var votes = votewin.data.get('votes') || [];
+       var reversed = [];
+       for(var i=votes.length-1;i>=0; i--){
+         reversed.push(votes[i]);
+       }
+       votewin.add( {
+           xtype:'container',
+           id:'votelist',
+           data: reversed,
+           tpl: new Ext.XTemplate(
+            '<div class="precon-form">',
+            '<tpl for=".">',
+            '<div class="vote-summary vote-{type}">by <a href="#">{user_id}</a> <span class="date-time">{update_time}</span></div>',
+            '<div class="vote-comments">{comments} </div>',
+            '<hr/>',
+            '</tpl>', 
+           
+            '</div>')
+         });
+       
+         
     }      
 });
 
