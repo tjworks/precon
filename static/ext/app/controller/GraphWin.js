@@ -422,11 +422,12 @@ Ext.define('Precon.controller.GraphWin', {
         if(obj && obj instanceof precon.Connection){
             items.push(                
                       {
-                          text: 'Vote/Annotate',
+                          text: 'Annotate Link',
                           handler:function(menuItem,menu) {
                             self.getController('LinkController').showVoteWindow(obj)
                           }, 
-                          iconCls:'update'
+                          iconCls:'update', 
+                          disabled: !(window.user && user.user_id)
                       });
         };
             

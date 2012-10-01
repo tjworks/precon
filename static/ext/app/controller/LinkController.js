@@ -98,8 +98,40 @@ Ext.define('Precon.controller.LinkController', {
         var self = this;
         votewin = Ext.create('Precon.view.LinkVoteWindow',{data:con});
         votewin.show();
+        
+        
     }
     ,handleVote:function(btn){
+        var win = Ext.getCmp("linkvotewin");
+        console.log(btn)
+        
+        var vote = {}
+        vote.type = btn.data
+        vote.comments = win.down("textarea").getValue();
+        vote.user_id = user.user_id 
+        vote.connection_id = win.data.get('_id')
+        
+        if(!vote.comments){
+          Ext.Msg.alert("ERROR", "Please enter some notes");
+          return
+        }
+        
+        precon.invoke('linkService.annotate', vote, function(data){
+           if(data && data.error){
+             Ext.Msg.alert("ERROR", data.error);
+             return;
+           }
+          
+           console.log("Added vote", data);
+           votewin.data.getRawdata().votes = votewin.data.getRawdata().votes || []
+           votewin.data.getRawdata().votes.push(vote);
+           votewin.doLayout();        
+        });
+        
+        
+        
+    }
+    ,updateVotes:function(){
       
     }      
 });

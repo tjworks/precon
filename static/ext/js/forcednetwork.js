@@ -422,7 +422,7 @@ function myGraph(el,w,h) {
 	        //.distance(200)
 	        //.charge(-100)
 	        .linkStrength(0.3)
-	        .theta(0.1)
+	        .theta(0)
 	        .distance(function(){ return  Math.round(  this.size()[0] / Math.ceil( this.nodes().length / 100 ) / 3)  })
 	        .charge(-10)
 	        .size([w, h]);

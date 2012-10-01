@@ -574,10 +574,11 @@ reload=function(){
     });
  
   window.w && w.hide()
-  link = linkarray[0] 
-  link.set("voteCount", 3)
-  w = app.getView('Precon.view.LinkVoteWindow').create({data: link  }).show() 
-
+  for(var i=0;i< linkarray.length;i++){
+    console.log(linkarray[i].get('_id'))
+    if(linkarray[i].get('_id') == 'conn_intact_184907')
+      w = app.getView('Precon.view.LinkVoteWindow').create({data:link  }).show()
+  }  
 }
 
 

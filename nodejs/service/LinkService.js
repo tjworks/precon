@@ -25,7 +25,7 @@ exports.annotate = function(req, callback){
   if(!req.connection_id) throw  "Invalid request: missing connection id";
   if(!req.user_id) throw  "Invalid request: missing user_id";
   if(!req.comments) throw  "Invalid request: missing comments";
-  var type=  req.type || 'commentonly' 
+  var type=  req.type || 'comment' 
   
   var vote = {comments: req.comments, user_id:req.user_id, type:type, update_time: myutil.formate_date() };
   getCollection('connection', function(col){
@@ -35,7 +35,7 @@ exports.annotate = function(req, callback){
           for(var i=0;i<votes.length;i++){
             var v = votes[i];
             if(!v) continue;
-            if(v.user_id == req.user_id && type!='commentonly'){
+            if(v.user_id == req.user_id && type!='comment'){
               callback( myutil.exception('Double vote not allowed')  )
               return;
             }

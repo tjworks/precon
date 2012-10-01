@@ -14,21 +14,7 @@ Ext.define('Precon.view.LinkVoteWindow', {
     dat.node2 = this.data.getNodes()[1].get('label')
     dat.upcounts=1
     dat.downcounts = 1;
-    //var svg = $.clone( $( "path#"+ this.data.get("_id") ));
-    dat.votes = [
-       {
-         user_id:'TJ',
-         type:'up',
-         update_time:'2012-09-30 15:00:30',
-         comments:'This finding also is evidential in my paper Gluclose and Metformine blah'
-       },
-       {
-         user_id:'Joe',
-         type:'down',
-         update_time:'2012-09-21 12:00:30',
-         comments:'I attest this link does not exist!'
-       }
-    ]
+    
     this.items= [
         ,{
          xtype:'container',
@@ -58,7 +44,8 @@ Ext.define('Precon.view.LinkVoteWindow', {
                    text:'Vote Up',
                    icon:'/ext/resources/images/thumb-upx32.png',
                    scale:'large',
-                   handler: function(){ app.getController('LinkController').handleVote(this); }
+                   handler: function(){ app.getController('LinkController').handleVote(this); },
+                   data:'up'
                  }
                  ,{xtype:'container', witdh:5,html:'&nbsp;'}
                  ,{
@@ -66,17 +53,28 @@ Ext.define('Precon.view.LinkVoteWindow', {
                  text:'Vote Down',
                  icon:'/ext/resources/images/thumb-downx32.png',
                  scale:'large',
-                 handler: function(){ app.getController('LinkController').handleVote(this); }
+                 handler: function(){ app.getController('LinkController').handleVote(this); },
+                 data:'down'
+               }
+                ,{xtype:'container', witdh:5,html:'&nbsp;'}
+                 ,{
+                 xtype:'button',
+                 text:'Comment',
+                 //icon:'/ext/resources/images/thumb-downx32.png',
+                 scale:'large',
+                 handler: function(){ app.getController('LinkController').handleVote(this); },
+                 data:'comment'
                }
             ] // end items
       } // end container
        
        ,{
          xtype:'container',
-         data:dat,
+         id:'votelist',
+         data:dat.votes,
          tpl: new Ext.XTemplate(
           '<div class="precon-form">',
-          '<tpl for="votes">',
+          '<tpl for=".">',
           '<div class="vote-summary vote-{type}">by <a href="#">{user_id}</a> <span class="date-time">{update_time}</span></div>',
           '<div class="vote-comments">{comments} </div>',
           '<hr/>',
