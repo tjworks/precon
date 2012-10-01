@@ -336,7 +336,7 @@ Ext.define('Precon.controller.GraphWin', {
             mygraph.on("dblclick", function(evt, target){
                 log.debug("dblclick!", evt, target.__data__)
                 //showObject(target.__data__)
-                self.expandNode(target.__data__);
+                if(target.__data__ instanceof precon.Node) self.expandNode(target.__data__);
                 if(target.__data__ instanceof precon.Connection) self.showObject(target.__data__)
                 
             });     
@@ -358,7 +358,7 @@ Ext.define('Precon.controller.GraphWin', {
         this.toggleFullscreenMode()
    }
    ,expandNode: function(node){
-      if(!(  node instanceof precon.Connection)  || (!node.get("entity"))) return;
+      if(!(  node instanceof precon.Node)  || (!node.get("entity"))) return;
       if(node.loaded) return;
       var self = this;
       precon.searchNetworks( node.get('entity'), function(nets){ 
@@ -569,32 +569,10 @@ Ext.define('Precon.controller.GraphWin', {
                          id:obj._id,
                          data:ob
                     }
-                    /*
-                    {
-                                            title:title,
-                                            layout:'fit',
-                                            id:obj._id,
-                                            closable:true,
-                                            defaults: {
-                                                anchor: '100%',
-                                                bodyPadding:20
-                                               },
-                                            items:[{xtype:'nodeupdatepanel'}],
-                                            fbar: [
-                                                  {
-                                                      text: 'Update Node',
-                                                      handler: function () {
-                                                            alert("peng peng");
-                                                          var tabs = this.up('tabpanel');
-                                                      }
-                                                  }
-                                              ]
-                                        }*/
-                    
                 );
             }
-            else if (ob.getClass && ob.getClass()=="connection") {
-                   app.getController('LinkController').show(ob);
+            else if (ob instanceof precon.Connection) {
+                app.getController('LinkController').showVoteWindow(ob); 
                     
             } else
             {
