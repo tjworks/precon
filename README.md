@@ -85,16 +85,14 @@ For Linux
 
 Startup Mongo and Node.js for DB server
 ---------------------------------------
-- Configure scripts to use local database
+- Configure setting to use local database
 
-  - Open precon/static/ext/js/precon.client.js
-  - find this line::
-  
-  		    api_base: 'http://one-chart.com:3000/oc',
-  		  		
-  - change to:
-  
-  		    api_base: 'http://localhost:3000/oc',
+  - Create a new file under precon folder "dev.py"
+  - add following line::
+      		   
+    MONGODB_HOST='one-chart.com'
+    NODE_URL='http://localhost:3000'
+
   		
 - Start mongod:
 

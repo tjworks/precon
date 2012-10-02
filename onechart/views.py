@@ -12,10 +12,21 @@ def home(req):
     ctx = RequestContext(req, {})
     ctx.node_url= settings.NODE_URL or 'http://ONE-CHART.COM:3000'
     
-    print "node server is %s" %ctx.node_url
+    if('debug' in req.GET and req.GET['debug']):
+        ctx.debug_info = renderDebugInfo()
+    
     return HttpResponse(template.render(ctx))
 
 
+def renderDebugInfo():
+    import socket
+    info ='<div id="debug_footer" style="color:white;border:1px dashed #888;padding:10px;margin:10px"><pre>'
+    info += "Server host name: " + socket.gethostname() +"\n"
+    info += "Mongo DB: " + settings.MONGODB_HOST +"/"+settings.MONGODB_NAME +"\n"
+    info += "Node URL: "  + settings.NODE_URL + "\n"
+    info +="</pre></div>"
+    return info
+    
 def schema(req):
     """
     Show database schema
