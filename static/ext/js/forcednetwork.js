@@ -319,6 +319,25 @@ function myGraph(el,w,h) {
 			Ext.getCmp("zoomslider").setValue(7+Math.log(d3.event.scale)/Math.log(2));
 		}
 	}
+	function prezoom(pan,zoom) {
+	  	//	  mygraph.visg.attr("transform", 
+		//	       	"scale("+d3.event.scale+") translate("+d3.event.translate+")");
+		if (d3.event){
+			if (d3.event.sourceEvent.type == "mousewheel" || d3.event.sourceEvent.type=='DOMMouseScroll'){
+			//they scrolled with the mouse wheel, update the slider postion but do not trigger it's transformVis call
+				//zoomWidgetObj.setValue(0,zoom/2,false,false);
+			}else{
+				//they are interacting with the slider
+				//zoomWidgetObj.doZoom = true;
+			}
+		}else{
+			//zoomWidgetObj.doZoom = true;
+		}
+       var zoomFactor=1
+	   visg.attr("transform", "translate(" +  (pan[0] + ((w - (w * zoomFactor))/2)) + ',' + (pan[1] + ((h - (h * zoomFactor))/2)) + ")scale(" + zoom*zoomFactor + ")"); 	
+	   mygraph.zoomscale=d3.event.scale
+			       	
+	}
     // set up the D3 visualisation in the specified element
  
     
@@ -422,7 +441,7 @@ function myGraph(el,w,h) {
 	        //.distance(200)
 	        //.charge(-100)
 	        .linkStrength(0.3)
-	        .theta(0)
+	        .theta(0.1)
 	        .distance(function(){ return  Math.round(  this.size()[0] / Math.ceil( this.nodes().length / 100 ) / 3)  })
 	        .charge(-10)
 	        .size([w, h]);
@@ -474,22 +493,55 @@ function myGraph(el,w,h) {
 	  //  .attr("markerUnits","strokeWidth")
 	    .attr("d", "M0,-4L10,0L0,4");
 	   
-		graphZoom = d3.behavior.zoom().on("zoom",zoomTo );
+		//graphZoom = d3.behavior.zoom().on("zoom",zoomTo );
+		
 		graphDrag = d3.behavior.drag()
 			 	.on('dragstart', eventsProxy)
 			 	.on('dragend', eventsProxy)
 				.on("drag",eventsProxy)
 	 		
-		 viszoompang = vis.append('svg:g');
-		 viszoompang.call(graphZoom);
+		 //viszoompang = vis.append('svg:g');
+		  viszoompang = vis.append('svg:g')
+		 					.attr("id","viewport")
+		 					.attr("class","parentg")
+		 //viszoompang.call(graphZoom);
 
 			
-         visg=viszoompang.append("svg:g");
-    	 graph.visg=visg;		
+         //visg=viszoompang.append("svg:g");
+         visg=viszoompang;
+    	 graph.visg=visg;	
+    	 	
+		/*
 		 visg.append('svg:rect')
-		    .attr('width', w)
-		    .attr('height', h)
-		    .attr('fill', 'white')
+					.attr('width', w)
+					.attr('height', h)
+					.attr('fill', 'white')*/
+		
+		  vis.call(d3.behavior.zoom()
+			  .on("zoom", function() {
+		 
+				  translatePos=d3.event.translate;
+				  var value = mygraph.zoomscale;
+		 
+				  //detect the mousewheel event, then subtract/add a constant to the zoom level and transform it
+				  if (d3.event.sourceEvent.type=='mousewheel' || d3.event.sourceEvent.type=='DOMMouseScroll'){
+						if (d3.event.sourceEvent.wheelDelta){
+							if (d3.event.sourceEvent.wheelDelta > 0){
+								value = value + 0.3;
+							}else{
+								value = value - 0.3;
+							}
+						}else{
+							if (d3.event.sourceEvent.detail > 0){
+								value = value + 0.3;
+							}else{
+								value = value - 0.3;
+							}
+						}
+				  }
+				prezoom(d3.event.translate,value);
+			  }))
+		
 		 vis.on("click", eventsProxy ).on("contextmenu", eventsProxy);
 		 		/**
 		 
