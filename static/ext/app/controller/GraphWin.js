@@ -426,8 +426,7 @@ Ext.define('Precon.controller.GraphWin', {
                           handler:function(menuItem,menu) {
                             self.getController('LinkController').showVoteWindow(obj)
                           }, 
-                          iconCls:'update', 
-                          disabled: !(window.user && user.user_id)
+                          iconCls:'update'
                       });
         };
             

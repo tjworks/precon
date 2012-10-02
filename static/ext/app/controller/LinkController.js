@@ -102,6 +102,7 @@ Ext.define('Precon.controller.LinkController', {
         self.updateVotes(votewin, con);
     }
     ,handleVote:function(btn){
+        if(!window.user) return Ext.Msg.alert("ERROR", "Please login first")
         var win = Ext.getCmp("linkvotewin");
         console.log(btn)
         var self = this;
