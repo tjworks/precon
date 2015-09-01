@@ -14,7 +14,7 @@ var fs = require("fs"),
 var config = { 
 	"db": {
 			'port': 27017,
-			'host': "one-chart.com",
+			'host': "52.25.168.18",
 			'name':'oc'
 		},
 	'server': {

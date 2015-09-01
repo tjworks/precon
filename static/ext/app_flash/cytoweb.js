@@ -182,7 +182,7 @@ Network.fromEdges = function(db_edges){
 
 
 function searchEdges(node, level, result, callback){	
-	baseurl = "http://one-chart.com:3000/oc/edge"
+	baseurl = "http://localhost:3000/oc/edge"
 	query = '{"$or": [{"source":"TOKEN"}, {"target":"TOKEN"}]}'
 	url = baseurl + "?query="+ escape( query.replace("TOKEN", node.toUpperCase()) )
 	console.log("Calling search edge with: "+node+", level: "+level+"")

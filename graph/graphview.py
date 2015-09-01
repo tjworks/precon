@@ -22,7 +22,7 @@ def handler(req, precon_id=None):
     #ctx = gf_template.get_context(req, {})
     
     ctx = RequestContext(req, {})
-    ctx.node_url= settings.NODE_URL or 'http://ONE-CHART.COM:3000'
+    ctx.node_url= settings.NODE_URL or 'http://localhost:3000'
     
     ctx.mvc = True if req.META['HTTP_HOST'].find('mvc')>=0 else False
     

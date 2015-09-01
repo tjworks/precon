@@ -15,12 +15,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'db.sqlite',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'test',                      # Or path to database file if using sqlite3.
+        'USER': 'zjd',                      # Not used with sqlite3.
+        'PASSWORD': 'precon',                  # Not used with sqlite3.
+        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -75,6 +75,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+   "/home/ec2-user/precon/static", 
 )
 
 # List of finder classes that know how to find static files in
@@ -119,6 +120,8 @@ TEMPLATE_DIRS = (
     "templates",
 )
 
+TEMPFILE_DIR = '/home/ec2-user/precon/tempfile'
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -157,7 +160,7 @@ LOGGING = {
     },
     'handlers': {
         'mail_admins': {
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
         },
@@ -176,13 +179,13 @@ LOGGING = {
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'propagate': True,
         },
         #catch all
         '': {
             'handlers': ['filelog','console'],
-            'level': 'INFO'
+            'level': 'DEBUG'
         },
     }
 }
@@ -214,7 +217,7 @@ MONGODB_HOST='localhost'
 MONGODB_NAME='oc'
 
 
-NODE_URL='http://one-chart.com:3000'
+NODE_URL='http://52.25.168.18:3000'
 
 
 

@@ -10,7 +10,7 @@ def home(req):
     template = loader.get_template('home.html')
     #ctx = gf_template.get_context(req, {})
     ctx = RequestContext(req, {})
-    ctx.node_url= settings.NODE_URL or 'http://ONE-CHART.COM:3000'
+    ctx.node_url= settings.NODE_URL or 'http://localhost:3000'
     
     if('debug' in req.GET and req.GET['debug']):
         ctx.debug_info = renderDebugInfo()
